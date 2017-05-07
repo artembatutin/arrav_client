@@ -222,7 +222,6 @@ public class TitleActivity extends Activity {
 				}
 			}
 		} else {
-			plainFont.drawLeftAlignedEffectString("Merry Christmas and Happy New Year!", 10, client.windowHeight - 10, 0xffffff, true);
 			alphaOpacity[3] -= (alphaOpacity[3] > 5 ? 8 : 0);
 		}
 		

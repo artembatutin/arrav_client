@@ -6,59 +6,55 @@ import net.edge.activity.ui.UIComponent;
 import net.edge.activity.ui.resize.ResizableUI;
 import net.edge.activity.ui.util.OrbHandler;
 import net.edge.cache.unit.ImageCache;
-import net.edge.game.model.Model;
-import net.edge.game.model.Player;
-import net.edge.media.Rasterizer2D;
-import net.edge.util.collect.LinkedDeque;
 import net.edge.cache.unit.Interface;
 import net.edge.cache.unit.NPCType;
+import net.edge.game.model.Model;
 import net.edge.game.model.NPC;
+import net.edge.game.model.Player;
+import net.edge.media.Rasterizer2D;
 import net.edge.media.img.BitmapImage;
+import net.edge.util.collect.LinkedDeque;
 import net.edge.util.string.StringUtils;
 
 import java.awt.*;
 
-public class ResizableUI_508 extends ResizableUI {
-
-	private int chatboxHeight = 114;
-	private int chatboxResizeClickY = -1;
-	private int chatboxResizeFromY = -1;
-
+public class ResizableUI_OS extends ResizableUI {
+	
 	@Override
 	public void buildChat() {
-		final String[] modes = {"View", "On", "Friends", "Off", "Hide"};
+		String[] modes = {"View", "On", "Friends", "Off", "Hide"};
 		if(client.mouseX >= 5 && client.mouseX <= 61 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
 			client.menuItemName[1] = "View All";
 			client.menuItemCode[1] = 999;
 			client.menuPos = 2;
 			client.hoveredChannelButton = 0;
-		} else if(client.mouseX >= 62 && client.mouseX <= 118 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
-			client.menuItemName[1] = "View Game";
+		} else if(client.mouseX >= 71 && client.mouseX <= 127 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
+			client.menuItemName[1] = "View game";
 			client.menuItemCode[1] = 998;
 			client.menuPos = 2;
 			client.hoveredChannelButton = 1;
-		} else if(client.mouseX >= 119 && client.mouseX <= 175 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
+		} else if(client.mouseX >= 137 && client.mouseX <= 193 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
 			for(int i = 0; i <= 4; i++) {
 				client.menuItemName[i + 1] = modes[4 - i] + " public";
 				client.menuItemCode[i + 1] = 997 - i;
 			}
 			client.menuPos = 6;
 			client.hoveredChannelButton = 2;
-		} else if(client.mouseX >= 176 && client.mouseX <= 232 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
+		} else if(client.mouseX >= 203 && client.mouseX <= 259 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
 			for(int i = 0; i <= 3; i++) {
 				client.menuItemName[i + 1] = modes[3 - i] + " private";
 				client.menuItemCode[i + 1] = 992 - i;
 			}
 			client.menuPos = 5;
 			client.hoveredChannelButton = 3;
-		} else if(client.mouseX >= 233 && client.mouseX <= 289 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
+		} else if(client.mouseX >= 269 && client.mouseX <= 325 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
 			for(int i = 0; i <= 3; i++) {
 				client.menuItemName[i + 1] = modes[3 - i] + " clan chat";
 				client.menuItemCode[i + 1] = 1003 - i;
 			}
 			client.menuPos = 5;
 			client.hoveredChannelButton = 4;
-		} else if(client.mouseX >= 290 && client.mouseX <= 344 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
+		} else if(client.mouseX >= 335 && client.mouseX <= 391 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
 			for(int i = 0; i <= 3; i++) {
 				client.menuItemName[i + 1] = modes[3 - i] + " trade";
 				client.menuItemCode[i + 1] = 987 - i;
@@ -71,30 +67,27 @@ public class ResizableUI_508 extends ResizableUI {
 			client.hoveredChannelButton = -1;
 		}
 		if(client.forcedChatWidgetId == -1 && client.showChat) {
-			client.chatWidget.scrollPos = client.chatContentHeight - client.chatScrollPos - chatboxHeight;
-			if(client.mouseX > 478 && client.mouseX < 580 &&
-					client.mouseY >= client.windowHeight - chatboxHeight - 48 &&
-					client.mouseY <= client.windowHeight - 47) {
-				client.gameActivity.processScrollbar(496, client.windowHeight - chatboxHeight - 48, client.mouseX, client.mouseY, chatboxHeight, client.chatContentHeight, client.chatWidget);
+			client.chatWidget.scrollPos = client.chatContentHeight - client.chatScrollPos - 114;
+			if(client.mouseX > 478 && client.mouseX < 580 && client.mouseY > client.windowHeight - 165) {
+				client.gameActivity.processScrollbar(494, 0, client.mouseX, client.mouseY - (client.windowHeight - 159), 114, client.chatContentHeight, client.chatWidget);
 			}
-			int pos = client.chatContentHeight - chatboxHeight - client.chatWidget.scrollPos;
-			if(client.mouseWheelAmt != 0 && client.mouseWheelX >= 8 && client.mouseWheelX <= 511 &&
-					client.mouseWheelY >= client.windowHeight - chatboxHeight - 48 &&
-					client.mouseWheelY <= client.windowHeight - 47) {
+			int pos = client.chatContentHeight - 114 - client.chatWidget.scrollPos;
+			if(client.mouseWheelAmt != 0 && client.mouseWheelX < 520 &&
+					client.mouseWheelY > client.windowHeight - 160) {
 				pos -= 30 * client.mouseWheelAmt;
 			}
 			if(pos < 0) {
 				pos = 0;
 			}
-			if(pos > client.chatContentHeight - chatboxHeight) {
-				pos = client.chatContentHeight - chatboxHeight;
+			if(pos > client.chatContentHeight - 114) {
+				pos = client.chatContentHeight - 114;
 			}
 			if(client.chatScrollPos != pos) {
 				client.chatScrollPos = pos;
 			}
 		}
 	}
-
+	
 	@Override
 	public void updateChat() {
 		int yoff = client.windowHeight - 165;
@@ -243,7 +236,7 @@ public class ResizableUI_508 extends ResizableUI {
 		}
 		client.gameGraphics.setCanvas();
 	}
-
+	
 	@Override
 	public void buildMap() {
 		if(client.mouseInRegion(client.windowWidth - 180, 3, client.windowWidth - 145, 38)) {
@@ -263,7 +256,7 @@ public class ResizableUI_508 extends ResizableUI {
 			client.menuPos++;
 		}
 	}
-
+	
 	@Override
 	public void updateMap() {
 		for(int i = 0; i < 76; i++) {
@@ -275,69 +268,73 @@ public class ResizableUI_508 extends ResizableUI {
 		}
 		int xOffset = client.windowWidth - 182;
 		if(client.minimapOverlay == 2) {
-			ImageCache.get(84).drawImage(xOffset + 18, 0);
-			ImageCache.get(85).drawImage(xOffset + 23, 5);
-			ImageCache.get(83).drawImage(xOffset + 13, 0);
-			ImageCache.get(1700).drawAffineTransformedImage(xOffset + 19, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
+			ImageCache.get(1925).drawImage(xOffset, -2);
+			ImageCache.get(1700).drawAffineTransformedImage(xOffset + 4, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
+			if(Config.DRAW_ORBS.isOn()) {
+				displayOrb(client.windowWidth - 209, 38, Constants.ORB_HEALTH, false);
+				displayOrb(client.windowWidth - 212, 72, Constants.ORB_PRAYER, true);
+				displayOrb(client.windowWidth - 200, 106, Constants.ORB_RUN, true);
+				displayOrb(client.windowWidth - 177, 140, Constants.ORB_SUMMONING, true);
+			}
 			return;
 		}
 		int rotation = client.cameraAngleX + client.minimapAngle & 0x7ff;
 		int middleX = 48 + client.localPlayer.x / 32;
 		int middleY = 464 - client.localPlayer.y / 32;
 		client.minimapImage.drawAffineTransformedImage(xOffset + 25, 5, 146, 151, middleX, middleY, client.minimapLineStarts, client.minimapLineLengths, rotation, 256 + client.minimapZoom);
-		for(int i = 0; i < client.mapFunctionCount; i++) {
-			int x = (client.mapFunctionX[i] * 4 + 2) - client.localPlayer.x / 32;
-			int y = (client.mapFunctionY[i] * 4 + 2) - client.localPlayer.y / 32;
-			markMinimap(client.mapFunctionImage[i], x, y);
+		for(int j5 = 0; j5 < client.mapFunctionCount; j5++) {
+			int k = (client.mapFunctionX[j5] * 4 + 2) - client.localPlayer.x / 32;
+			int i3 = (client.mapFunctionY[j5] * 4 + 2) - client.localPlayer.y / 32;
+			markMinimap(client.mapFunctionImage[j5], k, i3);
 		}
-		for(int tileX = 0; tileX < 104; tileX++) {
-			for(int tileY = 0; tileY < 104; tileY++) {
-				LinkedDeque sceneItem = client.sceneItems[client.cameraPlane][tileX][tileY];
-				if(sceneItem != null) {
-					int x = (tileX * 4 + 2) - client.localPlayer.x / 32;
-					int y = (tileY * 4 + 2) - client.localPlayer.y / 32;
-					markMinimap(client.mapDotItem, x, y);
+		for(int k5 = 0; k5 < 104; k5++) {
+			for(int l5 = 0; l5 < 104; l5++) {
+				LinkedDeque class19 = client.sceneItems[client.cameraPlane][k5][l5];
+				if(class19 != null) {
+					int l = (k5 * 4 + 2) - client.localPlayer.x / 32;
+					int j3 = (l5 * 4 + 2) - client.localPlayer.y / 32;
+					markMinimap(client.mapDotItem, l, j3);
 				}
 			}
 		}
 		for(int i6 = 0; i6 < client.npcListSize; i6++) {
 			NPC npc = client.npcList[client.npcEntryList[i6]];
 			if(npc != null && npc.isVisible()) {
-				NPCType npcDefinition = npc.type;
-				if(npcDefinition.childrenIDs != null) {
-					npcDefinition = npcDefinition.getSubNPCType();
+				NPCType entityDef = npc.type;
+				if(entityDef.childrenIDs != null) {
+					entityDef = entityDef.getSubNPCType();
 				}
-				if(npcDefinition != null && npcDefinition.visibleMinimap && npcDefinition.clickable) {
-					int x = npc.x / 32 - client.localPlayer.x / 32;
-					int y = npc.y / 32 - client.localPlayer.y / 32;
-					markMinimap(client.mapDotNPC, x, y);
+				if(entityDef != null && entityDef.visibleMinimap && entityDef.clickable) {
+					int i1 = npc.x / 32 - client.localPlayer.x / 32;
+					int k3 = npc.y / 32 - client.localPlayer.y / 32;
+					markMinimap(client.mapDotNPC, i1, k3);
 				}
 			}
 		}
 		for(int j6 = 0; j6 < client.playerCount; j6++) {
 			Player player = client.playerList[client.playerEntryList[j6]];
 			if(player != null && player.isVisible()) {
-				int x = player.x / 32 - client.localPlayer.x / 32;
-				int y = player.y / 32 - client.localPlayer.y / 32;
-				boolean friend = false;
+				int j1 = player.x / 32 - client.localPlayer.x / 32;
+				int l3 = player.y / 32 - client.localPlayer.y / 32;
+				boolean flag1 = false;
 				long l6 = StringUtils.encryptName(player.name);
 				for(int k6 = 0; k6 < client.friendsCount; k6++) {
 					if(l6 != client.friendsListAsLongs[k6] || client.friendsNodeIDs[k6] == 0) {
 						continue;
 					}
-					friend = true;
+					flag1 = true;
 					break;
 				}
-				boolean team = false;
+				boolean flag2 = false;
 				if(client.localPlayer.team != 0 && player.team != 0 && client.localPlayer.team == player.team) {
-					team = true;
+					flag2 = true;
 				}
-				if(friend) {
-					markMinimap(client.mapDotFriend, x, y);
-				} else if(team) {
-					markMinimap(client.mapDotTeam, x, y);
+				if(flag1) {
+					markMinimap(client.mapDotFriend, j1, l3);
+				} else if(flag2) {
+					markMinimap(client.mapDotTeam, j1, l3);
 				} else {
-					markMinimap(client.mapDotPlayer, x, y);
+					markMinimap(client.mapDotPlayer, j1, l3);
 				}
 			}
 		}
@@ -345,46 +342,43 @@ public class ResizableUI_508 extends ResizableUI {
 			if(client.hintType == 1 && client.NPCHintID >= 0 && client.NPCHintID < client.npcList.length) {
 				NPC npc = client.npcList[client.NPCHintID];
 				if(npc != null) {
-					int x = npc.x / 32 - client.localPlayer.x / 32;
-					int y = npc.y / 32 - client.localPlayer.y / 32;
-					method81(client.mapArrow, x, y);
+					int k1 = npc.x / 32 - client.localPlayer.x / 32;
+					int i4 = npc.y / 32 - client.localPlayer.y / 32;
+					method81(client.mapArrow, k1, i4);
 				}
 			}
 			if(client.hintType == 2) {
-				int x = ((client.anInt934 - client.baseX) * 4 + 2) - client.localPlayer.x / 32;
-				int y = ((client.anInt935 - client.baseY) * 4 + 2) - client.localPlayer.y / 32;
-				method81(client.mapArrow, x, y);
+				int l1 = ((client.anInt934 - client.baseX) * 4 + 2) - client.localPlayer.x / 32;
+				int j4 = ((client.anInt935 - client.baseY) * 4 + 2) - client.localPlayer.y / 32;
+				method81(client.mapArrow, l1, j4);
 			}
 			if(client.hintType == 10 && client.anInt933 >= 0 && client.anInt933 < client.playerList.length) {
 				Player player = client.playerList[client.anInt933];
 				if(player != null) {
-					int x = player.x / 32 - client.localPlayer.x / 32;
-					int y = player.y / 32 - client.localPlayer.y / 32;
-					method81(client.mapArrow, x, y);
+					int i2 = player.x / 32 - client.localPlayer.x / 32;
+					int k4 = player.y / 32 - client.localPlayer.y / 32;
+					method81(client.mapArrow, i2, k4);
 				}
 			}
 		}
 		if(client.walkX != 0) {
-			int x = (client.walkX * 4 + 2) - client.localPlayer.x / 32;
-			int y = (client.walkY * 4 + 2) - client.localPlayer.y / 32;
-			markMinimap(client.mapFlag, x, y);
+			int j2 = (client.walkX * 4 + 2) - client.localPlayer.x / 32;
+			int l4 = (client.walkY * 4 + 2) - client.localPlayer.y / 32;
+			markMinimap(client.mapFlag, j2, l4);
 		}
 		Rasterizer2D.removeClip();
-		ImageCache.get(84).drawImage(xOffset + 18, 0);
-		ImageCache.get(83).drawImage(xOffset + 13, 0);
-		ImageCache.get(83).drawImage(xOffset + 140, 125);
-		ImageCache.get(238).drawImage(xOffset + 144, 129);
-		ImageCache.get(1700).drawAffineTransformedImage(xOffset + 18, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
-		Rasterizer2D.fillRectangle(xOffset + 97, 78, 3, 3, 0xffffff);
+		ImageCache.get(1925).drawImage(xOffset, -2);
+		ImageCache.get(1700).drawAffineTransformedImage(xOffset + 5, 3, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
 		if(Config.DRAW_ORBS.isOn()) {
 			displayOrb(client.windowWidth - 209, 38, Constants.ORB_HEALTH, false);
 			displayOrb(client.windowWidth - 212, 72, Constants.ORB_PRAYER, true);
 			displayOrb(client.windowWidth - 200, 106, Constants.ORB_RUN, true);
 			displayOrb(client.windowWidth - 177, 140, Constants.ORB_SUMMONING, true);
 		}
+		Rasterizer2D.fillRectangle(xOffset + 97, 78, 3, 3, 0xffffff);
 		client.gameGraphics.setCanvas();
 	}
-
+	
 	@Override
 	public void buildInventory() {
 		if(client.mouseWheelAmt != 0 && client.olderTabInterfaces[client.invTab] != -1) {
@@ -441,7 +435,7 @@ public class ResizableUI_508 extends ResizableUI {
 			}
 		}
 	}
-
+	
 	@Override
 	public void updateInventory() {
 		int xOffset = client.windowWidth - 197;
@@ -472,65 +466,36 @@ public class ResizableUI_508 extends ResizableUI {
 			}
 		}
 	}
-
+	
 	@Override
 	public Point getOnScreenWidgetOffsets() {
 		return super.getOnScreenWidgetOffsets();
 	}
-
+	
 	@Override
 	public boolean allowScene() {
-		if(client.showChat && !(client.messagePromptRaised || client.bankSearching || client.inputDialogState > 0 || client.chatBoxStatement != null || client.forcedChatWidgetId != -1 || client.chatWidgetId != -1)) {
-			if(client.mouseDragButton != 1) {
-				chatboxResizeClickY = -1;
-			} else if(chatboxResizeClickY == -1 && client.clickX >= 256 && client.clickY >= client.windowHeight - chatboxHeight - 59 &&
-					client.clickX <= 264 && client.clickY <= client.windowHeight - chatboxHeight - 50) {
-				chatboxResizeFromY = chatboxHeight;
-				chatboxResizeClickY = client.clickY;
-			}
-			if(chatboxResizeClickY != -1) {
-				chatboxHeight = chatboxResizeFromY + (chatboxResizeClickY - client.mouseY);
-				if(chatboxHeight < 114) {
-					chatboxHeight = 114;
-				}
-				return false;
-			}
-		}
-		if(client.mouseX < 0 || client.mouseY < 0) {
-			return false;
-		}
-		if(client.mouseX >= (client.windowWidth < 1000 ? client.windowWidth - 240 : client.windowWidth - 480) && client.mouseY >= (client.windowWidth < 1000 ? client.windowHeight - 72 : client.windowHeight - 36)) {
+		if(client.mouseX >= (client.windowWidth < 980 ? client.windowWidth - 231 : client.windowWidth - 462) && client.mouseY >= (client.windowWidth < 980 ? client.windowHeight - 72 : client.windowHeight - 36)) {
 			return false;
 		}
 		if(client.mouseX >= client.windowWidth - 204 && client.mouseY >= (client.windowWidth < 980 ? client.windowHeight - 346 : client.windowHeight - 310) && client.showTab) {
 			return false;
 		}
-		if(client.mouseX <= 518 & client.mouseY >= client.windowHeight - 22) {
+		if(client.mouseX >= 0 && client.mouseX <= 518 & client.mouseY >= client.windowHeight - 22) {
 			return false;
 		}
-		if(client.messagePromptRaised || client.bankSearching || client.inputDialogState > 0 || client.chatBoxStatement != null || client.forcedChatWidgetId != -1 || client.chatWidgetId != -1) {
-			if(client.mouseX <= 518 & client.mouseY >= client.windowHeight - 166) {
-				return false;
-			}
-		} else if(client.showChat) {
-			if(client.mouseX <= 518 && client.mouseY >= client.windowHeight - chatboxHeight - 48) {
-				return false;
-			} else if(client.mouseX >= 256 && client.mouseY >= client.windowHeight - chatboxHeight - 59 &&
-					client.mouseX <= 264 && client.mouseY <= client.windowHeight - chatboxHeight - 50) {
-				return false;
-
-			}
-		}
-		if(client.mouseY <= 165 & client.mouseX >= client.windowWidth - 182) {
+		if(client.mouseX >= 0 && client.mouseX <= 518 & client.mouseY >= client.windowHeight - 165 && (client.showChat || client.messagePromptRaised || client.inputDialogState > 0 || client.chatBoxStatement != null || client.forcedChatWidgetId != -1 || client.chatWidgetId != -1)) {
 			return false;
 		}
-		return true;
+		if(client.mouseY >= 0 && client.mouseY <= 165 & client.mouseX >= client.windowWidth - 182) {
+			return false;
+		}
+		return client.mouseX >= 0 && client.mouseY >= 0;
 	}
-
+	
 	@Override
 	public void buildSceneOverlay() {
 	}
-
+	
 	public void method81(BitmapImage icon, int x, int y) {
 		final int l = x * x + y * y;
 		if(l > 4225 && l < 0x15f90) {
@@ -550,8 +515,10 @@ public class ResizableUI_508 extends ResizableUI {
 			markMinimap(icon, xOffset + x, y);
 		}
 	}
-
+	
 	public void markMinimap(BitmapImage icon, int x, int y) {
+		if(icon == null)
+			return;
 		final int rotation = client.cameraAngleX + client.minimapAngle & 0x7ff;
 		final int z = x * x + y * y;
 		if(z > 6400) {
@@ -566,6 +533,58 @@ public class ResizableUI_508 extends ResizableUI {
 		int xOffset = client.windowWidth - 182;
 		int yOffset = -4;
 		icon.drawImage(94 + fx - icon.imageOriginalWidth / 2 + xOffset + 4, 83 - fy - icon.imageOriginalHeight / 2 - 8 + 8 + yOffset);
+	}
+	
+	/**
+	 * Displays the channel buttons.
+	 */
+	private void displayChannelButtons() {
+		int y = 0;
+		y = client.windowHeight - 165;
+		ImageCache.get(68).drawImage(5, y + 142);
+		String text[] = {"On", "Friends", "Off", "Hide"};
+		int textColor[] = {65280, 0xffff00, 0xff0000, 65535};
+		for(int i = 0; i <= 5; i++) {
+			if(client.selectedChannelButton == i && (client.showChat)) {
+				client.chatButtons[1].drawImage(5 + 66 * i, y + 142);
+			}
+			if(i == client.hoveredChannelButton) {
+				if(client.hoveredChannelButton == client.selectedChannelButton && (client.showChat)) {
+					client.chatButtons[2].drawImage(5 + 66 * i, y + 142);
+				} else {
+					client.chatButtons[0].drawImage(5 + 66 * i, y + 142);
+				}
+			}
+		}
+		if(client.hoveredChannelButton == 6) {
+			client.chatButtons[3].drawImage(404, y + 142);
+		}
+		client.smallFont.drawLeftAlignedEffectString("Report Abuse", 425, y + 157, 0xffffff, true);
+		client.smallFont.drawLeftAlignedEffectString("All", 26, y + 157, 0xffffff, true);
+		client.smallFont.drawLeftAlignedEffectString("Game", 86, y + 157, 0xffffff, true);
+		client.smallFont.drawLeftAlignedEffectString("Public", 150, y + 152, 0xffffff, true);
+		client.smallFont.drawLeftAlignedEffectString("Private", 212, y + 152, 0xffffff, true);
+		client.smallFont.drawLeftAlignedEffectString("Clan", 286, y + 152, 0xffffff, true);
+		client.smallFont.drawLeftAlignedEffectString("Trade", 349, y + 152, 0xffffff, true);
+		client.smallFont.drawCenteredEffectString(text[client.publicChatMode], 164, y + 163, textColor[client.publicChatMode], true);
+		client.smallFont.drawCenteredEffectString(text[client.privateChatMode], 230, y + 163, textColor[client.privateChatMode], true);
+		client.smallFont.drawCenteredEffectString(text[client.clanChatMode], 296, y + 163, textColor[client.clanChatMode], true);
+		client.smallFont.drawCenteredEffectString(text[client.tradeMode], 362, y + 163, textColor[client.tradeMode], true);
+	}
+	
+	/**
+	 * Displays the orb.
+	 */
+	private void displayOrb(int x, int y, int orb, boolean hover) {
+		ImageCache.get(hover && client.mouseInRegion(x, y, x + 57, y + 33) ? 1922 : 1921).drawImage(x, y);
+		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 15, y + 26, OrbHandler.getColor(orb), true);
+		ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 73 : orb == Constants.ORB_HEALTH && OrbHandler.poisoned ? 78 : 56 + orb).drawImage(x + 27, y + 3);
+		Rasterizer2D.setClip(x + 27, y + 3, x + 58, y + 3 + OrbHandler.getFill(orb, 27));
+		ImageCache.get(60).drawImage(x + 27, y + 3);
+		Rasterizer2D.removeClip();
+		if(orb != Constants.ORB_HEALTH || OrbHandler.getPercent(orb) > 20 || OrbHandler.getPercent(orb) < 1 || client.loopCycle % 20 > 10) {
+			ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).drawImage(x + 41 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageWidth / 2, y + 17 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageHeight / 2);
+		}
 	}
 	
 	/**
@@ -589,7 +608,7 @@ public class ResizableUI_508 extends ResizableUI {
 			}
 		}
 	}
-
+	
 	/**
 	 * Displays the side icons.
 	 */
@@ -614,62 +633,6 @@ public class ResizableUI_508 extends ResizableUI {
 					client.sideIcons[i].drawImage(xOffset + client.windowWidth - 462 + 33 * i, yOffset + client.windowHeight - 36);
 				}
 			}
-		}
-	}
-
-	/**
-	 * Displays the chat channel buttons.
-	 */
-	private void displayChannelButtons() {
-		int y;
-		y = client.windowHeight - 165;
-		ImageCache.get(65).drawImage(5, y + 142);
-		String text[] = {"On", "Friends", "Off", "Hide"};
-		int textColor[] = {65280, 0xffff00, 0xff0000, 65535};
-		for(int i = 0; i <= 5; i++) {
-			if(client.selectedChannelButton == i && (client.showChat)) {
-				client.chatButtons[1].drawImage(5 + 57 * i, y + 142);
-			}
-			if(i == client.hoveredChannelButton) {
-				if(client.hoveredChannelButton == client.selectedChannelButton && (client.showChat)) {
-					client.chatButtons[2].drawImage(5 + 57 * i, y + 142);
-				} else {
-					client.chatButtons[0].drawImage(5 + 57 * i, y + 142);
-				}
-			}
-		}
-		if(client.hoveredChannelButton == 6) {
-			client.chatButtons[3].drawImage(404, y + 143);
-		}
-		client.smallFont.drawLeftAlignedEffectString("Report Abuse", 425, y + 157, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("All", 26, y + 157, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Game", 78, y + 152, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Public", 132, y + 152, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Private", 187, y + 152, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Clan", 249, y + 152, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Trade", 304, y + 152, 0xffffff, true);
-		client.smallFont.drawCenteredEffectString("Assist", 374, y + 152, 0xffffff, true);
-		client.smallFont.drawCenteredEffectString("On", 90, y + 163, 65280, true);
-		client.smallFont.drawCenteredEffectString("Disabled", 374, y + 163, 0xff0000, true);
-		client.smallFont.drawCenteredEffectString(text[client.publicChatMode], 147, y + 163, textColor[client.publicChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.privateChatMode], 205, y + 163, textColor[client.privateChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.clanChatMode], 260, y + 163, textColor[client.clanChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.tradeMode], 318, y + 163, textColor[client.tradeMode], true);
-		//game.smallFont.drawCenteredString(374, y + 163, text[game.duelMode], tetColor[game.duelMode], true);
-	}
-
-	/**
-	 * Displays the orb.
-	 */
-	private void displayOrb(int x, int y, int orb, boolean hover) {
-		ImageCache.get(hover && client.mouseInRegion(x, y, x + 57, y + 33) ? 51 : 50).drawImage(x, y);
-		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 15, y + 26, OrbHandler.getColor(orb), true);
-		ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 73 : orb == Constants.ORB_HEALTH && OrbHandler.poisoned ? 78 : 56 + orb).drawImage(x + 27, y + 3);
-		Rasterizer2D.setClip(x, y, x + 58, y + 3 + OrbHandler.getFill(orb, 27));
-		ImageCache.get(60).drawImage(x + 27, y + 3);
-		Rasterizer2D.removeClip();
-		if(orb != Constants.ORB_HEALTH || OrbHandler.getPercent(orb) > 20 || OrbHandler.getPercent(orb) < 1 || client.loopCycle % 20 > 10) {
-			ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).drawImage(x + 41 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageWidth / 2, y + 17 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageHeight / 2);
 		}
 	}
 }

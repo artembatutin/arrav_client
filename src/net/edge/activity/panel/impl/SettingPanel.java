@@ -64,18 +64,16 @@ public class SettingPanel extends Panel {
 		else if(client.leftClickInRegion(x + 150, y + 312, x + 192, y + 327))
 			Config.TEN_X_HITS.toggle();
 		else if(client.leftClickInRegion(x + 220, y + 188, x + 246, y + 203))
-			client.uiRenderer.switchRevision(317);
-		else if(client.leftClickInRegion(x + 260, y + 188, x + 288, y + 203))
 			client.uiRenderer.switchRevision(459);
-		else if(client.leftClickInRegion(x + 301, y + 188, x + 326, y + 203))
+		else if(client.leftClickInRegion(x + 260, y + 188, x + 288, y + 203))
 			client.uiRenderer.switchRevision(474);
-		else if(client.leftClickInRegion(x + 341, y + 188, x + 371, y + 203))
-			client.uiRenderer.switchRevision(508);
-		else if(client.leftClickInRegion(x + 381, y + 188, x + 409, y + 203))
+		else if(client.leftClickInRegion(x + 301, y + 188, x + 326, y + 203))
 			client.uiRenderer.switchRevision(525);
-		else if(client.leftClickInRegion(x + 421, y + 188, x + 450, y + 203))
+		else if(client.leftClickInRegion(x + 341, y + 188, x + 371, y + 203))
 			client.uiRenderer.switchRevision(562);
-		else if(client.leftClickInRegion(x + 392, y + 166, x + 436, y + 179)) {
+		else if(client.leftClickInRegion(x + 381, y + 188, x + 418, y + 203))
+			client.uiRenderer.switchRevision(2);
+		else if(client.leftClickInRegion(x + 431, y + 188, x + 476, y + 203)) {
 			if(client.uiRenderer.isResizableOrFull()) {
 				client.uiRenderer.switchRevision(1);
 			} else {
@@ -148,11 +146,18 @@ public class SettingPanel extends Panel {
 			ImageCache.get(13).drawAlphaImage(x + 430, y + 60);
 		
 		/* Game-frames */
-		drawSection(x + 215, y + 130, 80, 285, "User Interfaces");
-		fancyFont.drawCenteredEffectString("Selected: " + (client.uiRenderer.id == 1 ? "Custom" : client.uiRenderer.id), x + 330, y + 175, 0xFFFFFF, true);
-		drawTitleButton("Custom", x + 390, y + 162, 0xDB6147);
-		for(int id = 0; id < Constants.SELECTABLE_GAMEFRAMES.length - 1; id++)
-			drawTitleButton(Constants.SELECTABLE_GAMEFRAMES[id] + "", x + 220 + (id * 40), y + 185, 0xDBB047);
+		drawSection(x + 215, y + 130, 80, 285, "Game-Frame");
+		fancyFont.drawCenteredEffectString("Selected: " + (client.uiRenderer.id == 1 ? "Custom" : (client.uiRenderer.id == 2 ? "OSRS" : client.uiRenderer.id)), x + 355, y + 175, 0xFFFFFF, true);
+		for(int id = 0; id < Constants.SELECTABLE_GAMEFRAMES.length; id++) {
+			int frame = Constants.SELECTABLE_GAMEFRAMES[id];
+			if(frame == 1) {
+				drawTitleButton("Custom", x + 220 + (id * 42), y + 185, 0xDB6147);
+			} else if (frame == 2) {
+				drawTitleButton("OSRS", x + 220 + (id * 40), y + 185, 0x9a7155);
+			} else {
+				drawTitleButton(Constants.SELECTABLE_GAMEFRAMES[id] + "", x + 220 + (id * 40), y + 185, 0xDBB047);
+			}
+		}
 		
 		/* Menus */
 		drawSection(x + 215, y + 220, 110, 285, "Preferences");

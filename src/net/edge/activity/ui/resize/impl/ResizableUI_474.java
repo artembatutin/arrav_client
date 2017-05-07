@@ -1,7 +1,10 @@
 package net.edge.activity.ui.resize.impl;
 
+import net.edge.Config;
+import net.edge.Constants;
 import net.edge.activity.ui.UIComponent;
 import net.edge.activity.ui.resize.ResizableUI;
+import net.edge.activity.ui.util.OrbHandler;
 import net.edge.cache.unit.ImageCache;
 import net.edge.cache.unit.Interface;
 import net.edge.cache.unit.NPCType;
@@ -240,6 +243,17 @@ public class ResizableUI_474 extends ResizableUI {
 			client.menuItemName[1] = "Face North";
 			client.menuItemCode[1] = 1014;
 			client.menuPos = 2;
+		} else if(Config.DRAW_ORBS.isOn() && client.mouseX > client.windowWidth - 202 && client.mouseX < client.windowWidth - 142 && client.mouseY > 106 && client.mouseY < 139) {
+			client.menuItemName[1] = "Run";
+			client.menuItemCode[1] = 1051;
+			client.menuPos = 2;
+		} else if(Config.DRAW_ORBS.isOn() && client.mouseInRegion(client.windowWidth - 212, 72, client.windowWidth - 155, 105)) {
+			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
+			client.menuItemCode[client.menuPos] = 1053;
+			client.menuPos++;
+			client.menuItemName[client.menuPos] = "Select quick prayers";
+			client.menuItemCode[client.menuPos] = 1054;
+			client.menuPos++;
 		}
 	}
 
@@ -254,10 +268,14 @@ public class ResizableUI_474 extends ResizableUI {
 		}
 		int xOffset = client.windowWidth - 182;
 		if(client.minimapOverlay == 2) {
-			ImageCache.get(84).drawImage(xOffset + 18, 0);
-			ImageCache.get(85).drawImage(xOffset + 23, 5);
-			ImageCache.get(83).drawImage(xOffset - 1, 0);
-			ImageCache.get(1700).drawAffineTransformedImage(xOffset + 4, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
+			ImageCache.get(1925).drawImage(xOffset, -2);
+			ImageCache.get(1700).drawAffineTransformedImage(xOffset + 5, 3, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
+			if(Config.DRAW_ORBS.isOn()) {
+				displayOrb(client.windowWidth - 209, 38, Constants.ORB_HEALTH, false);
+				displayOrb(client.windowWidth - 212, 72, Constants.ORB_PRAYER, true);
+				displayOrb(client.windowWidth - 200, 106, Constants.ORB_RUN, true);
+				displayOrb(client.windowWidth - 177, 140, Constants.ORB_SUMMONING, true);
+			}
 			return;
 		}
 		int rotation = client.cameraAngleX + client.minimapAngle & 0x7ff;
@@ -349,9 +367,14 @@ public class ResizableUI_474 extends ResizableUI {
 			markMinimap(client.mapFlag, j2, l4);
 		}
 		Rasterizer2D.removeClip();
-		ImageCache.get(84).drawImage(xOffset + 18, 0);
-		ImageCache.get(83).drawImage(xOffset - 1, 0);
-		ImageCache.get(1700).drawAffineTransformedImage(xOffset + 4, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
+		ImageCache.get(1925).drawImage(xOffset, -2);
+		ImageCache.get(1700).drawAffineTransformedImage(xOffset + 5, 3, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
+		if(Config.DRAW_ORBS.isOn()) {
+			displayOrb(client.windowWidth - 209, 38, Constants.ORB_HEALTH, false);
+			displayOrb(client.windowWidth - 212, 72, Constants.ORB_PRAYER, true);
+			displayOrb(client.windowWidth - 200, 106, Constants.ORB_RUN, true);
+			displayOrb(client.windowWidth - 177, 140, Constants.ORB_SUMMONING, true);
+		}
 		Rasterizer2D.fillRectangle(xOffset + 97, 78, 3, 3, 0xffffff);
 		client.gameGraphics.setCanvas();
 	}
@@ -494,6 +517,8 @@ public class ResizableUI_474 extends ResizableUI {
 	}
 
 	public void markMinimap(BitmapImage icon, int x, int y) {
+		if(icon == null)
+			return;
 		final int rotation = client.cameraAngleX + client.minimapAngle & 0x7ff;
 		final int z = x * x + y * y;
 		if(z > 6400) {
@@ -507,8 +532,7 @@ public class ResizableUI_474 extends ResizableUI {
 		final int fy = y * cos - x * sin >> 16;
 		int xOffset = client.windowWidth - 182;
 		int yOffset = -4;
-		if(icon != null)
-			icon.drawImage(94 + fx - icon.imageOriginalWidth / 2 + xOffset + 4, 83 - fy - icon.imageOriginalHeight / 2 - 8 + 8 + yOffset);
+		icon.drawImage(94 + fx - icon.imageOriginalWidth / 2 + xOffset + 4, 83 - fy - icon.imageOriginalHeight / 2 - 8 + 8 + yOffset);
 	}
 
 	/**
@@ -546,6 +570,21 @@ public class ResizableUI_474 extends ResizableUI {
 		client.smallFont.drawCenteredEffectString(text[client.privateChatMode], 230, y + 163, textColor[client.privateChatMode], true);
 		client.smallFont.drawCenteredEffectString(text[client.clanChatMode], 296, y + 163, textColor[client.clanChatMode], true);
 		client.smallFont.drawCenteredEffectString(text[client.tradeMode], 362, y + 163, textColor[client.tradeMode], true);
+	}
+	
+	/**
+	 * Displays the orb.
+	 */
+	private void displayOrb(int x, int y, int orb, boolean hover) {
+		ImageCache.get(hover && client.mouseInRegion(x, y, x + 57, y + 33) ? 1922 : 1921).drawImage(x, y);
+		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 15, y + 26, OrbHandler.getColor(orb), true);
+		ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 73 : orb == Constants.ORB_HEALTH && OrbHandler.poisoned ? 78 : 56 + orb).drawImage(x + 27, y + 3);
+		Rasterizer2D.setClip(x + 27, y + 3, x + 58, y + 3 + OrbHandler.getFill(orb, 27));
+		ImageCache.get(60).drawImage(x + 27, y + 3);
+		Rasterizer2D.removeClip();
+		if(orb != Constants.ORB_HEALTH || OrbHandler.getPercent(orb) > 20 || OrbHandler.getPercent(orb) < 1 || client.loopCycle % 20 > 10) {
+			ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).drawImage(x + 41 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageWidth / 2, y + 17 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageHeight / 2);
+		}
 	}
 
 	/**

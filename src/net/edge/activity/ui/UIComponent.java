@@ -15,6 +15,6 @@ public enum UIComponent {
 
 	SCENE,
 
-	PLAYER_BAR;
+	PLAYER_BAR
 
 }

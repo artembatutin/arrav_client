@@ -34,7 +34,6 @@ import net.edge.util.string.StringEncoder;
 import net.edge.activity.Activity;
 import net.edge.activity.panel.impl.*;
 import net.edge.activity.ui.UI;
-import net.edge.activity.ui.UICache;
 import net.edge.activity.ui.fixed.impl.*;
 import net.edge.activity.ui.resize.impl.*;
 import net.edge.activity.ui.util.SkillOrbHandler;
@@ -120,7 +119,6 @@ public class Client extends ClientEngine {
 	private static final long serialVersionUID = -7411772866641918319L;
 	// Non-static final fields.
 	private final CRC32 crc;
-	public final UICache gameframes = new UICache();
 	public final Interface chatWidget;
 	public final PaletteImage[] modIcons;
 	public final String[] chatAuthor;
@@ -608,19 +606,6 @@ public class Client extends ClientEngine {
 		cameraOffsetXChange = 2;
 		bigX = new int[4000];
 		bigY = new int[4000];
-		gameframes.register(317, new FixedUI_317());
-		gameframes.register(459, new FixedUI_459());
-		gameframes.register(474, new FixedUI_474());
-		gameframes.register(508, new FixedUI_508());
-		gameframes.register(525, new FixedUI_525());
-		gameframes.register(562, new FixedUI_562());
-		gameframes.register(317, new ResizableUI_317());
-		gameframes.register(459, new ResizableUI_459());
-		gameframes.register(474, new ResizableUI_474());
-		gameframes.register(508, new ResizableUI_508());
-		gameframes.register(525, new ResizableUI_525());
-		gameframes.register(562, new ResizableUI_562());
-		gameframes.register(1, new ResizableUI_CUS());
 	}
 
 	@Override

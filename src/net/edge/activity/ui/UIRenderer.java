@@ -3,7 +3,9 @@ package net.edge.activity.ui;
 import net.edge.Client;
 import net.edge.Constants;
 import net.edge.activity.ui.fixed.FixedUI;
+import net.edge.activity.ui.fixed.impl.*;
 import net.edge.activity.ui.resize.ResizableUI;
+import net.edge.activity.ui.resize.impl.*;
 
 public class UIRenderer {
 
@@ -38,8 +40,8 @@ public class UIRenderer {
 	public UIRenderer(Client game, int id) {
 		this.client = game;
 		this.id = id;
-		fixed = game.gameframes.getFixed(id);
-		resizable = game.gameframes.getResizable(id);
+		fixed = getFixed(id);
+		resizable = getResizable(id);
 	}
 
 	/**
@@ -136,8 +138,47 @@ public class UIRenderer {
 	 */
 	public void switchRevision(int id) {
 		this.id = id;
-		fixed = client.gameframes.getFixed(id);
-		resizable = client.gameframes.getResizable(id);
+		fixed = getFixed(id);
+		resizable = getResizable(id);
+	}
+	
+	/**
+	 * Get the fixed game frame mode revision.
+	 */
+	public FixedUI getFixed(int id) {
+		if(id == 459)
+			return new FixedUI_459();
+		if(id == 474)
+			return new FixedUI_474();
+		if(id == 525)
+			return new FixedUI_525();
+		if(id == 562)
+			return new FixedUI_562();
+		if(id == 2)
+			return new FixedUI_OS();
+		if(this.id != 1)
+			this.id = 562;
+		return new FixedUI_562();
+	}
+	
+	/**
+	 * Get the resizable game frame mode revision.
+	 */
+	public ResizableUI getResizable(int id) {
+		if(id == 459)
+			return new ResizableUI_459();
+		if(id == 474)
+			return new ResizableUI_474();
+		if(id == 525)
+			return new ResizableUI_525();
+		if(id == 562)
+			return new ResizableUI_562();
+		if(id == 1)
+			return new ResizableUI_CUS();
+		if(id == 2)
+			return new ResizableUI_OS();
+		//this.id = 562;
+		return new ResizableUI_562();
 	}
 
 }

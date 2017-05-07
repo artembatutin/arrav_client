@@ -1788,9 +1788,15 @@ public class GameActivity extends Activity {
 		client.method70();
 		if(client.combatMultiwayMode == 1) {
 			if(client.uiRenderer.isResizableOrFull()) {
-				ImageCache.get(15).drawImage(client.windowWidth - 35, 173);
+				if(client.uiRenderer.getId() < 500 && client.uiRenderer.getId() != 1)
+					ImageCache.get(1926).drawImage(client.windowWidth - 30, 140);
+				else
+					ImageCache.get(15).drawImage(client.windowWidth - 35, 149);
 			} else {
-				ImageCache.get(15).drawImage(472, 300);
+				if(client.uiRenderer.getId() < 500 && client.uiRenderer.getId() != 1)
+					ImageCache.get(1926).drawImage(485, 310);
+				else
+					ImageCache.get(15).drawImage(472, 300);
 			}
 		}
 		if(client.systemUpdateTimer != 0) {

@@ -372,8 +372,6 @@ public class ResizableUI_525 extends ResizableUI {
 		Rasterizer2D.removeClip();
 		ImageCache.get(84).drawImage(xOffset + 18, 0);
 		ImageCache.get(83).drawImage(xOffset + 13, 0);
-		ImageCache.get(83).drawImage(xOffset + 140, 125);
-		ImageCache.get(239).drawImage(xOffset + 144, 129);
 		ImageCache.get(1700).drawAffineTransformedImage(xOffset + 18, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
 		Rasterizer2D.fillRectangle(xOffset + 97, 78, 3, 3, 0xffffff);
 		if(Config.DRAW_ORBS.isOn()) {
@@ -552,6 +550,8 @@ public class ResizableUI_525 extends ResizableUI {
 	}
 
 	public void markMinimap(BitmapImage icon, int x, int y) {
+		if(icon == null)
+			return;
 		final int rotation = client.cameraAngleX + client.minimapAngle & 0x7ff;
 		final int z = x * x + y * y;
 		if(z > 6400) {

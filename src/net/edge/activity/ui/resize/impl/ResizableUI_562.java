@@ -560,6 +560,8 @@ public class ResizableUI_562 extends ResizableUI {
 	}
 
 	public void markMinimap(BitmapImage icon, int x, int y) {
+		if(icon == null)
+			return;
 		final int rotation = client.cameraAngleX + client.minimapAngle & 0x7ff;
 		final int z = x * x + y * y;
 		if(z > 6400) {
@@ -573,8 +575,7 @@ public class ResizableUI_562 extends ResizableUI {
 		final int fy = y * cos - x * sin >> 16;
 		int xOffset = client.windowWidth - 182;
 		int yOffset = -4;
-		if(icon != null)
-			icon.drawImage(94 + fx - icon.imageOriginalWidth / 2 + xOffset + 4, 83 - fy - icon.imageOriginalHeight / 2 - 8 + 8 + yOffset);
+		icon.drawImage(94 + fx - icon.imageOriginalWidth / 2 + xOffset + 4, 83 - fy - icon.imageOriginalHeight / 2 - 8 + 8 + yOffset);
 	}
 
 	/**

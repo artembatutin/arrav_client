@@ -463,6 +463,8 @@ public class FixedUI_562 extends FixedUI {
 	}
 
 	public void markMinimap(BitmapImage icon, int x, int y) {
+		if(icon == null)
+			return;
 		final int rotation = client.cameraAngleX + client.minimapAngle & 0x7ff;
 		final int z = x * x + y * y;
 		if(z > 6400) {
@@ -474,8 +476,7 @@ public class FixedUI_562 extends FixedUI {
 		cos = (cos << 8) / (client.minimapZoom + 256);
 		final int fx = y * sin + x * cos >> 16;
 		final int fy = y * cos - x * sin >> 16;
-		if(icon != null)
-			icon.drawImage(94 + fx - icon.imageOriginalWidth / 2 + 14, 83 - fy - icon.imageOriginalHeight / 2);
+		icon.drawImage(94 + fx - icon.imageOriginalWidth / 2 + 14, 83 - fy - icon.imageOriginalHeight / 2);
 	}
 
 	/**

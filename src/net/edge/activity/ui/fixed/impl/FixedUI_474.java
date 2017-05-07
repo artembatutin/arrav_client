@@ -1,7 +1,10 @@
 package net.edge.activity.ui.fixed.impl;
 
+import net.edge.Config;
+import net.edge.Constants;
 import net.edge.activity.ui.fixed.FixedUI;
 import net.edge.activity.ui.UIComponent;
+import net.edge.activity.ui.util.OrbHandler;
 import net.edge.cache.unit.ImageCache;
 import net.edge.cache.unit.Interface;
 import net.edge.cache.unit.NPCType;
@@ -223,6 +226,12 @@ public class FixedUI_474 extends FixedUI {
 			ImageCache.get(69).drawImage(26, 4);
 			ImageCache.get(40).drawImage(0, 4);
 			ImageCache.get(1700).drawAffineTransformedImage(26, 4, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
+			if(Config.DRAW_ORBS.isOn()) {
+				displayOrb(-2, 42, Constants.ORB_HEALTH, false);
+				displayOrb(-2, 87, Constants.ORB_PRAYER, true);
+				displayOrb(24, 122, Constants.ORB_RUN, true);
+				displaySpecialOrb(178, 117, Constants.ORB_SUMMONING, true);
+			}
 			client.mapGraphics.drawGraphics(519, 0, client.graphics);
 			client.gameGraphics.setCanvas();
 			return;
@@ -321,6 +330,12 @@ public class FixedUI_474 extends FixedUI {
 		ImageCache.get(70).drawImage(0, 0);
 		ImageCache.get(69).drawImage(26, 4);
 		ImageCache.get(40).drawImage(0, 4);
+		if(Config.DRAW_ORBS.isOn()) {
+			displayOrb(-2, 42, Constants.ORB_HEALTH, false);
+			displayOrb(-2, 87, Constants.ORB_PRAYER, true);
+			displayOrb(24, 122, Constants.ORB_RUN, true);
+			displaySpecialOrb(178, 117, Constants.ORB_SUMMONING, true);
+		}
 		if(client.menuOpened) {
 			client.gameActivity.drawer.drawMenu(-519, 0, false);
 		}
@@ -446,6 +461,8 @@ public class FixedUI_474 extends FixedUI {
 	}
 
 	public void markMinimap(BitmapImage icon, int x, int y) {
+		if(icon == null)
+			return;
 		final int rotation = client.cameraAngleX + client.minimapAngle & 0x7ff;
 		final int z = x * x + y * y;
 		if(z > 6400) {
@@ -457,8 +474,7 @@ public class FixedUI_474 extends FixedUI {
 		cos = (cos << 8) / (client.minimapZoom + 256);
 		final int fx = y * sin + x * cos >> 16;
 		final int fy = y * cos - x * sin >> 16;
-		if(icon != null)
-			icon.drawImage(124 + fx - (icon.imageOriginalWidth >> 1), 83 - fy - (icon.imageOriginalHeight >> 1));
+		icon.drawImage(124 + fx - (icon.imageOriginalWidth >> 1), 83 - fy - (icon.imageOriginalHeight >> 1));
 	}
 
 	/**
@@ -493,6 +509,36 @@ public class FixedUI_474 extends FixedUI {
 		client.smallFont.drawCenteredEffectString(text[client.privateChatMode], 230, 163, textColor[client.privateChatMode], true);
 		client.smallFont.drawCenteredEffectString(text[client.clanChatMode], 296, 163, textColor[client.clanChatMode], true);
 		client.smallFont.drawCenteredEffectString(text[client.tradeMode], 362, 163, textColor[client.tradeMode], true);
+	}
+	
+	/**
+	 * Displays orbs components.
+	 */
+	private void displayOrb(int x, int y, int orb, boolean hover) {
+		ImageCache.get(hover && client.mouseInRegion(x + 519, y + 4, x + 576, y + 37) ? 1922 : 1921).drawImage(x, y);
+		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 15, y + 26, OrbHandler.getColor(orb), true);
+		ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 73 : orb == Constants.ORB_HEALTH && OrbHandler.poisoned ? 78 : 56 + orb).drawImage(x + 27, y + 3);
+		Rasterizer2D.setClip(x + 27, y + 3, x + 54, y + 3 + OrbHandler.getFill(orb, 27));
+		ImageCache.get(60).drawImage(x + 27, y + 3);
+		Rasterizer2D.removeClip();
+		if(orb != Constants.ORB_HEALTH || OrbHandler.getPercent(orb) > 20 || OrbHandler.getPercent(orb) < 1 || client.loopCycle % 20 > 10) {
+			ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).drawImage(x + 41 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageWidth / 2, y + 17 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageHeight / 2);
+		}
+	}
+	
+	/**
+	 * Displays special orb component.
+	 */
+	private void displaySpecialOrb(int x, int y, int orb, boolean hover) {
+		ImageCache.get(hover && client.mouseInRegion(x + 519, y + 4, x + 576, y + 37) ? 1924 : 1923).drawImage(x, y);
+		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 43, y + 26, OrbHandler.getColor(orb), true);
+		ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 73 : orb == Constants.ORB_HEALTH && OrbHandler.poisoned ? 78 : 56 + orb).drawImage(x + 4, y + 4);
+		Rasterizer2D.setClip(x + 3, y + 3, x + 30, y + 3 + OrbHandler.getFill(orb, 27));
+		ImageCache.get(60).drawImage(x + 3, y + 3);
+		Rasterizer2D.removeClip();
+		if(orb != Constants.ORB_HEALTH || OrbHandler.getPercent(orb) > 20 || OrbHandler.getPercent(orb) < 1 || client.loopCycle % 20 > 10) {
+			ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).drawImage(x + 17 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageWidth / 2, y + 17 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageHeight / 2);
+		}
 	}
 
 	/**

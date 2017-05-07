@@ -129,10 +129,10 @@ public class CacheUnpacker {
 		};
 		Config.load();
 		message = "Preparing packing modules.";
-		client.repackCacheIndex(1);
+		//client.repackCacheIndex(1);
 		//client.repackCacheIndex(2);
 		//client.repackCacheIndex(3);
-		//client.repackCacheIndex(4);
+		client.repackCacheIndex(4);
 		//client.repackCacheIndex(5);
 		//client.repackCacheIndex(6);
 		//client.repackCacheIndex(7);
