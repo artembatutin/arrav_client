@@ -7124,8 +7124,8 @@ public class Client extends ClientEngine {
 						if(chatInput.equals("::custom")) {
 							uiRenderer.switchRevision(1);
 						}
-						if(chatInput.equals("::317")) {
-							uiRenderer.switchRevision(317);
+						if(chatInput.equals("::osrs")) {
+							uiRenderer.switchRevision(2);
 						}
 						if(chatInput.equals("::459")) {
 							uiRenderer.switchRevision(459);
@@ -7133,17 +7133,11 @@ public class Client extends ClientEngine {
 						if(chatInput.equals("::474")) {
 							uiRenderer.switchRevision(474);
 						}
-						if(chatInput.equals("::508")) {
-							uiRenderer.switchRevision(508);
-						}
 						if(chatInput.equals("::525")) {
 							uiRenderer.switchRevision(525);
 						}
 						if(chatInput.equals("::562")) {
 							uiRenderer.switchRevision(562);
-						}
-						if(chatInput.equals("::660")) {
-							uiRenderer.switchRevision(660);
 						}
 						if(chatInput.equals("::packinterface")) {
 							Interface.pack();

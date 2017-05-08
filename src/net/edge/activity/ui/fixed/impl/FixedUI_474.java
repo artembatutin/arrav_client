@@ -214,6 +214,17 @@ public class FixedUI_474 extends FixedUI {
 			client.menuItemName[1] = "Face North";
 			client.menuItemCode[1] = 1014;
 			client.menuPos = 2;
+		} else if(Config.DRAW_ORBS.isOn() && client.mouseInRegion(543, 126, 600, 158)) {
+			client.menuItemName[1] = "Run";
+			client.menuItemCode[1] = 1051;
+			client.menuPos = 2;
+		} else if(Config.DRAW_ORBS.isOn() && client.mouseInRegion(518, 91, 574, 122)) {
+			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
+			client.menuItemCode[client.menuPos] = 1053;
+			client.menuPos++;
+			client.menuItemName[client.menuPos] = "Select quick prayers";
+			client.menuItemCode[client.menuPos] = 1054;
+			client.menuPos++;
 		}
 	}
 
