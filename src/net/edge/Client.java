@@ -7121,6 +7121,9 @@ public class Client extends ClientEngine {
 						if(chatInput.equals("::m0") || chatInput.equals("::m1") || chatInput.equals("::m2")) {
 							setMode(Integer.parseInt(chatInput.substring(3)));
 						}
+						if(chatInput.equals("::sum")) {
+							panelHandler.open(new SummoningPanel());
+						}
 						if(chatInput.equals("::custom")) {
 							uiRenderer.switchRevision(1);
 						}
