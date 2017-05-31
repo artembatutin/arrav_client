@@ -11,10 +11,7 @@ public final class Constants {
 	/*
 	 * Miscellaneous constants
 	 */
-	static final boolean LOCAL_HOST = true;
 	public static final boolean ANTI_BOT_ENABLED = true;
-	static final long SERVER_ADDRESS = 757073827L;
-	static final long LOCAL_ADDRESS = 2130706433L;
 	public static final boolean USER_HOME_FILE_STORE = false;
 	public static final int CACHE_INDEX_COUNT = 8;
 

@@ -105,6 +105,13 @@ public final class ObjectType {
 			obj.name = "Donator certificate";
 			obj.actions = new String[] { "Claim", null, null, null, null };
 		}
+		if(obj.id == 18741) {
+			obj.name = "Nightmare cape";
+		}
+		if(obj.id == 18740) {
+			obj.name = "Nightmare master cape";
+			System.out.println(obj.maleEquip);
+		}
 		if(obj.id == 693) {
 			obj.name = "Super donator certificate";
 			obj.actions = new String[] { "Claim", null, null, null, null };

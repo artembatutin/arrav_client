@@ -920,7 +920,7 @@ public class Client extends ClientEngine {
 	@Override
 	public URL getCodeBase() {
 		try {
-			return new URL((Constants.LOCAL_HOST ? Constants.LOCAL_ADDRESS : Constants.SERVER_ADDRESS) + ":" + 80); // Returns the server's URL.
+			return new URL((longToIp(TitleActivity.CONNECTIONS[titleActivity.getConnection()].getIp())) + ":" + 80); // Returns the server's URL.
 		} catch(final Exception _ex) {
 			//empty
 		}
@@ -3397,10 +3397,7 @@ public class Client extends ClientEngine {
 	}
 
 	public Socket openSocket(int port, boolean updater) throws IOException {
-		long ip = (Constants.LOCAL_HOST ? Constants.LOCAL_ADDRESS : Constants.SERVER_ADDRESS);
-		if(updater)
-			if(!Constants.JAGGRAB_ENABLED)
-				ip = Constants.LOCAL_ADDRESS;
+		long ip = TitleActivity.CONNECTIONS[titleActivity.getConnection()].getIp();
 		return new Socket(InetAddress.getByName(longToIp(ip)), port);
 	}
 

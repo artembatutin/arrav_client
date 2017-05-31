@@ -9,6 +9,43 @@ import net.edge.media.Rasterizer2D;
 import net.edge.util.string.StringUtils;
 
 public class TitleActivity extends Activity {
+	
+	public static class Connection {
+		
+		private final String name;
+		private final long ip;
+		private final int port;
+		
+		Connection(String name, long ip, int port) {
+			this.name = name;
+			this.ip = ip;
+			this.port = port;
+		}
+		
+		public String getName() {
+			return name;
+		}
+		
+		public long getIp() {
+			return ip;
+		}
+		
+		public int getPort() {
+			return port;
+		}
+		
+	}
+	
+	public final static Connection[] CONNECTIONS = {
+			new Connection("Main", 757073827L, 43594),
+			new Connection("Dev", 2130706433L, 43593)
+	};
+	
+	/**
+	 * The connection index selected.
+	 */
+	private int connection = 0;
+	
 	/**
 	 * Scroll state condition.
 	 */
@@ -66,9 +103,13 @@ public class TitleActivity extends Activity {
 				client.titleMessage = "";
 			}
 		}
-
 		/* Clicking */
-		if(client.leftClickInRegion(centerX - 127, centerY - 47, centerX + 126, centerY - 20)) { // User
+		if(client.leftClickInRegion(centerX - 370, centerY - 245, centerX - 320, centerY - 227)) { // ip
+			int con = connection + 1;
+			if(con >= CONNECTIONS.length)
+				con = 0;
+			connection = con;
+		}else if(client.leftClickInRegion(centerX - 127, centerY - 47, centerX + 126, centerY - 20)) { // User
 			selectedInputForm = 1;
 		} else if(client.leftClickInRegion(centerX - 127, centerY - 5, centerX + 126, centerY + 22)) { // Password
 			selectedInputForm = 2;
@@ -234,6 +275,8 @@ public class TitleActivity extends Activity {
 			plainFont.drawLeftAlignedEffectString("Memory: " + usedMemory + "k (" + usedMemory / 1024L + "M)", 5, 45, 0xffff00, false);
 			plainFont.drawLeftAlignedEffectString("Fps: " + client.fps, 5, 60, 0xffff00, false);
 		}
+		Rasterizer2D.fillRoundedRectangle(centerX - 370, centerY - 245, 50, 18, 3, 0x000000, 100);
+		smallFont.drawCenteredString(CONNECTIONS[connection].getName(), centerX - 345, centerY - 232, 0xffffff);
 		smallFont.drawRightAlignedString("Build: " + Constants.BUILD, client.windowWidth - 20, client.windowHeight - 10, 0xffffff);
 		titleGraphics.drawGraphics(0, 0, client.graphics);
 	}
@@ -289,5 +332,9 @@ public class TitleActivity extends Activity {
 			hovered[1] = false;
 			hovered[2] = false;
 		}
+	}
+	
+	public int getConnection() {
+		return connection;
 	}
 }
