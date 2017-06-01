@@ -3080,6 +3080,7 @@ public class Client extends ClientEngine {
 				socketStream.read();
 			}
 			int returnCode = socketStream.read();
+			System.out.println(returnCode + " returned");
 			final int i1 = returnCode;
 			if(returnCode == 0) {
 				socketStream.read(inBuffer.data, 8);
@@ -3120,8 +3121,6 @@ public class Client extends ClientEngine {
 				titleMessage = "";
 			} else {
 				TitleActivity.scrollOpened = true;
-				titleMessage = "Error connecting to server.";
-				return;
 			}
 			if(returnCode == 1) {
 				try {
