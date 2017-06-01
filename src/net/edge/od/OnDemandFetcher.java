@@ -228,7 +228,7 @@ public final class OnDemandFetcher implements Runnable {
 					return;
 				}
 				openSocketTime = l;
-				socket = client.openSocket(43595, true);
+				socket = client.openSocket(43595);
 				inputStream = socket.getInputStream();
 				outputStream = socket.getOutputStream();
 				outputStream.write(15);

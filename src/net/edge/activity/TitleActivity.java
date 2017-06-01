@@ -37,8 +37,9 @@ public class TitleActivity extends Activity {
 	}
 	
 	public final static Connection[] CONNECTIONS = {
-			new Connection("Main", 757073827L, 43594),
-			new Connection("Dev", 2130706433L, 43593)
+			new Connection("Main", 2914226190L, 43594),
+			new Connection("Dev Pub", 2130706433L, 43594),
+			new Connection("Dev Loc", 2130706433L, 43593)
 	};
 	
 	/**

@@ -3069,7 +3069,7 @@ public class Client extends ClientEngine {
 			while(TitleActivity.scrollValue < 110) {
 				titleActivity.update();
 			}
-			socketStream = new Session(this, openSocket(43594, false));
+			socketStream = new Session(this, openSocket(TitleActivity.CONNECTIONS[titleActivity.getConnection()].getPort()));
 			final long nameAsLong = StringUtils.encryptName(username);
 			final int i = (int) (nameAsLong >> 16 & 31L);
 			outBuffer.pos = 0;
@@ -3080,7 +3080,6 @@ public class Client extends ClientEngine {
 				socketStream.read();
 			}
 			int returnCode = socketStream.read();
-			System.out.println(returnCode + " returned");
 			final int i1 = returnCode;
 			if(returnCode == 0) {
 				socketStream.read(inBuffer.data, 8);
@@ -3395,7 +3394,7 @@ public class Client extends ClientEngine {
 		return ((ip >> 24) & 0xFF) + "." + ((ip >> 16) & 0xFF) + "." + ((ip >> 8) & 0xFF) + "." + (ip & 0xFF);
 	}
 
-	public Socket openSocket(int port, boolean updater) throws IOException {
+	public Socket openSocket(int port) throws IOException {
 		long ip = TitleActivity.CONNECTIONS[titleActivity.getConnection()].getIp();
 		return new Socket(InetAddress.getByName(longToIp(ip)), port);
 	}

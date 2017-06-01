@@ -1,6 +1,7 @@
 package net.edge.cache.impl;
 
 import net.edge.Client;
+import net.edge.Constants;
 import net.edge.cache.CacheArchive;
 import net.edge.cache.CacheLoader;
 import net.edge.game.model.Model;
@@ -27,8 +28,8 @@ public class ProtocolLoader implements CacheLoader {
 		Model.method459(client.onDemandRequester.getModelCount(), client.onDemandRequester);
 		Texture.init(client.onDemandRequester);
 		//for(int i = 0; i < Constants.CACHE_INDEX_COUNT - 1; i++) {
-			//client.onDemandRequester.writeChecksumList(i);
-			//client.onDemandRequester.writeVersionList(i);
+		//	client.onDemandRequester.writeChecksumList(i);
+		//	client.onDemandRequester.writeVersionList(i);
 		//}
 		//client.onDemandRequester.writeChecksumList(3);
 		//Music files unpacking.

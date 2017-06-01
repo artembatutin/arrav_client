@@ -132,7 +132,7 @@ public class CacheUnpacker {
 		//client.repackCacheIndex(1);
 		//client.repackCacheIndex(2);
 		//client.repackCacheIndex(3);
-		client.repackCacheIndex(4);
+		//client.repackCacheIndex(4);
 		//client.repackCacheIndex(5);
 		//client.repackCacheIndex(6);
 		//client.repackCacheIndex(7);
@@ -560,7 +560,7 @@ public class CacheUnpacker {
 			}
 			loadingSocket = null;
 		}
-		loadingSocket = client.openSocket(43596, true);
+		loadingSocket = client.openSocket(43596);
 		loadingSocket.setSoTimeout(10000);
 		final java.io.InputStream inputstream = loadingSocket.getInputStream();
 		final OutputStream outputstream = loadingSocket.getOutputStream();

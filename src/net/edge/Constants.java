@@ -5,14 +5,14 @@ public final class Constants {
 	private Constants() {
 	}
 
-	public static final int BUILD = 12;
-	public static final boolean JAGGRAB_ENABLED = false;
+	public static final int BUILD = 14;
+	public static final boolean JAGGRAB_ENABLED = true;
 
 	/*
 	 * Miscellaneous constants
 	 */
 	public static final boolean ANTI_BOT_ENABLED = true;
-	public static final boolean USER_HOME_FILE_STORE = false;
+	public static final boolean USER_HOME_FILE_STORE = true;
 	public static final int CACHE_INDEX_COUNT = 8;
 
 	/*
