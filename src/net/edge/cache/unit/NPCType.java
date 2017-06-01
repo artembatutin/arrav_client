@@ -87,7 +87,7 @@ public final class NPCType {
 		npc.id = id;
 		npc.decode(data);
 		if(id == 8327) {
-			npc.actions = new String[] {"Talk-to", null, "Trade", null, null, null};
+			npc.actions = new String[] {"Talk-to", null, "Trade", null, "Max-out", null};
 			npc.modelId[8] = 4443;
 			npc.headIcon = -1;
 			npc.name = "Night's watch captain";
