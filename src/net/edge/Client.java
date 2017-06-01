@@ -3327,7 +3327,7 @@ public class Client extends ClientEngine {
 				return;
 			}
 			if(returnCode == 19) {
-				titleMessage = "The server is currently startup.\nPlease allow a moment.";
+				titleMessage = "The server is currently starting up.\nPlease allow it a moment.";
 				return;
 			}
 			if(returnCode == 20) {
