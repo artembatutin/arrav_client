@@ -101,6 +101,7 @@ public final class ObjectType {
 			obj.toLend();
 		}
 		
+		
 		if(obj.id == 692) {
 			obj.name = "Donator certificate";
 			obj.actions = new String[] { "Claim", null, null, null, null };
@@ -1062,6 +1063,7 @@ public final class ObjectType {
 		case 21373:
 		case 21374:
 		case 21375:
+		case 20769:
 			fixPriority = true;
 			break;
 		case 21462:

@@ -54,6 +54,7 @@ public final class NPCType {
 	private int[] modelId;
 	private boolean nonTextured;
 	public static HashLruCache modelcache = new HashLruCache(30);
+	private boolean fixPriority;
 
 	private NPCType() {
 		turnLeftAnimationId = -1;
@@ -86,11 +87,12 @@ public final class NPCType {
 		data.pos = index[id];
 		npc.id = id;
 		npc.decode(data);
-		if(id == 8327) {
+		if(id == 3705) {
 			npc.actions = new String[] {"Talk-to", null, "Trade", null, "Max-out", null};
-			npc.modelId[8] = 4443;
+			npc.modelId[6] = 4443;
 			npc.headIcon = -1;
 			npc.name = "Night's watch captain";
+			npc.fixPriority = true;
 		}
 		if(id == 8027) {
 			npc.actions = new String[] {"Talk-to", null, null, null, null, null};
@@ -475,6 +477,12 @@ public final class NPCType {
 		}
 		if(nonTextured)
 			model.triTex = null;
+		if(fixPriority) {
+			if(model.triPri != null) {
+				for(int p = 0; p < model.triPri.length; p++)
+					model.triPri[p] = 10;
+			}
+		}
 		return model;
 	}
 
@@ -552,6 +560,12 @@ public final class NPCType {
 		}
 		if(nonTextured)
 			model_1.triTex = null;
+		if(fixPriority) {
+			if(model.triPri != null) {
+				for(int p = 0; p < model.triPri.length; p++)
+					model.triPri[p] = 10;
+			}
+		}
 		return model_1;
 	}
 
@@ -617,6 +631,12 @@ public final class NPCType {
 		}
 		if(nonTextured)
 			model.triTex = null;
+		if(fixPriority) {
+			if(model.triPri != null) {
+				for(int p = 0; p < model.triPri.length; p++)
+					model.triPri[p] = 10;
+			}
+		}
 		return model;
 	}
 	
