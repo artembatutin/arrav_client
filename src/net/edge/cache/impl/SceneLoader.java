@@ -61,7 +61,7 @@ public class SceneLoader implements CacheLoader {
 			ai[i8] = l8 * i9 >> 16;
 		}
 		Scene.setViewport(500, 800, 512, 334, ai);
-		client.startThread(client.mouseDetection, 10);
+		client.startThread(client.mouseDetection, 6);
 		Location.client = client;
 		LocationType.client = client;
 		NPCType.client = client;

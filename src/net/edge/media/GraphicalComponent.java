@@ -7,8 +7,8 @@ import java.awt.image.DataBufferInt;
 public final class GraphicalComponent {
 
 	private final int[] raster;
-	public final int width;
-	public final int height;
+	private final int width;
+	private final int height;
 	private final BufferedImage image;
 
 	public GraphicalComponent(int width, int height) {
@@ -24,6 +24,18 @@ public final class GraphicalComponent {
 	}
 
 	public void setCanvas() {
-		Rasterizer2D.setCanvas(raster, height, width);
+		Rasterizer2D.setCanvas(raster, getHeight(), getWidth());
+	}
+	
+	public int getWidth() {
+		return width;
+	}
+	
+	public int getHeight() {
+		return height;
+	}
+	
+	public BufferedImage getImage() {
+		return image;
 	}
 }

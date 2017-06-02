@@ -8915,6 +8915,8 @@ public class Client extends ClientEngine {
 	}
 
 	public void repackCacheIndex(int cacheIndex) {
+		if(!(new File(SignLink.getCacheDir() + "index" + cacheIndex).exists()))
+			return;
 		System.out.println("Started repacking index " + cacheIndex + ".");
 		int indexLength = new File(indexLocation(cacheIndex, -1)).listFiles().length;
 		File[] file = new File(indexLocation(cacheIndex, -1)).listFiles();

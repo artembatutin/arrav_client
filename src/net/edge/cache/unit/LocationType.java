@@ -88,6 +88,9 @@ public final class LocationType {
 	}
 
 	public static LocationType getPrecise(int id) {
+		if(id == 2563) {
+			id += 42003;//max cape
+		}
 		if(id > index.length)
 			id = index.length - 1;
 
@@ -103,7 +106,6 @@ public final class LocationType {
 		loc.id = id;
 		loc.renew();
 		loc.read(data);
-		
 		if(id == 28139)
 			loc.name = "Edge Portal";
 		if(id == 24124)

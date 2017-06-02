@@ -52,6 +52,8 @@ public class Rasterizer2D extends DoublyLinkableEntry {
 	 * Draws a point with the specified color and alpha value at (x, y).
 	 */
 	public static void drawPoint(int x, int y, int color, int alpha) {
+		if(alpha == 0)
+			return;
 		if(x >= clipStartX && y >= clipStartY && x < clipEndX && y < clipEndY) {
 			int pos = x + y * canvasWidth;
 			int a2 = 256 - alpha;
@@ -89,6 +91,8 @@ public class Rasterizer2D extends DoublyLinkableEntry {
 	 * Draws a horizontal line with an alpha value support.
 	 */
 	public static void drawHorizontalLine(int x, int y, int length, int color, int alpha) {
+		if(alpha == 0)
+			return;
 		if(y < clipStartY || y >= clipEndY) {
 			return;
 		}
@@ -191,6 +195,8 @@ public class Rasterizer2D extends DoublyLinkableEntry {
 	 * value.
 	 */
 	public static void drawDiagonalLine(int x1, int y1, int x2, int y2, int color, int alpha) {
+		if(alpha == 0)
+			return;
 		x2 -= x1;
 		y2 -= y1;
 		if(y2 == 0) {
@@ -286,6 +292,8 @@ public class Rasterizer2D extends DoublyLinkableEntry {
 	 * Draws a non-filled rectangle with an alpha value support.
 	 */
 	public static void drawRectangle(int x, int y, int width, int height, int color, int alpha) {
+		if(alpha == 0)
+			return;
 		drawHorizontalLine(x, y, width, color, alpha);
 		drawHorizontalLine(x, y + height - 1, width, color, alpha);
 		if(height >= 3) {
@@ -318,9 +326,10 @@ public class Rasterizer2D extends DoublyLinkableEntry {
 	 * Draws a vertical line with an alpha value support.
 	 */
 	public static void drawVerticalLine(int x, int y, int length, int color, int alpha) {
-		if(x < clipStartX || x >= clipEndX) {
+		if(alpha == 0)
 			return;
-		}
+		if(x < clipStartX || x >= clipEndX)
+			return;
 		if(y < clipStartY) {
 			length -= clipStartY - y;
 			y = clipStartY;
@@ -376,6 +385,8 @@ public class Rasterizer2D extends DoublyLinkableEntry {
 	 * Draws a filled rectangle with an alpha value support.
 	 */
 	public static void fillRectangle(int x, int y, int width, int height, int color, int alpha) {
+		if(alpha == 0)
+			return;
 		if(x < clipStartX) {
 			width -= clipStartX - x;
 			x = clipStartX;
@@ -436,6 +447,8 @@ public class Rasterizer2D extends DoublyLinkableEntry {
 	}
 
 	public static void fillCircle(int x, int y, int radius, int color, int alpha) {
+		if(alpha == 0)
+			return;
 		int a2 = 256 - alpha;
 		int r1 = (color >> 16 & 0xff) * alpha;
 		int g1 = (color >> 8 & 0xff) * alpha;
@@ -518,9 +531,10 @@ public class Rasterizer2D extends DoublyLinkableEntry {
 	}
 
 	public static void fillRoundedRectangle(int x, int y, int width, int height, int radius, int color, int alpha) {
-		if(x >= clipEndX || y >= clipEndY || x + width < clipStartX || y + height < clipStartY) {
+		if(alpha == 0)
 			return;
-		}
+		if(x >= clipEndX || y >= clipEndY || x + width < clipStartX || y + height < clipStartY)
+			return;
 		if(width == height) {
 			if(radius > width >> 1) {
 				fillCircle(x + radius, y + radius, radius, color);

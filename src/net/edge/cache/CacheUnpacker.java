@@ -47,11 +47,6 @@ public class CacheUnpacker {
 	private int circleAngle = 0;
 
 	/**
-	 * Main graphical component.
-	 */
-	private GraphicalComponent component;
-
-	/**
 	 * Client access instance.
 	 */
 	private final Client client;
@@ -84,7 +79,8 @@ public class CacheUnpacker {
 	 * Main runnable method.
 	 */
 	public void load() {
-
+		final int centerX = client.windowWidth / 2;
+		final int centerY = client.windowHeight / 2;
 		if(Constants.JAGGRAB_ENABLED) {
 			updater = new Updater(client);
 			updater.run();
@@ -93,130 +89,38 @@ public class CacheUnpacker {
 		// Initializing
 		this.init();
 		Activity.init();
-
-		// Initializing executor
-		final ExecutorService executor = ThreadUtils.createThread("Cache Loader");
-		
-		CacheUnpacker u = this;
-
-		// Executing the loading
-		executor.execute(new Runnable() {
-
-			@Override
-			public void run() {
-				// Drawing the loading screen while the loading process is going
-				long t1 = System.currentTimeMillis();
-				do {
-					updateLoading();
-					long t2 = System.currentTimeMillis();
-					if(t2 - t1 < 10) {
-						try {
-							Thread.sleep(10 - (t2 - t1));
-						} catch(InterruptedException ignored) {
-						}
-					}
-					t1 = t2;
-				} while(!finished);
-			}
-		});
-		
-		CacheLoader[] loaders = {
-				new ProtocolLoader(getCacheArchive(5, "versionlist", CacheUnpacker.EXPECTED_CRC[5])),
-				new MediaLoader(getCacheArchive(4, "media", CacheUnpacker.EXPECTED_CRC[4])),
-				new ConfigurationLoader(getCacheArchive(2, "config", CacheUnpacker.EXPECTED_CRC[2])),
-				new InterfaceLoader(getCacheArchive(3, "interface", CacheUnpacker.EXPECTED_CRC[3])),
-				new SceneLoader()
-		};
 		Config.load();
 		message = "Preparing packing modules.";
-		//client.repackCacheIndex(1);
-		//client.repackCacheIndex(2);
-		//client.repackCacheIndex(3);
-		//client.repackCacheIndex(4);
-		//client.repackCacheIndex(5);
-		//client.repackCacheIndex(6);
-		//client.repackCacheIndex(7);
-		for(CacheLoader loader : loaders) {
-			message = loader.message();
-			loader.run(client);
-			progress++;
+		client.startThread(new LoaderScreen(centerX, centerY), 8);
+		if(!Constants.USER_HOME_FILE_STORE) {
+			client.repackCacheIndex(1);
+			client.repackCacheIndex(2);
+			client.repackCacheIndex(3);
+			client.repackCacheIndex(4);
+			client.repackCacheIndex(5);
+			client.repackCacheIndex(6);
+			client.repackCacheIndex(7);
 		}
+		load(new ProtocolLoader(getCacheArchive(5, "versionlist", CacheUnpacker.EXPECTED_CRC[5])));
+		load(new MediaLoader(getCacheArchive(4, "media", CacheUnpacker.EXPECTED_CRC[4])));
+		load(new ConfigurationLoader(getCacheArchive(2, "config", CacheUnpacker.EXPECTED_CRC[2])));
+		load(new InterfaceLoader(getCacheArchive(3, "interface", CacheUnpacker.EXPECTED_CRC[3])));
+		load(new SceneLoader());
 		finished = true;
 		TitleActivity.scrollOpened = true;
 		TitleActivity.scrollValue = 110;
 
-		// Shutting down the executor
-		executor.shutdown();
-
 		// Resetting when finished
-		component = null;
 		loadingCircleStarts = null;
 		loadingCircleLengths = null;
 		message = null;
 		System.gc();
 	}
-
-	/**
-	 * Window listener to see whenever the window has changed positions.
-	 */
-	private void checkWindow() {
-		if(client.frame != null) {
-			if(client.windowWidth != client.frame.getContentWidth() || client.windowHeight != client.frame.getContentHeight()) {
-				client.windowWidth = client.frame.getContentWidth();
-				client.windowHeight = client.frame.getContentHeight();
-				component = new GraphicalComponent(client.windowWidth, client.windowHeight);
-			}
-		} else {
-			if(client.windowWidth != client.getWidth() || client.windowHeight != client.getHeight()) {
-				client.windowWidth = client.getWidth();
-				client.windowHeight = client.getHeight();
-				component = new GraphicalComponent(client.windowWidth, client.windowHeight);
-			}
-		}
-	}
-
-	/**
-	 * Loading screen draw loop.
-	 */
-	private void updateLoading() {
-		if(loadingCircleStarts == null || loadingCircleLengths == null) {
-			loadingCircleStarts = new int[74];
-			loadingCircleLengths = new int[74];
-			for(int i = 37; i >= 0; i--) {
-				final int amt = (int) Math.sqrt(37 * 37 - (37 - i) * (37 - i));
-				loadingCircleLengths[i] = 2 * amt;
-				loadingCircleLengths[73 - i] = 2 * amt;
-				loadingCircleStarts[i] = -amt + 37;
-				loadingCircleStarts[73 - i] = -amt + 37;
-			}
-		}
-		if(component == null || component.width != client.windowWidth || component.height != client.windowHeight) {
-			component = new GraphicalComponent(client.windowWidth, client.windowHeight);
-			component.setCanvas();
-		} else {
-			component.setCanvas();
-			Rasterizer2D.clearCanvas();
-		}
-		checkWindow();
-		final int centerX = client.windowWidth / 2;
-		final int centerY = client.windowHeight / 2;
-		circleAngle = (circleAngle + 20) & 2047;
-		Rasterizer2D.fillRectangle(0, 0, client.windowWidth, client.windowHeight, 0x070505);
-		ImageCache.get(859).drawImage(centerX - 433, centerY - 305);
-		ImageCache.get(860).drawImage(centerX, centerY - 305);
-		ImageCache.get(861).drawImage(centerX - 433, centerY);
-		ImageCache.get(862).drawImage(centerX, centerY);
-		Rasterizer2D.fillRoundedRectangle(centerX - 154, centerY - 84, 308, 113, 20, 0x000000, 100);
-		Rasterizer2D.fillRoundedRectangle(centerX - 150, centerY - 80, 300, 105, 17, 0x000000, 225);
-		if(ImageCache.get(7, true) != null)
-			ImageCache.get(7, true).drawAffineTransformedAlphaImage(centerX - 37, centerY - 55, 74, 74, 37, 37, loadingCircleStarts, loadingCircleLengths, circleAngle, 256);
-		client.fancyFont.drawCenteredEffectString(progress + "/5", centerX, centerY - 10, 0xF0BB3C, true);
-		client.fancyFont.drawCenteredEffectString(message, centerX, centerY - 60, 0xDBB047, true);
-		client.boldFont.drawLeftAlignedEffectString(sideMessage, 4, 15, 0xFFFFFF, true);
-		if(client.onDemandRequester != null)
-			client.smallFont.drawCenteredEffectString(client.onDemandRequester.statusString, centerX, centerY + 60, 0xFFFFFF, true);
-		if(component != null)
-			component.drawGraphics(0, 0, client.graphics);
+	
+	private void load(CacheLoader loader) {
+		message = loader.message();
+		loader.run(client);
+		progress++;
 	}
 
 	/**
@@ -240,7 +144,7 @@ public class CacheUnpacker {
 			} while(!finished);
 			finished = false;
 		}
-		// Unpacking startup media components.
+		// Unpacking startup title components.
 		client.titleArchive = getCacheArchive(1, "title", CacheUnpacker.EXPECTED_CRC[1]);
 		// Unpacking Font
 		client.smallFont = new BitmapFont(client.titleArchive, "p11_full", false);
@@ -587,6 +491,86 @@ public class CacheUnpacker {
 		client.anIntArray853 = null;
 		client.anIntArray1190 = null;
 		client.anIntArray1191 = null;
+	}
+	
+	public class LoaderScreen implements Runnable {
+		
+		/**
+		 * Main graphical component.
+		 */
+		private GraphicalComponent component;
+		
+		private final int x, y;
+		
+		public LoaderScreen(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
+		
+		@Override
+		public void run() {
+			// Drawing the loading screen while the loading process is going
+			long t1 = System.currentTimeMillis();
+			do {
+				updateLoading(x, y);
+				long t2 = System.currentTimeMillis();
+				if(t2 - t1 < 10) {
+					try {
+						Thread.sleep(10 - (t2 - t1));
+					} catch(InterruptedException ignored) {
+					}
+				}
+				t1 = t2;
+			} while(!finished);
+			component = null;
+		}
+		
+		/**
+		 * Loading screen draw loop.
+		 */
+		private void updateLoading(int centerX, int centerY) {
+			if(client.onDemandRequester == null)
+				return;
+			if(loadingCircleStarts == null || loadingCircleLengths == null) {
+				loadingCircleStarts = new int[74];
+				loadingCircleLengths = new int[74];
+				for(int i = 37; i >= 0; i--) {
+					final int amt = (int) Math.sqrt(37 * 37 - (37 - i) * (37 - i));
+					loadingCircleLengths[i] = 2 * amt;
+					loadingCircleLengths[73 - i] = 2 * amt;
+					loadingCircleStarts[i] = -amt + 37;
+					loadingCircleStarts[73 - i] = -amt + 37;
+				}
+			}
+			if(component == null || component.getWidth() != client.windowWidth || component.getHeight() != client.windowHeight) {
+				component = new GraphicalComponent(client.windowWidth, client.windowHeight);
+				component.setCanvas();
+			} else {
+				component.setCanvas();
+				Rasterizer2D.clearCanvas();
+			}
+			circleAngle = (circleAngle + 20) & 2047;
+			Rasterizer2D.fillRectangle(0, 0, client.windowWidth, client.windowHeight, 0x070505);
+			ImageCache.get(859).drawImage(centerX - 433, centerY - 305);
+			ImageCache.get(860).drawImage(centerX, centerY - 305);
+			ImageCache.get(861).drawImage(centerX - 433, centerY);
+			ImageCache.get(862).drawImage(centerX, centerY);
+			Rasterizer2D.fillRoundedRectangle(centerX - 154, centerY - 84, 308, 113, 20, 0x000000, 100);
+			Rasterizer2D.fillRoundedRectangle(centerX - 150, centerY - 80, 300, 105, 17, 0x000000, 225);
+			if(ImageCache.get(7, true) != null)
+				ImageCache.get(7, true).drawAffineTransformedAlphaImage(centerX - 37, centerY - 55, 74, 74, 37, 37, loadingCircleStarts, loadingCircleLengths, circleAngle, 256);
+			client.fancyFont.drawCenteredEffectString(progress + "/5", centerX, centerY - 10, 0xF0BB3C, true);
+			client.boldFont.drawLeftAlignedEffectString(sideMessage, 4, 15, 0xFFFFFF, true);
+			client.smallFont.drawCenteredEffectString(client.onDemandRequester.statusString, centerX, centerY + 60, 0xFFFFFF, true);
+			sendText(message, centerX, centerY - 60);
+		}
+		
+		private void sendText(String text, int x, int y) {
+			if(client.fancyFont == null)
+				return;
+			client.fancyFont.drawCenteredEffectString(text, x, y, 0xDBB047, true);
+			component.drawGraphics(0, 0, client.graphics);
+		}
 	}
 }
 

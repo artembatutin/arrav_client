@@ -1,7 +1,12 @@
 package net.edge.activity;
 
 import net.edge.Client;
+import net.edge.Constants;
+import net.edge.cache.CacheArchive;
+import net.edge.game.model.Model;
 import net.edge.media.font.BitmapFont;
+import net.edge.media.tex.Texture;
+import net.edge.od.OnDemandFetcher;
 
 /**
  * An <i>Activity</i> is a handler for a stage of the client.
