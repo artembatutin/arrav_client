@@ -68,7 +68,6 @@ public class Client extends ClientEngine {
 	 * Npc information values.
 	 */
 	public int npcInfoId;
-	public int[] npcDrops;
 	public int[] npcDropsId;
 	public int[] npcDropsMin;
 	public int[] npcDropsMax;
@@ -5679,11 +5678,6 @@ public class Client extends ClientEngine {
 						return true;
 					} else {
 						panelSearch = false;
-					}
-					final int commonCount = inBuffer.getUShort();
-					npcDrops = new int[commonCount];
-					for(int common = 0; common < commonCount; common++) {
-						npcDrops[common] = inBuffer.getUShort();
 					}
 					final int uniqueCount = inBuffer.getUShort();
 					npcDropsId = new int[uniqueCount];
