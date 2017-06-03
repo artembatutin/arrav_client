@@ -440,8 +440,8 @@ public final class Interface {
 			inter.textAlign = buffer.getUByte();
 		}
 		if(inter.type == Constants.WIDGET_STRING) {
-			inter.text = buffer.getLine();
-			inter.textAlt = buffer.getLine();
+			inter.text = buffer.getLine().replace("Avarrocka", "Edgeville");
+			inter.textAlt = buffer.getLine().replace("Avarrocka", "Edgeville");
 			inter.textAlign = buffer.getUByte();
 		}
 		if(inter.type == Constants.WIDGET_STRING_2 || inter.type == Constants.WIDGET_RECTANGLE || inter.type == Constants.WIDGET_STRING) {

@@ -42,12 +42,18 @@ public final class ClientFrame extends Frame {
 
 		//The following 2 lines do not work with linux
 
-		//setLocation((screenWidth - gameFrameWidth) / 2, (screenHeight - gameFrameHeight) / 2); // Sets the location to middle of the screen.
-		//setLocationRelativeTo(null); //Sets the location of the window relative to the specified component.
-
+		if(!isLinux()) {
+			setLocation((screenWidth - gameFrameWidth) / 2, (screenHeight - gameFrameHeight) / 2); // Sets the location to middle of the screen.
+			setLocationRelativeTo(null); //Sets the location of the window relative to the specified component.
+		}
 		setBackground(Color.BLACK); // Sets the background color.
 		requestFocus(); // Requests the user's focus.
 		toFront(); // Displays frame to front.
+	}
+	
+	public static boolean isLinux() {
+		String OS = System.getProperty("os.name").toLowerCase();
+		return (OS.contains("nix") || OS.contains("nux") || OS.indexOf("aix") > 0) && !OS.contains("mac");
 	}
 
 	/**

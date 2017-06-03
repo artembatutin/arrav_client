@@ -3305,7 +3305,7 @@ public class Client extends ClientEngine {
 				return;
 			}
 			if(returnCode == 14) {
-				titleMessage = "The server is being updated.\nPlease wait 1 minute and try again.";
+				titleMessage = "The server is currently updating.\nPlease wait a moment.";
 				return;
 			}
 			if(returnCode == 16) {
