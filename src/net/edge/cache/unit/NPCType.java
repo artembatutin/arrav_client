@@ -131,6 +131,9 @@ public final class NPCType {
 		if(id == 682 || id == 8270 || id == 4288 || id == 1658 || id == 705) {//masters with shop
 			npc.actions = new String[] {"Trade", null, "Get-Skillcape", null, "Trade", null};
 		}
+		if(id == 4901) {//finlay
+			npc.actions = new String[] {"Trade", null, null, null, null, null};
+		}
 		if(id == 3495 || id == 1613 || id == 10702 || id == 111 || (npc.name != null && npc.name.contains("Waterfiend"))) {//fixes
 			npc.nonTextured = true;
 		}
