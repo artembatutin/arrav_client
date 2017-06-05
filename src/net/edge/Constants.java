@@ -5,7 +5,7 @@ public final class Constants {
 	private Constants() {
 	}
 
-	public static final int BUILD = 16;
+	public static final int BUILD = 17;
 	public static final boolean JAGGRAB_ENABLED = false;
 
 	/*

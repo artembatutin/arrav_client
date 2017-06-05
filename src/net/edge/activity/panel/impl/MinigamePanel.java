@@ -124,4 +124,10 @@ public class MinigamePanel extends Panel {
 	public int getId() {
 		return 7;
 	}
+	
+	@Override
+	public boolean blockedMove() {
+		return false;
+	}
+	
 }

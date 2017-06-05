@@ -1298,7 +1298,7 @@ public class Client extends ClientEngine {
 				}
 				drawWidget(childWidget, xPos, yPos, childWidget.scrollPos, component);
 				if(childWidget.scrollMax > childWidget.height) {
-					if(uiRenderer.id == 317) {
+					if(uiRenderer.id == 459) {
 						gameActivity.drawOldScrollbar(xPos + childWidget.width, yPos, childWidget.height, childWidget.scrollMax, childWidget.scrollPos);
 					} else {
 						gameActivity.drawScrollbar(xPos + childWidget.width, yPos, childWidget.height, childWidget.scrollMax, childWidget.scrollPos);
@@ -1737,11 +1737,13 @@ public class Client extends ClientEngine {
 						y = yPos - boxHeight;
 					}
 					if(component == UIComponent.INVENTORY) {//Boundaries
-						if(x + boxWidth > 240) {
-							x += 215 - (x + boxWidth);
-						}
-						if(y + boxHeight > 290) {
-							y -= boxHeight + childWidget.height + 10;
+						if(widget.id == 3917) {//fixing skill menus
+							if(widget.subX[child] + boxWidth > 205) {
+								x -= (widget.subX[child] + boxWidth) - 190;
+							}
+							if(widget.subY[child] + boxHeight > 220) {
+								y -= (boxHeight + widget.subY[child]) - 160;
+							}
 						}
 					}
 
@@ -3514,7 +3516,7 @@ public class Client extends ClientEngine {
 			outBuffer.putOpcode(185);
 			outBuffer.putShort(49);
 		}
-		if(code == 582 && !panelHandler.isActive()) {
+		if(code == 582 && panelHandler.action()) {
 			final NPC npc = npcList[arg1];
 			if(npc != null) {
 				findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, npc.smallY[0], localPlayer.smallX[0], false, npc.smallX[0]);
@@ -3529,7 +3531,7 @@ public class Client extends ClientEngine {
 				outBuffer.putShortPlus128(anInt1284);
 			}
 		}
-		if(code == 234 && !panelHandler.isActive()) {
+		if(code == 234 && panelHandler.action()) {
 			boolean flag1 = findWalkingPath(2, 0, 0, 0, localPlayer.smallY[0], 0, 0, arg3, localPlayer.smallX[0], false, arg2);
 			if(!flag1) {
 				flag1 = findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, arg3, localPlayer.smallX[0], false, arg2);
@@ -3543,7 +3545,7 @@ public class Client extends ClientEngine {
 			outBuffer.putShort(arg1);
 			outBuffer.putLitEndShort(arg2 + baseX);
 		}
-		if(code == 62 && !panelHandler.isActive()) {
+		if(code == 62 && panelHandler.action()) {
 			if(clickLoc(arg4, arg3, arg2)) {
 				outBuffer.putOpcode(192);
 				outBuffer.putShort(anInt1284);
@@ -3554,7 +3556,7 @@ public class Client extends ClientEngine {
 				outBuffer.putShort(anInt1285);
 			}
 		}
-		if(code == 511 && !panelHandler.isActive()) {
+		if(code == 511 && panelHandler.action()) {
 			boolean flag2 = findWalkingPath(2, 0, 0, 0, localPlayer.smallY[0], 0, 0, arg3, localPlayer.smallX[0], false, arg2);
 			if(!flag2) {
 				flag2 = findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, arg3, localPlayer.smallX[0], false, arg2);
@@ -3614,7 +3616,7 @@ public class Client extends ClientEngine {
 				}
 			}
 		}
-		if(code == 561 && !panelHandler.isActive()) {
+		if(code == 561 && panelHandler.action()) {
 			final Player player = playerList[arg1];
 			if(player != null) {
 				findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, player.smallY[0], localPlayer.smallX[0], false, player.smallX[0]);
@@ -3630,7 +3632,7 @@ public class Client extends ClientEngine {
 				outBuffer.putShort(arg1);
 			}
 		}
-		if(code == 20 && !panelHandler.isActive()) {
+		if(code == 20 && panelHandler.action()) {
 			final NPC npc = npcList[arg1];
 			if(npc != null) {
 				findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, npc.smallY[0], localPlayer.smallX[0], false, npc.smallX[0]);
@@ -3642,7 +3644,7 @@ public class Client extends ClientEngine {
 				outBuffer.putLitEndShort(arg1);
 			}
 		}
-		if(code == 779 && !panelHandler.isActive()) {
+		if(code == 779 && panelHandler.action()) {
 			final Player player = playerList[arg1];
 			if(player != null) {
 				findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, player.smallY[0], localPlayer.smallX[0], false, player.smallX[0]);
@@ -3869,7 +3871,7 @@ public class Client extends ClientEngine {
 			outBuffer.putOpcode(185);
 			outBuffer.putShort(6666);
 		}
-		if(code == 27 && !panelHandler.isActive()) {
+		if(code == 27 && panelHandler.action()) {
 			final Player player = playerList[arg1];
 			if(player != null && !panelHandler.isShopOpen()) {
 				findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, player.smallY[0], localPlayer.smallX[0], false, player.smallX[0]);
@@ -3885,7 +3887,7 @@ public class Client extends ClientEngine {
 				outBuffer.putLitEndShort(arg1);
 			}
 		}
-		if(code == 213 && !panelHandler.isActive()) {
+		if(code == 213 && panelHandler.action()) {
 			boolean flag3 = findWalkingPath(2, 0, 0, 0, localPlayer.smallY[0], 0, 0, arg3, localPlayer.smallX[0], false, arg2);
 			if(!flag3) {
 				flag3 = findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, arg3, localPlayer.smallX[0], false, arg2);
@@ -4043,7 +4045,7 @@ public class Client extends ClientEngine {
 				atInventoryInterfaceType = 3;
 			}
 		}
-		if(code == 652 && !panelHandler.isActive()) {
+		if(code == 652 && panelHandler.action()) {
 			boolean flag4 = findWalkingPath(2, 0, 0, 0, localPlayer.smallY[0], 0, 0, arg3, localPlayer.smallX[0], false, arg2);
 			if(!flag4) {
 				flag4 = findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, arg3, localPlayer.smallX[0], false, arg2);
@@ -4057,7 +4059,7 @@ public class Client extends ClientEngine {
 			outBuffer.putLitEndShort(arg3 + baseY);
 			outBuffer.putLitEndShortPlus128(arg1);
 		}
-		if(code == 94 && !panelHandler.isActive()) {
+		if(code == 94 && panelHandler.action()) {
 			boolean flag5 = findWalkingPath(2, 0, 0, 0, localPlayer.smallY[0], 0, 0, arg3, localPlayer.smallX[0], false, arg2);
 			if(!flag5) {
 				flag5 = findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, arg3, localPlayer.smallX[0], false, arg2);
@@ -4097,7 +4099,7 @@ public class Client extends ClientEngine {
 		}
 		if(code == 225) {
 			final NPC npc = npcList[arg1];
-			if(npc != null && !panelHandler.isActive()) {
+			if(npc != null && panelHandler.action()) {
 				findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, npc.smallY[0], localPlayer.smallX[0], false, npc.smallX[0]);
 				crossX = super.clickX;
 				crossY = super.clickY;
@@ -4109,7 +4111,7 @@ public class Client extends ClientEngine {
 		}
 		if(code == 965) {
 			final NPC npc = npcList[arg1];
-			if(npc != null && !panelHandler.isActive()) {
+			if(npc != null && panelHandler.action()) {
 				findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, npc.smallY[0], localPlayer.smallX[0], false, npc.smallX[0]);
 				crossX = super.clickX;
 				crossY = super.clickY;
@@ -4125,7 +4127,7 @@ public class Client extends ClientEngine {
 		}
 		if(code == 413) {
 			final NPC npc = npcList[arg1];
-			if(npc != null && !panelHandler.isActive()) {
+			if(npc != null && panelHandler.action()) {
 				findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, npc.smallY[0], localPlayer.smallX[0], false, npc.smallX[0]);
 				crossX = super.clickX;
 				crossY = super.clickY;
@@ -4161,14 +4163,14 @@ public class Client extends ClientEngine {
 			outBuffer.putOpcode(134);
 			outBuffer.putShort(arg1);
 		}
-		if(code == 900 && !panelHandler.isActive()) {
+		if(code == 900 && panelHandler.action()) {
 			clickLoc(arg4, arg3, arg2);
 			outBuffer.putOpcode(252);
 			outBuffer.putMedium((int) (arg4 >> 14 & 0xFFFFFF));
 			outBuffer.putShort(arg2 + baseX);
 			outBuffer.putShort(arg3 + baseY);
 		}
-		if(code == 412 && !panelHandler.isActive()) {
+		if(code == 412 && panelHandler.action()) {
 			final NPC npc = npcList[arg1];
 			if(npc != null) {
 				findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, npc.smallY[0], localPlayer.smallX[0], false, npc.smallX[0]);
@@ -4180,7 +4182,7 @@ public class Client extends ClientEngine {
 				outBuffer.putShortPlus128(arg1);
 			}
 		}
-		if(code == 365 && !panelHandler.isActive()) {
+		if(code == 365 && panelHandler.action()) {
 			final Player player = playerList[arg1];
 			if(player != null) {
 				findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, player.smallY[0], localPlayer.smallX[0], false, player.smallX[0]);
@@ -4193,7 +4195,7 @@ public class Client extends ClientEngine {
 				outBuffer.putLitEndShort(anInt1137);
 			}
 		}
-		if(code == 729 && !panelHandler.isActive()) {
+		if(code == 729 && panelHandler.action()) {
 			final Player player = playerList[arg1];
 			if(player != null) {
 				findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, player.smallY[0], localPlayer.smallX[0], false, player.smallX[0]);
@@ -4205,7 +4207,7 @@ public class Client extends ClientEngine {
 				outBuffer.putLitEndShort(arg1);
 			}
 		}
-		if(code == 577 && !panelHandler.isActive()) {
+		if(code == 577 && panelHandler.action()) {
 			final Player player = playerList[arg1];
 			if(player != null) {
 				findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, player.smallY[0], localPlayer.smallX[0], false, player.smallX[0]);
@@ -4217,7 +4219,7 @@ public class Client extends ClientEngine {
 				outBuffer.putLitEndShort(arg1);
 			}
 		}
-		if(code == 956 && !panelHandler.isActive()) {
+		if(code == 956 && panelHandler.action()) {
 			if(clickLoc(arg4, arg3, arg2)) {
 				outBuffer.putOpcode(35);
 				outBuffer.putMedium((int) (arg4 >> 14 & 0xFFFFFF));
@@ -4226,7 +4228,7 @@ public class Client extends ClientEngine {
 				outBuffer.putShort(anInt1137);
 			}
 		}
-		if(code == 567 && !panelHandler.isActive()) {
+		if(code == 567 && panelHandler.action()) {
 			boolean flag6 = findWalkingPath(2, 0, 0, 0, localPlayer.smallY[0], 0, 0, arg3, localPlayer.smallX[0], false, arg2);
 			if(!flag6) {
 				flag6 = findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, arg3, localPlayer.smallX[0], false, arg2);
@@ -4306,7 +4308,7 @@ public class Client extends ClientEngine {
 				}
 			}
 		}
-		if(code == 491 && !panelHandler.isActive()) {
+		if(code == 491 && panelHandler.action()) {
 			final Player player = playerList[arg1];
 			if(player != null) {
 				findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, player.smallY[0], localPlayer.smallX[0], false, player.smallX[0]);
@@ -4361,7 +4363,7 @@ public class Client extends ClientEngine {
 				atInventoryInterfaceType = 3;
 			}
 		}
-		if(code == 478 && !panelHandler.isActive()) {
+		if(code == 478 && panelHandler.action()) {
 			final NPC npc = npcList[arg1];
 			if(npc != null) {
 				findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, npc.smallY[0], localPlayer.smallX[0], false, npc.smallX[0]);
@@ -4379,21 +4381,21 @@ public class Client extends ClientEngine {
 				outBuffer.putLitEndShort(arg1);
 			}
 		}
-		if(code == 113 && !panelHandler.isActive()) {
+		if(code == 113 && panelHandler.action()) {
 			clickLoc(arg4, arg3, arg2);
 			outBuffer.putOpcode(70);
 			outBuffer.putMedium((int) (arg4 >> 14 & 0xFFFFFF));
 			outBuffer.putShort(arg2 + baseX);
 			outBuffer.putShort(arg3 + baseY);
 		}
-		if(code == 872 && !panelHandler.isActive()) {
+		if(code == 872 && panelHandler.action()) {
 			clickLoc(arg4, arg3, arg2);
 			outBuffer.putOpcode(234);
 			outBuffer.putMedium((int) (arg4 >> 14 & 0xFFFFFF));
 			outBuffer.putShort(arg2 + baseX);
 			outBuffer.putShort(arg3 + baseY);
 		}
-		if(code == 502 && !panelHandler.isActive()) {
+		if(code == 502 && panelHandler.action()) {
 			clickLoc(arg4, arg3, arg2);
 			outBuffer.putOpcode(132);
 			outBuffer.putMedium((int) (arg4 >> 14 & 0xFFFFFF));
@@ -4446,7 +4448,7 @@ public class Client extends ClientEngine {
 			}
 			pushMessage(s10, 0, "");
 		}
-		if(code == 244 && !panelHandler.isActive()) {
+		if(code == 244 && panelHandler.action()) {
 			boolean flag7 = findWalkingPath(2, 0, 0, 0, localPlayer.smallY[0], 0, 0, arg3, localPlayer.smallX[0], false, arg2);
 			if(!flag7) {
 				flag7 = findWalkingPath(2, 0, 1, 0, localPlayer.smallY[0], 1, 0, arg3, localPlayer.smallX[0], false, arg2);
@@ -5499,7 +5501,7 @@ public class Client extends ClientEngine {
 						openInterfaceID = -1;
 						panelHandler.open(new BankPanel());
 					} else {
-						if(panelHandler.isActive())
+						if(panelHandler.action())
 							panelHandler.close();
 						openInterfaceID = i5;
 					}
@@ -5909,7 +5911,7 @@ public class Client extends ClientEngine {
 						openInterfaceID = -1;
 					} else {
 						openInterfaceID = l7;
-						if(panelHandler.isActive())
+						if(!panelHandler.isBlocked())
 							panelHandler.close();
 					}
 					aBoolean1149 = false;
@@ -5985,6 +5987,9 @@ public class Client extends ClientEngine {
 					}
 					if(inputDialogState != 0) {
 						inputDialogState = 0;
+					}
+					if(panelHandler.isActive() && !panelHandler.isBlocked()) {
+						panelHandler.close();
 					}
 					openInterfaceID = -1;
 					aBoolean1149 = false;

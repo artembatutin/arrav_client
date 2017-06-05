@@ -251,6 +251,10 @@ public class CounterPanel extends Panel {
 		return 9;
 	}
 	
+	@Override
+	public boolean blockedMove() {
+		return false;
+	}
 	/**
 	 * Represents a shop on this panel.
 	 */

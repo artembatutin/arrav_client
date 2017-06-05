@@ -368,6 +368,11 @@ public class ClanSettingPanel extends Panel {
 	public int getId() {
 		return 1;
 	}
+	
+	@Override
+	public boolean blockedMove() {
+		return false;
+	}
 
 	public static class ClanMember {
 

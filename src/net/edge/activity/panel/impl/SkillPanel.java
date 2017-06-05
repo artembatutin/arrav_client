@@ -124,4 +124,10 @@ public class SkillPanel extends Panel {
 	public int getId() {
 		return 4;
 	}
+	
+	@Override
+	public boolean blockedMove() {
+		return false;
+	}
+	
 }

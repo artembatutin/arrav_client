@@ -2559,6 +2559,8 @@ public final class Model extends Entity {
 		AnimationFrame nextAnim = null;
 		if(nextId != -1) {
 			nextAnim = AnimationFrame.get(nextId);
+			if(nextAnim == null)
+				return;
 			if(nextAnim.skinList != skinList) {
 				nextAnim = null;
 			}

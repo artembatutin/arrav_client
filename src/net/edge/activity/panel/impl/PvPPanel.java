@@ -192,6 +192,12 @@ public class PvPPanel extends Panel {
 	
 	@Override
 	public int getId() {
-		return 7;
+		return 12;
 	}
+	
+	@Override
+	public boolean blockedMove() {
+		return false;
+	}
+	
 }

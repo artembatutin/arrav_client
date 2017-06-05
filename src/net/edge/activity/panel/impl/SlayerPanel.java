@@ -161,4 +161,10 @@ public class SlayerPanel extends Panel {
 	public int getId() {
 		return 11;
 	}
+	
+	@Override
+	public boolean blockedMove() {
+		return false;
+	}
+	
 }

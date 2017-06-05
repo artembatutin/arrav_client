@@ -229,5 +229,10 @@ public class SettingPanel extends Panel {
 		}
 		smallFont.drawLeftAlignedEffectString(text, x + 5, y + 13, 0xFFFFFF, true);
 	}
+	
+	@Override
+	public boolean blockedMove() {
+		return false;
+	}
 
 }

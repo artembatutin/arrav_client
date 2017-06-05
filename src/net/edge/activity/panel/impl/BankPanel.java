@@ -13,8 +13,9 @@ public class BankPanel extends Panel {
 
 	/**
 	 * The selected bank slot
+	 * static to keep it saved.
 	 */
-	private int tab;
+	private static int tab;
 
 	/**
 	 * An item selection manipulator value.
@@ -29,7 +30,9 @@ public class BankPanel extends Panel {
 	/**
 	 * Scroll bar manipulated value.
 	 */
-	private int scrollPos, scrollMax, scrollDragPos;
+	private static int scrollPos;//static to save.
+	private int scrollMax;
+	private int scrollDragPos;
 
 	/**
 	 * The condition if the scroll is being dragged.
@@ -207,7 +210,7 @@ public class BankPanel extends Panel {
 					}
 				}
 			}
-		} else {
+		} else if(this.on()) {
 			for(int i = 0; i < Interface.cache[270 + tab].invId.length; i++) {
 				int icon = Interface.cache[270 + tab].invId[i];
 				int x = i % 7 * 65;
@@ -543,4 +546,10 @@ public class BankPanel extends Panel {
 	public int getId() {
 		return 6;
 	}
+	
+	@Override
+	public boolean blockedMove() {
+		return false;
+	}
+	
 }

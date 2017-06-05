@@ -96,7 +96,16 @@ public class DropPanel extends Panel {
 			beginX = client.windowWidth / 2 - 380;
 			beginY = client.windowHeight / 2 - 250;
 		}
-		scrollMax = Math.max(51 * ((client.npcDropsId.length + 2) / 3) - 285, 0);
+		
+		int max1 = 1;
+		int max2 = 0;
+		if(client.panelSearch && seekable != null) {
+			max1 = 32 * seekable.length;
+			max2 = 0;
+		} else if(!client.panelSearch) {
+			max1 = 51 * ((client.npcDropsId.length + 2) / 3);
+		}
+		scrollMax = Math.max((max1 > max2 ? max1 : max2) - 285, 0);
 
         /* Scrolling */
 		if(client.mouseInRegion(beginX + 5, beginY + 50, beginX + 493, beginY + 365)) {
@@ -342,6 +351,12 @@ public class DropPanel extends Panel {
 	
 	@Override
 	public int getId() {
-		return 6;
+		return 10;
 	}
+	
+	@Override
+	public boolean blockedMove() {
+		return false;
+	}
+	
 }

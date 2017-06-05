@@ -52,7 +52,7 @@ public class GameActivity extends Activity {
 			}
 		}
 		synchronized(client.mouseDetection.synchronizer) {
-			if(client.flagged && !client.panelHandler.isActive()) {
+			if(client.flagged && client.panelHandler.action()) {
 				if(client.clickButton != 0 || client.mouseDetection.index >= 40) {
 					final int j2 = client.outBuffer.pos;
 					int j3 = 0;
@@ -118,7 +118,7 @@ public class GameActivity extends Activity {
 				client.mouseDetection.index = 0;
 			}
 		}
-		if(client.clickButton != 0 && !client.panelHandler.isActive()) {
+		if(client.clickButton != 0 && client.panelHandler.action()) {
 			client.aLong1220 = client.clickTime;
 		}
 		if(client.anInt1016 > 0) {
@@ -223,7 +223,7 @@ public class GameActivity extends Activity {
 				client.clickButton = 0;
 			}
 		}
-		if(Scene.hoverX != -1 && !client.panelHandler.isActive()) {
+		if(Scene.hoverX != -1 && client.panelHandler.action()) {
 			final int k = Scene.hoverX;
 			final int k1 = Scene.hoverY;
 			final boolean flag = client.findWalkingPath(0, 0, 0, 0, client.localPlayer.smallY[0], 0, 0, k1, client.localPlayer.smallX[0], true, k);
@@ -488,7 +488,7 @@ public class GameActivity extends Activity {
 					client.buildWidgetMenu(4, Interface.cache[client.openInterfaceID], client.mouseX, 4, client.mouseY, 0);
 				}
 			} else {
-				if(!client.panelHandler.isActive()) {
+				if(client.panelHandler.action()) {
 					if(client.mouseWheelAmt != 0) {
 						client.cameraZoom += client.mouseWheelAmt * 20;
 					}
@@ -598,8 +598,9 @@ public class GameActivity extends Activity {
 	}
 
 	private void build3dScreenMenu() {
-		if(client.panelHandler.isActive())
+		if(!client.panelHandler.action()) {
 			return;
+		}
 		if(client.itemSelected == 0 && client.spellSelected == 0) {
 			client.menuItemName[client.menuPos] = "Walk here";
 			client.menuItemCode[client.menuPos] = 516;
@@ -820,8 +821,9 @@ public class GameActivity extends Activity {
 	}
 
 	private void buildAtNPCMenu(NPCType entityDef, int i, int j, int k) {
-		if(client.panelHandler.isActive())
+		if(!client.panelHandler.action()) {
 			return;
+		}
 		if(client.menuPos >= 400) {
 			return;
 		}
@@ -934,8 +936,9 @@ public class GameActivity extends Activity {
 	}
 
 	private void buildAtPlayerMenu(int i, int j, Player player, int k) {
-		if(client.panelHandler.isActive())
+		if(!client.panelHandler.action()) {
 			return;
+		}
 		if(player == client.localPlayer) {
 			return;
 		}
@@ -1139,8 +1142,9 @@ public class GameActivity extends Activity {
 	}
 
 	private void buildSplitPrivateChatMenu() {
-		if(client.panelHandler.isActive())
+		if(!client.panelHandler.action()) {
 			return;
+		}
 		if(client.uiRenderer.isResizableOrFull() && !client.showChat) {
 			return;
 		}
@@ -1482,7 +1486,7 @@ public class GameActivity extends Activity {
 				final int j2 = client.localPlayer.y - l1 >> 7;
 				final boolean flag1 = client.findWalkingPath(1, 0, 0, 0, client.localPlayer.smallY[0], 0, 0, j2, client.localPlayer.smallX[0], true, i2);
 				if(flag1) {
-					if(client.panelHandler.isActive() && !client.panelHandler.isTitleBlockedOpen()) {
+					if(client.panelHandler.action()) {
 						client.panelHandler.close();
 					}
 					client.outBuffer.putByte(xClick);

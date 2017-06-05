@@ -34,12 +34,35 @@ public class PanelHandler {
 			currentPanel.reset();
 		currentPanel = null;
 	}
+	
+	public boolean isBlocked() {
+		return currentPanel != null && currentPanel.getId() != 0 && currentPanel.blockedMove();
+	}
+	
+	public boolean on() {
+		return currentPanel != null && currentPanel.on();
+	}
 
-	/**
-	 * Determines if any panel is active.
-	 */
 	public boolean isActive() {
-		return currentPanel != null && currentPanel.getId() != 0;
+		if(currentPanel == null)
+			return false;
+		if(currentPanel.getId() == 0)
+			return false;
+		if(currentPanel.blockedMove())
+			return true;
+		return true;
+	}
+	
+	public boolean action() {
+		if(currentPanel == null)
+			return true;
+		if(currentPanel.getId() == 0)
+			return true;
+		if(currentPanel.blockedMove())
+			return false;
+		if(currentPanel.on())
+			return false;
+		return true;
 	}
 
 	/**
@@ -99,16 +122,16 @@ public class PanelHandler {
 	}
 	
 	/**
-	 * Determines if the title panel is open in blocked instance.
+	 * Determines if the market panel is open.
 	 */
-	public boolean isTitleBlockedOpen() {
+	public boolean isMarketOpen() {
 		return currentPanel != null && currentPanel.getId() == 9;
 	}
 	
 	/**
-	 * Determines if the title panel is open.
+	 * Determines if the drop panel is open.
 	 */
-	public boolean isTitleOpen() {
+	public boolean isDropOpen() {
 		return currentPanel != null && currentPanel.getId() == 10;
 	}
 	
@@ -117,6 +140,20 @@ public class PanelHandler {
 	 */
 	public boolean isSlayerOpen() {
 		return currentPanel != null && currentPanel.getId() == 11;
+	}
+	
+	/**
+	 * Determines if the pvp panel is open.
+	 */
+	public boolean isPvpOpen() {
+		return currentPanel != null && currentPanel.getId() == 12;
+	}
+	
+	/**
+	 * Determines if the summoning panel is open.
+	 */
+	public boolean isSumOpen() {
+		return currentPanel != null && currentPanel.getId() == 13;
 	}
 
 }

@@ -119,6 +119,9 @@ public final class NPCType {
 		if(id == 5913) {//aubury
 			npc.actions = new String[] {"Talk-to", null, "Get-Skillcape", null, "Teleport", null};
 		}
+		if(id == 2270) {//thieving
+			npc.actions = new String[] {"Trade", null, "Get-Skillcape", null, null, null};
+		}
 		if(id == 8462) {//slayer master
 			npc.actions = new String[] {"Talk-to", null, "Tasks", null, "Trade", null };
 		}

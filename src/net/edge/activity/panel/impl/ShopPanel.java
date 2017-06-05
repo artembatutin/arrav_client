@@ -351,4 +351,10 @@ public class ShopPanel extends Panel {
 	public int getId() {
 		return 3;
 	}
+	
+	@Override
+	public boolean blockedMove() {
+		return false;
+	}
+	
 }

@@ -131,4 +131,9 @@ public class BossPanel extends Panel {
 	public int getId() {
 		return 8;
 	}
+	
+	@Override
+	public boolean blockedMove() {
+		return false;
+	}
 }

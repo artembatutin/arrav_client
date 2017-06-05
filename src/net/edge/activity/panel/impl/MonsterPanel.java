@@ -110,4 +110,10 @@ public class MonsterPanel extends Panel {
 	public int getId() {
 		return 5;
 	}
+	
+	@Override
+	public boolean blockedMove() {
+		return false;
+	}
+	
 }

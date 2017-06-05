@@ -346,6 +346,12 @@ public class SummoningPanel extends Panel {
 
 	@Override
 	public int getId() {
-		return 3;
+		return 13;
 	}
+	
+	@Override
+	public boolean blockedMove() {
+		return false;
+	}
+	
 }

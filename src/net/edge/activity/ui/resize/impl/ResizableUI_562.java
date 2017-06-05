@@ -287,6 +287,12 @@ public class ResizableUI_562 extends ResizableUI {
 			ImageCache.get(84).drawImage(xOffset + 18, 0);
 			ImageCache.get(85).drawImage(xOffset + 23, 5);
 			ImageCache.get(83).drawImage(xOffset + 13, 0);
+			if(Config.DRAW_ORBS.isOn()) {
+				displayOrb(client.windowWidth - 209, 38, Constants.ORB_HEALTH, false);
+				displayOrb(client.windowWidth - 212, 72, Constants.ORB_PRAYER, true);
+				displayOrb(client.windowWidth - 200, 106, Constants.ORB_RUN, true);
+				displayOrb(client.windowWidth - 177, 140, Constants.ORB_SUMMONING, true);
+			}
 			ImageCache.get(1700).drawAffineTransformedImage(xOffset + 19, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
 			return;
 		}
@@ -394,12 +400,12 @@ public class ResizableUI_562 extends ResizableUI {
 
 	@Override
 	public void buildInventory() {
-		if(client.mouseWheelAmt != 0 && client.olderTabInterfaces[client.invTab] != -1) {
-			Interface tab = Interface.cache[client.olderTabInterfaces[client.invTab]];
+		if(client.mouseWheelAmt != 0 && client.newerTabInterfaces[client.invTab] != -1) {
+			Interface tab = Interface.cache[client.newerTabInterfaces[client.invTab]];
 			if(tab.subId != null) {
 				int posX = client.windowWidth - 197;
 				int posY = client.windowHeight - 303;
-				if(client.windowWidth < 1000) {
+				if(client.windowWidth < 980) {
 					posY -= 36;
 				}
 				Interface widget = null;
