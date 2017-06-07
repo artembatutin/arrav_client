@@ -44,10 +44,45 @@ public class DropPanel extends Panel {
 		}
 	}
 	
+	public enum Drop {
+		HERB_SEEDS,
+		FLOWER_SEEDS,
+		ALLOTMENT_SEEDS,
+		CHARMS,
+		LOW_RUNES,
+		MED_RUNES,
+		HIGH_RUNES,
+		LOW_HERBS,
+		MED_HERBS,
+		HIGH_HERBS,
+		LOW_GEMS,
+		MED_GEMS,
+		HIGH_GEMS,
+		LOW_EQUIPMENT,
+		ADAMANT_EQUIPMENT,
+		RUNE_EQUIPMENT,
+		LOW_RESOURCES,
+		MED_RESOURCES,
+		HIGH_RESOURCES,
+		CASKETS,
+		BARROWS;
+		
+		public String name;
+		
+		Drop() {
+			name = this.name().replaceAll("_", " ").toLowerCase();
+		}
+	}
+	
 	/**
 	 * The npc type of this drop.
 	 */
 	private NPCType type;
+	
+	/**
+	 * Array of table drops.
+	 */
+	private Drop[] drops = Drop.values();
 	
 	/**
 	 * Array of chances.
@@ -103,7 +138,8 @@ public class DropPanel extends Panel {
 			max1 = 32 * seekable.length;
 			max2 = 0;
 		} else if(!client.panelSearch) {
-			max1 = 51 * ((client.npcDropsId.length + 2) / 3);
+			max1 = 43 * client.npcDropsId.length;
+			max2 = (32 * client.npcDropsId.length);
 		}
 		scrollMax = Math.max((max1 > max2 ? max1 : max2) - 285, 0);
 
@@ -273,6 +309,15 @@ public class DropPanel extends Panel {
 		} else {
 			if(type == null)
 				return;
+			Rasterizer2D.drawVerticalLine(beginX + 126, beginY + 50, 280, 0x000000);
+			
+			for(int c = 0; c < client.npcDrops.length; c++) {
+				Drop drop = drops[client.npcDrops[c]];
+				Rasterizer2D.fillRectangle(beginX + 6, beginY + offset, 120, 30, 0x0000, 100);
+				plainFont.drawLeftAlignedString(drop.name, beginX + 15, beginY + offset + 17, 0xffffff);
+				offset += 31;
+			}
+			
 			offset = -scrollPos + 52;
 			for(int u = 0; u < client.npcDropsId.length; u++) {
 				int id = client.npcDropsId[u];
@@ -282,15 +327,19 @@ public class DropPanel extends Panel {
 				ObjectType obj = ObjectType.get(id);
 				if(obj == null)
 					continue;
-				int x = u % 3 * 158;
 				BitmapImage image = ObjectType.getIcon(id, max, 0);
-				Rasterizer2D.fillRoundedRectangle(beginX + 10 + x, beginY + offset, 155, 47, 3, 0x000000, 50);
 				if(image != null)
-					image.drawImage(beginX + 15 + x, beginY + offset + 2);
-				plainFont.drawLeftAlignedString(obj.name, beginX + 55 + x, beginY + offset + 14, 0xffffff);
-				smallFont.drawLeftAlignedString("From " + min + " to " + max, beginX + 55 + x, beginY + offset + 29, 0xe6c9a5);
-				smallFont.drawLeftAlignedString(ch.name, beginX + 55 + x, beginY + offset + 40, ch.color);
-				offset += u % 3 == 2 ? 50 : 0;
+					image.drawImage(beginX + 140, beginY + offset);
+				//Rasterizer2D.fillRectangle(beginX + 6, beginY + offset, 120, 30, 0x0000, 100);
+				plainFont.drawLeftAlignedString(obj.name, beginX + 190, beginY + offset + 14, 0xffffff);
+				smallFont.drawLeftAlignedString(ch.name, beginX + 190, beginY + offset + 26, ch.color);
+				if(min == 1 && max > 1) {
+					smallFont.drawLeftAlignedString("Up to " + max, beginX + 340, beginY + offset + 20, 0xffffff);
+				} else if(min != 1) {
+					smallFont.drawLeftAlignedString("From " + min + " up to " + max, beginX + 340, beginY + offset + 20, 0xffffff);
+				}
+				Rasterizer2D.drawHorizontalLine(beginX + 127, beginY + offset + 38, 374, 0x000000);
+				offset += 41;
 			}
 		}
 
@@ -322,6 +371,8 @@ public class DropPanel extends Panel {
 			br.lines().forEach(line -> {
 				String[] l = line.split("-");
 				for(String num : l) {
+					if(num.length() == 0)
+						continue;
 					int id = Integer.parseInt(num);
 					if(id > 0)
 						ids.add(id);

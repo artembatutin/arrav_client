@@ -68,6 +68,7 @@ public class Client extends ClientEngine {
 	 * Npc information values.
 	 */
 	public int npcInfoId;
+	public int[] npcDrops;
 	public int[] npcDropsId;
 	public int[] npcDropsMin;
 	public int[] npcDropsMax;
@@ -640,12 +641,17 @@ public class Client extends ClientEngine {
 	 */
 	public static void main(String[] args) {
 		try {
+			if(args != null && args.length > 0) {
+				Constants.JAGGRAB_ENABLED = Boolean.parseBoolean(args[0]);
+				Constants.USER_HOME_FILE_STORE = Boolean.parseBoolean(args[1]);
+			}
 			SignLink.storeId = 32;
 			SignLink.startPriv(InetAddress.getLocalHost());
 			final Client client = new Client();
 			client.nodeID = 10;
 			client.startApplication();
 		} catch(final Exception exception) {
+			exception.printStackTrace();
 			System.out.println("Failed to launch the application.");
 		}
 	}
@@ -5680,6 +5686,11 @@ public class Client extends ClientEngine {
 						return true;
 					} else {
 						panelSearch = false;
+					}
+					final int commonCount = inBuffer.getUShort();
+					npcDrops = new int[commonCount];
+					for(int common = 0; common < commonCount; common++) {
+						npcDrops[common] = inBuffer.getUShort();
 					}
 					final int uniqueCount = inBuffer.getUShort();
 					npcDropsId = new int[uniqueCount];

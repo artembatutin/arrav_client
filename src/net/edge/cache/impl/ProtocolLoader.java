@@ -27,6 +27,7 @@ public class ProtocolLoader implements CacheLoader {
 		client.onDemandRequester.start(archive, client);
 		Model.method459(client.onDemandRequester.getModelCount(), client.onDemandRequester);
 		Texture.init(client.onDemandRequester);
+		//client.onDemandRequester.writeChecksumList(3);
 		//for(int i = 0; i < Constants.CACHE_INDEX_COUNT - 1; i++) {
 		//	client.onDemandRequester.writeChecksumList(i);
 		//	client.onDemandRequester.writeVersionList(i);

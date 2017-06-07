@@ -27,7 +27,8 @@ public class ShopPanel extends Panel {
 		CASTLE_WARS_TICKETS(-1),
 		AGILITY_ARENA_TICKETS(-1),
 		BLOOD_MONEY(1917),
-		EDGE_TOKENS(1918);
+		EDGE_TOKENS(1918),
+		VOTE_POINTS(-1);
 		
 		/**
 		 * The image that is represented by this element.
@@ -161,10 +162,12 @@ public class ShopPanel extends Panel {
 			return true;
 		}
 		
-		if(back) {
-			if(client.leftClickInRegion(beginX + 382, beginY + 12, beginX + 438, beginY + 42)) {
+		if(client.leftClickInRegion(beginX + 382, beginY + 12, beginX + 438, beginY + 42)) {
+			if(client.localPrivilege == 4) {
+				client.outBuffer.putOpcode(185);
+				client.outBuffer.putShort(124);
+			} else if(back)
 				client.panelHandler.open(new CounterPanel());
-			}
 		}
 
 		/* Adding item */
@@ -234,8 +237,8 @@ public class ShopPanel extends Panel {
 		if(client.mouseInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
 		}
-		if(back) {
-			fancyFont.drawCenteredString("Back", beginX + 407, beginY + 27, 0xF3B13F);
+		if(back || client.localPrivilege == 4) {
+			fancyFont.drawCenteredString(client.localPrivilege == 4 ? "Edit" : "Back", beginX + 407, beginY + 27, 0xF3B13F);
 			Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
 			if(client.mouseInRegion(beginX + 382, beginY + 12, beginX + 438, beginY + 42)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xF3B13F, 20);

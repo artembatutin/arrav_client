@@ -4,15 +4,15 @@ public final class Constants {
 
 	private Constants() {
 	}
-
-	public static final int BUILD = 17;
-	public static final boolean JAGGRAB_ENABLED = false;
+	
+	public static boolean JAGGRAB_ENABLED = true;
+	public static boolean USER_HOME_FILE_STORE = true;
 
 	/*
 	 * Miscellaneous constants
 	 */
+	public static final int BUILD = 18;
 	public static final boolean ANTI_BOT_ENABLED = true;
-	public static final boolean USER_HOME_FILE_STORE = false;
 	public static final int CACHE_INDEX_COUNT = 8;
 
 	/*
