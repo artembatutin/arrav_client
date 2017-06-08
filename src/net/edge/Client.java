@@ -8808,7 +8808,7 @@ public class Client extends ClientEngine {
 			entity.anInt1503 = 0;
 			return;
 		}
-		if(entity.anim != -1 && entity.animDelay == 0) {
+		if(entity.anim != -1 && entity.animDelay == 0 && DeformSequence.cache.length > entity.anim) {
 			final DeformSequence animation = DeformSequence.cache[entity.anim];
 			if(entity.anInt1542 > 0 && animation.precedenceAnimating == 0) {
 				entity.anInt1503++;

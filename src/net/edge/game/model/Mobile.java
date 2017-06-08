@@ -137,6 +137,9 @@ public class Mobile extends Entity {
 			j++;
 			k--;
 		}
+		if(anim >= DeformSequence.cache.length) {
+			anim = -1;
+		}
 		if(anim != -1 && DeformSequence.cache[anim].precedenceWalking == 1) {
 			anim = -1;
 		}

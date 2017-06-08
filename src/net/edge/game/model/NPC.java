@@ -60,7 +60,7 @@ public final class NPC extends Mobile {
 		int nextAnim = -1;
 		int currCycle = -1;
 		int nextCycle = -1;
-		if(super.anim >= 0 && super.animDelay == 0) {
+		if(super.anim >= 0 && super.animDelay == 0 && DeformSequence.cache.length > super.anim) {
 			DeformSequence seq = DeformSequence.cache[super.anim];
 			if(Config.TWEENING.isOn() && super.nextAnimFrame != -1) {
 				nextAnim = seq.frameList[super.nextAnimFrame];
