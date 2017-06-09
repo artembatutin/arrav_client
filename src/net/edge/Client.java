@@ -219,6 +219,7 @@ public class Client extends ClientEngine {
 	public String chatBoxStatement;
 	public String chatInput;
 	public String amountOrNameInput;
+	public String outBoundInput;
 	public String promptInputTitle;
 	public String spellTooltip;
 	public String promptInput;
@@ -536,6 +537,7 @@ public class Client extends ClientEngine {
 		anIntArray990 = new int[5];
 		aBoolean994 = false;
 		amountOrNameInput = "";
+		outBoundInput = "";
 		aClass19_1013 = new LinkedDeque();
 		cameraMoved = false;
 		anInt1018 = -1;
@@ -644,6 +646,7 @@ public class Client extends ClientEngine {
 			if(args != null && args.length > 0) {
 				Constants.JAGGRAB_ENABLED = Boolean.parseBoolean(args[0]);
 				Constants.USER_HOME_FILE_STORE = Boolean.parseBoolean(args[1]);
+				System.out.println("Loading local." + Constants.USER_HOME_FILE_STORE  + Constants.JAGGRAB_ENABLED);
 			}
 			SignLink.storeId = 32;
 			SignLink.startPriv(InetAddress.getLocalHost());
@@ -5843,6 +5846,7 @@ public class Client extends ClientEngine {
 					messagePromptRaised = false;
 					inputDialogState = 1;
 					amountOrNameInput = "";
+					outBoundInput = "";
 					promptInput = "";
 					promptInputTitle = inBuffer.getLine();
 					pktType = -1;
@@ -5869,6 +5873,7 @@ public class Client extends ClientEngine {
 					messagePromptRaised = false;
 					inputDialogState = 2;
 					amountOrNameInput = "";
+					outBoundInput = "";
 					promptInput = "";
 					promptInputTitle = inBuffer.getLine();
 					pktType = -1;
@@ -6816,10 +6821,19 @@ public class Client extends ClientEngine {
 					}
 				}
 			} else if(inputDialogState == 1) {
+				if(j == 107 || j == 75 || j == 109 || j == 77) {//k(107/75), m(109/77) inputs.
+					if(outBoundInput.length() == 0)
+						outBoundInput += (char) j;
+					return;
+				}
 				if(j >= 48 && j <= 57 && amountOrNameInput.length() < 10) {
 					amountOrNameInput += (char) j;
 				}
-				if(j == 8 && amountOrNameInput.length() > 0) {
+				if(j == 8 && (amountOrNameInput.length() > 0 || outBoundInput.length() > 0)) {
+					if(outBoundInput.length() > 0) {
+						outBoundInput = outBoundInput.substring(0, outBoundInput.length() - 1);
+						return;
+					}
 					amountOrNameInput = amountOrNameInput.substring(0, amountOrNameInput.length() - 1);
 				}
 				if(j == 13 || j == 10) {
@@ -6827,9 +6841,18 @@ public class Client extends ClientEngine {
 						int i1 = 0;
 						try {
 							i1 = Integer.parseInt(amountOrNameInput);
-						} catch(final Exception _ex) {
+						} catch(final Exception ignored) {}
+						if(outBoundInput.length() > 0) {
+							if(outBoundInput.contains("k") || outBoundInput.contentEquals("K")) {
+								i1 *= 1000;
+							}
+							if(outBoundInput.contains("m") || outBoundInput.contentEquals("M")) {
+								i1 *= 1000000;
+							}
+							outBoundInput = "";
 						}
 						if(npcSug) {
+							//npc suggestion output.
 							if(npcSugMin > 0) {
 								npcSugMax = i1;
 								inputDialogState = 0;

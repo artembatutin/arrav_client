@@ -146,10 +146,10 @@ public class ResizableUI_CUS extends ResizableUI {
 			client.boldFont.drawCenteredString(client.promptInput + "*", 270, y + 90, 0xffffff);
 		} else if(client.inputDialogState == 1) {
 			client.boldFont.drawCenteredString("Enter amount:", 270, y + 60, 0xFFBF00);
-			client.boldFont.drawCenteredString(client.amountOrNameInput + "*", 270, y + 90, 0xffffff);
+			client.boldFont.drawCenteredString(client.amountOrNameInput + client.outBoundInput + "*", 270, y + 90, 0xffffff);
 		} else if(client.inputDialogState == 2) {
 			client.boldFont.drawCenteredString("Enter name:", 270, y + 60, 0xFFBF00);
-			client.boldFont.drawCenteredString(client.amountOrNameInput + "*", 270, y + 90, 0xffffff);
+			client.boldFont.drawCenteredString(client.amountOrNameInput + client.outBoundInput + "*", 270, y + 90, 0xffffff);
 		} else if(client.chatBoxStatement != null) {
 			client.boldFont.drawCenteredString(client.chatBoxStatement, 270, y + 60, 0xFFBF00);
 			client.boldFont.drawCenteredString("Click to continue", 270, y + 90, 0xffffff);

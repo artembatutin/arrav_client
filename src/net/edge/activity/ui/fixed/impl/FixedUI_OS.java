@@ -98,10 +98,10 @@ public class FixedUI_OS extends FixedUI {
 			client.boldFont.drawCenteredString(client.promptInput + "*", 259, 80, 128);
 		} else if(client.inputDialogState == 1) {
 			client.boldFont.drawCenteredString("Enter amount:", 259, 60, 0);
-			client.boldFont.drawCenteredString(client.amountOrNameInput + "*", 259, 80, 128);
+			client.boldFont.drawCenteredString(client.amountOrNameInput + client.outBoundInput + "*", 259, 80, 128);
 		} else if(client.inputDialogState == 2) {
 			client.boldFont.drawCenteredString("Enter name:", 259, 60, 0);
-			client.boldFont.drawCenteredString(client.amountOrNameInput + "*", 259, 80, 128);
+			client.boldFont.drawCenteredString(client.amountOrNameInput + client.outBoundInput + "*", 259, 80, 128);
 		} else if(client.chatBoxStatement != null) {
 			client.boldFont.drawCenteredString(client.chatBoxStatement, 259, 60, 0);
 			client.boldFont.drawCenteredString("Click to continue", 259, 80, 128);
