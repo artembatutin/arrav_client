@@ -210,7 +210,7 @@ public final class ObjectType {
 		final int endX = Rasterizer2D.clipEndX;
 		final int startY = Rasterizer2D.clipStartY;
 		final int endY = Rasterizer2D.clipEndY;
-		Rasterizer3D.textured = false;
+		Rasterizer3D.textured = true;
 		Rasterizer2D.setCanvas(sprite2.imageRaster, 32, 32);
 		Rasterizer2D.fillRectangle(0, 0, 32, 32, 0);
 		Rasterizer3D.viewport = new Viewport(0, 0, 32, 32, 32);
@@ -223,7 +223,7 @@ public final class ObjectType {
 		}
 		final int l3 = Rasterizer3D.angleSine[obj.iconYaw] * zoom >> 16;
 		final int i4 = Rasterizer3D.angleCosine[obj.iconYaw] * zoom >> 16;
-		Rasterizer3D.iconDrawingMissingTextures = false;
+		Rasterizer3D.iconDrawingMissingTextures = true;
 		model.drawModel(obj.iconRoll, obj.anInt204, obj.iconYaw, obj.iconHorizontalOffset, l3 + model.maxVerticalDistUp / 2 + obj.iconVerticalOffset, i4 + obj.iconVerticalOffset);
 		for(int _x = 31; _x >= 0; _x--) {
 			for(int _y = 31; _y >= 0; _y--) {

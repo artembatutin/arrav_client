@@ -2181,6 +2181,7 @@ public final class Model extends Entity {
 		try {
 			method483(flag, hover, hash);
 		} catch(final Exception e) {
+			e.printStackTrace();
 		}
 	}
 
