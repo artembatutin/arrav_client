@@ -121,8 +121,39 @@ public final class ObjectType {
 			obj.name = "Extreme donator certificate";
 			obj.actions = new String[] { "Claim", null, null, null, null };
 		}
+		
+		if(id == 3904)
+			obj.pet("Trapped abyssal orphan");
+		if(id == 3906)
+			obj.pet("Trapped Jadiku");
+		if(id == 3908)
+			obj.pet("Trapped Toram");
+		if(id == 3910)
+			obj.pet("Trapped Wyrmy");
+		
+		if(id == 3912)
+			obj.pet("Trapped Kraa");//armadyl
+		if(id == 3914)
+			obj.pet("Trapped Grary");//bandos
+		if(id == 3916)
+			obj.pet("Trapped Tsutsy");//zamorak
+		if(id == 3918)
+			obj.pet("Trapped Zilzy");//saradomin
 
 		return obj;
+	}
+	
+	private void pet(String name) {
+		ObjectType copied = get(10025);
+		this.modelId = copied.modelId;
+		this.modifiedModelColors = copied.modifiedModelColors;
+		this.originalModelColors = copied.originalModelColors;
+		this.iconRoll = copied.iconRoll;
+		this.iconYaw = copied.iconYaw;
+		this.iconZoom = copied.iconZoom;
+		this.stackable = false;
+		this.noteId = -1;
+		this.name = name;
 	}
 
 	public static BitmapImage getIcon(int id, int itemAmount, int type) {
@@ -164,7 +195,7 @@ public final class ObjectType {
 		}
 		if(obj.lentItemID != -1) {
 			try {
-				sprite = getIcon(obj.noteId, 50, 0);
+				sprite = getIcon(obj.lendID, 50, 0);
 			} catch(Exception ignored) {
 			}
 			if(sprite == null)
@@ -243,7 +274,7 @@ public final class ObjectType {
 			sprite.imageOriginalWidth = maxWidth;
 			sprite.imageOriginalHeight = maxHeight;
 		}
-		/*if(obj.lendID != -1) {
+		if(obj.lendID != -1 && sprite != null) {
 			final int l5 = sprite.imageOriginalWidth;
 			final int j6 = sprite.imageOriginalHeight;
 			sprite.imageOriginalWidth = 32;
@@ -251,7 +282,7 @@ public final class ObjectType {
 			sprite.drawImage(0, 0);
 			sprite.imageOriginalWidth = l5;
 			sprite.imageOriginalHeight = j6;
-		}*/
+		}
 		if(type == 0 && !Rasterizer3D.iconDrawingMissingTextures) {
 			iconcache.put(id, sprite2);
 		}

@@ -114,6 +114,8 @@ public final class LocationType {
 			loc.actions = new String[]{"Add-Logs", null, "Check", null, null};
 		if(id == 38817 || id == 38818 || id == 38819 || id == 38820 || id == 38821)
 			loc.actions = new String[]{"Add-Logs", null, null, null, null};
+		if(loc.id == 6069)
+			loc.actions = new String[] { "Grab", null, null, null, null };
 		if(loc.id == 4709)
 			loc.mapFunction = 89;
 		if(loc.id == 9678)

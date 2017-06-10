@@ -4,6 +4,7 @@ import net.edge.Config;
 import net.edge.Constants;
 import net.edge.cache.CacheArchive;
 import net.edge.game.model.Model;
+import net.edge.game.model.NPC;
 import net.edge.sign.SignLink;
 import net.edge.util.collect.HashLruCache;
 import net.edge.util.io.Buffer;
@@ -83,7 +84,7 @@ public final class NPCType {
 			}
 		}
 		pos = (pos + 1) % 20;
-		final NPCType npc = cache[pos] = new NPCType();
+		NPCType npc = cache[pos] = new NPCType();
 		data.pos = index[id];
 		npc.id = id;
 		npc.decode(data);
@@ -140,7 +141,42 @@ public final class NPCType {
 		if(id == 3495 || id == 1613 || id == 10702 || id == 111 || (npc.name != null && npc.name.contains("Waterfiend"))) {//fixes
 			npc.nonTextured = true;
 		}
+		
+		//pets
+		if(id == 3167)
+			npc.pet(1615, "Abyssal orphan", 48);
+		if(id == 3168)
+			npc.pet(2745, "Jadiku", 28);
+		if(id == 3169)
+			npc.pet(8349, "Toram", 48);
+		if(id == 3170)
+			npc.pet(3334, "Wyrmy", 48);
+		
+		if(id == 3177)
+			npc.pet(6222, "Kraa", 28);//armadyl
+		if(id == 3178)
+			npc.pet(6260, "Grary", 38);//bandos
+		if(id == 3179)
+			npc.pet(6203, "Tsutsy", 48);//zamorak
+		if(id == 3180)
+			npc.pet(6247, "Zilzy", 68);//saradomin
 		return npc;
+	}
+	
+	private void pet(int copy, String name, int scale) {
+		NPCType copied = get(copy);
+		this.modelId = copied.modelId;
+		this.modifiedModelColors = copied.modifiedModelColors;
+		this.originalModelColors = copied.originalModelColors;
+		this.additionalModelCount = copied.additionalModelCount;
+		this.turnAroundAnimationId = copied.turnAroundAnimationId;
+		this.turnLeftAnimationId = copied.turnLeftAnimationId;
+		this.turnRightAnimationId = copied.turnRightAnimationId;
+		this.walkAnimationId = copied.walkAnimationId;
+		this.standAnimationId = copied.standAnimationId;
+		this.name = name;
+		this.scaleXY = scale;
+		this.scaleZ = scale;
 	}
 
 	public static void reset() {

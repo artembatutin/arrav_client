@@ -6384,7 +6384,7 @@ public class Client extends ClientEngine {
 			} else {
 				l1 = l - j1;
 			}
-			if(k1 > l1) {
+			if(k1 > l1 && k1 != 0) {
 				final int i2 = l1 * 0x10000 / k1;
 				int k2 = 32768;
 				while(k != i1) {
@@ -6409,7 +6409,7 @@ public class Client extends ClientEngine {
 						}
 					}
 				}
-			} else {
+			} else if(l1 != 0) {
 				final int j2 = k1 * 0x10000 / l1;
 				int l2 = 32768;
 				while(l != j1) {
