@@ -24,11 +24,6 @@ public class ClanSettingPanel extends Panel {
 	private int scrollDragPos2 = 0;
 
 	@Override
-	public String id() {
-		return "clan";
-	}
-
-	@Override
 	public boolean process() {
 	    /* Initialization */
 		int beginX = 4;

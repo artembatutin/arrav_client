@@ -53,6 +53,7 @@ public enum Config {
 	 * Miscellaneous configurations
 	 */
 	DEBUG_DATA(0, false),
+	FPS_ON(0, true),
 	DEBUG_INDEXES(0, false),
 	ORTHO_VIEW(0, false),
 
@@ -172,14 +173,13 @@ public enum Config {
 					String[] con = line.split(":");
 					try {
 						Config config = Config.valueOf(con[0]);
-						if(config != null) {
-							config.set(Integer.parseInt(con[1]), false);
-						}
+						config.set(Integer.parseInt(con[1]), false);
 					} catch(Exception ex) {
 
 					}
 				}
 				in.close();
+				br.close();
 			}
 		} catch(IOException e) {
 			e.printStackTrace();

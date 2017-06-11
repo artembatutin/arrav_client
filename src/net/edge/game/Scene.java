@@ -2,7 +2,6 @@ package net.edge.game;
 
 import net.edge.Constants;
 import net.edge.game.model.Model;
-import net.edge.game.model.Vector;
 import net.edge.Config;
 import net.edge.game.model.Entity;
 import net.edge.game.tile.*;
@@ -258,11 +257,11 @@ public final class Scene {
 					}
 				} else {
 					if(ground.color1[i] != 12345678) {
-						//if(true || ground.aBoolean683) {
-						Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i], ShapedGround.texVertexX[0], ShapedGround.texVertexX[1], ShapedGround.texVertexX[3], ShapedGround.texVertexY[0], ShapedGround.texVertexY[1], ShapedGround.texVertexY[3], ShapedGround.texVertexZ[0], ShapedGround.texVertexZ[1], ShapedGround.texVertexZ[3], ground.texId[i], Config.GROUND_MATERIALS.isOn(), true);
-						//} else {
-						//	Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i], ShapedGround.texVertexX[l2], ShapedGround.texVertexX[j3], ShapedGround.texVertexX[l3], ShapedGround.texVertexY[l2], ShapedGround.texVertexY[j3], ShapedGround.texVertexY[l3], ShapedGround.texVertexZ[l2], ShapedGround.texVertexZ[j3], ShapedGround.texVertexZ[l3], ground.texId[i], Config.GROUND_MATERIALS, true);
-						//}
+						if(ground.messed) {
+							Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i], ShapedGround.texVertexX[0], ShapedGround.texVertexX[1], ShapedGround.texVertexX[3], ShapedGround.texVertexY[0], ShapedGround.texVertexY[1], ShapedGround.texVertexY[3], ShapedGround.texVertexZ[0], ShapedGround.texVertexZ[1], ShapedGround.texVertexZ[3], ground.texId[i], Config.GROUND_MATERIALS.isOn(), true);
+						} else {
+							Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i], ShapedGround.texVertexX[l2], ShapedGround.texVertexX[j3], ShapedGround.texVertexX[l3], ShapedGround.texVertexY[l2], ShapedGround.texVertexY[j3], ShapedGround.texVertexY[l3], ShapedGround.texVertexZ[l2], ShapedGround.texVertexZ[j3], ShapedGround.texVertexZ[l3], ground.texId[i], Config.GROUND_MATERIALS.isOn(), true);
+						}
 					}
 				}
 			}
@@ -1209,7 +1208,7 @@ public final class Scene {
 		}
 	}
 
-	protected void calculateLighting(int lighty, int lightx, int lightz) {
+	protected void shadeModels(int lighty, int lightx, int lightz) {
 		final int lightness = 104;
 		final int roundness = 1480;//1280;
 		final int distance = (int) Math.sqrt(lightx * lightx + lighty * lighty + lightz * lightz);
@@ -1220,26 +1219,26 @@ public final class Scene {
 					final Tile tile = tileMap[plane][x][y];
 					if(tile != null) {
 						final Wall wall = tile.wall;
-						if(wall != null && wall.model1 != null && wall.model1.vertexNormal1 != null) {
+						if(wall != null && wall.model1 != null && wall.model1.vectorX != null) {
 							method307((Model) wall.model1, plane, x, y, 1, 1);
-							if(wall.model2 != null && wall.model2.vertexNormal1 != null) {
+							if(wall.model2 != null && wall.model2.vectorX != null) {
 								method307((Model) wall.model2, plane, x, y, 1, 1);
 								method308((Model) wall.model1, (Model) wall.model2, 0, 0, 0, false);
-								((Model) wall.model2).setLighting(lightness, contrast, lightx, lighty, lightz);
+								((Model) wall.model2).doShading(lightness, contrast, lightx, lighty, lightz);
 							}
-							((Model) wall.model1).setLighting(lightness, contrast, lightx, lighty, lightz);
+							((Model) wall.model1).doShading(lightness, contrast, lightx, lighty, lightz);
 						}
 						for(int k2 = 0; k2 < tile.entityUnitAmount; k2++) {
 							final EntityUnit npcspw = tile.entityUnit[k2];
-							if(npcspw != null && npcspw.model != null && npcspw.model.vertexNormal1 != null) {
+							if(npcspw != null && npcspw.model != null && npcspw.model.vectorX != null) {
 								method307((Model) npcspw.model, plane, x, y, npcspw.sizeX - npcspw.tileX + 1, npcspw.sizeY - npcspw.tileY + 1);
-								((Model) npcspw.model).setLighting(lightness, contrast, lightx, lighty, lightz);
+								((Model) npcspw.model).doShading(lightness, contrast, lightx, lighty, lightz);
 							}
 						}
 						final GroundDecoration grounddec = tile.groundDecor;
-						if(grounddec != null && grounddec.model.vertexNormal1 != null) {
+						if(grounddec != null && grounddec.model.vectorX != null) {
 							method306((Model) grounddec.model, plane, x, y);
-							((Model) grounddec.model).setLighting(lightness, contrast, lightx, lighty, lightz);
+							((Model) grounddec.model).doShading(lightness, contrast, lightx, lighty, lightz);
 						}
 					}
 				}
@@ -1250,25 +1249,25 @@ public final class Scene {
 	private void method306(Model model, int plane, int x, int y) {
 		if(x < tilesDisplayedX) {
 			final Tile tile = tileMap[plane][x + 1][y];
-			if(tile != null && tile.groundDecor != null && tile.groundDecor.model.vertexNormal1 != null) {
+			if(tile != null && tile.groundDecor != null && tile.groundDecor.model.vectorX != null) {
 				method308(model, (Model) tile.groundDecor.model, 128, 0, 0, true);
 			}
 		}
 		if(y < tilesDisplayedX) {
 			final Tile tile_1 = tileMap[plane][x][y + 1];
-			if(tile_1 != null && tile_1.groundDecor != null && tile_1.groundDecor.model.vertexNormal1 != null) {
+			if(tile_1 != null && tile_1.groundDecor != null && tile_1.groundDecor.model.vectorX != null) {
 				method308(model, (Model) tile_1.groundDecor.model, 0, 128, 0, true);
 			}
 		}
 		if(x < tilesDisplayedX && y < tilesDisplayedY) {
 			final Tile tile_2 = tileMap[plane][x + 1][y + 1];
-			if(tile_2 != null && tile_2.groundDecor != null && tile_2.groundDecor.model.vertexNormal1 != null) {
+			if(tile_2 != null && tile_2.groundDecor != null && tile_2.groundDecor.model.vectorX != null) {
 				method308(model, (Model) tile_2.groundDecor.model, 128, 128, 0, true);
 			}
 		}
 		if(x < tilesDisplayedX && y > 0) {
 			final Tile tile_3 = tileMap[plane][x + 1][y - 1];
-			if(tile_3 != null && tile_3.groundDecor != null && tile_3.groundDecor.model.vertexNormal1 != null) {
+			if(tile_3 != null && tile_3.groundDecor != null && tile_3.groundDecor.model.vectorX != null) {
 				method308(model, (Model) tile_3.groundDecor.model, 128, -128, 0, true);
 			}
 		}
@@ -1291,15 +1290,15 @@ public final class Scene {
 								if(tile != null) {
 									final int dz = (heightMap3d[tilePlane][dx][dy] + heightMap3d[tilePlane][dx + 1][dy] + heightMap3d[tilePlane][dx][dy + 1] + heightMap3d[tilePlane][dx + 1][dy + 1]) / 4 - (heightMap3d[plane][x][y] + heightMap3d[plane][x + 1][y] + heightMap3d[plane][x][y + 1] + heightMap3d[plane][x + 1][y + 1]) / 4;
 									final Wall wall = tile.wall;
-									if(wall != null && wall.model1 != null && wall.model1.vertexNormal1 != null) {
+									if(wall != null && wall.model1 != null && wall.model1.vectorX != null) {
 										method308(model, (Model) wall.model1, (dx - x) * 128 + (1 - xSize) * 64, (dy - y) * 128 + (1 - ySize) * 64, dz, flag);
 									}
-									if(wall != null && wall.model2 != null && wall.model2.vertexNormal1 != null) {
+									if(wall != null && wall.model2 != null && wall.model2.vectorX != null) {
 										method308(model, (Model) wall.model2, (dx - x) * 128 + (1 - xSize) * 64, (dy - y) * 128 + (1 - ySize) * 64, dz, flag);
 									}
 									for(int j3 = 0; j3 < tile.entityUnitAmount; j3++) {
 										final EntityUnit spawn = tile.entityUnit[j3];
-										if(spawn != null && spawn.model != null && spawn.model.vertexNormal1 != null) {
+										if(spawn != null && spawn.model != null && spawn.model.vectorX != null) {
 											final int endX = spawn.sizeX - spawn.tileX + 1;
 											final int endY = spawn.sizeY - spawn.tileY + 1;
 											method308(model, (Model) spawn.model, (spawn.tileX - x) * 128 + (endX - xSize) * 64, (spawn.tileY - y) * 128 + (endY - ySize) * 64, dz, flag);
@@ -1323,9 +1322,7 @@ public final class Scene {
 		final int ai[] = model_1.vertexX;
 		final int i1 = model_1.vertexAmt;
 		for(int j1 = 0; j1 < model.vertexAmt; j1++) {
-			final Vector class33 = model.vertexNormal1[j1];
-			final Vector class33_1 = model.vertexNormal2[j1];
-			if(class33_1.magnitude != 0) {
+			if(model.vectorNormalMagnitude[j1] != 0) {
 				final int i2 = (model.vertexY[j1] >> (model.upscaled ? 2 : 0)) - unknown;
 				if(i2 <= model_1.maxVerticalDistDown) {
 					final int j2 = (model.vertexX[j1] >> (model.upscaled ? 2 : 0)) - x;
@@ -1333,17 +1330,15 @@ public final class Scene {
 						final int k2 = (model.vertexZ[j1] >> (model.upscaled ? 2 : 0)) - y;
 						if(k2 >= model_1.minVertexZ && k2 <= model_1.maxVertexZ) {
 							for(int l2 = 0; l2 < i1; l2++) {
-								final Vector class33_2 = model_1.vertexNormal1[l2];
-								final Vector class33_3 = model_1.vertexNormal2[l2];
-								if(j2 == (ai[l2] >> (model_1.upscaled ? 2 : 0)) && k2 == (model_1.vertexZ[l2] >> (model_1.upscaled ? 2 : 0)) && i2 == (model_1.vertexY[l2] >> (model_1.upscaled ? 2 : 0)) && class33_3.magnitude != 0) {
-									class33.x += class33_3.x;
-									class33.y += class33_3.y;
-									class33.z += class33_3.z;
-									class33.magnitude += class33_3.magnitude;
-									class33_2.x += class33_1.x;
-									class33_2.y += class33_1.y;
-									class33_2.z += class33_1.z;
-									class33_2.magnitude += class33_1.magnitude;
+								if(j2 == (ai[l2] >> (model_1.upscaled ? 2 : 0)) && k2 == (model_1.vertexZ[l2] >> (model_1.upscaled ? 2 : 0)) && i2 == (model_1.vertexY[l2] >> (model_1.upscaled ? 2 : 0)) && model_1.vectorNormalMagnitude[l2] != 0) {
+									model.vectorX[j1] += model_1.vectorNormalX[l2];
+									model.vectorY[j1] += model_1.vectorNormalY[l2];
+									model.vectorZ[j1] += model_1.vectorNormalZ[l2];
+									model.vectorMagnitude[j1]+= model_1.vectorMagnitude[l2];
+									model_1.vectorX[l2] += model.vectorNormalX[j1];
+									model_1.vectorY[l2] += model.vectorNormalY[j1];
+									model_1.vectorZ[l2] += model.vectorNormalZ[j1];
+									model_1.vectorMagnitude[l2] += model.vectorMagnitude[j1];
 									l++;
 									anIntArray486[j1] = anInt488;
 									anIntArray487[l2] = anInt488;
@@ -1857,6 +1852,7 @@ public final class Scene {
 				}
 			}
 		}
+		//TODO: Put entities into an Int2ObjectArray and stop this loop of creation.
 		final EntityUnit spawn = new EntityUnit();
 		spawn.hash = hash;
 		spawn.config = config;

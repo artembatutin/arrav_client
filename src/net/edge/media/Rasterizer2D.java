@@ -1,11 +1,9 @@
 package net.edge.media;
 
-import net.edge.util.collect.DoublyLinkableEntry;
-
 /**
  * Handles 2D graphic components drawing.
  */
-public class Rasterizer2D extends DoublyLinkableEntry {
+public class Rasterizer2D {
 
 	public static int[] canvasRaster;
 	public static int canvasWidth;

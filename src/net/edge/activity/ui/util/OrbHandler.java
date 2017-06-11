@@ -13,10 +13,10 @@ public class OrbHandler {
 	/**
 	 * Values displayed on the orbs.
 	 */
-	private static int healthValue = 0;
-	private static int prayerValue = 0;
-	private static int runValue = 0;
-	private static int summoningValue = 0;
+	private static String healthValue;
+	private static String prayerValue;
+	private static String runValue;
+	private static String summoningValue;
 	/**
 	 * Used to count the filling progress for the orbs.
 	 */
@@ -48,22 +48,28 @@ public class OrbHandler {
 	/**
 	 * Updates the arguments which are used for drawing the orbs.
 	 */
-	public static void updateOrbs() {
+	public static void updateOrbs(int skill) {
 		if(Config.DRAW_ORBS.isOn()) {
-			healthValue = client.currentStats[3];
-			healthFill = healthValue / (float) client.maxStats[3] / 10;
-			if(!TEN_X_HITS.isOn()) {
-				healthValue = healthValue / 10;
+			if(skill == 3) {
+				healthValue = client.currentStats[3] + "";
+				healthFill = client.currentStats[3] / (float) client.maxStats[3] / 10;
+				if(!TEN_X_HITS.isOn()) {
+					healthValue = client.currentStats[3] / 10 + "";
+				}
+			} else if(skill == 5) {
+				prayerValue = client.currentStats[5] + "";
+				prayerFill = client.currentStats[5] / (float) client.maxStats[5];
+			} else if(skill == 22) {
+				summoningValue = client.currentStats[22] + "";
+				summoningFill = client.currentStats[22] / (float) client.maxStats[22];
 			}
-
-			prayerValue = client.currentStats[5];
-			prayerFill = prayerValue / (float) client.maxStats[5];
-
-			runValue = client.energy;
-			runFill = runValue / 100F;
-
-			summoningValue = client.currentStats[22];
-			summoningFill = summoningValue / (float) client.maxStats[22];
+		}
+	}
+	
+	public static void updateRun() {
+		if(Config.DRAW_ORBS.isOn()) {
+			runValue = client.energy + "";
+			runFill = client.energy / 100F;
 		}
 	}
 
@@ -72,16 +78,16 @@ public class OrbHandler {
 	 */
 	public static String getValue(int orb) {
 		if(orb == Constants.ORB_HEALTH) {
-			return Integer.toString(healthValue);
+			return healthValue;
 		}
 		if(orb == Constants.ORB_PRAYER) {
-			return Integer.toString(prayerValue);
+			return prayerValue;
 		}
 		if(orb == Constants.ORB_RUN) {
-			return Integer.toString(runValue);
+			return runValue;
 		}
 		if(orb == Constants.ORB_SUMMONING) {
-			return Integer.toString(summoningValue);
+			return summoningValue;
 		}
 		return "";
 	}

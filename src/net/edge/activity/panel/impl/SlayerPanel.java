@@ -12,12 +12,6 @@ import java.util.Objects;
 
 public class SlayerPanel extends Panel {
 	
-	
-	@Override
-	public String id() {
-		return "slayer";
-	}
-	
 	@Override
 	public boolean process() {
 	    /* Initialization */

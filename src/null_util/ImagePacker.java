@@ -73,7 +73,7 @@ public class ImagePacker {
 			}
 
 			// write the bufferedImage back to image folder where it will be used.
-			ImageIO.write(copy, "png", new File(SignLink.getCacheDir() + "/images/img/" + Integer.parseInt(file.getName().replace(".png", "").replace(".PNG", "")) + ".png"));
+			ImageIO.write(copy, "png", new File(SignLink.getCacheDir() + "/images/img/" + (file.getName().replace(".png", "").replace(".PNG", "")) + ".png"));
 
 			//// this writes the bufferedImage into a byte array called resultingBytes
 			ByteArrayOutputStream byteArrayOut = new ByteArrayOutputStream();

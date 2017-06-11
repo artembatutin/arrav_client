@@ -1,12 +1,13 @@
 package net.edge.cache.unit;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.edge.media.Viewport;
 import net.edge.cache.CacheArchive;
 import net.edge.game.model.Model;
 import net.edge.media.Rasterizer2D;
 import net.edge.media.Rasterizer3D;
 import net.edge.media.img.BitmapImage;
-import net.edge.util.collect.HashLruCache;
 import net.edge.util.io.Buffer;
 
 import java.util.Hashtable;
@@ -18,8 +19,8 @@ public final class ObjectType {
 	public static Buffer data;
 	public static int[] index;
 
-	public static HashLruCache iconcache = new HashLruCache(100);
-	public static HashLruCache modelcache = new HashLruCache(50);
+	public static Int2ObjectOpenHashMap<BitmapImage> iconcache = new Int2ObjectOpenHashMap<>();
+	public static Int2ObjectOpenHashMap<Model> modelcache = new Int2ObjectOpenHashMap<>();
 
 	public int id;
 	public int value;
@@ -156,11 +157,12 @@ public final class ObjectType {
 		this.name = name;
 	}
 
-	public static BitmapImage getIcon(int id, int itemAmount, int type) {
-		if(type == 0) {
-			BitmapImage sprite = (BitmapImage) iconcache.get(id);
+	public static BitmapImage getIcon(int id, int itemAmount, int border) {
+		int hash = (border << 16) + id;
+		if(iconcache.containsKey(hash)) {
+			BitmapImage sprite = iconcache.get(hash);
 			if(sprite != null && sprite.imageOriginalHeight != itemAmount && sprite.imageOriginalHeight != -1) {
-				sprite.unlinkPrimary();
+				iconcache.remove(hash);
 				sprite = null;
 			}
 			if(sprite != null) {
@@ -210,20 +212,18 @@ public final class ObjectType {
 		final int endX = Rasterizer2D.clipEndX;
 		final int startY = Rasterizer2D.clipStartY;
 		final int endY = Rasterizer2D.clipEndY;
-		Rasterizer3D.textured = true;
 		Rasterizer2D.setCanvas(sprite2.imageRaster, 32, 32);
 		Rasterizer2D.fillRectangle(0, 0, 32, 32, 0);
 		Rasterizer3D.viewport = new Viewport(0, 0, 32, 32, 32);
 		int zoom = obj.iconZoom;
-		if(type == -1) {
+		if(border == -1) {
 			zoom = (int) (zoom * 1.5D);
 		}
-		if(type > 0) {
+		if(border > 0) {
 			zoom = (int) (zoom * 1.04D);
 		}
 		final int l3 = Rasterizer3D.angleSine[obj.iconYaw] * zoom >> 16;
 		final int i4 = Rasterizer3D.angleCosine[obj.iconYaw] * zoom >> 16;
-		Rasterizer3D.iconDrawingMissingTextures = true;
 		model.drawModel(obj.iconRoll, obj.anInt204, obj.iconYaw, obj.iconHorizontalOffset, l3 + model.maxVerticalDistUp / 2 + obj.iconVerticalOffset, i4 + obj.iconVerticalOffset);
 		for(int _x = 31; _x >= 0; _x--) {
 			for(int _y = 31; _y >= 0; _y--) {
@@ -240,23 +240,23 @@ public final class ObjectType {
 				}
 			}
 		}
-		if(type > 0) {
+		if(border > 0) {
 			for(int _x = 31; _x >= 0; _x--) {
 				for(int _y = 31; _y >= 0; _y--) {
 					if(sprite2.imageRaster[_x + _y * 32] == 0) {
 						if(_x > 0 && sprite2.imageRaster[_x - 1 + _y * 32] == 1) {
-							sprite2.imageRaster[_x + _y * 32] = type;
+							sprite2.imageRaster[_x + _y * 32] = border;
 						} else if(_y > 0 && sprite2.imageRaster[_x + (_y - 1) * 32] == 1) {
-							sprite2.imageRaster[_x + _y * 32] = type;
+							sprite2.imageRaster[_x + _y * 32] = border;
 						} else if(_x < 31 && sprite2.imageRaster[_x + 1 + _y * 32] == 1) {
-							sprite2.imageRaster[_x + _y * 32] = type;
+							sprite2.imageRaster[_x + _y * 32] = border;
 						} else if(_y < 31 && sprite2.imageRaster[_x + (_y + 1) * 32] == 1) {
-							sprite2.imageRaster[_x + _y * 32] = type;
+							sprite2.imageRaster[_x + _y * 32] = border;
 						}
 					}
 				}
 			}
-		} else if(type == 0) {
+		} else if(border == 0) {
 			for(int _x = 31; _x >= 0; _x--) {
 				for(int _y = 31; _y >= 0; _y--) {
 					if(sprite2.imageRaster[_x + _y * 32] == 0 && _x > 0 && _y > 0 && sprite2.imageRaster[_x - 1 + (_y - 1) * 32] > 0) {
@@ -283,13 +283,12 @@ public final class ObjectType {
 			sprite.imageOriginalWidth = l5;
 			sprite.imageOriginalHeight = j6;
 		}
-		if(type == 0 && !Rasterizer3D.iconDrawingMissingTextures) {
-			iconcache.put(id, sprite2);
+		if(border == 0 && !Rasterizer3D.textureMissing) {
+			iconcache.put((border << 16) + id, sprite2);
 		}
 		Rasterizer2D.setCanvas(pixels, height, width);
 		Rasterizer2D.setClip(startX, startY, endX, endY);
 		Rasterizer3D.viewport = viewport;
-		Rasterizer3D.textured = true;
 		if(obj.stackable) {
 			sprite2.imageOriginalWidth = 33;
 		} else {
@@ -460,7 +459,7 @@ public final class ObjectType {
 				return get(j).getAmountModel(1);
 			}
 		}
-		Model model = (Model) modelcache.get(id);
+		Model model = modelcache.get(id);
 		if(model != null) {
 			return model;
 		}
@@ -692,15 +691,14 @@ public final class ObjectType {
 				buffer.getUShort();
 			} else if(opcode == 249) {
 				int count = buffer.getUByte();
-
-				if(aHashTable1873 == null)
-					aHashTable1873 = new Hashtable<>();
-
+				
 				for(int i2 = 0; i2 != count; ++i2) {
 					boolean string = buffer.getUByte() == 1;
 					int key = buffer.getUMedium();
-					Object value = string ? buffer.getString() : Integer.valueOf(buffer.getInt());
-					aHashTable1873.put(key, value);
+					if(string)
+						buffer.getString();
+					else
+						buffer.getInt();
 				}
 
 			} else {
@@ -709,8 +707,6 @@ public final class ObjectType {
 			}
 		} while(true);
 	}
-
-	private Hashtable<Integer, Object> aHashTable1873;
 
 	private void renew() {
 		modelId = 0;

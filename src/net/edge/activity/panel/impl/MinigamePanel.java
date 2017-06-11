@@ -35,11 +35,6 @@ public class MinigamePanel extends Panel {
 	private Minigames[] mgs = Minigames.values();
 
 	@Override
-	public String id() {
-		return "minigame";
-	}
-
-	@Override
 	public boolean process() {
 	    /* Initialization */
 		int beginX = 4;

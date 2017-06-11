@@ -132,10 +132,6 @@ public final class StringUtils {
 	 * @return asterisks
 	 */
 	public static String toAsterisks(String message) {
-		final StringBuilder stringbuffer = new StringBuilder();
-		for(int j = 0; j < message.length(); j++) {
-			stringbuffer.append("*");
-		}
-		return stringbuffer.toString();
+		return message.replaceAll("(?s).", "*");
 	}
 }

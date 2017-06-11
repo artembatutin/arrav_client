@@ -1,8 +1,7 @@
 package net.edge.util.collect;
 
 public class SinglyLinkableEntry {
-
-	long key;
+	
 	SinglyLinkableEntry nextPrimary;
 	SinglyLinkableEntry prevPrimary;
 

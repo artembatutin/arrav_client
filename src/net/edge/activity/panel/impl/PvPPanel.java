@@ -34,11 +34,6 @@ public class PvPPanel extends Panel {
 	private boolean clan = false;
 	
 	@Override
-	public String id() {
-		return "shop";
-	}
-	
-	@Override
 	public boolean process() {
 		/* Initialization */
 		int beginX = 4;

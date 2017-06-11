@@ -41,11 +41,6 @@ public class BossPanel extends Panel {
 	private Boss[] bosses = Boss.values();
 
 	@Override
-	public String id() {
-		return "boss";
-	}
-
-	@Override
 	public boolean process() {
 	    /* Initialization */
 		int beginX = 4;

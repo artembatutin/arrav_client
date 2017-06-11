@@ -1,5 +1,6 @@
 package net.edge.activity.panel.impl;
 
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.edge.activity.panel.Panel;
 import net.edge.cache.unit.ObjectType;
 import net.edge.cache.unit.NPCType;
@@ -115,11 +116,6 @@ public class DropPanel extends Panel {
 	private int[] result;
 	
 	@Override
-	public String id() {
-		return "npc";
-	}
-	
-	@Override
 	public boolean process() {
 		if(type == null && client.npcInfoId != 0) {
 			type = NPCType.get(client.npcInfoId);
@@ -215,7 +211,7 @@ public class DropPanel extends Panel {
 			if(client.panelSearchInput != null) {
 				if(!Objects.equals(cachedSearch, client.panelSearchInput)) {
 					cachedSearch = client.panelSearchInput;
-					List<Integer> ids = new ArrayList<>();
+					IntArrayList ids = new IntArrayList();
 					for(int i = 0; i < seekable.length; i++) {
 						NPCType n = seekable[i];
 						if(n == null)
@@ -229,7 +225,7 @@ public class DropPanel extends Panel {
 					}
 					result = new int[ids.size()];
 					for(int i = 0; i < ids.size(); i++) {
-						result[i] = ids.get(i);
+						result[i] = ids.getInt(i);
 					}
 				}
 			}
@@ -363,7 +359,7 @@ public class DropPanel extends Panel {
 		client.npcSug = false;
 		client.panelSearchInput = "";
 		URL url;
-		List<Integer> ids = new ArrayList<>();
+		IntArrayList ids = new IntArrayList();
 		try {
 			url = new URL("http://edgeville.net/game/drops.txt");
 			URLConnection conn = url.openConnection();
@@ -384,10 +380,11 @@ public class DropPanel extends Panel {
 		}
 		seekable = new NPCType[ids.size()];
 		for(int i = 0; i < ids.size(); i++) {
-			int id = ids.get(i);
+			int id = ids.getInt(i);
 			if(id > 0 && id < NPCType.size())
 				seekable[i] = NPCType.get(id);
 		}
+		ids.clear();
 	}
 	
 	@Override

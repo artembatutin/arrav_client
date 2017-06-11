@@ -1,9 +1,9 @@
 package net.edge.game.model;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.edge.Client;
 import net.edge.Config;
 import net.edge.cache.unit.*;
-import net.edge.util.collect.HashLruCache;
 import net.edge.util.io.Buffer;
 import net.edge.util.string.StringUtils;
 
@@ -18,7 +18,7 @@ public final class Player extends Mobile {
 	public int team;
 	private int gender;
 	public String name;
-	public static HashLruCache modelcache = new HashLruCache(260);
+	public static Long2ObjectOpenHashMap<Model> modelcache = new Long2ObjectOpenHashMap<>();
 	public int combatLevel;
 	public int headIcon;
 	public int skullIcon;
@@ -186,7 +186,7 @@ public final class Player extends Mobile {
 				nextCycle = super.idleAnimCycle;
 			}
 		}
-		Model model_1 = (Model) modelcache.get(l);
+		Model model_1 = modelcache.get(l);
 		if(model_1 == null) {
 			boolean flag = false;
 			for(int i2 = 0; i2 < 12; i2++) {
@@ -206,7 +206,7 @@ public final class Player extends Mobile {
 			}
 			if(flag) {
 				if(aLong1697 != -1L) {
-					model_1 = (Model) modelcache.get(aLong1697);
+					model_1 = modelcache.get(aLong1697);
 				}
 				if(model_1 == null) {
 					return null;

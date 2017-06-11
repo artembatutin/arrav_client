@@ -40,12 +40,6 @@ public abstract class Activity {
 	}
 
 	/**
-	 * This method will return the nodeId <code>String</code>.
-	 * <br>Example: <code>return "game";</code>
-	 */
-	public abstract String id();
-
-	/**
 	 * This will process the actions e.g. clicking and writing.
 	 * @return {@code true} if process has been made, {@code false} otherwise.
 	 */

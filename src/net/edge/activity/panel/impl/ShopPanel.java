@@ -15,8 +15,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 public class ShopPanel extends Panel {
 	
@@ -86,11 +84,6 @@ public class ShopPanel extends Panel {
 	 * Condition if back button displayed.
 	 */
 	private static boolean back = false;
-
-	@Override
-	public String id() {
-		return "shop";
-	}
 
 	@Override
 	public boolean process() {
@@ -312,9 +305,8 @@ public class ShopPanel extends Panel {
 	
 	public static void update(String title) {
 		ShopPanel.back = false;
-		if(CounterPanel.shops == null) {
+		if(CounterPanel.shops.isEmpty()) {
 			URL url;
-			List<CounterPanel.Shop> shops = new ArrayList<>();
 			try {
 				url = new URL("http://edgeville.net/game/shops.txt");
 				URLConnection conn = url.openConnection();
@@ -327,17 +319,15 @@ public class ShopPanel extends Panel {
 					icons[0] = Integer.parseInt(shop[2]);
 					icons[1] = Integer.parseInt(shop[3]);
 					icons[2] = Integer.parseInt(shop[4]);
-					shops.add(new CounterPanel.Shop(name, id, icons));
+					CounterPanel.shops.add(new CounterPanel.Shop(name, id, icons));
 				});
-				CounterPanel.shops = shops.toArray(new CounterPanel.Shop[shops.size()]);
 				br.close();
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
 		}
 		if(title != null) {
-			for(int i = 0; i < CounterPanel.shops.length; i++) {
-				CounterPanel.Shop s = CounterPanel.shops[i];
+			for(CounterPanel.Shop s : CounterPanel.shops) {
 				if(s.getName().equals(title)) {
 					ShopPanel.back = true;
 					break;

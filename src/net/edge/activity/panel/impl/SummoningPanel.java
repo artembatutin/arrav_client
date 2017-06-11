@@ -1,20 +1,11 @@
 package net.edge.activity.panel.impl;
 
 import net.edge.activity.panel.Panel;
-import net.edge.cache.unit.ImageCache;
 import net.edge.cache.unit.Interface;
 import net.edge.cache.unit.ObjectType;
 import net.edge.game.Scene;
 import net.edge.media.Rasterizer2D;
 import net.edge.media.img.BitmapImage;
-
-import java.io.*;
-import java.net.URL;
-import java.net.URLConnection;
-import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.ArrayList;
-import java.util.List;
 
 public class SummoningPanel extends Panel {
 	
@@ -144,11 +135,6 @@ public class SummoningPanel extends Panel {
 	 * Condition if back button displayed.
 	 */
 	private static boolean back = false;
-
-	@Override
-	public String id() {
-		return "shop";
-	}
 
 	@Override
 	public boolean process() {

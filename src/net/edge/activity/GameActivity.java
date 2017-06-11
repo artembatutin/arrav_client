@@ -26,11 +26,6 @@ public class GameActivity extends Activity {
 	public AssetDrawer drawer;
 
 	@Override
-	public String id() {
-		return "game";
-	}
-
-	@Override
 	public boolean process() {
 		if(client.systemUpdateTimer > 1) {
 			client.systemUpdateTimer--;
@@ -336,7 +331,6 @@ public class GameActivity extends Activity {
 		if(client.anInt1010 > 50) {
 			client.outBuffer.putOpcode(0);
 		}
-		OrbHandler.updateOrbs();
 		try {
 			if(client.socketStream != null && client.outBuffer.pos > 0) {
 				client.socketStream.write(client.outBuffer.data, client.outBuffer.pos);
@@ -1524,6 +1518,7 @@ public class GameActivity extends Activity {
 				if(obj == null || !((Mobile) obj).isVisible()) {
 					continue;
 				}
+				Mobile mobile = (Mobile) obj;
 				if(obj instanceof NPC) {
 					NPCType entityDef = ((NPC) obj).type;
 					if(entityDef.childrenIDs != null) {
@@ -1533,7 +1528,7 @@ public class GameActivity extends Activity {
 						continue;
 					}
 					if(Config.DISPLAY_NAMES.isOn()) {
-						calcMobileRenderLoc((Mobile) obj, ((Mobile) obj).height + 15);
+						calcMobileRenderLoc(mobile, mobile.height + 15);
 						int offset = ((NPC) obj).special == 101 ? 10 : 20;
 						smallFont.drawCenteredEffectString(entityDef.name, client.spriteDrawX, client.spriteDrawY - offset, 0xffbf00, true);
 					}
@@ -1543,7 +1538,7 @@ public class GameActivity extends Activity {
 					final Player player = (Player) obj;
 					player.skullIcon = 0;
 					if(player.headIcon >= 0) {
-						calcMobileRenderLoc((Mobile) obj, ((Mobile) obj).height + 15);
+						calcMobileRenderLoc(mobile, mobile.height + 15);
 						if(client.spriteDrawX > -1) {
 							if(player.skullIcon > 0 && player.skullIcon < 6) {
 								ImageCache.get(1692 + player.skullIcon).drawImage(client.spriteDrawX - 12, client.spriteDrawY - l);
@@ -1556,13 +1551,13 @@ public class GameActivity extends Activity {
 						}
 					}
 					if(j >= 0 && client.hintType == 10 && client.anInt933 == client.playerEntryList[j]) {
-						calcMobileRenderLoc((Mobile) obj, ((Mobile) obj).height + 15);
+						calcMobileRenderLoc(mobile, mobile.height + 15);
 						if(client.spriteDrawX > -1) {
 							ImageCache.get(1701 + player.hintIcon).drawImage(client.spriteDrawX - 12, client.spriteDrawY - l);
 						}
 					}
 					if(Config.DISPLAY_NAMES.isOn()) {
-						calcMobileRenderLoc((Mobile) obj, ((Mobile) obj).height + 15);
+						calcMobileRenderLoc(mobile, mobile.height + 15);
 						int col = 0x00ff00;
 						//if (player.clanName == localPlayer.clanName)
 						//	col = 0x00ff00;
@@ -1574,62 +1569,62 @@ public class GameActivity extends Activity {
 				} else {
 					final NPCType entityDef_1 = ((NPC) obj).type;
 					if(entityDef_1.headIcon >= 0) {
-						calcMobileRenderLoc((Mobile) obj, ((Mobile) obj).height + 15);
+						calcMobileRenderLoc(mobile, mobile.height + 15);
 						if(client.spriteDrawX > -1) {
 							ImageCache.get(1592 + entityDef_1.headIcon).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 30);
 						}
 					}
 					if(client.hintType == 1 && client.NPCHintID == client.npcEntryList[j - client.playerCount] && client.loopCycle % 20 < 10) {
-						calcMobileRenderLoc((Mobile) obj, ((Mobile) obj).height + 15);
+						calcMobileRenderLoc(mobile, mobile.height + 15);
 						if(client.spriteDrawX > -1) {
 							ImageCache.get(1701).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 28);
 						}
 					}
 				}
-				if(((Mobile) obj).chatSpoken != null && (j >= client.playerCount || client.publicChatMode == 0 || client.publicChatMode == 3 || client.publicChatMode == 1 && client.isFriendOrSelf(((Player) obj).name))) {
-					calcMobileRenderLoc((Mobile) obj, ((Mobile) obj).height);
+				if(mobile.chatSpoken != null && (j >= client.playerCount || client.publicChatMode == 0 || client.publicChatMode == 3 || client.publicChatMode == 1 && client.isFriendOrSelf(((Player) obj).name))) {
+					calcMobileRenderLoc(mobile, mobile.height);
 					if(client.spriteDrawX > -1 && chatsDisplayed < client.anInt975) {
-						client.chatOffsetsX[chatsDisplayed] = boldFont.getStringWidth(((Mobile) obj).chatSpoken) / 2;
+						client.chatOffsetsX[chatsDisplayed] = boldFont.getStringWidth(mobile.chatSpoken) / 2;
 						client.chatOffsetsY[chatsDisplayed] = boldFont.lineHeight;
 						client.chatPositionsX[chatsDisplayed] = client.spriteDrawX;
 						client.chatPositionsY[chatsDisplayed] = client.spriteDrawY;
-						client.chatColorEffects[chatsDisplayed] = ((Mobile) obj).chatColorEffect;
-						client.chatAnimationEffects[chatsDisplayed] = ((Mobile) obj).chatAnimationEffect;
-						client.chatLoopCycles[chatsDisplayed] = ((Mobile) obj).chatLoopCycle;
-						client.chatMessagesSpoken[chatsDisplayed++] = ((Mobile) obj).chatSpoken;
-						if(client.chatEffectsToggle == 0 && ((Mobile) obj).chatAnimationEffect >= 1 && ((Mobile) obj).chatAnimationEffect <= 3) {
+						client.chatColorEffects[chatsDisplayed] = mobile.chatColorEffect;
+						client.chatAnimationEffects[chatsDisplayed] = mobile.chatAnimationEffect;
+						client.chatLoopCycles[chatsDisplayed] = mobile.chatLoopCycle;
+						client.chatMessagesSpoken[chatsDisplayed++] = mobile.chatSpoken;
+						if(client.chatEffectsToggle == 0 && mobile.chatAnimationEffect >= 1 && mobile.chatAnimationEffect <= 3) {
 							client.chatOffsetsY[chatsDisplayed] += 10;
 							client.chatPositionsY[chatsDisplayed] += 5;
 						}
-						if(client.chatEffectsToggle == 0 && ((Mobile) obj).chatAnimationEffect == 4) {
+						if(client.chatEffectsToggle == 0 && mobile.chatAnimationEffect == 4) {
 							client.chatOffsetsX[chatsDisplayed] = 60;
 						}
-						if(client.chatEffectsToggle == 0 && ((Mobile) obj).chatAnimationEffect == 5) {
+						if(client.chatEffectsToggle == 0 && mobile.chatAnimationEffect == 5) {
 							client.chatOffsetsY[chatsDisplayed] += 5;
 						}
 					}
 				}
-				if(((Mobile) obj).loopCycleStatus > client.loopCycle) {
+				if(mobile.loopCycleStatus > client.loopCycle) {
 					try {
-						calcMobileRenderLoc((Mobile) obj, ((Mobile) obj).height + 15);
+						calcMobileRenderLoc(mobile, mobile.height + 15);
 						if(client.spriteDrawX > -1) {
-							drawer.drawBar(((Mobile) obj));
+							drawer.drawBar(mobile);
 							if(Config.HITBARS.get() == 3) {
-								calcMobileRenderLoc((Mobile) obj, ((Mobile) obj).height + 15);
+								calcMobileRenderLoc(mobile, mobile.height + 15);
 								int level = obj instanceof NPC ? ((NPC) obj).type.combatLevel : ((Player) obj).combatLevel;
 								if(obj instanceof NPC && ((NPC) obj).special != 101) {
 									smallFont.drawCenteredEffectString("@gre@" + ((NPC) obj).special + "/100", client.spriteDrawX, client.spriteDrawY + -8, 0xff0000, true);
 								}
-								smallFont.drawCenteredEffectString(getCombatDifferenceColor(client.localPlayer.combatLevel, level) + (new StringBuilder()).append(((Mobile) obj).currentHealth).append("/").append(((Mobile) obj).maxHealth).toString(), client.spriteDrawX, client.spriteDrawY + 3, 0xff0000, true);
+								smallFont.drawCenteredEffectString(getCombatDifferenceColor(client.localPlayer.combatLevel, level) + mobile.currentHealth + "/" + mobile.maxHealth, client.spriteDrawX, client.spriteDrawY + 3, 0xff0000, true);
 							}
 						}
 					} catch(final Exception e) {
 					}
 				}
 				for(int j1 = 0; j1 < 4; j1++) {
-					if(((Mobile) obj).hitsLoopCycle[j1] > client.loopCycle) {
-						calcMobileRenderLoc((Mobile) obj, ((Mobile) obj).height / 2);
-						drawer.drawHit((Mobile) obj, j1);
+					if(mobile.hitsLoopCycle[j1] > client.loopCycle) {
+						calcMobileRenderLoc(mobile, mobile.height / 2);
+						drawer.drawHit(mobile, j1);
 					}
 				}
 			}
@@ -1819,39 +1814,28 @@ public class GameActivity extends Activity {
 		}
 		final int x = client.baseX + (client.localPlayer.x - 6 >> 7);
 		final int y = client.baseY + (client.localPlayer.y - 6 >> 7);
+		final int modeint = client.uiRenderer.getMode();
+		int line = modeint == 0 ? 5 : 1;
+		int off = modeint == 0 ? 511 : client.windowWidth - 200;
+		if(Config.FPS_ON.isOn()) {
+			smallFont.drawRightAlignedString("Fps: " + client.fps, off, (line += 15), 0xffff00);
+		}
 		if(Config.DEBUG_DATA.isOn()) {
 			final Runtime runtime = Runtime.getRuntime();
 			final int usedMemory = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
 			final int maxMemory = (int) (runtime.totalMemory() / 1024L);
-			final DecimalFormat df = new DecimalFormat("#,###,###,###");
-			final int modeint = client.uiRenderer.getMode();
 			final int centerX = client.windowWidth / 2;
 			final int centerY = client.windowHeight / 2;
-			final String mode = modeint == 0 ? "fixed" : modeint == 1 ? "resizable" : modeint == 2 ? "fullscreen" : "null";
 			client.socketStream.updateIOPerSec();
 			final int in = client.socketStream.inPerSec;
 			final int out = client.socketStream.outPerSec;
-			int line = modeint == 0 ? 5 : 1;
-			int off = modeint == 0 ? 511 : client.windowWidth - 200;
-			if(Config.DEBUG_INDEXES.isOn()) {
-				int[] flo = client.terrainDataIds;
-				plainFont.drawRightAlignedString("Floor map: " + Arrays.toString(flo), off, (line += 15), 0xffff00);
-				int[] obj = client.objectDataIds;
-				plainFont.drawRightAlignedString("Object map: " + Arrays.toString(obj), off, (line += 15), 0xffff00);
-			}
-			plainFont.drawRightAlignedString("Fps: " + client.fps, off, (line += 15), 0xffff00);
-			plainFont.drawRightAlignedString("Mem (k): " + df.format(usedMemory) + " / " + df.format(maxMemory), off, (line += 15), 0xffff00);
-			plainFont.drawRightAlignedString("Mem (M): " + (usedMemory / 1024L) + " / " + (maxMemory / 1024L), off, (line += 15), 0xffff00);
-			plainFont.drawRightAlignedString("In:" + in + "B/s Out:" + out + "B/s", off, (line += 15), 0xffff00);
+			smallFont.drawRightAlignedString("IO: " + in + " - " + out, off, (line += 15), 0xffff00);
+			smallFont.drawRightAlignedString("Mem: " + (usedMemory / 1024L) + " / " + (maxMemory / 1024L), off, (line += 15), 0xffff00);
 			line += 5;
-			plainFont.drawRightAlignedString("Mouse: " + client.mouseX + "," + client.mouseY, off, (line += 15), 0xffff00);
-			plainFont.drawRightAlignedString("Center-mouse: " + (client.mouseX - centerX) + "," + (client.mouseY - centerY), off, (line += 15), 0xffff00);
-			plainFont.drawRightAlignedString("Coords: " + x + "," + y, off, (line += 15), 0xffff00);
-			line += 5;
-			plainFont.drawRightAlignedString("Screen mode: " + mode, off, (line += 15), 0xffff00);
-			plainFont.drawRightAlignedString("Screen dim: " + client.windowWidth + "x" + client.windowHeight, off, (line += 15), 0xffff00);
-			line += 8;
-			smallFont.drawRightAlignedString("Region: " + ((x >> 3) - 6) + "," + ((y >> 3) - 6), off, (line += 12), 0xffff00);
+			smallFont.drawRightAlignedString("Cursor: " + client.mouseX + "," + client.mouseY, off, (line += 15), 0xffff00);
+			smallFont.drawRightAlignedString("Center: " + (client.mouseX - centerX) + "," + (client.mouseY - centerY), off, (line += 15), 0xffff00);
+			smallFont.drawRightAlignedString("Coords: " + x + "," + y, off, (line += 15), 0xffff00);
+			smallFont.drawRightAlignedString("Screen: " + client.windowWidth + "x" + client.windowHeight, off, (line += 15), 0xffff00);
 		}
 	}
 

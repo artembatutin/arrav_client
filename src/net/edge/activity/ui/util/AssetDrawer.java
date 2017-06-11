@@ -142,7 +142,8 @@ public class AssetDrawer {
 					if(obj.hitmarkMove[id] <= -14) {
 						obj.hitmarkTrans[id] -= 10;
 					}
-					hitmarkDraw(hit, obj, String.valueOf(obj.hitArray[id]).length(), obj.hitMarkTypes[id], obj.hitIcon[id], obj.hitArray[id], obj.soakDamage[id], obj.hitmarkMove[id], obj.hitmarkTrans[id], id);
+					int hitLength = (int) Math.log10(obj.hitArray[id]) + 1;
+					hitmarkDraw(hit, obj, hitLength, obj.hitMarkTypes[id], obj.hitIcon[id], obj.hitArray[id], obj.soakDamage[id], obj.hitmarkMove[id], obj.hitmarkTrans[id], id);
 				}
 				break;
 
@@ -202,10 +203,11 @@ public class AssetDrawer {
 					x += 4;
 				}
 				end2.drawAlphaImage(client.spriteDrawX - 12 + x, drawPos - 12, opacity);
-				(type == 1 ? client.bigHitFont : client.smallHitFont).drawCenteredString(String.valueOf(damage), client.spriteDrawX + 4 + (soak > 0 ? -16 : 0), drawPos + (type == 1 ? 2 : 32), 0xffffff, opacity);
+				(type == 1 ? client.bigHitFont : client.smallHitFont).drawCenteredString(damage + "", client.spriteDrawX + 4 + (soak > 0 ? -16 : 0), drawPos + (type == 1 ? 2 : 32), 0xffffff, opacity);
 			} else {
-				Rasterizer2D.fillRoundedRectangle(client.spriteDrawX + (soak > 0 ? -16 : 0) - 3, drawPos - 13, (type == 1 ? client.bigHitFont : client.smallHitFont).getStringWidth(String.valueOf(damage)) + 6, 19, 5, 0x000000, opacity / 2);
-				(type == 1 ? client.bigHitFont : client.smallHitFont).drawLeftAlignedString(String.valueOf(damage), client.spriteDrawX + (soak > 0 ? -16 : 0), drawPos + (type == 1 ? 5 : 34) - 4, 0xffffff);
+				String text = damage + "";
+				Rasterizer2D.fillRoundedRectangle(client.spriteDrawX + (soak > 0 ? -16 : 0) - 3, drawPos - 13, (type == 1 ? client.bigHitFont : client.smallHitFont).getStringWidth(text) + 6, 19, 5, 0x000000, opacity / 2);
+				(type == 1 ? client.bigHitFont : client.smallHitFont).drawLeftAlignedString(text, client.spriteDrawX + (soak > 0 ? -16 : 0), drawPos + (type == 1 ? 5 : 34) - 4, 0xffffff);
 			}
 
 			if(soak > 0) {

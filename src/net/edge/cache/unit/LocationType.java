@@ -1,16 +1,16 @@
 package net.edge.cache.unit;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.edge.Config;
 import net.edge.cache.CacheArchive;
 import net.edge.game.model.Model;
 import net.edge.od.OnDemandFetcher;
-import net.edge.util.collect.HashLruCache;
 import net.edge.util.io.Buffer;
 import net.edge.Client;
 
 import java.io.*;
-import java.util.HashSet;
-import java.util.Set;
 
 public final class LocationType {
 
@@ -21,10 +21,8 @@ public final class LocationType {
 	private static LocationType[] cache;
 	private static int[] index;
 
-	private static final Model[] models = new Model[4];
-
-	public static HashLruCache animatedModelCache = new HashLruCache(30);
-	public static HashLruCache modelCache = new HashLruCache(500);
+	public final static Long2ObjectOpenHashMap<Model> animatedModelCache = new Long2ObjectOpenHashMap<>();
+	public final static Int2ObjectOpenHashMap<Model> modelCache = new Int2ObjectOpenHashMap<>();
 
 	public boolean aBoolean736;
 	private int ambient;
@@ -132,8 +130,8 @@ public final class LocationType {
 
 
 	public static void reset() {
-		modelCache = null;
-		animatedModelCache = null;
+		modelCache.clear();
+		animatedModelCache.clear();
 		index = null;
 		cache = null;
 		data = null;
@@ -324,7 +322,7 @@ public final class LocationType {
 
 	private void write(DataOutputStream out) throws IOException {
 		boolean actionsd = false;
-		Set<Integer> written = new HashSet<>();
+		IntArrayList written = new IntArrayList();
 		do {
 			if(modelIds != null && modelTypes != null && !written.contains(1)) {
 				out.writeByte(1);
@@ -588,8 +586,8 @@ public final class LocationType {
 			if(j != 10) {
 				return null;
 			}
-			hash = (id << 6) + l + ((long) (currAnim + 1) << 32);
-			final Model cachedModel = (Model) animatedModelCache.get(hash);
+			hash = ((currAnim + 1) << 6) + l + ((long) (id) << 32);
+			final Model cachedModel = animatedModelCache.get(hash);
 			if(cachedModel != null) {
 				return cachedModel;
 			}
@@ -598,12 +596,13 @@ public final class LocationType {
 			}
 			final boolean mirror = rotated ^ l > 3;
 			final int modelCount = modelIds.length;
+			Model[] models = new Model[modelIds.length];
 			for(int i2 = 0; i2 < modelCount; i2++) {
 				int l2 = modelIds[i2];
 				if(mirror) {
 					l2 += 0x10000;
 				}
-				model = (Model) modelCache.get(l2);
+				model = modelCache.get(l2);
 				if(model == null) {
 					model = Model.get(l2 & 0xffff, id > 42003 ? 0 : 6);
 					if(model == null) {
@@ -635,8 +634,8 @@ public final class LocationType {
 			if(i1 == -1) {
 				return null;
 			}
-			hash = (long) ((id << 8) + (i1 << 3) + l) + ((long) (currAnim + 1) << 32);
-			final Model model_2 = (Model) animatedModelCache.get(hash);
+			hash = (((currAnim + 1) << 8) + (i1 << 3) + l) + ((long) (id) << 32);
+			final Model model_2 = animatedModelCache.get(hash);
 			if(model_2 != null) {
 				return model_2;
 			}
@@ -645,7 +644,7 @@ public final class LocationType {
 			if(mirror) {
 				modelId += 0x10000;
 			}
-			model = (Model) modelCache.get(modelId);
+			model = modelCache.get(modelId);
 			if(model == null) {
 				model = Model.get(modelId & 0xffff, id > 42003 ? 0 : 6);
 				if(model == null) {

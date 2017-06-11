@@ -1,9 +1,9 @@
 package net.edge.cache.unit;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.edge.Constants;
 import net.edge.game.model.Model;
 import net.edge.sign.SignLink;
-import net.edge.util.collect.HashLruCache;
 import net.edge.util.io.Buffer;
 import net.edge.Client;
 import net.edge.cache.CacheArchive;
@@ -19,7 +19,7 @@ public final class Interface {
 	public static BitmapFont[] fonts;
 	public static CacheArchive archive;
 	public static Interface[] cache;
-	private static final HashLruCache modelcache = new HashLruCache(30);
+	private static final Int2ObjectOpenHashMap<Model> modelcache = new Int2ObjectOpenHashMap<>();
 	public int type;
 	public int id;
 	public int parent;
@@ -540,13 +540,13 @@ public final class Interface {
 
 	public static void pack() {
 		try {
-			cache[16027].text = "@or2@- Server uptime:";
-			cache[16028].text = "@or2@- Players online:";
-			cache[16029].text = "@or2@- Staff online:";
-			cache[16030].text = "@or2@- Players in wild:";
-			cache[16033].text = "@or2@- Username:";
-			cache[16034].text = "@or2@- Password:";
-			cache[16035].text = "@or2@- Rank:";
+
+			for(int i = 16026; i < 17000; i++) {
+				cache[i].text = "";
+			}
+			cache[14777].text = "Soft cowhide";
+			cache[14778].text = "Hard cowhide";
+			
 			final Buffer byteV = new Buffer(new byte[999999999]);
 			byteV.putInt(cache.length);
 			for(final Interface screen : cache) {
@@ -833,7 +833,7 @@ public final class Interface {
 		rsi.valueIndexArray[0][2] = 0;
 	}
 
-	private static void addHoverButton(int id, int imgId, int width, int height, String tooltipText, int contentType, int hoverOver, int actionType) {
+	public static void addHoverButton(int id, int imgId, int width, int height, String tooltipText, int contentType, int hoverOver, int actionType) {
 		final Interface tab = addInterface(id);
 		tab.id = id;
 		tab.parent = id;
@@ -864,7 +864,7 @@ public final class Interface {
 		setBounds(IMAGEID, 0, 0, 0, hover);
 	}
 
-	private static void addHoveredButton(int id, int imageId, int width, int height, int IMAGEID) {
+	public static void addHoveredButton(int id, int imageId, int width, int height, int IMAGEID) {
 		final Interface tab = addInterface(id);
 		tab.parent = id;
 		tab.id = id;
@@ -881,7 +881,7 @@ public final class Interface {
 		tab.child(0, IMAGEID, 0, 0);
 	}
 
-	private static void addHoverImage(int id, int sprite1, int sprite2) {
+	public static void addHoverImage(int id, int sprite1, int sprite2) {
 		final Interface tab = addInterface(id);
 		tab.id = id;
 		tab.parent = id;
@@ -1338,7 +1338,7 @@ public final class Interface {
 		tab.tooltip = tooltip;
 	}
 
-	private void child(int id, int interID, int x, int y) {
+	public void child(int id, int interID, int x, int y) {
 		subId[id] = interID;
 		subX[id] = x;
 		subY[id] = y;
@@ -1368,7 +1368,7 @@ public final class Interface {
 			model_1.applyAnimation(anim1);
 		}
 		model_1.calculateLighting(64, 850, -30, -50, -30, true);
-		//model_1.calculateLighting(104/*64*/, 1280/*768*/, -50, -10, -50, true);
+		//model_1.shadeModels(104/*64*/, 1280/*768*/, -50, -10, -50, true);
 		return model_1;
 	}
 
@@ -1407,7 +1407,7 @@ public final class Interface {
 		invAmt[i2] = temp;
 	}
 
-	private void totalChildren(int t) {
+	public void totalChildren(int t) {
 		subId = new int[t];
 		subX = new int[t];
 		subY = new int[t];

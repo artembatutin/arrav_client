@@ -1,5 +1,7 @@
 package net.edge.media.tex;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.edge.od.OnDemandFetcher;
 import net.edge.util.io.Buffer;
 
@@ -7,7 +9,7 @@ import java.util.HashMap;
 
 public final class Texture {
 
-	private static HashMap<Integer, Texture> cache = new HashMap<>();
+	private static Int2ObjectArrayMap<Texture> cache = new Int2ObjectArrayMap<>();
 	private static OnDemandFetcher resourceManager;
 	private static float brightness = 1;
 

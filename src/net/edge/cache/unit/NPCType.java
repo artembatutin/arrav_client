@@ -1,12 +1,13 @@
 package net.edge.cache.unit;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.edge.Config;
 import net.edge.Constants;
 import net.edge.cache.CacheArchive;
 import net.edge.game.model.Model;
-import net.edge.game.model.NPC;
 import net.edge.sign.SignLink;
-import net.edge.util.collect.HashLruCache;
 import net.edge.util.io.Buffer;
 import net.edge.Client;
 import net.edge.util.DataToolkit;
@@ -54,7 +55,7 @@ public final class NPCType {
 	public boolean visible;
 	private int[] modelId;
 	private boolean nonTextured;
-	public static HashLruCache modelcache = new HashLruCache(30);
+	public static Int2ObjectOpenHashMap<Model> modelcache = new Int2ObjectOpenHashMap<>();
 	private boolean fixPriority;
 
 	private NPCType() {
@@ -556,7 +557,7 @@ public final class NPCType {
 				return type.getModel(idleAnim, currAnim, ai);
 			}
 		}
-		Model model = (Model) modelcache.get(id);
+		Model model = modelcache.get(id);
 		if(model == null) {
 			boolean flag = false;
 			for(int aModelId : modelId) {
@@ -620,7 +621,7 @@ public final class NPCType {
 				return type.getModel(j, currAnim, ai);
 			}
 		}
-		Model cachedModel = (Model) modelcache.get(id);
+		Model cachedModel = modelcache.get(id);
 		if(cachedModel == null) {
 			boolean flag = false;
 			for(int aModelId : modelId) {

@@ -107,9 +107,9 @@ public class CacheUnpacker {
 		load(new InterfaceLoader(getCacheArchive(3, "interface", CacheUnpacker.EXPECTED_CRC[3])));
 		load(new SceneLoader());
 		finished = true;
+		client.titleActivity.initialize();
 		TitleActivity.scrollOpened = true;
 		TitleActivity.scrollValue = 110;
-
 		// Resetting when finished
 		loadingCircleStarts = null;
 		loadingCircleLengths = null;

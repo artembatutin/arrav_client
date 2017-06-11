@@ -15,11 +15,6 @@ public class MonsterPanel extends Panel {
 	private final int IMAGES[] = {1010, 1011, 1012, 1834, 1884, 1835, 1836, 1837, 1910, 1920};
 
 	@Override
-	public String id() {
-		return "monster";
-	}
-
-	@Override
 	public boolean process() {
 	    /* Initialization */
 		int beginX = 4;

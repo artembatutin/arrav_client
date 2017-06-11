@@ -40,11 +40,6 @@ public class BankPanel extends Panel {
 	private boolean scrollDrag = false;
 
 	@Override
-	public String id() {
-		return "bank";
-	}
-
-	@Override
 	public boolean process() {
 	    /* Initialization */
 		int beginX = 4;
@@ -476,7 +471,10 @@ public class BankPanel extends Panel {
 		if(xSelected != 0 || ySelected != 0 && srcSlot != -1) {
 			int icon = Interface.cache[270 + tab].invId[srcSlot];
 			if(icon != 0) {
-				ObjectType.getIcon(icon, Interface.cache[270 + tab].invAmt[srcSlot], 0).drawImage(xSelected, ySelected, 128);
+				BitmapImage img = ObjectType.getIcon(icon, Interface.cache[270 + tab].invAmt[srcSlot], 0);
+				if(img != null) {
+					img.drawImage(xSelected, ySelected, 128);
+				}
 				/* Amount numbers */
 				if(Interface.cache[270 + tab].invAmt[srcSlot] > 1) {
 					String amt = Client.valueToKOrM(Interface.cache[270 + tab].invAmt[srcSlot]);

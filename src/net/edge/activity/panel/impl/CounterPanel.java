@@ -1,5 +1,7 @@
 package net.edge.activity.panel.impl;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.edge.activity.panel.Panel;
 import net.edge.cache.unit.ObjectType;
 import net.edge.game.Scene;
@@ -11,15 +13,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CounterPanel extends Panel {
 	
 	/**
 	 * The shops array
 	 */
-	public static Shop[] shops;
+	final static ObjectList<Shop> shops = new ObjectArrayList<>();
 	
 	/**
 	 * Scroll bar manipulated value.
@@ -32,11 +32,6 @@ public class CounterPanel extends Panel {
 	private boolean scrollDrag = false;
 	
 	@Override
-	public String id() {
-		return "npc";
-	}
-	
-	@Override
 	public boolean process() {
 	    /* Initialization */
 		int beginX = 4;
@@ -46,8 +41,8 @@ public class CounterPanel extends Panel {
 			beginY = client.windowHeight / 2 - 250;
 		}
 		
-		int max1 = 43 * shops.length;
-		int max2 = (32 * shops.length);
+		int max1 = 43 * shops.size();
+		int max2 = (32 * shops.size());
 		scrollMax = Math.max((max1 > max2 ? max1 : max2) - 185, 0);
 
         /* Scrolling */
@@ -109,17 +104,16 @@ public class CounterPanel extends Panel {
 			client.messagePromptRaised = true;
 		} else {
 			int offset = -scrollPos + 152;
-			if(shops != null && shops.length > 0) {
-				for(int i = 0; i < shops.length; i++) {
+			if(shops.size() > 0) {
+				int i = 0;
+				for(Shop s : shops) {
 					int x = i % 2 * 235;
-					Shop s = shops[i];
-					if(s == null)
-						continue;
 					if(client.leftClickInRegion(beginX + 6 + x, beginY + offset, beginX + 230 + x, beginY + 30 + offset)) {
 						client.outBuffer.putOpcode(20);
 						client.outBuffer.putShort(s.getId());
 					}
 					offset += i % 2 == 1 ? 41 : 0;
+					i++;
 				}
 			}
 		}
@@ -166,12 +160,10 @@ public class CounterPanel extends Panel {
 		Rasterizer2D.setClip(beginX + 5, beginY + 150, beginX + 493, beginY + 330);
 		int offset = -scrollPos + 152;
 		
-		if(shops != null && shops.length > 0) {
-			for(int i = 0; i < shops.length; i++) {
+		if(shops.size() > 0) {
+			int i = 0;
+			for(Shop s : shops) {
 				int x = i % 2 * 235;
-				Shop s = shops[i];
-				if(s == null)
-					continue;
 				Rasterizer2D.fillRectangle(beginX + 6 + x, beginY + offset, 230, 40, 0x0000, 100);
 				if(client.mouseInRegion(beginX + 6 + x, beginY + offset, beginX + 230 + x, beginY + 30 + offset)) {
 					Rasterizer2D.drawRectangle(beginX + 6 + x, beginY + offset, 230, 41, 0xffffff);
@@ -195,6 +187,7 @@ public class CounterPanel extends Panel {
 				//plainFont.drawLeftAlignedString("Combat: " + npc.combatLevel, beginX + 320, beginY + offset + 17, 0xffffff);
 				//smallFont.drawLeftAlignedString("Id: " + npc.id, beginX + 410, beginY + offset + 17, 0xffffff);
 				offset += i % 2 == 1 ? 41 : 0;
+				i++;
 			}
 		}
 
@@ -216,9 +209,8 @@ public class CounterPanel extends Panel {
 	@Override
 	public void initialize() {
 		client.marketSearch = false;
-		if(shops == null) {
+		if(shops.isEmpty()) {
 			URL url;
-			List<Shop> shops = new ArrayList<>();
 			try {
 				url = new URL("http://edgeville.net/game/shops.txt");
 				URLConnection conn = url.openConnection();
@@ -231,9 +223,8 @@ public class CounterPanel extends Panel {
 					icons[0] = Integer.parseInt(shop[2]);
 					icons[1] = Integer.parseInt(shop[3]);
 					icons[2] = Integer.parseInt(shop[4]);
-					shops.add(new Shop(name, id, icons));
+					CounterPanel.shops.add(new Shop(name, id, icons));
 				});
-				CounterPanel.shops = shops.toArray(new Shop[shops.size()]);
 				br.close();
 			} catch(IOException e) {
 				e.printStackTrace();

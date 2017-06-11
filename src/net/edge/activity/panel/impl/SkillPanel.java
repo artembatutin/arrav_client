@@ -30,11 +30,6 @@ public class SkillPanel extends Panel {
 	};
 
 	@Override
-	public String id() {
-		return "skill";
-	}
-
-	@Override
 	public boolean process() {
 	    /* Initialization */
 		int beginX = 4;

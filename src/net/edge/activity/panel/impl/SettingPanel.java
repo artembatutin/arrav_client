@@ -10,11 +10,6 @@ import net.edge.media.Rasterizer2D;
 public class SettingPanel extends Panel {
 
 	@Override
-	public String id() {
-		return "setting";
-	}
-
-	@Override
 	public boolean process() {
 
 		int x = 0;

@@ -1,5 +1,6 @@
 package net.edge;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.edge.activity.GameActivity;
 import net.edge.activity.TitleActivity;
 import net.edge.activity.panel.PanelHandler;
@@ -34,8 +35,6 @@ import net.edge.util.string.StringEncoder;
 import net.edge.activity.Activity;
 import net.edge.activity.panel.impl.*;
 import net.edge.activity.ui.UI;
-import net.edge.activity.ui.fixed.impl.*;
-import net.edge.activity.ui.resize.impl.*;
 import net.edge.activity.ui.util.SkillOrbHandler;
 import net.edge.cache.unit.*;
 import net.edge.game.model.*;
@@ -54,7 +53,6 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.zip.CRC32;
@@ -373,7 +371,7 @@ public class Client extends ClientEngine {
 	private LinkedDeque aClass19_1179;
 	private String reportAbuseInput;
 	private String[] friendsList;
-	public List<ClanSettingPanel.ClanMember> clanMatesList;
+	public ObjectArrayList<ClanSettingPanel.ClanMember> clanMatesList;
 	public String[] clanBansList;
 	private byte[][] terrainData;
 	private byte[][] objectData;
@@ -559,7 +557,7 @@ public class Client extends ClientEngine {
 		mapFunctionY = new int[1000];
 		regionLoaded = false;
 		friendsList = new String[200];
-		clanMatesList = new ArrayList<>();
+		clanMatesList = new ObjectArrayList<>();
 		clanBansList = new String[0];
 		inBuffer = Buffer.newPooledBuffer();
 		menuItemArg1 = new int[500];
@@ -646,7 +644,6 @@ public class Client extends ClientEngine {
 			if(args != null && args.length > 0) {
 				Constants.JAGGRAB_ENABLED = Boolean.parseBoolean(args[0]);
 				Constants.USER_HOME_FILE_STORE = Boolean.parseBoolean(args[1]);
-				System.out.println("Loading local." + Constants.USER_HOME_FILE_STORE  + Constants.JAGGRAB_ENABLED);
 			}
 			SignLink.storeId = 32;
 			SignLink.startPriv(InetAddress.getLocalHost());
@@ -962,7 +959,7 @@ public class Client extends ClientEngine {
 
 	public static String valueToKOrM(int j) {
 		if(j < 0x186a0) {
-			return String.valueOf(j);
+			return j + "";
 		}
 		if(j < 0x989680) {
 			return j / 1000 + "K";
@@ -972,16 +969,17 @@ public class Client extends ClientEngine {
 	}
 
 	private static String valueToKOrMLong(int i) {
-		String s = String.valueOf(i);
-		for(int k = s.length() - 3; k > 0; k -= 3) {
-			s = s.substring(0, k) + "," + s.substring(k);
+		//for(int k = s.length() - 3; k > 0; k -= 3) {
+		//	s = s.substring(0, k) + "," + s.substring(k);
+		//}
+		
+		if(i > 1000000) {
+			return "million @whi@(" + (i/1000000) + ")";
+		} else if(i > 1000) {
+			return "K @whi@(" + (i/1000) + ")";
+		} else {
+			return i + "";
 		}
-		if(s.length() > 8) {
-			s = "@gre@" + s.substring(0, s.length() - 8) + " million @whi@(" + s + ")";
-		} else if(s.length() > 4) {
-			s = "@cya@" + s.substring(0, s.length() - 4) + "K @whi@(" + s + ")";
-		}
-		return " " + s;
 	}
 
 	public void checkWindow() {
@@ -1533,7 +1531,7 @@ public class Client extends ClientEngine {
 							message = "";
 						}
 						if(Config.DEBUG_INDEXES.isOn()) {
-							s1 = Integer.toString(childWidget.id);
+							s1 = childWidget.id + "";
 						}
 						if(rank >= 1) {
 							ImageCache.get(1626 + rank).drawImage(xPos + childWidget.width / 2, yPos + font.lineHeight / 2 - 3);
@@ -1833,7 +1831,7 @@ public class Client extends ClientEngine {
 
 	public void drawSoak(int damage, int opacity, int drawPos, int x) {
 		x -= 12;
-		int soakLength = String.valueOf(damage).length();
+		int soakLength = (int) Math.log10(damage) + 1;
 		ImageCache.get(188).drawAlphaImage(spriteDrawX + x, drawPos - 12, opacity);
 		x += 20;
 		ImageCache.get(180).drawAlphaImage(spriteDrawX + x, drawPos - 12, opacity);
@@ -1843,7 +1841,7 @@ public class Client extends ClientEngine {
 			x += 4;
 		}
 		ImageCache.get(182).drawAlphaImage(spriteDrawX + x, drawPos - 10, opacity);
-		smallHitFont.drawCenteredString(String.valueOf(damage), spriteDrawX - 8 + x + (soakLength == 1 ? 5 : 0), drawPos + 32, 0xffffff, opacity);
+		smallHitFont.drawCenteredString(damage + "", spriteDrawX - 8 + x + (soakLength == 1 ? 5 : 0), drawPos + 32, 0xffffff, opacity);
 	}
 
 	private void drawFriendsListOrWelcomeScreen(Interface class9) {
@@ -2735,7 +2733,7 @@ public class Client extends ClientEngine {
 
 	private String interfaceIntToString(int j) {
 		if(j < 0x3b9ac9ff) {
-			return String.valueOf(j);
+			return j + "";
 		} else {
 			return "*";
 		}
@@ -2818,7 +2816,7 @@ public class Client extends ClientEngine {
 		}
 	}
 
-	private void resetConfigMem() {
+	private void clearMemory() {
 		LocationType.modelCache.clear();
 		LocationType.animatedModelCache.clear();
 		NPCType.modelcache.clear();
@@ -3419,7 +3417,7 @@ public class Client extends ClientEngine {
 		socketStream = null;
 		loggedIn = false;
 		TitleActivity.scrollOpened = true;
-		resetConfigMem();
+		clearMemory();
 		scene.clear();
 		for(int i = 0; i < 4; i++) {
 			collisionMaps[i].clear();
@@ -3430,8 +3428,8 @@ public class Client extends ClientEngine {
 		ImageCache.reset();
 		Texture.reset();
 		gameActivity.reset();
-		titleActivity.initialize();
 		panelHandler.close();
+		titleActivity.initialize();
 	}
 
 	public void dropClient() {
@@ -4962,6 +4960,7 @@ public class Client extends ClientEngine {
 							maxStats[skill] = k20 + 2;
 						}
 					}
+					OrbHandler.updateOrbs(skill);
 					pktType = -1;
 					return true;
 
@@ -5424,17 +5423,11 @@ public class Client extends ClientEngine {
 							Interface.cache[50144 + fresh].text = "";
 					}
 					int size = inBuffer.getUShort();
-					clanMatesList = new ArrayList<>(size);
+					clanMatesList = new ObjectArrayList<>(size);
 					for(int c = 0; c < size; c++) {
 						String name = inBuffer.getLine();
-						int rank = 0;
-						boolean muted;
-						muted = name.contains("@red@");
-						if(name.startsWith("@ra")) {
-							rank = Character.getNumericValue(name.charAt(3));
-							StringBuilder sb = new StringBuilder(name);
-							name = sb.delete(0, 5).toString();
-						}
+						boolean muted = inBuffer.getBoolean();
+						int rank = inBuffer.getUByte();
 						name = StringUtils.formatName(name.toLowerCase().replace("_", " "));
 						String ranked = rank == 0 ? "" : "@ra" + rank + "@";
 						Interface.cache[50144 + c].text = ranked + name;
@@ -5454,6 +5447,7 @@ public class Client extends ClientEngine {
 
 				case 110:
 					energy = inBuffer.getUByte();
+					OrbHandler.updateRun();
 					pktType = -1;
 					return true;
 
@@ -6966,7 +6960,10 @@ public class Client extends ClientEngine {
 							pushMessage("::ortho - Toggle between orthographic and perspective views", 0, "");
 							pushMessage("::cls - Clears the chatbox", 0, "");
 							pushMessage("::commands - This command", 0, "");
-						} else if(chatInput.equals("::debugdat")) {
+						} else if(chatInput.equals("::fps")) {
+							Config.FPS_ON.toggle();
+							pushMessage("--> fps " + (Config.FPS_ON.isOn() ? "on" : "off"), 0, "");
+						} else if(chatInput.equals("::dat")) {
 							Config.DEBUG_DATA.toggle();
 							pushMessage("--> data debug " + (Config.DEBUG_DATA.isOn() ? "on" : "off"), 0, "");
 						} else if(chatInput.equals("::repackimg")) {
@@ -6977,7 +6974,7 @@ public class Client extends ClientEngine {
 								e.printStackTrace();
 								pushMessage("--> failed to repack image index", 0, "");
 							}
-						} else if(chatInput.equals("::debugidx")) {
+						} else if(chatInput.equals("::idx")) {
 							Config.DEBUG_INDEXES.toggle();
 							pushMessage("--> index debug " + (Config.DEBUG_INDEXES.isOn() ? "on" : "off"), 0, "");
 						} else if(chatInput.equals("::data")) {
@@ -8110,7 +8107,7 @@ public class Client extends ClientEngine {
 			aClass19_1056.clear();
 			aClass19_1013.clear();
 			Texture.reset();
-			resetConfigMem();
+			clearMemory();
 			scene.clear();
 			for(int plane = 0; plane < 4; plane++) {
 				collisionMaps[plane].clear();
@@ -8243,6 +8240,7 @@ public class Client extends ClientEngine {
 			exception.printStackTrace();
 		}
 		LocationType.modelCache.clear();
+		LocationType.animatedModelCache.clear();
 		System.gc();
 		Texture.reset();
 		onDemandRequester.method566();

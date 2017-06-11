@@ -45,7 +45,7 @@ public class TitleActivity extends Activity {
 	/**
 	 * The connection index selected.
 	 */
-	private int connection = 0;
+	private int connection;
 	
 	/**
 	 * Scroll state condition.
@@ -79,15 +79,16 @@ public class TitleActivity extends Activity {
 	 * Hover positions toggles.
 	 */
 	private boolean[] hovered = new boolean[3];
-
+	
 	/**
-	 * Main activity Id.
-	 * @return activity Id
+	 * The formatted username.
 	 */
-	@Override
-	public String id() {
-		return "title";
-	}
+	private String formatted = "";
+	
+	/**
+	 * Astericks password entry.
+	 */
+	private String astericks = "";
 
 	/**
 	 * Main title activity data process.
@@ -143,6 +144,7 @@ public class TitleActivity extends Activity {
 			} else if(selectedInputForm == 1) {
 				if(key == 8 && client.localUsername.length() > 0) {
 					client.localUsername = client.localUsername.substring(0, client.localUsername.length() - 1);
+					formatted = StringUtils.formatName(client.localUsername);
 				}
 				if(key == 9 || key == 10 || key == 13) {
 					selectedInputForm = 2;
@@ -151,10 +153,12 @@ public class TitleActivity extends Activity {
 					if(client.localUsername.length() > 15) {
 						client.localUsername = client.localUsername.substring(0, 15);
 					}
+					formatted = StringUtils.formatName(client.localUsername);
 				}
 			} else if(selectedInputForm == 2) {
 				if(key == 8 && client.localPassword.length() > 0) {
 					client.localPassword = client.localPassword.substring(0, client.localPassword.length() - 1);
+					astericks = StringUtils.toAsterisks(client.localPassword);
 				}
 				if(key == 9 || key == 10 || key == 13) {
 					if(client.titleMessage.length() > 0) {
@@ -172,6 +176,7 @@ public class TitleActivity extends Activity {
 					if(client.localPassword.length() > 26) {
 						client.localPassword = client.localPassword.substring(0, 26);
 					}
+					astericks = StringUtils.toAsterisks(client.localPassword);
 				}
 			}
 		} while(true);
@@ -247,8 +252,8 @@ public class TitleActivity extends Activity {
 
 		/* Text */
 		if(scrollValue < 10) {
-			fancyFont.drawLeftAlignedEffectString(StringUtils.formatName(client.localUsername) + (selectedInputForm == 1 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - 125, centerY - 28, 0xFFFFFF, true);
-			fancyFont.drawLeftAlignedEffectString(StringUtils.toAsterisks(client.localPassword) + (selectedInputForm == 2 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - 125, centerY + 14, 0xFFFFFF, true);
+			fancyFont.drawLeftAlignedEffectString(formatted + (selectedInputForm == 1 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - 125, centerY - 28, 0xFFFFFF, true);
+			fancyFont.drawLeftAlignedEffectString(astericks + (selectedInputForm == 2 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - 125, centerY + 14, 0xFFFFFF, true);
 		}
 
 		/* Error & offline warning // effect */
@@ -271,12 +276,13 @@ public class TitleActivity extends Activity {
 		if(Config.DEBUG_DATA.isOn()) {
 			final Runtime runtime = Runtime.getRuntime();
 			final int usedMemory = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
-			plainFont.drawLeftAlignedEffectString("Mouse: " + client.mouseX + "," + client.mouseY, 5, 15, 0xffff00, false);
-			plainFont.drawLeftAlignedEffectString("DMouse: " + -(centerX - client.mouseX) + "," + -(centerY - client.mouseY), 5, 30, 0xffff00, false);
-			plainFont.drawLeftAlignedEffectString("Memory: " + usedMemory + "k (" + usedMemory / 1024L + "M)", 5, 45, 0xffff00, false);
-			plainFont.drawLeftAlignedEffectString("Fps: " + client.fps, 5, 60, 0xffff00, false);
+			plainFont.drawLeftAlignedEffectString("mouse: " + client.mouseX + "," + client.mouseY, 5, 15, 0xffff00, false);
+			plainFont.drawLeftAlignedEffectString("dMouse: " + -(centerX - client.mouseX) + "," + -(centerY - client.mouseY), 5, 30, 0xffff00, false);
+			plainFont.drawLeftAlignedEffectString("memory: " + usedMemory + "k (" + usedMemory / 1024L + "M)", 5, 45, 0xffff00, false);
+			plainFont.drawLeftAlignedEffectString("fps: " + client.fps, 5, 60, 0xffff00, false);
 		}
-		Rasterizer2D.fillRoundedRectangle(centerX - 370, centerY - 245, 50, 18, 3, 0x000000, 100);
+		Rasterizer2D.fillRectangle(centerX - 370, centerY - 245, 50, 18, 0x000000, 100);
+		Rasterizer2D.drawRectangle(centerX - 370, centerY - 245, 50, 18, 0x000000);
 		smallFont.drawCenteredString(CONNECTIONS[connection].getName(), centerX - 345, centerY - 232, 0xffffff);
 		smallFont.drawRightAlignedString("Build: " + Constants.BUILD, client.windowWidth - 20, client.windowHeight - 10, 0xffffff);
 		titleGraphics.drawGraphics(0, 0, client.graphics);
@@ -289,6 +295,9 @@ public class TitleActivity extends Activity {
 	public void initialize() {
 		started = false;
 		titleGraphics = new GraphicalComponent(client.windowWidth, client.windowHeight);
+		if(!Constants.JAGGRAB_ENABLED) {
+			connection = 1;
+		}
 	}
 
 	/**

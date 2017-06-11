@@ -628,7 +628,7 @@ public final class MapDecoder {
 				}
 			}
 		}
-		scene.calculateLighting(-10, -50, -50);
+		scene.shadeModels(-10, -50, -50);
 		for(int j1 = 0; j1 < sizeX; j1++) {
 			for(int l1 = 0; l1 < sizeY; l1++) {
 				if((renderRuleFlags[1][j1][l1] & 2) == 2) {

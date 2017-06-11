@@ -70,7 +70,10 @@ public final class Model extends Entity {
 	public int[][] anIntArrayArray1657;
 	public int[][] triangleSkin;
 	public boolean hoverable;
-	public Vector[] vertexNormal2;
+	public int[] vectorNormalX;
+	public int[] vectorNormalY;
+	public int[] vectorNormalZ;
+	public int[] vectorNormalMagnitude;
 	private static OnDemandFetcher odFetcher;
 	private static boolean[] projTriClipX = new boolean[4096];
 	private static boolean[] projTriClipZ = new boolean[4096];
@@ -112,8 +115,8 @@ public final class Model extends Entity {
 	private float[] textureCoordU;
 	private float[] textureCoordV;
 	public boolean upscaled;
-	private EmitterTriangle[] emitters;
-	private MagnetVertex[] magnets;
+	//private EmitterTriangle[] emitters;
+	//private MagnetVertex[] magnets;
 
 	static {
 		angleSine = Rasterizer3D.angleSine;
@@ -461,7 +464,10 @@ public final class Model extends Entity {
 			if(hasVertexNormals) {
 				int numVertexNormals = buffers[0].getUByte();
 				if(numVertexNormals > 0) {
-					vertexNormal1 = new Vector[numVertexNormals];
+					vectorX = new int[numVertexNormals];
+					vectorY = new int[numVertexNormals];
+					vectorZ = new int[numVertexNormals];
+					vectorMagnitude = new int[numVertexNormals];
 					for(int vertex = 0; vertex < numVertexNormals; vertex++) {
 						int x = buffers[0].getUShort();
 						int y = buffers[0].getUShort();
@@ -474,7 +480,10 @@ public final class Model extends Entity {
 								z = -1;
 						}
 						byte divisor = buffers[0].getSByte();
-						vertexNormal1[vertex] = new Vector(x, y, z, divisor);
+						vectorX[vertex] = x;
+						vectorY[vertex] = y;
+						vectorZ[vertex] = z;
+						vectorMagnitude[vertex] = divisor;
 					}
 				}
 			}
@@ -1056,7 +1065,7 @@ public final class Model extends Entity {
 			if(bool_51_) {
 				int i_110_ = buffers[0].getUByte(); // XXX f_ab -> emitters, fa -> EmitterTriangle
 				if(i_110_ > 0) {
-					emitters = new EmitterTriangle[i_110_];
+					//emitters = new EmitterTriangle[i_110_];
 					for(int i_111_ = 0; i_111_ < i_110_; i_111_++) {
 						int i_112_ = buffers[0].getUShort();
 						int i_113_ = buffers[0].getUShort();
@@ -1065,29 +1074,37 @@ public final class Model extends Entity {
 							i_114_ = triPri[i_113_];
 						else
 							i_114_ = (byte) i_54_;
-						emitters[i_111_] = new EmitterTriangle(i_112_, vertexIndex3d1[i_113_], vertexIndex3d2[i_113_], vertexIndex3d3[i_113_], i_114_);
+						//emitters[i_111_] = new EmitterTriangle(i_112_, vertexIndex3d1[i_113_], vertexIndex3d2[i_113_], vertexIndex3d3[i_113_], i_114_);
 					}
 				}
 				int i_115_ = buffers[0].getUByte();
 				if(i_115_ > 0) { // XXX d -> magnets, nc -> MagnetVertex
-					magnets = new MagnetVertex[i_115_];
+					//magnets = new MagnetVertex[i_115_];
 					for(int i_116_ = 0; i_115_ > i_116_; i_116_++) {
 						int i_117_ = buffers[0].getUShort();
 						int i_118_ = buffers[0].getUShort();
-						magnets[i_116_] = new MagnetVertex(i_117_, i_118_);
+						//magnets[i_116_] = new MagnetVertex(i_117_, i_118_);
 					}
 				}
 			}
 			if(bool_52_) {
 				int i_119_ = buffers[0].getUByte();
 				if(i_119_ > 0) {
-					//C = new vt[i_119_];
+					//vertexNormal1 = new Vector[i_119_];
+					vectorX = new int[i_119_];
+					vectorY = new int[i_119_];
+					vectorZ = new int[i_119_];
+					vectorMagnitude = new int[i_119_];
 					for(int i_120_ = 0; i_119_ > i_120_; i_120_++) {
 						int i_121_ = buffers[0].getUShort();
 						int i_122_ = buffers[0].getUShort();
 						int i_123_ = buffers[0].getUByte();
 						byte i_124_ = buffers[0].getSByte();
-						//C[i_120_] = new vt(i_121_, i_122_, i_123_, i_124_);
+						vectorX[i_120_] = i_121_;
+						vectorY[i_120_] = i_122_;
+						vectorZ[i_120_] = i_123_;
+						vectorMagnitude[i_120_] = i_124_;
+						//vertexNormal1[i_120_] = new Vector(i_121_, i_122_, i_123_, i_124_);
 					}
 				}
 			}
@@ -1254,20 +1271,14 @@ public final class Model extends Entity {
 		upscaled = model.upscaled;
 	}
 
-	public Model(boolean flag, boolean flag1, Model model) {// objects -
-		// adjustToTerrain,
-		// nonFlatShading
-		// (hedges, terrain
-		// objects?)
+	public Model(boolean flag, boolean flag1, Model model) {
 		hoverable = false;
-		// anInt1620++;
 		vertexAmt = model.vertexAmt;
 		triAmt = model.triAmt;
 		texAmt = model.texAmt;
 		if(flag) {
 			vertexY = new int[vertexAmt];
-			for(int j = 0; j < vertexAmt; j++)
-				vertexY[j] = model.vertexY[j];
+			System.arraycopy(model.vertexY, 0, vertexY, 0, vertexAmt);
 
 		} else {
 			vertexY = model.vertexY;
@@ -1298,21 +1309,16 @@ public final class Model extends Entity {
 					triType[l] = 0;
 
 			} else {
-				for(int i1 = 0; i1 < triAmt; i1++)
-					triType[i1] = model.triType[i1];
-
+				System.arraycopy(model.triType, 0, triType, 0, triAmt);
 			}
-			super.vertexNormal1 = new Vector[vertexAmt];
-			for(int j1 = 0; j1 < vertexAmt; j1++) {
-				Vector class33 = super.vertexNormal1[j1] = new Vector();
-				Vector class33_1 = model.vertexNormal1[j1];
-				class33.x = class33_1.x;
-				class33.y = class33_1.y;
-				class33.z = class33_1.z;
-				class33.magnitude = class33_1.magnitude;
-			}
-
-			vertexNormal2 = model.vertexNormal2;
+			super.vectorX = model.vectorX;
+			super.vectorY = model.vectorY;
+			super.vectorZ = model.vectorZ;
+			super.vectorMagnitude = model.vectorMagnitude;
+			vectorNormalX = model.vectorNormalX;
+			vectorNormalY = model.vectorNormalY;
+			vectorNormalZ = model.vectorNormalZ;
+			vectorNormalMagnitude = model.vectorNormalMagnitude;
 		} else {
 			triCol1 = model.triCol1;
 			triCol2 = model.triCol2;
@@ -1704,7 +1710,6 @@ public final class Model extends Entity {
 	private void drawTriangle(int face) {
 		try {
 			if(projTriClipZ[face]) {
-				//reduce(face);
 				drawTriangleOrQuad(face);
 				return;
 			}
@@ -1729,6 +1734,7 @@ public final class Model extends Entity {
 			
 			if(noTextureValues || noCoordinates) {
 				if(face_type == 0) {
+					//Rasterizer3D.drawFlatTriangle(projVertexY[a], projVertexY[b], projVertexY[c], projVertexX[a], projVertexX[b], projVertexX[c], vertex2dZ[a], vertex2dZ[b], vertex2dZ[c], hslToRgbMap[triCol1[face]]);
 					Rasterizer3D.drawGouraudTriangle(projVertexY[a], projVertexY[b], projVertexY[c], projVertexX[a], projVertexX[b], projVertexX[c], vertex2dZ[a], vertex2dZ[b], vertex2dZ[c], triCol1[face], triCol2[face], triCol3[face]);
 					return;
 				}
@@ -1737,13 +1743,12 @@ public final class Model extends Entity {
 					return;
 				}
 			}
-			if(//triTex[face] <= 51 ||
-					display_model_specific_texture) {
+			if(display_model_specific_texture) {
 				if(face_type == 0) {
-					int texture_type = !noCoordinates ? triTexCoord[face] & 0xffff : -1;
+					int texture_type = triTexCoord[face] & 0xffff;
 					if(texture_type == 0xffff)
 						texture_type = -1;
-					if(texture_type == -1 || texType == null || texType[texture_type] >= 0) {
+					if((texType != null && texType[texture_type] >= 0) || texture_type == -1) {
 						int x = (texture_type == -1 || texType[texture_type] > 0) ? a : texVertex1[texture_type] & 0xffff;
 						int y = (texture_type == -1 || texType[texture_type] > 0) ? b : texVertex2[texture_type] & 0xffff;
 						int z = (texture_type == -1 || texType[texture_type] > 0) ? c : texVertex3[texture_type] & 0xffff;
@@ -1753,10 +1758,10 @@ public final class Model extends Entity {
 				}
 
 				if(face_type == 1) {
-					int texture_type = !noCoordinates ? triTexCoord[face] & 0xffff : -1;
+					int texture_type = triTexCoord[face] & 0xffff;
 					if(texture_type == 0xffff)
 						texture_type = -1;
-					if(texture_type == -1 || texType == null || texType[texture_type] >= 0) {
+					if((texType != null && texType[texture_type] >= 0) || texture_type == -1) {
 						int x = (texture_type == -1 || texType[texture_type] > 0) ? a : texVertex1[texture_type] & 0xffff;
 						int y = (texture_type == -1 || texType[texture_type] > 0) ? b : texVertex2[texture_type] & 0xffff;
 						int z = (texture_type == -1 || texType[texture_type] > 0) ? c : texVertex3[texture_type] & 0xffff;
@@ -1767,9 +1772,9 @@ public final class Model extends Entity {
 			}
 
 			if(face_type == 0) {//TODO: do this.
-				if(Rasterizer3D.textured && triTex != null && triTex[face] != -1) {
+				if(triTex[face] != -1) {
 					int x, y, z;
-					if(triTexCoord != null && triTexCoord[face] != -1) {
+					if(texType != null && triTexCoord[face] != -1) {
 						int var8 = triTexCoord[face] & 0xffff;
 						int code = texType[var8] & 0xff;
 						x = texVertex1[var8] & 0xffff;
@@ -1785,30 +1790,27 @@ public final class Model extends Entity {
 						y = b;
 						z = c;
 					}
-
 					Rasterizer3D.drawTexturedTriangle(projVertexY[a], projVertexY[b], projVertexY[c], projVertexX[a], projVertexX[b], projVertexX[c], vertex2dZ[a], vertex2dZ[b], vertex2dZ[c], triCol1[face], triCol2[face], triCol3[face], projTexVertexX[x], projTexVertexX[y], projTexVertexX[z], projTexVertexY[x], projTexVertexY[y], projTexVertexY[z], projTexVertexZ[x], projTexVertexZ[y], projTexVertexZ[z], triTex[face], force_texture, false);
 					return;
 				}
-				if(Rasterizer3D.textured) {
-					int texture_type = !noCoordinates ? triTexCoord[face] & 0xffff : -1;
-					if(texture_type == 0xffff) {
-						texture_type = -1;
-					}
-					if(texture_type == -1 || texType == null || texType[texture_type] >= 0) {
-						int x = (texture_type == -1 || texType[texture_type] > 0) ? a : texVertex1[texture_type] & 0xffff;
-						int y = (texture_type == -1 || texType[texture_type] > 0) ? b : texVertex2[texture_type] & 0xffff;
-						int z = (texture_type == -1 || texType[texture_type] > 0) ? c : texVertex3[texture_type] & 0xffff;
-						Rasterizer3D.drawTexturedTriangle(projVertexY[a], projVertexY[b], projVertexY[c], projVertexX[a], projVertexX[b], projVertexX[c], vertex2dZ[a], vertex2dZ[b], vertex2dZ[c], triCol1[face], triCol1[face], triCol1[face], projTexVertexX[x], projTexVertexX[y], projTexVertexX[z], projTexVertexY[x], projTexVertexY[y], projTexVertexY[z], projTexVertexZ[x], projTexVertexZ[y], projTexVertexZ[z], triTex[face], force_texture, false);
-						return;
-					}
+				int texture_type = triTexCoord[face] & 0xffff;
+				if(texture_type == 0xffff) {
+					texture_type = -1;
+				}
+				if((texType != null && texType[texture_type] >= 0) || texture_type == -1) {
+					int x = (texture_type == -1 || texType[texture_type] > 0) ? a : texVertex1[texture_type] & 0xffff;
+					int y = (texture_type == -1 || texType[texture_type] > 0) ? b : texVertex2[texture_type] & 0xffff;
+					int z = (texture_type == -1 || texType[texture_type] > 0) ? c : texVertex3[texture_type] & 0xffff;
+					Rasterizer3D.drawTexturedTriangle(projVertexY[a], projVertexY[b], projVertexY[c], projVertexX[a], projVertexX[b], projVertexX[c], vertex2dZ[a], vertex2dZ[b], vertex2dZ[c], triCol1[face], triCol1[face], triCol1[face], projTexVertexX[x], projTexVertexX[y], projTexVertexX[z], projTexVertexY[x], projTexVertexY[y], projTexVertexY[z], projTexVertexZ[x], projTexVertexZ[y], projTexVertexZ[z], triTex[face], force_texture, false);
+					return;
 				}
 				Rasterizer3D.drawGouraudTriangle(projVertexY[a], projVertexY[b], projVertexY[c], projVertexX[a], projVertexX[b], projVertexX[c], vertex2dZ[a], vertex2dZ[b], vertex2dZ[c], triCol1[face], triCol2[face], triCol3[face]);
 				return;
 			}
 			if(face_type == 1) {//TODO: do this.
-				if(Rasterizer3D.textured && triTex != null && triTex[face] != -1) {
+				if(triTex[face] != -1) {
 					int x, y, z;
-					if(triTexCoord != null && triTexCoord[face] != -1) {
+					if(texType != null && triTexCoord[face] != -1) {
 						int var8 = triTexCoord[face] & 0xffff;
 						int code = texType[var8] & 0xff;
 						x = texVertex1[var8] & 0xffff;
@@ -1827,191 +1829,24 @@ public final class Model extends Entity {
 					Rasterizer3D.drawTexturedTriangle(projVertexY[a], projVertexY[b], projVertexY[c], projVertexX[a], projVertexX[b], projVertexX[c], vertex2dZ[a], vertex2dZ[b], vertex2dZ[c], triCol1[face], triCol1[face], triCol1[face], projTexVertexX[x], projTexVertexX[y], projTexVertexX[z], projTexVertexY[x], projTexVertexY[y], projTexVertexY[z], projTexVertexZ[x], projTexVertexZ[y], projTexVertexZ[z], triTex[face], force_texture, false);
 					return;
 				}
-				if(Rasterizer3D.textured) {
-					int texture_type = !noCoordinates ? triTexCoord[face] & 0xffff : -1;
-					if(texture_type == 0xffff) {
-						texture_type = -1;
-					}
-					if(texture_type == -1 || texType == null || texType[texture_type] >= 0) {
-						int x = (texture_type == -1 || texType[texture_type] > 0) ? a : texVertex1[texture_type] & 0xffff;
-						int y = (texture_type == -1 || texType[texture_type] > 0) ? b : texVertex2[texture_type] & 0xffff;
-						int z = (texture_type == -1 || texType[texture_type] > 0) ? c : texVertex3[texture_type] & 0xffff;
-						Rasterizer3D.drawTexturedTriangle(projVertexY[a], projVertexY[b], projVertexY[c], projVertexX[a], projVertexX[b], projVertexX[c], vertex2dZ[a], vertex2dZ[b], vertex2dZ[c], triCol1[face], triCol1[face], triCol1[face], projTexVertexX[x], projTexVertexX[y], projTexVertexX[z], projTexVertexY[x], projTexVertexY[y], projTexVertexY[z], projTexVertexZ[x], projTexVertexZ[y], projTexVertexZ[z], triTex[face], force_texture, false);
-						return;
-					}
+				int texture_type = triTexCoord[face] & 0xffff;
+				if(texture_type == 0xffff) {
+					texture_type = -1;
+				}
+				if((texType != null && texType[texture_type] >= 0) || texture_type == -1) {
+					int x = (texture_type == -1 || texType[texture_type] > 0) ? a : texVertex1[texture_type] & 0xffff;
+					int y = (texture_type == -1 || texType[texture_type] > 0) ? b : texVertex2[texture_type] & 0xffff;
+					int z = (texture_type == -1 || texType[texture_type] > 0) ? c : texVertex3[texture_type] & 0xffff;
+					Rasterizer3D.drawTexturedTriangle(projVertexY[a], projVertexY[b], projVertexY[c], projVertexX[a], projVertexX[b], projVertexX[c], vertex2dZ[a], vertex2dZ[b], vertex2dZ[c], triCol1[face], triCol1[face], triCol1[face], projTexVertexX[x], projTexVertexX[y], projTexVertexX[z], projTexVertexY[x], projTexVertexY[y], projTexVertexY[z], projTexVertexZ[x], projTexVertexZ[y], projTexVertexZ[z], triTex[face], force_texture, false);
+					return;
 				}
 				Rasterizer3D.drawFlatTriangle(projVertexY[a], projVertexY[b], projVertexY[c], projVertexX[a], projVertexX[b], projVertexX[c], vertex2dZ[a], vertex2dZ[b], vertex2dZ[c], hslToRgbMap[triCol1[face]]);
-				return;
 			}
 		} catch(Exception e) {
+			//e.printStackTrace();
 		}
 	}
-
-
-	private final void reduce(int i) {
-		try {
-			if(triFill != null && triFill[i] == -1)
-				return;
-			int j = Rasterizer3D.viewport.centerX;
-			int k = Rasterizer3D.viewport.centerY;
-			int l = 0;
-			int i1 = vertexIndex3d1[i];
-			int j1 = vertexIndex3d2[i];
-			int k1 = vertexIndex3d3[i];
-			int l1 = projTexVertexZ[i1];
-			int i2 = projTexVertexZ[j1];
-			int j2 = projTexVertexZ[k1];
-
-			if(l1 >= Constants.CAM_NEAR) {
-				triReqX[l] = projVertexX[i1];
-				triReqY[l] = projVertexY[i1];
-				triReqCol[l++] = triCol1[i];
-			} else {
-				int k2 = projTexVertexX[i1];
-				int k3 = projTexVertexY[i1];
-				int k4 = triCol1[i];
-				if(j2 >= Constants.CAM_NEAR) {
-					int k5 = (Constants.CAM_NEAR - l1) * shadeAmt[j2 - l1];
-
-					triReqX[l] = j + ((k2 + ((projTexVertexX[k1] - k2) * k5 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-					triReqY[l] = k + ((k3 + ((projTexVertexY[k1] - k3) * k5 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-					triReqCol[l++] = k4 + ((triCol3[i] - k4) * k5 >> 16);
-				}
-				if(i2 >= Constants.CAM_NEAR) {
-					int l5 = (Constants.CAM_NEAR - l1) * shadeAmt[i2 - l1];
-
-					triReqX[l] = j + ((k2 + ((projTexVertexX[j1] - k2) * l5 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-					triReqY[l] = k + ((k3 + ((projTexVertexY[j1] - k3) * l5 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-					triReqCol[l++] = k4 + ((triCol2[i] - k4) * l5 >> 16);
-				}
-			}
-			if(i2 >= Constants.CAM_NEAR) {
-				triReqX[l] = projVertexX[j1];
-				triReqY[l] = projVertexY[j1];
-				triReqCol[l++] = triCol2[i];
-			} else {
-				int l2 = projTexVertexX[j1];
-				int l3 = projTexVertexY[j1];
-				int l4 = triCol2[i];
-				if(l1 >= Constants.CAM_NEAR) {
-					int i6 = (Constants.CAM_NEAR - i2) * shadeAmt[l1 - i2];
-					triReqX[l] = j + ((l2 + ((projTexVertexX[i1] - l2) * i6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-					triReqY[l] = k + ((l3 + ((projTexVertexY[i1] - l3) * i6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-
-					triReqCol[l++] = l4 + ((triCol1[i] - l4) * i6 >> 16);
-				}
-				if(j2 >= Constants.CAM_NEAR) {
-					int j6 = (Constants.CAM_NEAR - i2) * shadeAmt[j2 - i2];
-					triReqX[l] = j + ((l2 + ((projTexVertexX[k1] - l2) * j6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-					triReqY[l] = k + ((l3 + ((projTexVertexY[k1] - l3) * j6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-					triReqCol[l++] = l4 + ((triCol3[i] - l4) * j6 >> 16);
-				}
-			}
-			if(j2 >= Constants.CAM_NEAR) {
-				triReqX[l] = projVertexX[k1];
-				triReqY[l] = projVertexY[k1];
-				triReqCol[l++] = triCol3[i];
-			} else {
-				int i3 = projTexVertexX[k1];
-				int i4 = projTexVertexY[k1];
-				int i5 = triCol3[i];
-				if(i2 >= Constants.CAM_NEAR) {
-					int k6 = (Constants.CAM_NEAR - j2) * shadeAmt[i2 - j2];
-					triReqX[l] = j + ((i3 + ((projTexVertexX[j1] - i3) * k6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-					triReqY[l] = k + ((i4 + ((projTexVertexY[j1] - i4) * k6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-					triReqCol[l++] = i5 + ((triCol2[i] - i5) * k6 >> 16);
-				}
-				if(l1 >= Constants.CAM_NEAR) {
-					int l6 = (Constants.CAM_NEAR - j2) * shadeAmt[l1 - j2];
-					triReqX[l] = j + ((i3 + ((projTexVertexX[i1] - i3) * l6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-					triReqY[l] = k + ((i4 + ((projTexVertexY[i1] - i4) * l6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-					triReqCol[l++] = i5 + ((triCol1[i] - i5) * l6 >> 16);
-				}
-			}
-			int j3 = triReqX[0];
-			int j4 = triReqX[1];
-			int j5 = triReqX[2];
-			int i7 = triReqY[0];
-			int j7 = triReqY[1];
-			int k7 = triReqY[2];
-			if((j3 - j4) * (k7 - j7) - (i7 - j7) * (j5 - j4) > 0) {
-				Rasterizer3D.clippedScan = false;
-				;
-				if(l == 3) {
-					if(j3 < 0 || j4 < 0 || j5 < 0 || j3 > Rasterizer3D.viewport.width || j4 > Rasterizer3D.viewport.width || j5 > Rasterizer3D.viewport.width)
-						Rasterizer3D.clippedScan = true;
-					;
-
-					int meshType;
-					if(triType == null)
-						meshType = 0;
-					else
-						meshType = triType[i] & 3;
-
-					Rasterizer3D.alphaFilter = (triAlpha == null ? 0 : triAlpha[i] & 0xFF);
-					if(meshType == 0)
-						Rasterizer3D.drawGouraudTriangle(i7, j7, k7, j3, j4, j5, 0, 0, 0, triReqCol[0], triReqCol[1], triReqCol[2]);
-					else if(meshType == 1)
-						Rasterizer3D.drawFlatTriangle(i7, j7, k7, j3, j4, j5, 0, 0, 0, hslToRgbMap[triCol1[i]]);
-					else if(meshType == 2) {
-						int j8 = triType[i] >> 2;
-						int k9 = texVertex1[j8] & 0xffff;
-						int k10 = texVertex2[j8] & 0xffff;
-						int k11 = texVertex3[j8] & 0xffff;
-						Rasterizer3D.drawTexturedTriangle(i7, j7, k7, j3, j4, j5, 0, 0, 0, triReqCol[0], triReqCol[1], triReqCol[2], projTexVertexX[k9], projTexVertexX[k10], projTexVertexX[k11], projTexVertexY[k9], projTexVertexY[k10], projTexVertexY[k11], projTexVertexZ[k9], projTexVertexZ[k10], projTexVertexZ[k11], triTex[i], false, false);
-					} else if(meshType == 3) {
-						int k8 = triType[i] >> 2;
-						int l9 = texVertex1[k8] & 0xffff;
-						int l10 = texVertex2[k8] & 0xffff;
-						int l11 = texVertex3[k8] & 0xffff;
-						Rasterizer3D.drawTexturedTriangle(i7, j7, k7, j3, j4, j5, 0, 0, 0, triCol1[i], triCol1[i], triCol1[i], projTexVertexX[l9], projTexVertexX[l10], projTexVertexX[l11], projTexVertexY[l9], projTexVertexY[l10], projTexVertexY[l11], projTexVertexZ[l9], projTexVertexZ[l10], projTexVertexZ[l11], triTex[i], false, false);
-					}
-				}
-				if(l == 4) {
-					if(j3 < 0 || j4 < 0 || j5 < 0 || j3 > Rasterizer3D.viewport.width || j4 > Rasterizer3D.viewport.width || j5 > Rasterizer3D.viewport.width || triReqX[3] < 0 || triReqX[3] > Rasterizer3D.viewport.width)
-						Rasterizer3D.clippedScan = true;
-					;
-					int i8;
-					if(triType == null)
-						i8 = 0;
-					else
-						i8 = triType[i] & 3;
-					Rasterizer3D.alphaFilter = (triAlpha == null ? 0 : triAlpha[i] & 0xFF);
-					if(i8 == 0) {
-						Rasterizer3D.drawGouraudTriangle(i7, j7, k7, j3, j4, j5, 0, 0, 0, triReqCol[0], triReqCol[1], triReqCol[2]);
-						Rasterizer3D.drawGouraudTriangle(i7, k7, triReqY[3], j3, j5, 0, 0, 0, triReqX[3], triReqCol[0], triReqCol[2], triReqCol[3]);
-						return;
-					}
-					if(i8 == 1) {
-						int l8 = hslToRgbMap[triCol1[i]];
-						Rasterizer3D.drawFlatTriangle(i7, j7, k7, j3, j4, j5, 0, 0, 0, l8);
-						Rasterizer3D.drawFlatTriangle(i7, k7, triReqY[3], j3, j5, triReqX[3], 0, 0, 0, l8);
-						return;
-					}
-					if(i8 == 2) {
-						int i9 = triType[i] >> 2;
-						int i10 = texVertex1[i9];
-						int i11 = texVertex2[i9];
-						int i12 = texVertex3[i9];
-						Rasterizer3D.drawTexturedTriangle(i7, j7, k7, j3, j4, j5, 0, 0, 0, triReqCol[0], triReqCol[1], triReqCol[2], projTexVertexX[i10], projTexVertexX[i11], projTexVertexX[i12], projTexVertexY[i10], projTexVertexY[i11], projTexVertexY[i12], projTexVertexZ[i10], projTexVertexZ[i11], projTexVertexZ[i12], triTex[i], false, false);
-						Rasterizer3D.drawTexturedTriangle(i7, k7, triReqY[3], j3, j5, 0, 0, 0, triReqX[3], triReqCol[0], triReqCol[2], triReqCol[3], projTexVertexX[i10], projTexVertexX[i11], projTexVertexX[i12], projTexVertexY[i10], projTexVertexY[i11], projTexVertexY[i12], projTexVertexZ[i10], projTexVertexZ[i11], projTexVertexZ[i12], triTex[i], false, false);
-						return;
-					}
-					if(i8 == 3) {
-						int j9 = triType[i] >> 2;
-						int j10 = texVertex1[j9];
-						int j11 = texVertex2[j9];
-						int j12 = texVertex3[j9];
-						Rasterizer3D.drawTexturedTriangle(i7, j7, k7, j3, j4, j5, 0, 0, 0, triCol1[i], triCol1[i], triCol1[i], projTexVertexX[j10], projTexVertexX[j11], projTexVertexX[j12], projTexVertexY[j10], projTexVertexY[j11], projTexVertexY[j12], projTexVertexZ[j10], projTexVertexZ[j11], projTexVertexZ[j12], triTex[i], false, false);
-						Rasterizer3D.drawTexturedTriangle(i7, k7, triReqY[3], j3, j5, triReqX[3], 0, 0, 0, triCol1[i], triCol1[i], triCol1[i], projTexVertexX[j10], projTexVertexX[j11], projTexVertexX[j12], projTexVertexY[j10], projTexVertexY[j11], projTexVertexY[j12], projTexVertexZ[j10], projTexVertexZ[j11], projTexVertexZ[j12], triTex[i], false, false);
-					}
-				}
-			}
-		} catch(Exception e) {
-
-		}
-	}
-
+	
 	public void drawModel(int yaw, int pitch, int roll, int dx, int dy, int dz) {
 		final int midX = Rasterizer3D.viewport.centerX;
 		final int midY = Rasterizer3D.viewport.centerY;
@@ -2919,11 +2754,11 @@ public final class Model extends Entity {
 			triCol2 = new int[triAmt];
 			triCol3 = new int[triAmt];
 		}
-		if(super.vertexNormal1 == null) {
-			super.vertexNormal1 = new Vector[vertexAmt];
-			for(int l1 = 0; l1 < vertexAmt; l1++) {
-				super.vertexNormal1[l1] = new Vector();
-			}
+		if(super.vectorX == null) {
+			super.vectorX = new int[vertexAmt];
+			super.vectorY = new int[vertexAmt];
+			super.vectorZ = new int[vertexAmt];
+			super.vectorMagnitude = new int[vertexAmt];
 		}
 		for(int i2 = 0; i2 < triAmt; i2++) {
 			if(triFill[i2] == 65535 || triFill[i2] == 16705 || triFill[i2] == 37798) {
@@ -2953,38 +2788,30 @@ public final class Model extends Entity {
 			i5 = (i5 << 8) / k5;
 			j5 = (j5 << 8) / k5;
 			if(triType == null || (triType[i2] & 1) == 0) {
-				Vector class33_2 = super.vertexNormal1[j2];
-				class33_2.x += l4;
-				class33_2.y += i5;
-				class33_2.z += j5;
-				class33_2.magnitude++;
-				class33_2 = super.vertexNormal1[l2];
-				class33_2.x += l4;
-				class33_2.y += i5;
-				class33_2.z += j5;
-				class33_2.magnitude++;
-				class33_2 = super.vertexNormal1[i3];
-				class33_2.x += l4;
-				class33_2.y += i5;
-				class33_2.z += j5;
-				class33_2.magnitude++;
+				vectorX[j2] += l4;
+				vectorY[j2] += i5;
+				vectorZ[j2] += j5;
+				vectorMagnitude[j2]++;
+				vectorX[l2] += l4;
+				vectorY[l2] += i5;
+				vectorZ[l2] += j5;
+				vectorMagnitude[l2]++;
+				vectorX[i3] += l4;
+				vectorY[i3] += i5;
+				vectorZ[i3] += j5;
+				vectorMagnitude[i3]++;
 			} else {
 				final int light = lightness + (lightx * l4 + lighty * i5 + lightz * j5) / intensity;
 				triCol1[i2] = adjustLightness(triFill[i2], light, triType[i2]);
 			}
 		}
 		if(flag) {
-			setLighting(lightness, intensity, lightx, lighty, lightz);
+			doShading(lightness, intensity, lightx, lighty, lightz);
 		} else {
-			vertexNormal2 = new Vector[vertexAmt];
-			for(int k2 = 0; k2 < vertexAmt; k2++) {
-				final Vector class33 = super.vertexNormal1[k2];
-				final Vector class33_1 = vertexNormal2[k2] = new Vector();
-				class33_1.x = class33.x;
-				class33_1.y = class33.y;
-				class33_1.z = class33.z;
-				class33_1.magnitude = class33.magnitude;
-			}
+			vectorNormalX = super.vectorX;
+			vectorNormalY = super.vectorY;
+			vectorNormalZ = super.vectorZ;
+			vectorNormalMagnitude = super.vectorMagnitude;
 		}
 		if(flag) {
 			computeBoundsDist();
@@ -2993,38 +2820,38 @@ public final class Model extends Entity {
 		}
 	}
 
-	public void setLighting(int lightness, int contrast, int lightx, int lighty, int lightz) {
+	public void doShading(int lightness, int contrast, int lightx, int lighty, int lightz) {
 		for(int i = 0; i < triAmt; i++) {
 			final int x3d = vertexIndex3d1[i];
 			final int y3d = vertexIndex3d2[i];
 			final int z3d = vertexIndex3d3[i];
 			if(triType == null) {
 				final int tex = triFill[i];
-				Vector class33 = super.vertexNormal1[x3d];
-				int light = lightness + (lightx * class33.x + lighty * class33.y + lightz * class33.z) / (contrast * class33.magnitude);
+				int light = lightness + (lightx * vectorX[x3d] + lighty * vectorY[x3d] + lightz * vectorZ[x3d]) / (contrast * vectorMagnitude[x3d]);
 				triCol1[i] = adjustLightness(tex, light, 0);
-				class33 = super.vertexNormal1[y3d];
-				light = lightness + (lightx * class33.x + lighty * class33.y + lightz * class33.z) / (contrast * class33.magnitude);
+				light = lightness + (lightx * vectorX[y3d] + lighty * vectorY[y3d] + lightz * vectorZ[y3d]) / (contrast * vectorMagnitude[y3d]);
 				triCol2[i] = adjustLightness(tex, light, 0);
-				class33 = super.vertexNormal1[z3d];
-				light = lightness + (lightx * class33.x + lighty * class33.y + lightz * class33.z) / (contrast * class33.magnitude);
+				light = lightness + (lightx * vectorX[z3d] + lighty * vectorY[z3d] + lightz * vectorZ[z3d]) / (contrast * vectorMagnitude[z3d]);
 				triCol3[i] = adjustLightness(tex, light, 0);
 			} else if((triType[i] & 1) == 0) {
 				final int tex = triFill[i];
 				final int type = triType[i];
-				Vector class33_1 = super.vertexNormal1[x3d];
-				int light = lightness + (lightx * class33_1.x + lighty * class33_1.y + lightz * class33_1.z) / (contrast * class33_1.magnitude);
+				int light = lightness + (lightx * vectorX[x3d] + lighty * vectorY[x3d] + lightz * vectorZ[x3d]) / (contrast * vectorMagnitude[x3d]);
 				triCol1[i] = adjustLightness(tex, light, type);
-				class33_1 = super.vertexNormal1[y3d];
-				light = lightness + (lightx * class33_1.x + lighty * class33_1.y + lightz * class33_1.z) / (contrast * class33_1.magnitude);
+				light = lightness + (lightx * vectorX[y3d] + lighty * vectorY[y3d] + lightz * vectorZ[y3d]) / (contrast * vectorMagnitude[y3d]);
 				triCol2[i] = adjustLightness(tex, light, type);
-				class33_1 = super.vertexNormal1[z3d];
-				light = lightness + (lightx * class33_1.x + lighty * class33_1.y + lightz * class33_1.z) / (contrast * class33_1.magnitude);
+				light = lightness + (lightx * vectorX[z3d] + lighty * vectorY[z3d] + lightz * vectorZ[z3d]) / (contrast * vectorMagnitude[z3d]);
 				triCol3[i] = adjustLightness(tex, light, type);
 			}
 		}
-		super.vertexNormal1 = null;
-		vertexNormal2 = null;
+		vectorX = null;
+		vectorY = null;
+		vectorZ = null;
+		vectorMagnitude = null;
+		vectorNormalX = null;
+		vectorNormalY = null;
+		vectorNormalZ = null;
+		vectorNormalMagnitude = null;
 		vertexSkin = null;
 		triSkin = null;
 		if(triType != null) {

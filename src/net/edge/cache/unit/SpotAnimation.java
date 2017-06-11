@@ -1,9 +1,9 @@
 package net.edge.cache.unit;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.edge.game.model.Model;
 import net.edge.util.io.Buffer;
 import net.edge.cache.CacheArchive;
-import net.edge.util.collect.HashLruCache;
 
 public final class SpotAnimation {
 
@@ -19,7 +19,7 @@ public final class SpotAnimation {
 	public int rotation;
 	public int lightness;
 	public int contrast;
-	public static HashLruCache modelcache = new HashLruCache(30);
+	public static Int2ObjectOpenHashMap<Model> modelcache = new Int2ObjectOpenHashMap<>();
 
 	private SpotAnimation() {
 		seqid = -1;
@@ -81,7 +81,7 @@ public final class SpotAnimation {
 	}
 
 	public Model getModel() {
-		Model model = (Model) modelcache.get(id);
+		Model model = modelcache.get(id);
 		if(model != null) {
 			return model;
 		}

@@ -1,15 +1,14 @@
 package net.edge.cache.unit;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.edge.Client;
 import net.edge.media.img.BitmapImage;
-
-import java.util.HashMap;
 
 public final class ImageCache {
 
 	private static Client client;
 
-	private final static HashMap<Integer, BitmapImage> imageCache = new HashMap<>();
+	private final static Int2ObjectOpenHashMap<BitmapImage> imageCache = new Int2ObjectOpenHashMap<>();
 
 	private final static BitmapImage nulledImage = new BitmapImage(0, 0);
 

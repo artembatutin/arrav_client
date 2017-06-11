@@ -3,8 +3,12 @@ package net.edge.game.model;
 import net.edge.util.collect.DoublyLinkableEntry;
 
 public class Entity extends DoublyLinkableEntry {
-
-	public Vector[] vertexNormal1;
+	
+	public int[] vectorX;
+	public int[] vectorY;
+	public int[] vectorZ;
+	public int[] vectorMagnitude;
+	
 	public int maxVerticalDistUp;
 
 	public Entity() {
