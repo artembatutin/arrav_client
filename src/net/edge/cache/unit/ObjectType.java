@@ -981,9 +981,9 @@ public final class ObjectType {
 			break;
 		case 7478:
 			this.name = "Edge Tokens";
-			this.description = "It's an edge tokens";
+			this.description = "It's an edge token.";
 			this.stackable = true;
-			actions = new String[] {"Drop", null, null, null, null};
+			actions = new String[] {null, null, null, null, null};
 			break;
 		case 19010:
 			originalModelColors = new int[1];
