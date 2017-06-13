@@ -83,8 +83,12 @@ public class ShopPanel extends Panel {
 	/**
 	 * Condition if back button displayed.
 	 */
-	private static boolean back = false;
+	private final boolean back;
 
+	public ShopPanel(boolean back) {
+		this.back = back;
+	}
+	
 	@Override
 	public boolean process() {
 		if(currency == null && Interface.cache[259].text != null && Interface.cache[259].text.length() > 0) {
@@ -100,10 +104,6 @@ public class ShopPanel extends Panel {
 		if(client.uiRenderer.isResizableOrFull()) {
 			beginX = client.windowWidth / 2 - 380;
 			beginY = client.windowHeight / 2 - 250;
-		}
-
-		if(Interface.cache[259] == null) {
-			Interface.cache[259] = Interface.addInterface(259);
 		}
 
 		scrollMax = Math.max(55 * ((client.currentShopInterfacePrices.length + 5) / 6) - 285, 0);
@@ -154,13 +154,16 @@ public class ShopPanel extends Panel {
 			Scene.hoverX = -1;
 			return true;
 		}
-		
-		if(client.leftClickInRegion(beginX + 382, beginY + 12, beginX + 438, beginY + 42)) {
-			if(client.localPrivilege == 4) {
+		if(client.localPrivilege == 4) {
+			if(client.leftClickInRegion(beginX + 325, beginY + 12, beginX + 381, beginY + 42)) {
 				client.outBuffer.putOpcode(185);
 				client.outBuffer.putShort(124);
-			} else if(back)
+			}
+		}
+		if(back) {
+			if(client.leftClickInRegion(beginX + 382, beginY + 12, beginX + 438, beginY + 42)) {
 				client.panelHandler.open(new CounterPanel());
+			}
 		}
 
 		/* Adding item */
@@ -230,8 +233,15 @@ public class ShopPanel extends Panel {
 		if(client.mouseInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
 		}
-		if(back || client.localPrivilege == 4) {
-			fancyFont.drawCenteredString(client.localPrivilege == 4 ? "Edit" : "Back", beginX + 407, beginY + 27, 0xF3B13F);
+		if(client.localPrivilege == 4) {
+			fancyFont.drawCenteredString("Edit", beginX + 350, beginY + 27, 0xF3B13F);
+			Rasterizer2D.fillRoundedRectangle(beginX + 323, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
+			if(client.mouseInRegion(beginX + 325, beginY + 12, beginX + 381, beginY + 42)) {
+				Rasterizer2D.fillRoundedRectangle(beginX + 323, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
+			}
+		}
+		if(back) {
+			fancyFont.drawCenteredString("Back", beginX + 407, beginY + 27, 0xF3B13F);
 			Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
 			if(client.mouseInRegion(beginX + 382, beginY + 12, beginX + 438, beginY + 42)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
@@ -300,11 +310,6 @@ public class ShopPanel extends Panel {
 
 	@Override
 	public void initialize() {
-		update(null);
-	}
-	
-	public static void update(String title) {
-		ShopPanel.back = false;
 		if(CounterPanel.shops.isEmpty()) {
 			URL url;
 			try {
@@ -326,18 +331,11 @@ public class ShopPanel extends Panel {
 				e.printStackTrace();
 			}
 		}
-		if(title != null) {
-			for(CounterPanel.Shop s : CounterPanel.shops) {
-				if(s.getName().equals(title)) {
-					ShopPanel.back = true;
-					break;
-				}
-			}
-		}
 	}
 
 	@Override
 	public void reset() {
+
 	}
 
 	@Override

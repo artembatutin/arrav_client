@@ -59,7 +59,7 @@ public class Mobile extends Entity {
 	public int anInt1549;
 	public int x;
 	public int y;
-	public int anInt1552;
+	public int yaw;
 	public final boolean[] aBooleanArray1553;
 	public int anInt1554;
 	public int anInt1555;

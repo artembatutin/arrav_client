@@ -1,5 +1,8 @@
 package net.edge.game;
 
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.edge.Constants;
 import net.edge.game.model.Model;
 import net.edge.Config;
@@ -18,8 +21,8 @@ public final class Scene {
 	private final int[][][] heightMap3d;
 	private final Tile[][][] tileMap;
 	private int currentPlane;
-	private int entity1Count;
-	private final EntityUnit[] entities1;
+	private final Long2ObjectOpenHashMap<EntityUnit> entities;
+	private final ObjectList<EntityUnit> tempEntities;
 	private final int[][][] heightMap2d;
 	private static int anInt446;
 	private static int cameraPlane;
@@ -84,7 +87,8 @@ public final class Scene {
 		final int tilesY = 104;
 		final int tilesX = 104;
 		final int planes = 4;
-		entities1 = new EntityUnit[5000];
+		entities = new Long2ObjectOpenHashMap<>();
+		tempEntities = new ObjectArrayList<>();
 		anIntArray486 = new int[10000];
 		anIntArray487 = new int[10000];
 		planesDisplayed = planes;
@@ -1080,6 +1084,7 @@ public final class Scene {
 	}
 
 	public void clear() {
+		entities.clear();
 		for(int plane = 0; plane < planesDisplayed; plane++) {
 			for(int x = 0; x < tilesDisplayedX; x++) {
 				for(int y = 0; y < tilesDisplayedY; y++) {
@@ -1093,10 +1098,6 @@ public final class Scene {
 			}
 			perspectiveCount[plane] = 0;
 		}
-		for(int k1 = 0; k1 < entity1Count; k1++) {
-			entities1[k1] = null;
-		}
-		entity1Count = 0;
 		for(int l1 = 0; l1 < entities2.length; l1++) {
 			entities2[l1] = null;
 		}
@@ -1161,14 +1162,14 @@ public final class Scene {
 		}
 	}
 
-	public boolean method285(int i, int j, int k, long hash, int i1, int j1, int k1, Entity entity, boolean flag) {
+	public boolean addEntity(int z, int j, int k, long hash, int y, int j1, int x, Entity entity, boolean flag) {
 		if(entity == null) {
 			return true;
 		}
-		int l1 = k1 - j1;
-		int i2 = i1 - j1;
-		int j2 = k1 + j1;
-		int k2 = i1 + j1;
+		int l1 = x - j1;
+		int i2 = y - j1;
+		int j2 = x + j1;
+		int k2 = y + j1;
 		if(flag) {
 			if(j > 640 && j < 1408) {
 				k2 += 128;
@@ -1187,11 +1188,11 @@ public final class Scene {
 		i2 /= 128;
 		j2 /= 128;
 		k2 /= 128;
-		return addEntityUnit(i, l1, i2, j2 - l1 + 1, k2 - i2 + 1, k1, i1, k, entity, j, true, hash, (byte) 0);
+		return addEntityUnit(z, l1, i2, j2 - l1 + 1, k2 - i2 + 1, x, y, k, entity, j, true, hash, (byte) 0);
 	}
 
-	public boolean method286(int j, int k, Entity class30_sub2_sub4, int l, int i1, int j1, int k1, int l1, int i2, long hash, int k2) {
-		return class30_sub2_sub4 == null || addEntityUnit(j, l1, k2, i2 - l1 + 1, i1 - k2 + 1, j1, k, k1, class30_sub2_sub4, l, true, hash, (byte) 0);
+	public boolean addPlayer(int j, int y, Entity entity, int yaw, int i1, int x, int k1, int l1, int i2, long hash, int k2) {
+		return entity == null || addEntityUnit(j, l1, k2, i2 - l1 + 1, i1 - k2 + 1, x, y, k1, entity, yaw, true, hash, (byte) 0);
 	}
 
 	void method290(int y, int k, int x, int plane) {
@@ -1763,7 +1764,7 @@ public final class Scene {
 		return false;
 	}
 
-	private void removeEntityUnit(EntityUnit entity) {
+	public void removeEntityUnit(EntityUnit entity) {
 		for(int x = entity.tileX; x <= entity.sizeX; x++) {
 			for(int y = entity.tileY; y <= entity.sizeY; y++) {
 				final Tile tile = tileMap[entity.plane][x][y];
@@ -1787,15 +1788,6 @@ public final class Scene {
 				}
 			}
 		}
-	}
-
-	public void removeEntityUnit1s() {
-		for(int i = 0; i < entity1Count; i++) {
-			final EntityUnit entity = entities1[i];
-			removeEntityUnit(entity);
-			entities1[i] = null;
-		}
-		entity1Count = 0;
 	}
 
 	public void removeObjectUnit(int plane, int x, int y) {
@@ -1840,7 +1832,7 @@ public final class Scene {
 		}
 	}
 
-	private boolean addEntityUnit(int plane, int x, int y, int sizeX, int sizeY, int baseX, int baseY, int l1, Entity entity, int i2, boolean flag, long hash, byte config) {
+	private boolean addEntityUnit(int plane, int x, int y, int sizeX, int sizeY, int baseX, int baseY, int l1, Entity entity, int yaw, boolean flag, long hash, byte config) {
 		for(int xPos = x; xPos < x + sizeX; xPos++) {
 			for(int yPos = y; yPos < y + sizeY; yPos++) {
 				if(xPos < 0 || yPos < 0 || xPos >= tilesDisplayedX || yPos >= tilesDisplayedY) {
@@ -1852,8 +1844,12 @@ public final class Scene {
 				}
 			}
 		}
-		//TODO: Put entities into an Int2ObjectArray and stop this loop of creation.
-		final EntityUnit spawn = new EntityUnit();
+		EntityUnit spawn = entities.get(hash);
+		if(spawn == null)
+			spawn = new EntityUnit();
+		else {
+			removeEntityUnit(spawn);
+		}
 		spawn.hash = hash;
 		spawn.config = config;
 		spawn.plane = plane;
@@ -1861,7 +1857,7 @@ public final class Scene {
 		spawn.z = baseY;
 		spawn.y = l1;
 		spawn.model = entity;
-		spawn.yaw = i2;
+		spawn.yaw = yaw;
 		spawn.tileX = x;
 		spawn.tileY = y;
 		spawn.sizeX = x + sizeX - 1;
@@ -1894,8 +1890,11 @@ public final class Scene {
 				tile_1.entityUnitAmount++;
 			}
 		}
+		if(flag && hash == -1) {
+			tempEntities.add(spawn);
+		}
 		if(flag) {
-			entities1[entity1Count++] = spawn;
+			entities.put(hash, spawn);
 		}
 		return true;
 	}
@@ -2085,5 +2084,13 @@ public final class Scene {
 			}
 		}
 		tileMap[plane][x][y].wall = wall;
+	}
+	
+	public Long2ObjectOpenHashMap<EntityUnit> getEntities() {
+		return entities;
+	}
+	
+	public ObjectList<EntityUnit> getTempEntities() {
+		return tempEntities;
 	}
 }

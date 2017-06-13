@@ -45,7 +45,7 @@ import net.edge.media.img.BitmapImage;
 import net.edge.util.MouseTracker;
 import net.edge.util.WebToolkit;
 import net.edge.util.string.StringUtils;
-import null_util.ImagePacker;
+import img.ImagePacker;
 
 import java.applet.AppletContext;
 import java.awt.*;
@@ -53,7 +53,6 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
-import java.util.List;
 import java.util.Objects;
 import java.util.zip.CRC32;
 
@@ -248,6 +247,7 @@ public class Client extends ClientEngine {
 	public int chatTypeView;
 	public int clanChatMode;
 	public int npcListSize;
+	public int previousNpcListSize;
 	public int privateChatMode;
 	public int openInterfaceID;
 	public int cameraZoom = 0;
@@ -257,6 +257,7 @@ public class Client extends ClientEngine {
 	public int cameraRoll;
 	public int cameraYaw;
 	public int playerCount;
+	public int previousPlayerCount;
 	public int friendsCount;
 	public int crossX;
 	public int crossY;
@@ -1064,6 +1065,8 @@ public class Client extends ClientEngine {
 		method134(buffer);
 		addPlayers(buffer, i);
 		method49(buffer);
+		if(playerCount > previousPlayerCount)
+			previousPlayerCount = playerCount;
 		for(int k = 0; k < anInt839; k++) {
 			final int l = anIntArray840[k];
 			if(playerList[l].anInt1537 != loopCycle) {
@@ -1088,6 +1091,8 @@ public class Client extends ClientEngine {
 		updateNPCMovement(buffer);
 		addNewNPC(psize, buffer);
 		method86(buffer);
+		if(npcListSize > previousNpcListSize)
+			previousNpcListSize = npcListSize;
 		for(int k = 0; k < anInt839; k++) {
 			final int l = anIntArray840[k];
 			if(npcList[l].anInt1537 != loopCycle) {
@@ -3189,7 +3194,9 @@ public class Client extends ClientEngine {
 				walkX = 0;
 				walkY = 0;
 				playerCount = 0;
+				previousPlayerCount = 0;
 				npcListSize = 0;
+				previousNpcListSize = 0;
 				for(int i2 = 0; i2 < maxPlayers; i2++) {
 					playerList[i2] = null;
 					playerBuffer[i2] = null;
@@ -5497,9 +5504,12 @@ public class Client extends ClientEngine {
 					if(inputDialogState != 0) {
 						inputDialogState = 0;
 					}
-					if(i5 == 65534) {
+					if(i5 == 65532) {
 						openInterfaceID = -1;
-						panelHandler.open(new ShopPanel());
+						panelHandler.open(new ShopPanel(true));
+					} else if(i5 == 65534) {
+						openInterfaceID = -1;
+						panelHandler.open(new ShopPanel(false));
 					} else if(i5 == 65533) {
 						openInterfaceID = -1;
 						panelHandler.open(new BankPanel());
@@ -5643,9 +5653,6 @@ public class Client extends ClientEngine {
 					updateStrings(text, frame);
 					if(Interface.cache[frame] != null)
 						Interface.cache[frame].text = text;
-					if(frame == 3901) {//shop back option check.
-						ShopPanel.update(text);
-					}
 					pktType = -1;
 					return true;
 
@@ -6165,16 +6172,16 @@ public class Client extends ClientEngine {
 	}
 
 	public void method104() {
-		StillGraphic class30_sub2_sub4_sub3 = (StillGraphic) aClass19_1056.getFirst();
-		for(; class30_sub2_sub4_sub3 != null; class30_sub2_sub4_sub3 = (StillGraphic) aClass19_1056.getNext()) {
-			if(class30_sub2_sub4_sub3.anInt1560 != cameraPlane || class30_sub2_sub4_sub3.noEffects) {
-				class30_sub2_sub4_sub3.unlinkPrimary();
-			} else if(loopCycle >= class30_sub2_sub4_sub3.anInt1564) {
-				class30_sub2_sub4_sub3.moveAnimation(anInt945);
-				if(class30_sub2_sub4_sub3.noEffects) {
-					class30_sub2_sub4_sub3.unlinkPrimary();
+		StillGraphic graphic = (StillGraphic) aClass19_1056.getFirst();
+		for(; graphic != null; graphic = (StillGraphic) aClass19_1056.getNext()) {
+			if(graphic.anInt1560 != cameraPlane || graphic.noEffects) {
+				graphic.unlinkPrimary();
+			} else if(loopCycle >= graphic.anInt1564) {
+				graphic.moveAnimation(anInt945);
+				if(graphic.noEffects) {
+					graphic.unlinkPrimary();
 				} else {
-					scene.method285(class30_sub2_sub4_sub3.anInt1560, 0, class30_sub2_sub4_sub3.anInt1563, -1, class30_sub2_sub4_sub3.anInt1562, 60, class30_sub2_sub4_sub3.anInt1561, class30_sub2_sub4_sub3, false);
+					scene.addEntity(graphic.anInt1560, 0, graphic.anInt1563, -1, graphic.anInt1562, 60, graphic.anInt1561, graphic, false);
 				}
 			}
 		}
@@ -6449,10 +6456,20 @@ public class Client extends ClientEngine {
 	}
 
 	public void method26(boolean flag) {
-		for(int j = 0; j < npcListSize; j++) {
+		int count = npcListSize > previousNpcListSize ? npcListSize : previousNpcListSize;
+		for(int j = 0; j < count; j++) {
 			final NPC npc = npcList[npcEntryList[j]];
 			long hash = 0x4000000000L + (npcEntryList[j] << 14);
-			if(npc == null || !npc.isVisible() || npc.type.visible != flag) {
+			EntityUnit u = scene.getEntities().get(hash);
+			if(npc == null) {
+				removeEntity(u);
+				continue;
+			}
+			if(j >= previousNpcListSize) {
+				removeEntity(u);
+				continue;
+			}
+			if(!npc.isVisible() || npc.type.visible != flag) {
 				continue;
 			}
 			final int l = npc.x >> 7;
@@ -6469,8 +6486,24 @@ public class Client extends ClientEngine {
 			if(!npc.type.clickable) {
 				hash += 0x100000000L;
 			}
-			scene.method285(cameraPlane, npc.anInt1552, method42(cameraPlane, npc.x, npc.y), hash, npc.y, (npc.anInt1540 - 1) * 64 + 60, npc.x, npc, npc.aBoolean1541);
+			boolean add = true;
+			u = scene.getEntities().get(hash);
+			if(npc.aBoolean1541) {
+				if(u != null) {
+					if(u.x == npc.x && u.y == npc.y && u.z == cameraPlane && u.yaw == npc.yaw)
+						add = false;
+				}
+			}
+			if(add) {
+				removeEntity(u);
+				scene.addEntity(cameraPlane, npc.yaw, method42(cameraPlane, npc.x, npc.y), hash, npc.y, (npc.anInt1540 - 1) * 64 + 60, npc.x, npc, npc.aBoolean1541);
+			}
 		}
+	}
+	
+	public void removeEntity(EntityUnit u) {
+		if(u != null)
+			scene.removeEntityUnit(u);
 	}
 
 	public void method37() {//TODO: REMOVED, add it back efficiently.
@@ -6599,11 +6632,11 @@ public class Client extends ClientEngine {
 		if(localPlayer.x >> 7 == walkX && localPlayer.y >> 7 == walkY) {
 			walkX = 0;
 		}
-		int j = playerCount;
+		int count = playerCount > previousPlayerCount ? playerCount : previousPlayerCount;
 		if(flag) {
-			j = 1;
+			count = 1;
 		}
-		for(int l = 0; l < j; l++) {
+		for(int l = 0; l < count; l++) {
 			Player player;
 			long hash;
 			if(flag) {
@@ -6613,7 +6646,13 @@ public class Client extends ClientEngine {
 				player = playerList[playerEntryList[l]];
 				hash = playerEntryList[l] << 14;
 			}
+			EntityUnit u = scene.getEntities().get(hash);
+			if(l >= previousPlayerCount && !flag) {
+				removeEntity(u);
+				continue;
+			}
 			if(player == null || !player.isVisible()) {
+				removeEntity(u);
 				continue;
 			}
 			player.noTransform = (!Config.LOW_MEM.isOn() && playerCount > 50 || playerCount > 200) && !flag && player.idleAnim == player.anInt1511;
@@ -6625,7 +6664,15 @@ public class Client extends ClientEngine {
 			if(player.aModel_1714 != null && loopCycle >= player.anInt1707 && loopCycle < player.anInt1708) {
 				player.noTransform = false;
 				player.anInt1709 = method42(cameraPlane, player.x, player.y);
-				scene.method286(cameraPlane, player.y, player, player.anInt1552, player.anInt1722, player.x, player.anInt1709, player.anInt1719, player.anInt1721, hash, player.anInt1720);
+				boolean add = true;
+				if(u != null) {
+					if(u.x == player.x && u.y == player.y && u.z == cameraPlane && u.yaw == player.yaw)
+						add = false;
+				}
+				if(add) {
+					removeEntity(u);
+					scene.addPlayer(cameraPlane, player.y, player, player.yaw, player.anInt1722, player.x, player.anInt1709, player.anInt1719, player.anInt1721, hash, player.anInt1720);
+				}
 				continue;
 			}
 			if((player.x & 0x7f) == 64 && (player.y & 0x7f) == 64) {
@@ -6635,23 +6682,35 @@ public class Client extends ClientEngine {
 				anIntArrayArray929[j1][k1] = anInt1265;
 			}
 			player.anInt1709 = method42(cameraPlane, player.x, player.y);
-			scene.method285(cameraPlane, player.anInt1552, player.anInt1709, hash, player.y, 60, player.x, player, player.aBoolean1541);
+			boolean add = true;
+			if(player.aBoolean1541) {
+				if(u != null) {
+					if(u.x == player.x && u.y == player.y && u.z == cameraPlane && u.yaw == player.yaw)
+						add = false;
+				}
+			}
+			if(add) {
+				removeEntity(u);
+				scene.addEntity(cameraPlane, player.yaw, player.anInt1709, hash, player.y, 60, player.x, player, player.aBoolean1541);
+			}
 		}
+		if(!flag && previousPlayerCount > playerCount)
+			previousPlayerCount = 0;
 	}
 
 	public void method55() {
-		for(Projectile class30_sub2_sub4_sub4 = (Projectile) aClass19_1013.getFirst(); class30_sub2_sub4_sub4 != null; class30_sub2_sub4_sub4 = (Projectile) aClass19_1013.getNext()) {
-			if(class30_sub2_sub4_sub4.anInt1597 != cameraPlane || loopCycle > class30_sub2_sub4_sub4.anInt1572) {
-				class30_sub2_sub4_sub4.unlinkPrimary();
-			} else if(loopCycle >= class30_sub2_sub4_sub4.anInt1571) {
-				if(class30_sub2_sub4_sub4.anInt1590 > 0) {
-					final NPC npc = npcList[class30_sub2_sub4_sub4.anInt1590 - 1];
+		for(Projectile projectile = (Projectile) aClass19_1013.getFirst(); projectile != null; projectile = (Projectile) aClass19_1013.getNext()) {
+			if(projectile.anInt1597 != cameraPlane || loopCycle > projectile.anInt1572) {
+				projectile.unlinkPrimary();
+			} else if(loopCycle >= projectile.anInt1571) {
+				if(projectile.anInt1590 > 0) {
+					final NPC npc = npcList[projectile.anInt1590 - 1];
 					if(npc != null && npc.x >= 0 && npc.x < 13312 && npc.y >= 0 && npc.y < 13312) {
-						class30_sub2_sub4_sub4.method455(loopCycle, npc.y, method42(class30_sub2_sub4_sub4.anInt1597, npc.x, npc.y) - class30_sub2_sub4_sub4.anInt1583, npc.x);
+						projectile.method455(loopCycle, npc.y, method42(projectile.anInt1597, npc.x, npc.y) - projectile.anInt1583, npc.x);
 					}
 				}
-				if(class30_sub2_sub4_sub4.anInt1590 < 0) {
-					final int j = -class30_sub2_sub4_sub4.anInt1590 - 1;
+				if(projectile.anInt1590 < 0) {
+					final int j = -projectile.anInt1590 - 1;
 					Player player;
 					if(j == unknownInt10) {
 						player = localPlayer;
@@ -6659,11 +6718,11 @@ public class Client extends ClientEngine {
 						player = playerList[j];
 					}
 					if(player != null && player.x >= 0 && player.x < 13312 && player.y >= 0 && player.y < 13312) {
-						class30_sub2_sub4_sub4.method455(loopCycle, player.y, method42(class30_sub2_sub4_sub4.anInt1597, player.x, player.y) - class30_sub2_sub4_sub4.anInt1583, player.x);
+					//	projectile.method455(loopCycle, player.y, method42(projectile.anInt1597, player.x, player.y) - projectile.anInt1583, player.x);
 					}
 				}
-				class30_sub2_sub4_sub4.method456(anInt945);
-				scene.method285(cameraPlane, class30_sub2_sub4_sub4.anInt1595, (int) class30_sub2_sub4_sub4.aDouble1587, -1, (int) class30_sub2_sub4_sub4.aDouble1586, 60, (int) class30_sub2_sub4_sub4.aDouble1585, class30_sub2_sub4_sub4, false);
+				projectile.method456(anInt945);
+				scene.addEntity(cameraPlane, projectile.anInt1595, (int) projectile.aDouble1587, -1, (int) projectile.aDouble1586, 60, (int) projectile.aDouble1585, projectile, false);
 			}
 		}
 
@@ -6902,27 +6961,9 @@ public class Client extends ClientEngine {
 						final int mem = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
 						pushMessage("--> mem: " + mem + "k", 0, "");
 					}
-					if(chatInput.equals("::msg1")) {
-						pushMessage("Game message.", 0, "");
-						pushMessage("Chat message.", 1, "@cr1@Edgeville");
-						pushMessage("Received private message.", 2, "@cr2@Edgeville");
-						pushMessage("wishes to trade with you.", 4, "Edgeville");
-						pushMessage("Edgeville has logged in/out.", 5, "");
-						pushMessage("Sent private message.", 6, "@cr6@Edgeville");
-						pushMessage("Clan message.", 7, "@cr7@Clan Name:Clanmate Name");
-						pushMessage("sent some request.", 8, "Edgeville");
-					}
-					if(chatInput.equals("::msg2")) {
-						pushMessage("Regular", 1, "Edgeville");
-						pushMessage("Moderator", 1, "@cr1@Edgeville");
-						pushMessage("Super-Moderator", 1, "@cr2@Edgeville");
-						pushMessage("Administrator", 1, "@cr3@Edgeville");
-						pushMessage("Developer", 1, "@cr4@Edgeville");
-						pushMessage("Designer", 1, "@cr5@Edgeville");
-						pushMessage("Respected-Member", 1, "@cr6@Edgeville");
-						pushMessage("Donator", 1, "@cr7@Edgeville");
-						pushMessage("Super-Donator", 1, "@cr8@Edgeville");
-						pushMessage("Extreme-Donator", 1, "@cr9@Edgeville");
+					if(chatInput.equals("::fps")) {
+						Config.FPS_ON.toggle();
+						pushMessage("--> fps " + (Config.FPS_ON.isOn() ? "on" : "off"), 0, "");
 					}
 					if(localPrivilege == 4) {
 						if(chatInput.startsWith("//setspecto")) {
@@ -6948,6 +6989,28 @@ public class Client extends ClientEngine {
 								pushMessage("Interface Failed to load", 0, "");
 							}
 						}
+						if(chatInput.equals("::msg1")) {
+							pushMessage("Game message.", 0, "");
+							pushMessage("Chat message.", 1, "@cr1@Edgeville");
+							pushMessage("Received private message.", 2, "@cr2@Edgeville");
+							pushMessage("wishes to trade with you.", 4, "Edgeville");
+							pushMessage("Edgeville has logged in/out.", 5, "");
+							pushMessage("Sent private message.", 6, "@cr6@Edgeville");
+							pushMessage("Clan message.", 7, "@cr7@Clan Name:Clanmate Name");
+							pushMessage("sent some request.", 8, "Edgeville");
+						}
+						if(chatInput.equals("::msg2")) {
+							pushMessage("Regular", 1, "Edgeville");
+							pushMessage("Moderator", 1, "@cr1@Edgeville");
+							pushMessage("Super-Moderator", 1, "@cr2@Edgeville");
+							pushMessage("Administrator", 1, "@cr3@Edgeville");
+							pushMessage("Developer", 1, "@cr4@Edgeville");
+							pushMessage("Designer", 1, "@cr5@Edgeville");
+							pushMessage("Respected-Member", 1, "@cr6@Edgeville");
+							pushMessage("Donator", 1, "@cr7@Edgeville");
+							pushMessage("Super-Donator", 1, "@cr8@Edgeville");
+							pushMessage("Extreme-Donator", 1, "@cr9@Edgeville");
+						}
 						if(chatInput.equals("::commands")) {
 							pushMessage("--> commands", 0, "");
 							pushMessage("::debugdat / ::debugidx - Toggle debug", 0, "");
@@ -6960,9 +7023,6 @@ public class Client extends ClientEngine {
 							pushMessage("::ortho - Toggle between orthographic and perspective views", 0, "");
 							pushMessage("::cls - Clears the chatbox", 0, "");
 							pushMessage("::commands - This command", 0, "");
-						} else if(chatInput.equals("::fps")) {
-							Config.FPS_ON.toggle();
-							pushMessage("--> fps " + (Config.FPS_ON.isOn() ? "on" : "off"), 0, "");
 						} else if(chatInput.equals("::dat")) {
 							Config.DEBUG_DATA.toggle();
 							pushMessage("--> data debug " + (Config.DEBUG_DATA.isOn() ? "on" : "off"), 0, "");
@@ -7096,23 +7156,8 @@ public class Client extends ClientEngine {
 							Config.ORTHO_VIEW.toggle();
 							pushMessage("--> orthographic view " + (Config.ORTHO_VIEW.isOn() ? "on" : "off"), 0, "");
 						}
-						// Developing commands
-
-						if(chatInput.equals("::roll")) { // temporary command until you can click the character for this
+						if(chatInput.equals("::roll")) {
 							rollCharacterInInterface = !rollCharacterInInterface;
-						}
-
-						if(chatInput.equals("::shop")) {
-							panelHandler.open(new ShopPanel());
-						}
-						if(chatInput.equals("::bank")) {
-							panelHandler.open(new BankPanel());
-						}
-						if(chatInput.equals("::setting")) {
-							panelHandler.open(new SettingPanel());
-						}
-						if(chatInput.equals("::train")) {
-							panelHandler.open(new SkillPanel());
 						}
 						if(chatInput.equals("::fog")) {
 							Config.SMOOTH_FOG.toggle();
@@ -7333,17 +7378,17 @@ public class Client extends ClientEngine {
 			entity.anInt1538 = 0;
 			entity.anInt1539 = 0;
 		}
-		final int l = entity.turnDirection - entity.anInt1552 & 0x7ff;
+		final int l = entity.turnDirection - entity.yaw & 0x7ff;
 		if(l != 0) {
 			if(l < entity.anInt1504 || l > 2048 - entity.anInt1504) {
-				entity.anInt1552 = entity.turnDirection;
+				entity.yaw = entity.turnDirection;
 			} else if(l > 1024) {
-				entity.anInt1552 -= entity.anInt1504;
+				entity.yaw -= entity.anInt1504;
 			} else {
-				entity.anInt1552 += entity.anInt1504;
+				entity.yaw += entity.anInt1504;
 			}
-			entity.anInt1552 &= 0x7ff;
-			if(entity.idleAnim == entity.anInt1511 && entity.anInt1552 != entity.turnDirection) {
+			entity.yaw &= 0x7ff;
+			if(entity.idleAnim == entity.anInt1511 && entity.yaw != entity.turnDirection) {
 				if(entity.anInt1512 != -1) {
 					entity.idleAnim = entity.anInt1512;
 					return;
@@ -8725,7 +8770,6 @@ public class Client extends ClientEngine {
 			}
 			playerEntryList[playerCount++] = j;
 			final Player player = playerList[j];
-			//player.title = PlayerTitle.TITLES[stream.getBits(2)];
 			player.anInt1537 = loopCycle;
 			final int k = stream.getBits(1);
 			if(k == 1) {
@@ -8820,7 +8864,7 @@ public class Client extends ClientEngine {
 		if(entity.anInt1549 == 3) {
 			entity.turnDirection = 512;
 		}
-		entity.anInt1552 = entity.turnDirection;
+		entity.yaw = entity.turnDirection;
 	}
 
 	private void method99(Mobile entity) {
@@ -8870,7 +8914,7 @@ public class Client extends ClientEngine {
 		} else {
 			entity.turnDirection = 0;
 		}
-		int i1 = entity.turnDirection - entity.anInt1552 & 0x7ff;
+		int i1 = entity.turnDirection - entity.yaw & 0x7ff;
 		if(i1 > 1024) {
 			i1 -= 2048;
 		}
@@ -8887,7 +8931,7 @@ public class Client extends ClientEngine {
 		}
 		entity.idleAnim = j1;
 		int k1 = 4;
-		if(entity.anInt1552 != entity.turnDirection && entity.interactingEntity == -1 && entity.anInt1504 != 0) {
+		if(entity.yaw != entity.turnDirection && entity.interactingEntity == -1 && entity.anInt1504 != 0) {
 			k1 = 2;
 		}
 		if(entity.smallXYIndex > 2) {

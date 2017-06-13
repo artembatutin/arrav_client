@@ -1,11 +1,8 @@
 package net.edge.media.tex;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.edge.od.OnDemandFetcher;
 import net.edge.util.io.Buffer;
-
-import java.util.HashMap;
 
 public final class Texture {
 

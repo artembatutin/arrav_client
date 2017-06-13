@@ -1,8 +1,6 @@
 package net.edge.cache.unit;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.edge.Config;
 import net.edge.Constants;
 import net.edge.cache.CacheArchive;

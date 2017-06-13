@@ -125,7 +125,6 @@ public class FixedUI_562 extends FixedUI {
 				if(client.chatMessage[i] != null) {
 					int x = 9;
 					final int y = (115 - 14 * line) + client.chatScrollPos;
-					;
 					if(y <= 0 && y >= 210) {
 						line++;
 						continue;

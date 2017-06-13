@@ -3,8 +3,8 @@ package net.edge.activity;
 import net.edge.Config;
 import net.edge.Constants;
 import net.edge.activity.ui.UIComponent;
-import net.edge.activity.ui.util.OrbHandler;
 import net.edge.game.Scene;
+import net.edge.game.tile.EntityUnit;
 import net.edge.media.Rasterizer2D;
 import net.edge.media.Rasterizer3D;
 import net.edge.sign.SignLink;
@@ -18,7 +18,6 @@ import net.edge.media.GraphicalComponent;
 import net.edge.media.font.BitmapFont;
 
 import java.io.IOException;
-import java.text.DecimalFormat;
 import java.util.Arrays;
 
 public class GameActivity extends Activity {
@@ -699,16 +698,16 @@ public class GameActivity extends Activity {
 				final Player player = client.playerList[id];
 				if((player.x & 0x7f) == 64 && (player.y & 0x7f) == 64) {
 					for(int k2 = 0; k2 < client.npcListSize; k2++) {
-						final NPC class30_sub2_sub4_sub1_sub1_2 = client.npcList[client.npcEntryList[k2]];
-						if(class30_sub2_sub4_sub1_sub1_2 != null && class30_sub2_sub4_sub1_sub1_2.type.boundaryDimension == 1 && class30_sub2_sub4_sub1_sub1_2.x == player.x && class30_sub2_sub4_sub1_sub1_2.y == player.y) {
-							buildAtNPCMenu(class30_sub2_sub4_sub1_sub1_2.type, client.npcEntryList[k2], y, x);
+						final NPC npc = client.npcList[client.npcEntryList[k2]];
+						if(npc != null && npc.type.boundaryDimension == 1 && npc.x == player.x && npc.y == player.y) {
+							buildAtNPCMenu(npc.type, client.npcEntryList[k2], y, x);
 						}
 					}
 
 					for(int i3 = 0; i3 < client.playerCount; i3++) {
-						final Player class30_sub2_sub4_sub1_sub2_2 = client.playerList[client.playerEntryList[i3]];
-						if(class30_sub2_sub4_sub1_sub2_2 != null && class30_sub2_sub4_sub1_sub2_2 != player && class30_sub2_sub4_sub1_sub2_2.x == player.x && class30_sub2_sub4_sub1_sub2_2.y == player.y) {
-							buildAtPlayerMenu(x, client.playerEntryList[i3], class30_sub2_sub4_sub1_sub2_2, y);
+						final Player playerHover = client.playerList[client.playerEntryList[i3]];
+						if(playerHover != null && playerHover != player && playerHover.x == player.x && playerHover.y == player.y) {
+							buildAtPlayerMenu(x, client.playerEntryList[i3], playerHover, y);
 						}
 					}
 
@@ -1356,7 +1355,9 @@ public class GameActivity extends Activity {
 			}
 			int fogRgb = (x >= 270 && x <= 465 && y >= 335 && y <= 495) ? 0xc8c0a8 : 0;
 			client.scene.drawScene(client.cameraLocationX, client.cameraLocationY, client.cameraLocationZ, client.cameraYaw, client.cameraRoll, camPlane, fogRgb);
-			client.scene.removeEntityUnit1s();
+			for(EntityUnit proj : client.scene.getTempEntities()) {
+				client.removeEntity(proj);
+			}
 		}
 		updateEntities();
 		drawHeadIcon();

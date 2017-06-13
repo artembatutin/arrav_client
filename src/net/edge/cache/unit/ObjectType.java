@@ -1,7 +1,6 @@
 package net.edge.cache.unit;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.edge.media.Viewport;
 import net.edge.cache.CacheArchive;
 import net.edge.game.model.Model;
@@ -9,8 +8,6 @@ import net.edge.media.Rasterizer2D;
 import net.edge.media.Rasterizer3D;
 import net.edge.media.img.BitmapImage;
 import net.edge.util.io.Buffer;
-
-import java.util.Hashtable;
 
 public final class ObjectType {
 
