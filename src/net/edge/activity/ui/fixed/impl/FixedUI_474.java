@@ -214,11 +214,11 @@ public class FixedUI_474 extends FixedUI {
 			client.menuItemName[1] = "Face North";
 			client.menuItemCode[1] = 1014;
 			client.menuPos = 2;
-		} else if(Config.DRAW_ORBS.isOn() && client.mouseInRegion(543, 126, 600, 158)) {
+		} else if(Config.def.isDRAW_ORBS() && client.mouseInRegion(543, 126, 600, 158)) {
 			client.menuItemName[1] = "Run";
 			client.menuItemCode[1] = 1051;
 			client.menuPos = 2;
-		} else if(Config.DRAW_ORBS.isOn() && client.mouseInRegion(518, 91, 574, 122)) {
+		} else if(Config.def.isDRAW_ORBS() && client.mouseInRegion(518, 91, 574, 122)) {
 			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
 			client.menuItemCode[client.menuPos] = 1053;
 			client.menuPos++;
@@ -237,7 +237,7 @@ public class FixedUI_474 extends FixedUI {
 			ImageCache.get(69).drawImage(26, 4);
 			ImageCache.get(40).drawImage(0, 4);
 			ImageCache.get(1700).drawAffineTransformedImage(26, 4, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
-			if(Config.DRAW_ORBS.isOn()) {
+			if(Config.def.isDRAW_ORBS()) {
 				displayOrb(-2, 42, Constants.ORB_HEALTH, false);
 				displayOrb(-2, 87, Constants.ORB_PRAYER, true);
 				displayOrb(24, 122, Constants.ORB_RUN, true);
@@ -341,7 +341,7 @@ public class FixedUI_474 extends FixedUI {
 		ImageCache.get(70).drawImage(0, 0);
 		ImageCache.get(69).drawImage(26, 4);
 		ImageCache.get(40).drawImage(0, 4);
-		if(Config.DRAW_ORBS.isOn()) {
+		if(Config.def.isDRAW_ORBS()) {
 			displayOrb(-2, 42, Constants.ORB_HEALTH, false);
 			displayOrb(-2, 87, Constants.ORB_PRAYER, true);
 			displayOrb(24, 122, Constants.ORB_RUN, true);

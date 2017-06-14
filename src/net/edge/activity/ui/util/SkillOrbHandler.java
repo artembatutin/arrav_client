@@ -36,7 +36,7 @@ public class SkillOrbHandler {
 					}
 				}
 				savedExp[i] = client.currentExp[i];
-				updated[i] = Config.DRAW_SKILL_ORBS.isOn();
+				updated[i] = Config.def.isDRAW_SKILL_ORBS();
 			}
 			if(orbs[i] != null) {
 				if((int) getProgress(i) > (int) orbs[i].progress) {
@@ -144,7 +144,7 @@ public class SkillOrbHandler {
 
 	public static void drawOrbs() {
 		checkForUpdates();
-		if(!Config.DRAW_SKILL_ORBS.isOn()) {
+		if(!Config.def.isDRAW_SKILL_ORBS()) {
 			return;
 		}
 		if(login) {

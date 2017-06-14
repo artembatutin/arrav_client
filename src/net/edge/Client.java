@@ -1535,7 +1535,7 @@ public class Client extends ClientEngine {
 							s1 = message;
 							message = "";
 						}
-						if(Config.DEBUG_INDEXES.isOn()) {
+						if(Config.def.isDEBUG_INDEXES()) {
 							s1 = childWidget.id + "";
 						}
 						if(rank >= 1) {
@@ -1620,7 +1620,7 @@ public class Client extends ClientEngine {
 							rollCharacterInInterface = !rollCharacterInInterface;
 						}
 					}
-					if(Config.DEBUG_INDEXES.isOn()) {
+					if(Config.def.isDEBUG_INDEXES()) {
 						boldFont.drawCenteredEffectString(childWidget.id + "", xPos + childWidget.width / 2, yPos, 0x000000, childWidget.textShadow);
 					}
 					if(model != null) {
@@ -2212,7 +2212,7 @@ public class Client extends ClientEngine {
 					}
 					if(!flag) {
 						menuItemName[menuPos] = childWidget.tooltip;
-						if(Config.DEBUG_INDEXES.isOn()) {
+						if(Config.def.isDEBUG_INDEXES()) {
 							menuItemName[menuPos] += " @mag@" + childWidget.id;
 						}
 						menuItemCode[menuPos] = 315;
@@ -2232,7 +2232,7 @@ public class Client extends ClientEngine {
 						menuPos++;
 					}
 					menuItemName[menuPos] = s + " @gre@" + childWidget.spellName;
-					if(Config.DEBUG_INDEXES.isOn()) {
+					if(Config.def.isDEBUG_INDEXES()) {
 						menuItemName[menuPos] += " @mag@" + childWidget.id;
 					}
 					menuItemCode[menuPos] = 626;
@@ -2241,7 +2241,7 @@ public class Client extends ClientEngine {
 				}
 				if(childWidget.actionType == 3 && k >= xPos && i1 >= yPos && k < xPos + childWidget.width && i1 < yPos + childWidget.height) {
 					menuItemName[menuPos] = "Close";
-					if(Config.DEBUG_INDEXES.isOn()) {
+					if(Config.def.isDEBUG_INDEXES()) {
 						menuItemName[menuPos] += " @mag@" + childWidget.id;
 					}
 					menuItemCode[menuPos] = 200;
@@ -2250,7 +2250,7 @@ public class Client extends ClientEngine {
 				}
 				if(childWidget.actionType == 4 && k >= xPos && i1 >= yPos && k < xPos + childWidget.width && i1 < yPos + childWidget.height) {
 					menuItemName[menuPos] = childWidget.tooltip;
-					if(Config.DEBUG_INDEXES.isOn()) {
+					if(Config.def.isDEBUG_INDEXES()) {
 						menuItemName[menuPos] += " @mag@" + childWidget.id;
 					}
 					menuItemCode[menuPos] = 169;
@@ -2265,7 +2265,7 @@ public class Client extends ClientEngine {
 				}
 				if(childWidget.actionType == 6 && !aBoolean1149 && k >= xPos && i1 >= yPos && k < xPos + childWidget.width && i1 < yPos + childWidget.height) {
 					menuItemName[menuPos] = childWidget.tooltip;
-					if(Config.DEBUG_INDEXES.isOn()) {
+					if(Config.def.isDEBUG_INDEXES()) {
 						menuItemName[menuPos] += " @mag@" + childWidget.id;
 					}
 					menuItemCode[menuPos] = 679;
@@ -2400,7 +2400,7 @@ public class Client extends ClientEngine {
 											}
 										}
 										menuItemName[menuPos] = "Examine @lre@" + itemDef.name;
-										if(Config.DEBUG_INDEXES.isOn()) {
+										if(Config.def.isDEBUG_INDEXES()) {
 											menuItemName[menuPos] += " @mag@" + itemDef.id;
 										}
 										menuItemCode[menuPos] = 1125;
@@ -2675,7 +2675,7 @@ public class Client extends ClientEngine {
 
 	private void characterInInterface(Interface class9) {
 
-		if(Config.CHARACTER_PREVIEW.get() == 0) {
+		if(!Config.def.isCHARACTER_PREVIEW()) {
 			class9.modelYaw = 150;
 			class9.modelRoll = (int) (Math.sin(loopCycle / 40D) * 256D) & 0x7ff;
 			class9.offsetY = 0;
@@ -2683,7 +2683,7 @@ public class Client extends ClientEngine {
 			return;
 		}
 
-		if(Config.CHARACTER_PREVIEW.get() == 1) {
+		if(Config.def.isCHARACTER_PREVIEW()) {
 			class9.modelYaw = 70;
 			class9.offsetY = 10;
 			class9.modelZoom = class9.id == 15125 ? 535 : 585;
@@ -2705,7 +2705,6 @@ public class Client extends ClientEngine {
 					}
 				}
 			}
-			return;
 		}
 	}
 
@@ -2877,16 +2876,16 @@ public class Client extends ClientEngine {
 	}
 
 	public void determineMenuSize() {
-		int w = (Config.SELECTED_MENU.get() > 3 ? plainFont : boldFont).getEffectStringWidth("Choose Option");
+		int w = (Config.def.getSELECTED_MENU() > 3 ? plainFont : boldFont).getEffectStringWidth("Choose Option");
 		for(int j = 0; j < menuPos; j++) {
-			if(Config.DEBUG_INDEXES.isOn()) {
+			if(Config.def.isDEBUG_INDEXES()) {
 				menuItemName[j] += " @mon@-> " + menuItemCode[j];
 				menuItemName[j] += ":{" + menuItemArg1[j];
 				menuItemName[j] += "," + menuItemArg2[j];
 				menuItemName[j] += "," + menuItemArg3[j];
 				menuItemName[j] += "," + menuItemArg4[j] + "}" + j;
 			}
-			final int k = (Config.SELECTED_MENU.get() > 3 ? plainFont : boldFont).getEffectStringWidth(menuItemName[j]);
+			final int k = (Config.def.getSELECTED_MENU() > 3 ? plainFont : boldFont).getEffectStringWidth(menuItemName[j]);
 			if(k > w) {
 				w = k;
 			}
@@ -3040,7 +3039,7 @@ public class Client extends ClientEngine {
 	}
 
 	public void loadingStages() {
-		if(Config.LOW_MEM.isOn() && loadingStage == 2 && MapDecoder.plane != cameraPlane) {
+		if(Config.def.isLOW_MEM() && loadingStage == 2 && MapDecoder.plane != cameraPlane) {
 			gameGraphics.setCanvas();
 			fancyFont.drawLeftAlignedEffectString("Loading - please wait...", 10, 20, 0xffffff, true);
 			if(uiRenderer.isResizableOrFull()) {
@@ -3054,7 +3053,7 @@ public class Client extends ClientEngine {
 		if(loadingStage == 1) {
 			final int j = initialiseRegionLoading();
 			if(j != 0 && System.currentTimeMillis() - aLong824 > 0x57e40L) {
-				SignLink.reportError(localUsername + " glcfb " + aLong1215 + "," + j + "," + Config.LOW_MEM + "," + cacheIdx[0] + "," + onDemandRequester.getRequestCount() + "," + cameraPlane + "," + regionX + "," + regionY);
+				SignLink.reportError(localUsername + " glcfb " + aLong1215 + "," + j + "," + Config.def.isLOW_MEM() + "," + cacheIdx[0] + "," + onDemandRequester.getRequestCount() + "," + cameraPlane + "," + regionX + "," + regionY);
 				aLong824 = System.currentTimeMillis();
 			}
 		}
@@ -6357,7 +6356,7 @@ public class Client extends ClientEngine {
 	}
 
 	public int method120() {
-		if(Config.ROOF_OFF.isOn()) {
+		if(Config.def.isROOF_OFF()) {
 			return cameraPlane;
 		}
 		int j = 3;
@@ -6444,7 +6443,7 @@ public class Client extends ClientEngine {
 	}
 
 	public int method121() {
-		if(Config.ROOF_OFF.isOn()) {
+		if(Config.def.isROOF_OFF()) {
 			return cameraPlane;
 		}
 		final int j = method42(cameraPlane, cameraLocationX, cameraLocationY);
@@ -6486,18 +6485,9 @@ public class Client extends ClientEngine {
 			if(!npc.type.clickable) {
 				hash += 0x100000000L;
 			}
-			boolean add = true;
 			u = scene.getEntities().get(hash);
-			if(npc.aBoolean1541) {
-				if(u != null) {
-					if(u.x == npc.x && u.y == npc.y && u.z == cameraPlane && u.yaw == npc.yaw)
-						add = false;
-				}
-			}
-			if(add) {
-				removeEntity(u);
-				scene.addEntity(cameraPlane, npc.yaw, method42(cameraPlane, npc.x, npc.y), hash, npc.y, (npc.anInt1540 - 1) * 64 + 60, npc.x, npc, npc.aBoolean1541);
-			}
+			removeEntity(u);
+			scene.addEntity(cameraPlane, npc.yaw, method42(cameraPlane, npc.x, npc.y), hash, npc.y, (npc.anInt1540 - 1) * 64 + 60, npc.x, npc, npc.aBoolean1541);
 		}
 	}
 	
@@ -6655,7 +6645,7 @@ public class Client extends ClientEngine {
 				removeEntity(u);
 				continue;
 			}
-			player.noTransform = (!Config.LOW_MEM.isOn() && playerCount > 50 || playerCount > 200) && !flag && player.idleAnim == player.anInt1511;
+			player.noTransform = (!Config.def.isLOW_MEM() && playerCount > 50 || playerCount > 200) && !flag && player.idleAnim == player.anInt1511;
 			final int j1 = player.x >> 7;
 			final int k1 = player.y >> 7;
 			if(j1 < 0 || j1 >= 104 || k1 < 0 || k1 >= 104) {
@@ -6664,15 +6654,8 @@ public class Client extends ClientEngine {
 			if(player.aModel_1714 != null && loopCycle >= player.anInt1707 && loopCycle < player.anInt1708) {
 				player.noTransform = false;
 				player.anInt1709 = method42(cameraPlane, player.x, player.y);
-				boolean add = true;
-				if(u != null) {
-					if(u.x == player.x && u.y == player.y && u.z == cameraPlane && u.yaw == player.yaw)
-						add = false;
-				}
-				if(add) {
-					removeEntity(u);
-					scene.addPlayer(cameraPlane, player.y, player, player.yaw, player.anInt1722, player.x, player.anInt1709, player.anInt1719, player.anInt1721, hash, player.anInt1720);
-				}
+				removeEntity(u);
+				scene.addPlayer(cameraPlane, player.y, player, player.yaw, player.anInt1722, player.x, player.anInt1709, player.anInt1719, player.anInt1721, hash, player.anInt1720);
 				continue;
 			}
 			if((player.x & 0x7f) == 64 && (player.y & 0x7f) == 64) {
@@ -6682,17 +6665,8 @@ public class Client extends ClientEngine {
 				anIntArrayArray929[j1][k1] = anInt1265;
 			}
 			player.anInt1709 = method42(cameraPlane, player.x, player.y);
-			boolean add = true;
-			if(player.aBoolean1541) {
-				if(u != null) {
-					if(u.x == player.x && u.y == player.y && u.z == cameraPlane && u.yaw == player.yaw)
-						add = false;
-				}
-			}
-			if(add) {
-				removeEntity(u);
-				scene.addEntity(cameraPlane, player.yaw, player.anInt1709, hash, player.y, 60, player.x, player, player.aBoolean1541);
-			}
+			removeEntity(u);
+			scene.addEntity(cameraPlane, player.yaw, player.anInt1709, hash, player.y, 60, player.x, player, player.aBoolean1541);
 		}
 		if(!flag && previousPlayerCount > playerCount)
 			previousPlayerCount = 0;
@@ -6962,8 +6936,8 @@ public class Client extends ClientEngine {
 						pushMessage("--> mem: " + mem + "k", 0, "");
 					}
 					if(chatInput.equals("::fps")) {
-						Config.FPS_ON.toggle();
-						pushMessage("--> fps " + (Config.FPS_ON.isOn() ? "on" : "off"), 0, "");
+						Config.def.setFPS_ON(!Config.def.isFPS_ON());
+						pushMessage("--> fps " + (Config.def.isFPS_ON() ? "on" : "off"), 0, "");
 					}
 					if(localPrivilege == 4) {
 						if(chatInput.startsWith("//setspecto")) {
@@ -7024,8 +6998,8 @@ public class Client extends ClientEngine {
 							pushMessage("::cls - Clears the chatbox", 0, "");
 							pushMessage("::commands - This command", 0, "");
 						} else if(chatInput.equals("::dat")) {
-							Config.DEBUG_DATA.toggle();
-							pushMessage("--> data debug " + (Config.DEBUG_DATA.isOn() ? "on" : "off"), 0, "");
+							Config.def.setDEBUG_DATA(!Config.def.isDEBUG_DATA());
+							pushMessage("--> data debug " + (Config.def.isDEBUG_DATA() ? "on" : "off"), 0, "");
 						} else if(chatInput.equals("::repackimg")) {
 							try {
 								ImagePacker.pack(this, true);
@@ -7035,8 +7009,8 @@ public class Client extends ClientEngine {
 								pushMessage("--> failed to repack image index", 0, "");
 							}
 						} else if(chatInput.equals("::idx")) {
-							Config.DEBUG_INDEXES.toggle();
-							pushMessage("--> index debug " + (Config.DEBUG_INDEXES.isOn() ? "on" : "off"), 0, "");
+							Config.def.setDEBUG_INDEXES(!Config.def.isDEBUG_INDEXES());
+							pushMessage("--> index debug " + (Config.def.isDEBUG_INDEXES() ? "on" : "off"), 0, "");
 						} else if(chatInput.equals("::data")) {
 							final Runtime runtime = Runtime.getRuntime();
 							final int mem = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
@@ -7152,29 +7126,26 @@ public class Client extends ClientEngine {
 							System.out.println("repacking map index.");
 							onDemandRequester.packMapIndex();
 							loadRegion();
-						} else if(chatInput.equals("::ortho")) {
-							Config.ORTHO_VIEW.toggle();
-							pushMessage("--> orthographic view " + (Config.ORTHO_VIEW.isOn() ? "on" : "off"), 0, "");
 						}
 						if(chatInput.equals("::roll")) {
 							rollCharacterInInterface = !rollCharacterInInterface;
 						}
 						if(chatInput.equals("::fog")) {
-							Config.SMOOTH_FOG.toggle();
-							pushMessage("--> fog " + (Config.SMOOTH_FOG.isOn() ? "on" : "off"), 0, "");
+							Config.def.setSMOOTH_FOG(!Config.def.isSMOOTH_FOG());
+							pushMessage("--> fog " + (Config.def.isSMOOTH_FOG() ? "on" : "off"), 0, "");
 						}
 						if(chatInput.equals("::tween")) {
-							Config.TWEENING.toggle();
-							pushMessage("--> tween " + (Config.TWEENING.isOn() ? "on" : "off"), 0, "");
+							Config.def.setTWEENING(!Config.def.isTWEENING());
+							pushMessage("--> tween " + (Config.def.isTWEENING() ? "on" : "off"), 0, "");
 						}
 						if(chatInput.equals("::mat")) {
-							Config.GROUND_MATERIALS.toggle();
-							pushMessage("--> mat " + (Config.GROUND_MATERIALS.isOn() ? "on" : "off"), 0, "");
+							Config.def.setGROUND_MATERIALS(!Config.def.isGROUND_MATERIALS());
+							pushMessage("--> mat " + (Config.def.isGROUND_MATERIALS() ? "on" : "off"), 0, "");
 						}
 						if(chatInput.startsWith("hitmark")) {
 							try {
 								final String[] args = chatInput.split(" ");
-								Config.HITSPLATS.set(Integer.parseInt(args[1]));
+								Config.def.setHITSPLATS(Integer.parseInt(args[1]));
 							} catch(final Exception e) {
 								pushMessage("Interface Failed to load", 0, "");
 							}
@@ -7414,7 +7385,7 @@ public class Client extends ClientEngine {
 			if(entity.idleAnimFrame >= animation.length) {
 				entity.idleAnimFrame = 0;
 			}
-			if(Config.TWEENING.isOn()) {
+			if(Config.def.isTWEENING()) {
 				entity.nextIdleAnimFrame = entity.idleAnimFrame + 1;
 			}
 			if(entity.nextIdleAnimFrame >= animation.length) {
@@ -7438,7 +7409,7 @@ public class Client extends ClientEngine {
 			if(entity.spotAnimFrame >= animation_1.length && (entity.spotAnimFrame < 0 || entity.spotAnimFrame >= animation_1.length)) {
 				entity.spotAnim = -1;
 			}
-			if(Config.TWEENING.isOn()) {
+			if(Config.def.isTWEENING()) {
 				entity.nextSpotAnimFrame = entity.spotAnimFrame + 1;
 			}
 			if(entity.nextSpotAnimFrame >= animation_1.length) {
@@ -7476,7 +7447,7 @@ public class Client extends ClientEngine {
 					entity.anim = -1;
 				}
 			}
-			if(Config.TWEENING.isOn()) {
+			if(Config.def.isTWEENING()) {
 				entity.nextAnimFrame = entity.animFrame + 1;
 			}
 			if(entity.nextAnimFrame >= animation_3.length) {
@@ -8087,7 +8058,7 @@ public class Client extends ClientEngine {
 
 	private void method142(int i, int j, int k, int l, int i1, int j1, int k1) {
 		if(i1 >= 1 && i >= 1 && i1 <= 102 && i <= 102) {
-			if(Config.LOW_MEM.isOn() && j != cameraPlane) {
+			if(Config.def.isLOW_MEM() && j != cameraPlane) {
 				return;
 			}
 			long hash = 0;
@@ -8265,7 +8236,7 @@ public class Client extends ClientEngine {
 			if(plane < cameraPlane - 1) {
 				plane = cameraPlane - 1;
 			}
-			if(Config.LOW_MEM.isOn()) {
+			if(Config.def.isLOW_MEM()) {
 				scene.initPlane(MapDecoder.setPlane);
 			} else {
 				scene.initPlane(0);

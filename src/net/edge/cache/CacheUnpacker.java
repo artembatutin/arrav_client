@@ -89,7 +89,7 @@ public class CacheUnpacker {
 		// Initializing
 		this.init();
 		Activity.init();
-		Config.load();
+		Config.def.load();
 		message = "Preparing packing modules.";
 		client.startThread(new LoaderScreen(centerX, centerY), 8);
 		if(!Constants.USER_HOME_FILE_STORE) {

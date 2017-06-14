@@ -4,10 +4,10 @@ import net.edge.util.collect.DoublyLinkableEntry;
 
 public class Entity extends DoublyLinkableEntry {
 	
-	public int[] vectorX;
-	public int[] vectorY;
-	public int[] vectorZ;
-	public int[] vectorMagnitude;
+	public int[] vectorX = null;
+	public int[] vectorY = null;
+	public int[] vectorZ = null;
+	public int[] vectorMagnitude = null;
 	
 	public int maxVerticalDistUp;
 

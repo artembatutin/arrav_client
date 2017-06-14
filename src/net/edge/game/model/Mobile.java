@@ -1,8 +1,7 @@
 package net.edge.game.model;
 
+import net.edge.Config;
 import net.edge.cache.unit.DeformSequence;
-
-import static net.edge.Config.TEN_X_HITS;
 
 public class Mobile extends Entity {
 
@@ -196,7 +195,7 @@ public class Mobile extends Entity {
 	public int[] hitMarkPos = new int[4];
 
 	public final void updateHitData(int markType, int damage, int l, int icon, int soak) {
-		if(!TEN_X_HITS.isOn()) {
+		if(!Config.def.isTEN_X_HITS()) {
 			damage = damage / 10;
 			soak = soak / 10;
 		}

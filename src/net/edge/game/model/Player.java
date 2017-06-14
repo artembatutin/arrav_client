@@ -70,7 +70,7 @@ public final class Player extends Mobile {
 						final Model samodel = new Model(true, AnimationFrame.isNull(super.spotAnimFrame), false, model_2);
 						samodel.translate(0, -super.spotAnimOffset, 0);
 						samodel.applyEffects();
-						if(Config.TWEENING.isOn() && super.nextSpotAnimFrame != -1) {
+						if(Config.def.isTWEENING() && super.nextSpotAnimFrame != -1) {
 							samodel.applyAnimation(spotAnim.animFrameSequence.frameList[super.spotAnimFrame], spotAnim.animFrameSequence.frameList[super.nextSpotAnimFrame], super.spotAnimCycle, spotAnim.animFrameSequence.cycleList[super.spotAnimFrame]);
 						} else {
 							samodel.applyAnimation(spotAnim.animFrameSequence.frameList[super.spotAnimFrame]);
@@ -137,7 +137,7 @@ public final class Player extends Mobile {
 			if(super.anim >= 0 && super.animDelay == 0) {
 				final DeformSequence seq = DeformSequence.cache[super.anim];
 				currAnim = seq.frameList[super.animFrame];
-				if(Config.TWEENING.isOn() && super.nextAnimFrame != -1) {
+				if(Config.def.isTWEENING() && super.nextAnimFrame != -1) {
 					nextAnim = seq.frameList[super.nextAnimFrame];
 					currCycle = seq.cycleList[super.animFrame];
 					nextCycle = super.animCycle;
@@ -145,7 +145,7 @@ public final class Player extends Mobile {
 			} else if(super.idleAnim >= 0) {
 				final DeformSequence seq = DeformSequence.cache[super.idleAnim];
 				currAnim = seq.frameList[super.idleAnimFrame];
-				if(Config.TWEENING.isOn() && super.nextIdleAnimFrame != -1) {
+				if(Config.def.isTWEENING() && super.nextIdleAnimFrame != -1) {
 					nextAnim = seq.frameList[super.nextIdleAnimFrame];
 					currCycle = seq.cycleList[super.idleAnimFrame];
 					nextCycle = super.idleAnimCycle;
@@ -160,7 +160,7 @@ public final class Player extends Mobile {
 		if(super.anim >= 0 && super.animDelay == 0) {
 			final DeformSequence animation = DeformSequence.cache[super.anim];
 			currAnim = animation.frameList[super.animFrame];
-			if(Config.TWEENING.isOn() && super.nextAnimFrame != -1) {
+			if(Config.def.isTWEENING() && super.nextAnimFrame != -1) {
 				nextAnim = animation.frameList[super.nextAnimFrame];
 				currCycle = animation.cycleList[super.animFrame];
 				nextCycle = super.animCycle;
@@ -180,7 +180,7 @@ public final class Player extends Mobile {
 		} else if(super.idleAnim >= 0) {
 			DeformSequence seq = DeformSequence.cache[super.idleAnim];
 			currAnim = seq.frameList[super.idleAnimFrame];
-			if(Config.TWEENING.isOn() && super.nextIdleAnimFrame != -1) {
+			if(Config.def.isTWEENING() && super.nextIdleAnimFrame != -1) {
 				nextAnim = seq.frameList[super.nextIdleAnimFrame];
 				currCycle = seq.cycleList[super.idleAnimFrame];
 				nextCycle = super.idleAnimCycle;
@@ -259,7 +259,7 @@ public final class Player extends Mobile {
 		if(currAnim != -1 && i1 != -1) {
 			model_2.method471(DeformSequence.cache[super.anim].flowControl, i1, currAnim);
 		} else if(currAnim != -1) {
-			if(Config.TWEENING.isOn()) {
+			if(Config.def.isTWEENING()) {
 				model_2.applyAnimation(currAnim, nextAnim, nextCycle, currCycle);
 			} else {
 				model_2.applyAnimation(currAnim);

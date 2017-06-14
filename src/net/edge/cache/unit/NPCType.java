@@ -655,7 +655,7 @@ public final class NPCType {
 		if(currAnim != -1 && j != -1) {
 			model.method471(ai, j, currAnim);
 		} else if(currAnim != -1) {
-			if(Config.TWEENING.isOn()) {
+			if(Config.def.isTWEENING()) {
 				model.applyAnimation(currAnim, nextAnim, nextCycle, currCycle);
 			} else {
 				model.applyAnimation(currAnim);

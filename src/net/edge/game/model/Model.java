@@ -140,7 +140,7 @@ public final class Model extends Entity {
 				} else {
 					decodeOld(data);
 				}
-			if(!Config.RETAIN_MODEL_PRECISION.isOn() && upscaled) {
+			if(!Config.def.isRETAIN_MODEL_PRECISION() && upscaled) {
 				scale(32, 32, 32);
 				upscaled = false;
 			}
@@ -1095,6 +1095,7 @@ public final class Model extends Entity {
 					vectorY = new int[i_119_];
 					vectorZ = new int[i_119_];
 					vectorMagnitude = new int[i_119_];
+					System.out.println(i_119_);
 					for(int i_120_ = 0; i_119_ > i_120_; i_120_++) {
 						int i_121_ = buffers[0].getUShort();
 						int i_122_ = buffers[0].getUShort();
@@ -1311,14 +1312,22 @@ public final class Model extends Entity {
 			} else {
 				System.arraycopy(model.triType, 0, triType, 0, triAmt);
 			}
-			super.vectorX = model.vectorX;
-			super.vectorY = model.vectorY;
-			super.vectorZ = model.vectorZ;
-			super.vectorMagnitude = model.vectorMagnitude;
-			vectorNormalX = model.vectorNormalX;
-			vectorNormalY = model.vectorNormalY;
-			vectorNormalZ = model.vectorNormalZ;
-			vectorNormalMagnitude = model.vectorNormalMagnitude;
+			System.arraycopy(model.vectorX, 0, super.vectorX, 0, model.vectorX.length);
+			System.arraycopy(model.vectorY, 0, super.vectorY, 0, model.vectorY.length);
+			System.arraycopy(model.vectorZ, 0, super.vectorZ, 0, model.vectorZ.length);
+			System.arraycopy(model.vectorMagnitude, 0, super.vectorMagnitude, 0, model.vectorMagnitude.length);
+			//super.vectorX = model.vectorX;
+			//super.vectorY = model.vectorY;
+			//super.vectorZ = model.vectorZ;
+			//super.vectorMagnitude = model.vectorMagnitude;
+			System.arraycopy(model.vectorNormalX, 0, vectorNormalX, 0, model.vectorNormalX.length);
+			System.arraycopy(model.vectorNormalY, 0, vectorNormalY, 0, model.vectorNormalY.length);
+			System.arraycopy(model.vectorNormalZ, 0, vectorNormalZ, 0, model.vectorNormalZ.length);
+			System.arraycopy(model.vectorNormalMagnitude, 0, vectorNormalMagnitude, 0, model.vectorNormalMagnitude.length);
+			//vectorNormalX = model.vectorNormalX;
+			//vectorNormalY = model.vectorNormalY;
+			//vectorNormalZ = model.vectorNormalZ;
+			//vectorNormalMagnitude = model.vectorNormalMagnitude;
 		} else {
 			triCol1 = model.triCol1;
 			triCol2 = model.triCol2;
@@ -1894,7 +1903,7 @@ public final class Model extends Entity {
 		try {
 			method483(false, false, 0);
 		} catch(final Exception e) {
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 	}
 
@@ -1995,10 +2004,6 @@ public final class Model extends Entity {
 			if(z >= Constants.CAM_NEAR) {
 				projVertexX[i] = midX + (x * Scene.focalLength / z);
 				projVertexY[i] = midY + (y * Scene.focalLength / z);
-				if(Config.ORTHO_VIEW.isOn()) {
-					projVertexX[i] = midX + (x >> 3);
-					projVertexY[i] = midY + (y >> 3);
-				}
 				vertex2dZ[i] = z >> 2;
 			} else {
 				projVertexX[i] = -5000;
@@ -2008,9 +2013,6 @@ public final class Model extends Entity {
 				projTexVertexX[i] = x >> 2;
 				projTexVertexY[i] = y >> 2;
 				projTexVertexZ[i] = z >> 2;
-				if(Config.ORTHO_VIEW.isOn()) {
-					projTexVertexZ[i] = Scene.focalLength << 1;
-				}
 			}
 		}
 		try {
@@ -2788,18 +2790,24 @@ public final class Model extends Entity {
 			i5 = (i5 << 8) / k5;
 			j5 = (j5 << 8) / k5;
 			if(triType == null || (triType[i2] & 1) == 0) {
-				vectorX[j2] += l4;
-				vectorY[j2] += i5;
-				vectorZ[j2] += j5;
-				vectorMagnitude[j2]++;
-				vectorX[l2] += l4;
-				vectorY[l2] += i5;
-				vectorZ[l2] += j5;
-				vectorMagnitude[l2]++;
-				vectorX[i3] += l4;
-				vectorY[i3] += i5;
-				vectorZ[i3] += j5;
-				vectorMagnitude[i3]++;
+				if(j2 < vectorX.length) {
+					super.vectorX[j2] += l4;
+					super.vectorY[j2] += i5;
+					super.vectorZ[j2] += j5;
+					super.vectorMagnitude[j2]++;
+				}
+				if(l2 < vectorX.length) {
+					super.vectorX[l2] += l4;
+					super.vectorY[l2] += i5;
+					super.vectorZ[l2] += j5;
+					super.vectorMagnitude[l2]++;
+				}
+				if(i3 < vectorX.length) {
+					super.vectorX[i3] += l4;
+					super.vectorY[i3] += i5;
+					super.vectorZ[i3] += j5;
+					super.vectorMagnitude[i3]++;
+				}
 			} else {
 				final int light = lightness + (lightx * l4 + lighty * i5 + lightz * j5) / intensity;
 				triCol1[i2] = adjustLightness(triFill[i2], light, triType[i2]);
@@ -2808,10 +2816,14 @@ public final class Model extends Entity {
 		if(flag) {
 			doShading(lightness, intensity, lightx, lighty, lightz);
 		} else {
-			vectorNormalX = super.vectorX;
-			vectorNormalY = super.vectorY;
-			vectorNormalZ = super.vectorZ;
-			vectorNormalMagnitude = super.vectorMagnitude;
+			System.arraycopy(super.vectorX, 0, vectorNormalX, 0, super.vectorX.length);
+			System.arraycopy(super.vectorY, 0, vectorNormalY, 0, super.vectorY.length);
+			System.arraycopy(super.vectorZ, 0, vectorNormalZ, 0, super.vectorZ.length);
+			System.arraycopy(super.vectorMagnitude, 0, vectorNormalMagnitude, 0, super.vectorMagnitude.length);
+			//vectorNormalX = super.vectorX;
+			//vectorNormalY = super.vectorY;
+			//vectorNormalZ = super.vectorZ;
+			//vectorNormalMagnitude = super.vectorMagnitude;
 		}
 		if(flag) {
 			computeBoundsDist();
@@ -2827,12 +2839,19 @@ public final class Model extends Entity {
 			final int z3d = vertexIndex3d3[i];
 			if(triType == null) {
 				final int tex = triFill[i];
-				int light = lightness + (lightx * vectorX[x3d] + lighty * vectorY[x3d] + lightz * vectorZ[x3d]) / (contrast * vectorMagnitude[x3d]);
-				triCol1[i] = adjustLightness(tex, light, 0);
-				light = lightness + (lightx * vectorX[y3d] + lighty * vectorY[y3d] + lightz * vectorZ[y3d]) / (contrast * vectorMagnitude[y3d]);
-				triCol2[i] = adjustLightness(tex, light, 0);
-				light = lightness + (lightx * vectorX[z3d] + lighty * vectorY[z3d] + lightz * vectorZ[z3d]) / (contrast * vectorMagnitude[z3d]);
-				triCol3[i] = adjustLightness(tex, light, 0);
+				int light;
+				if(x3d < vectorX.length) {
+					light = lightness + (lightx * vectorX[x3d] + lighty * vectorY[x3d] + lightz * vectorZ[x3d]) / (contrast * vectorMagnitude[x3d]);
+					triCol1[i] = adjustLightness(tex, light, 0);
+				}
+				if(y3d < vectorX.length) {
+					light = lightness + (lightx * vectorX[y3d] + lighty * vectorY[y3d] + lightz * vectorZ[y3d]) / (contrast * vectorMagnitude[y3d]);
+					triCol2[i] = adjustLightness(tex, light, 0);
+				}
+				if(z3d < vectorX.length) {
+					light = lightness + (lightx * vectorX[z3d] + lighty * vectorY[z3d] + lightz * vectorZ[z3d]) / (contrast * vectorMagnitude[z3d]);
+					triCol3[i] = adjustLightness(tex, light, 0);
+				}
 			} else if((triType[i] & 1) == 0) {
 				final int tex = triFill[i];
 				final int type = triType[i];
@@ -2844,10 +2863,10 @@ public final class Model extends Entity {
 				triCol3[i] = adjustLightness(tex, light, type);
 			}
 		}
-		vectorX = null;
-		vectorY = null;
-		vectorZ = null;
-		vectorMagnitude = null;
+		super.vectorX = null;
+		super.vectorY = null;
+		super.vectorZ = null;
+		super.vectorMagnitude = null;
 		vectorNormalX = null;
 		vectorNormalY = null;
 		vectorNormalZ = null;

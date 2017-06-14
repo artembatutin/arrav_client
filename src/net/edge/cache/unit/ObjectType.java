@@ -119,6 +119,10 @@ public final class ObjectType {
 			obj.name = "Extreme donator certificate";
 			obj.actions = new String[] { "Claim", null, null, null, null };
 		}
+		if(obj.id == 6829) {
+			obj.name = "Vote box";
+			obj.actions = new String[] { "Open", null, null, null, null };
+		}
 		
 		if(id == 3904)
 			obj.pet("Trapped abyssal orphan");
@@ -879,63 +883,11 @@ public final class ObjectType {
 		this.stackAmounts[7] = 1000;
 		this.stackableIds[8] = 19009;
 		this.stackAmounts[8] = 10000;
-		actions = new String[] {"Drop", null, null, null, null};
+		actions = new String[] {null, null, null, null, null};
 	}
 
 	private void transform() {
 		switch(id) {
-			case 79:
-				ObjectType cape = ObjectType.get(4337);
-				stackable = false;
-				actions = cape.actions;
-				iconZoom = cape.iconZoom;
-				iconHorizontalOffset = cape.iconHorizontalOffset;
-				iconVerticalOffset = cape.iconVerticalOffset;
-				iconRoll = cape.iconRoll;
-				iconYaw = cape.iconYaw;
-				
-				femaleEquipOffset = cape.femaleEquipOffset;
-				womanEquipOffsetX = cape.womanEquipOffsetX;
-				womanEquipOffsetY = cape.womanEquipOffsetY;
-				womanEquipOffsetZ = cape.womanEquipOffsetZ;
-				maleEquipOffset = 50;
-				maleEquipOffsetX = cape.maleEquipOffsetX;
-				maleEquipOffsetY = cape.maleEquipOffsetY;
-				maleEquipOffsetZ = 40;
-				modelId = 65519;
-				maleEquipAlt = 65520;
-				maleEquip = 65520;
-				femaleEquip = 65520;
-				femaleEquipAlt = 65520;
-				name = "Ironman cape";
-				description = "That's soo coool bro.";
-				break;
-			case 80:
-				ObjectType cape2 = ObjectType.get(4337);
-				stackable = false;
-				actions = cape2.actions;
-				iconZoom = cape2.iconZoom;
-				iconHorizontalOffset = cape2.iconHorizontalOffset;
-				iconVerticalOffset = cape2.iconVerticalOffset;
-				iconRoll = cape2.iconRoll;
-				iconYaw = cape2.iconYaw;
-				femaleEquipOffset = cape2.femaleEquipOffset;
-				womanEquipOffsetX = cape2.womanEquipOffsetX;
-				womanEquipOffsetY = cape2.womanEquipOffsetY;
-				womanEquipOffsetZ = cape2.womanEquipOffsetZ;
-				maleEquipOffset = 120;
-				maleEquipOffsetX = 15;
-				maleEquipOffsetY = -100;
-				maleEquipOffsetZ = 0;
-				fixPriority = true;
-				modelId = 65517;
-				maleEquip = 65518;
-				maleEquipAlt = 65518;
-				femaleEquip = 65518;
-				femaleEquipAlt =  65518;
-				name = "Hardcore ironman cape";
-				description = "You are a legend.";
-				break;
 			case 19000:
 				bloodMoney(995);
 				break;

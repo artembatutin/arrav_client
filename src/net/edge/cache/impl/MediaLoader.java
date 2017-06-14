@@ -25,8 +25,8 @@ public class MediaLoader implements CacheLoader {
 	
 	public void run(Client client) {
 		ImageCache.get(69, true);//Requesting before it's too late.
-		client.uiRenderer = new UIRenderer(client, Config.GAME_FRAME.get());
-		if(Config.GAME_FRAME.get() == 1)
+		client.uiRenderer = new UIRenderer(client, Config.def.getGAME_FRAME());
+		if(Config.def.getGAME_FRAME() == 1)
 			client.setMode(1);
 		for(int k4 = 0; k4 < 8; k4++) {
 			client.clickCross[k4] = new BitmapImage(archive, "cross", k4);

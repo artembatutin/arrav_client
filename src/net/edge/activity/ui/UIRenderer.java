@@ -1,6 +1,7 @@
 package net.edge.activity.ui;
 
 import net.edge.Client;
+import net.edge.Config;
 import net.edge.Constants;
 import net.edge.activity.ui.fixed.FixedUI;
 import net.edge.activity.ui.fixed.impl.*;
@@ -140,6 +141,7 @@ public class UIRenderer {
 		this.id = id;
 		fixed = getFixed(id);
 		resizable = getResizable(id);
+		Config.def.setGAME_FRAME(id);
 	}
 	
 	/**

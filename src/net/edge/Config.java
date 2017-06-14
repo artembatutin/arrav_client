@@ -1,17 +1,14 @@
 package net.edge;
 
 import net.edge.sign.SignLink;
+import net.edge.util.FileToolkit;
+import net.edge.util.io.Buffer;
 
 import java.io.*;
 
-/**
- * [Config.java] In communications or computer systems, a configuration is an
- * arrangement of functional units according to their nature, number, and chief
- * characteristics. Often, configuration pertains to the choice of hardware,
- * software, firmware, and documentation. The configuration affects system function
- * and performance.
- */
-public enum Config {
+public class Config {
+	
+	public static Config def = new Config();
 
 	/**
 	 * Selected Menus
@@ -22,7 +19,7 @@ public enum Config {
 	 * NEW ALPHA: 5
 	 * CUSTOM: 6
 	 */
-	SELECTED_MENU(4, true),
+	private int SELECTED_MENU = 4;
 
 	/**
 	 * Hitsplats
@@ -30,159 +27,297 @@ public enum Config {
 	 * NEW-562: 1
 	 * NEWEST-660: 2
 	 */
-	HITSPLATS(2, true),
+	private int HITSPLATS = 2;
 
 	/**
 	 * Hitbars
 	 * OLD-317: 0
 	 * NEW-562: 1
 	 */
-	HITBARS(1, true),
+	private int HITBARS = 1;
 
 	/**
 	 * The 10x hitpoints toggle.
 	 */
-	TEN_X_HITS(1, true),
+	private boolean TEN_X_HITS = true;
 
 	/**
 	 * The game-frame revision id.
 	 */
-	GAME_FRAME(562, true),
+	private int GAME_FRAME = 562;
 
 	/*
-	 * Miscellaneous configurations
+	 * Debug configurations
 	 */
-	DEBUG_DATA(0, false),
-	FPS_ON(0, true),
-	DEBUG_INDEXES(0, false),
-	ORTHO_VIEW(0, false),
+	private boolean DEBUG_DATA = false;
+	private boolean FPS_ON = false;
+	private boolean DEBUG_INDEXES = false;
 
 	/*
 	 * Detail configurations
 	 */
-	LOW_MEM(0, true),
-	GROUND_DECORATION(1, true),
-	GROUND_MATERIALS(0, true),
-	SMOOTH_FOG(0, true),
-	TWEENING(0, true),
-	RETAIN_MODEL_PRECISION(1, true),
-	MAP_ANTIALIASING(1, true),
+	private boolean LOW_MEM = false;
+	private boolean GROUND_DECORATION = true;
+	private boolean GROUND_MATERIALS = false;
+	private boolean SMOOTH_FOG = false;
+	private boolean TWEENING = false;
+	private boolean RETAIN_MODEL_PRECISION = true;
+	private boolean MAP_ANTIALIASING = true;
 
 	/*
 	 * View toggle configurations
 	 */
-	DRAW_ORBS(1, true),
-	DRAW_SKILL_ORBS(0, true),
+	private boolean DRAW_ORBS = true;
+	private boolean DRAW_SKILL_ORBS = false;
 
 	/*
 	 * Style configurations
 	 */
-	DISPLAY_NAMES(0, true),
-	SPLIT_PRIVATE_CHAT_COLOR(0xffff, true),
-	CHARACTER_PREVIEW(1, true),
+	private boolean DISPLAY_NAMES = false;
+	private int SPLIT_PRIVATE_CHAT_COLOR = 0xffff;
+	private boolean CHARACTER_PREVIEW = true;
 	/** Roofs being off all the time. */
-	ROOF_OFF(1, true);
-
-	/**
-	 * The current setting id of the {@link Config}.
-	 */
-	private int setting;
-
-	/**
-	 * The condition if the setting must be saved.
-	 */
-	private final boolean save;
-
-	Config(int setting, boolean save) {
-		this.setting = setting;
-		this.save = save;
-	}
-
-	/**
-	 * Gets the setting id.
-	 * @return the settig id.
-	 */
-	public int get() {
-		return setting;
-	}
-
-	/**
-	 * Gets the setting as a boolean depending if it's set to 1.
-	 * @return the setting id as a boolean.
-	 */
-	public boolean isOn() {
-		return setting == 1;
-	}
-
-	/**
-	 * Toggle the config on or off.
-	 */
-	public void toggle() {
-		this.setting = setting == 1 ? 0 : 1;
-		save();
-	}
-
-	/**
-	 * Sets the new {@link #setting} to the {@link Config}.
-	 * @param setting the new value to set.
-	 */
-	public void set(int setting) {
-		set(setting, true);
-	}
-
-	/**
-	 * Sets the new {@link #setting} to the {@link Config}.
-	 * @param setting the new value to set.
-	 * @param save    the condition if the config will be saved afterwards.
-	 */
-	public void set(int setting, boolean save) {
-		this.setting = setting;
-		if(save)
-			save();
-	}
+	private boolean ROOF_OFF = true;
 
 	/**
 	 * Saves the configurations.
 	 */
 	public void save() {
-		try {
-			BufferedWriter out = new BufferedWriter(new FileWriter(SignLink.getCacheDir() + "config"));
-			for(Config con : Config.values()) {
-				if(con.save) {
-					out.write(con.toString() + ":" + con.get());
-					out.newLine();
-				}
-			}
-			out.close();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
+		Buffer data = new Buffer(new byte[19]);
+		//17 bytes and 1 short.
+		data.putShort(GAME_FRAME);
+		data.putByte(SELECTED_MENU);
+		data.putByte(HITSPLATS);
+		data.putByte(HITBARS);
+		data.putByte(TEN_X_HITS ? 1 : 0);
+		data.putByte(FPS_ON ? 1 : 0);
+		data.putByte(LOW_MEM ? 1 : 0);
+		data.putByte(GROUND_DECORATION ? 1 : 0);
+		data.putByte(GROUND_MATERIALS ? 1 : 0);
+		data.putByte(SMOOTH_FOG ? 1 : 0);
+		data.putByte(TWEENING ? 1 : 0);
+		data.putByte(RETAIN_MODEL_PRECISION ? 1 : 0);
+		data.putByte(MAP_ANTIALIASING ? 1 : 0);
+		data.putByte(DRAW_ORBS ? 1 : 0);
+		data.putByte(DRAW_SKILL_ORBS ? 1 : 0);
+		data.putByte(DISPLAY_NAMES ? 1 : 0);
+		data.putByte(CHARACTER_PREVIEW ? 1 : 0);
+		data.putByte(ROOF_OFF ? 1 : 0);
+		FileToolkit.writeFile(SignLink.getCacheDir() + "settings", data.data);
 	}
 
 	/**
 	 * Loads the configurations on startup.
 	 */
-	public static void load() {
-		try {
-			File file = new File(SignLink.getCacheDir() + "config");
-			if(file.exists()) {
-				FileReader in = new FileReader(file);
-				BufferedReader br = new BufferedReader(in);
-				String line;
-				while((line = br.readLine()) != null) {
-					String[] con = line.split(":");
-					try {
-						Config config = Config.valueOf(con[0]);
-						config.set(Integer.parseInt(con[1]), false);
-					} catch(Exception ex) {
-
-					}
-				}
-				in.close();
-				br.close();
-			}
-		} catch(IOException e) {
-			e.printStackTrace();
+	public void load() {
+		byte[] data = FileToolkit.readFile(SignLink.getCacheDir() + "settings");
+		if(data != null && data.length > 0) {
+			Buffer buf = new Buffer(data);
+			GAME_FRAME = buf.getUShort();
+			System.out.println(GAME_FRAME);
+			SELECTED_MENU = buf.getUByte();
+			HITSPLATS = buf.getUByte();
+			HITBARS = buf.getUByte();
+			TEN_X_HITS = buf.getBoolean();
+			FPS_ON = buf.getBoolean();
+			LOW_MEM = buf.getBoolean();
+			GROUND_DECORATION = buf.getBoolean();
+			GROUND_MATERIALS = buf.getBoolean();
+			SMOOTH_FOG = buf.getBoolean();
+			TWEENING = buf.getBoolean();
+			RETAIN_MODEL_PRECISION = buf.getBoolean();
+			MAP_ANTIALIASING = buf.getBoolean();
+			DRAW_ORBS = buf.getBoolean();
+			DRAW_SKILL_ORBS = buf.getBoolean();
+			DISPLAY_NAMES = buf.getBoolean();
+			CHARACTER_PREVIEW = buf.getBoolean();
+			ROOF_OFF = buf.getBoolean();
 		}
 	}
+	
+	public int getSELECTED_MENU() {
+		return SELECTED_MENU;
+	}
+	
+	public void setSELECTED_MENU(int SELECTED_MENU) {
+		this.SELECTED_MENU = SELECTED_MENU;
+		save();
+	}
+	
+	public int getHITSPLATS() {
+		return HITSPLATS;
+	}
+	
+	public void setHITSPLATS(int HITSPLATS) {
+		this.HITSPLATS = HITSPLATS;
+		save();
+	}
+	
+	public int getHITBARS() {
+		return HITBARS;
+	}
+	
+	public void setHITBARS(int HITBARS) {
+		this.HITBARS = HITBARS;
+		save();
+	}
+	
+	public boolean isTEN_X_HITS() {
+		return TEN_X_HITS;
+	}
+	
+	public void setTEN_X_HITS(boolean TEN_X_HITS) {
+		this.TEN_X_HITS = TEN_X_HITS;
+		save();
+	}
+	
+	public int getGAME_FRAME() {
+		return GAME_FRAME;
+	}
+	
+	public void setGAME_FRAME(int GAME_FRAME) {
+		this.GAME_FRAME = GAME_FRAME;
+		save();
+	}
+	
+	public boolean isDEBUG_DATA() {
+		return DEBUG_DATA;
+	}
+	
+	public void setDEBUG_DATA(boolean DEBUG_DATA) {
+		this.DEBUG_DATA = DEBUG_DATA;
+	}
+	
+	public boolean isFPS_ON() {
+		return FPS_ON;
+	}
+	
+	public void setFPS_ON(boolean FPS_ON) {
+		this.FPS_ON = FPS_ON;
+		save();
+	}
+	
+	public boolean isDEBUG_INDEXES() {
+		return DEBUG_INDEXES;
+	}
+	
+	public void setDEBUG_INDEXES(boolean DEBUG_INDEXES) {
+		this.DEBUG_INDEXES = DEBUG_INDEXES;
+	}
+	
+	public boolean isLOW_MEM() {
+		return LOW_MEM;
+	}
+	
+	public void setLOW_MEM(boolean LOW_MEM) {
+		this.LOW_MEM = LOW_MEM;
+		save();
+	}
+	
+	public boolean isGROUND_DECORATION() {
+		return GROUND_DECORATION;
+	}
+	
+	public void setGROUND_DECORATION(boolean GROUND_DECORATION) {
+		this.GROUND_DECORATION = GROUND_DECORATION;
+		save();
+	}
+	
+	public boolean isGROUND_MATERIALS() {
+		return GROUND_MATERIALS;
+	}
+	
+	public void setGROUND_MATERIALS(boolean GROUND_MATERIALS) {
+		this.GROUND_MATERIALS = GROUND_MATERIALS;
+		save();
+	}
+	
+	public boolean isSMOOTH_FOG() {
+		return SMOOTH_FOG;
+	}
+	
+	public void setSMOOTH_FOG(boolean SMOOTH_FOG) {
+		this.SMOOTH_FOG = SMOOTH_FOG;
+		save();
+	}
+	
+	public boolean isTWEENING() {
+		return TWEENING;
+	}
+	
+	public void setTWEENING(boolean TWEENING) {
+		this.TWEENING = TWEENING;
+		save();
+	}
+	
+	public boolean isRETAIN_MODEL_PRECISION() {
+		return RETAIN_MODEL_PRECISION;
+	}
+	
+	public void setRETAIN_MODEL_PRECISION(boolean RETAIN_MODEL_PRECISION) {
+		this.RETAIN_MODEL_PRECISION = RETAIN_MODEL_PRECISION;
+		save();
+	}
+	
+	public boolean isMAP_ANTIALIASING() {
+		return MAP_ANTIALIASING;
+	}
+	
+	public void setMAP_ANTIALIASING(boolean MAP_ANTIALIASING) {
+		this.MAP_ANTIALIASING = MAP_ANTIALIASING;
+		save();
+	}
+	
+	public boolean isDRAW_ORBS() {
+		return DRAW_ORBS;
+	}
+	
+	public void setDRAW_ORBS(boolean DRAW_ORBS) {
+		this.DRAW_ORBS = DRAW_ORBS;
+		save();
+	}
+	
+	public boolean isDRAW_SKILL_ORBS() {
+		return DRAW_SKILL_ORBS;
+	}
+	
+	public void setDRAW_SKILL_ORBS(boolean DRAW_SKILL_ORBS) {
+		this.DRAW_SKILL_ORBS = DRAW_SKILL_ORBS;
+		save();
+	}
+	
+	public boolean isDISPLAY_NAMES() {
+		return DISPLAY_NAMES;
+	}
+	
+	public void setDISPLAY_NAMES(boolean DISPLAY_NAMES) {
+		this.DISPLAY_NAMES = DISPLAY_NAMES;
+		save();
+	}
+	
+	public int getSPLIT_PRIVATE_CHAT_COLOR() {
+		return SPLIT_PRIVATE_CHAT_COLOR;
+	}
+	
+	public void setSPLIT_PRIVATE_CHAT_COLOR(int SPLIT_PRIVATE_CHAT_COLOR) {
+		this.SPLIT_PRIVATE_CHAT_COLOR = SPLIT_PRIVATE_CHAT_COLOR;
+	}
+	
+	public boolean isCHARACTER_PREVIEW() {
+		return CHARACTER_PREVIEW;
+	}
+	
+	public void setCHARACTER_PREVIEW(boolean CHARACTER_PREVIEW) {
+		this.CHARACTER_PREVIEW = CHARACTER_PREVIEW;
+	}
+	
+	public boolean isROOF_OFF() {
+		return ROOF_OFF;
+	}
+	
+	public void setROOF_OFF(boolean ROOF_OFF) {
+		this.ROOF_OFF = ROOF_OFF;
+		save();
+	}
+	
 }
