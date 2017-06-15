@@ -485,11 +485,11 @@ public class GameActivity extends Activity {
 					if(client.mouseWheelAmt != 0) {
 						client.cameraZoom += client.mouseWheelAmt * 20;
 					}
-					if(client.cameraZoom < -100) {
-						client.cameraZoom = -100;
+					if(client.cameraZoom < -200) {
+						client.cameraZoom = -200;
 					}
-					if(client.cameraZoom > 100) {
-						client.cameraZoom = 100;
+					if(client.cameraZoom > 200) {
+						client.cameraZoom = 200;
 					}
 				}
 				build3dScreenMenu();

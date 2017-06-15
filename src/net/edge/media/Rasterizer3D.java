@@ -2656,54 +2656,53 @@ public final class Rasterizer3D extends Rasterizer2D {
 		if(tex >= 0 && tex < MaterialType.textures.length) {
 
 			MaterialType def = MaterialType.textures[tex];
-			if(def != null) {
-				if(!def.aBoolean1223 && !force) {
-					drawGouraudTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, hsl1, hsl2, hsl3);
-					//drawGouraudTriangle317(y1, y2, y3, x1, x2, x3, hsl1, hsl2, hsl3);
-					return;
-				}
-				
-				Texture texture = Texture.get(tex);
-				if(texture != null && def.aBoolean1223) {
-					textureMissing = false;
-					if(mipmap) {
-						int area = (x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1) >> 1;
-						if(area < 0) {
-							area = -area;
-						}
-						double a = area / 8192d;
-						a = Math.pow(a, 0.3);
-						if(a >= 0.875) {
-							textureMipmap = 0;
-						} else if(a >= 0.625) {
-							textureMipmap = 1;
-						} else if(a >= 0.375) {
-							textureMipmap = 2;
-						} else if(a >= 0.1875) {
-							textureMipmap = 3;
-						} else if(a >= 0.09375) {
-							textureMipmap = 4;
-						} else if(a >= 0.046875) {
-							textureMipmap = 5;
-						} else if(a >= 0.0234375) {
-							textureMipmap = 6;
-						} else {
-							textureMipmap = 7;
-						}
-					} else {
-						textureMipmap = 0;
+			Texture texture = Texture.get(tex);
+			
+			if(def != null && !def.aBoolean1223 && !force && texture != null) {
+				drawGouraudTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, hsl1, hsl2, hsl3);
+				//drawGouraudTriangle317(y1, y2, y3, x1, x2, x3, hsl1, hsl2, hsl3);
+				return;
+			}
+			
+			if(texture != null) {
+				textureMissing = false;
+				if(mipmap) {
+					int area = (x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1) >> 1;
+					if(area < 0) {
+						area = -area;
 					}
-					int[] texels = texture.getTexels(textureMipmap);
-					
-					if(force) {
-						drawMaterializedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, hsl1, hsl2, hsl3, tx1, tx2, tx3, ty1, ty2, ty3, tz1, tz2, tz3, texels);
-					} else ///if(textured) {
-						drawHDTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, hsl1, hsl2, hsl3, tx1, tx2, tx3, ty1, ty2, ty3, tz1, tz2, tz3, texels);
-					///} else {
-					//	drawMaterializedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, hsl1, hsl2, hsl3, tx1, tx2, tx3, ty1, ty2, ty3, tz1, tz2, tz3, texels);
-					//}
-					return;
+					double a = area / 8192d;
+					a = Math.pow(a, 0.3);
+					if(a >= 0.875) {
+						textureMipmap = 0;
+					} else if(a >= 0.625) {
+						textureMipmap = 1;
+					} else if(a >= 0.375) {
+						textureMipmap = 2;
+					} else if(a >= 0.1875) {
+						textureMipmap = 3;
+					} else if(a >= 0.09375) {
+						textureMipmap = 4;
+					} else if(a >= 0.046875) {
+						textureMipmap = 5;
+					} else if(a >= 0.0234375) {
+						textureMipmap = 6;
+					} else {
+						textureMipmap = 7;
+					}
+				} else {
+					textureMipmap = 0;
 				}
+				int[] texels = texture.getTexels(textureMipmap);
+				
+				if(force)
+					drawMaterializedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, hsl1, hsl2, hsl3, tx1, tx2, tx3, ty1, ty2, ty3, tz1, tz2, tz3, texels);
+				else ///if(textured) {
+					drawHDTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, hsl1, hsl2, hsl3, tx1, tx2, tx3, ty1, ty2, ty3, tz1, tz2, tz3, texels);
+				///} else {
+				//	drawMaterializedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, hsl1, hsl2, hsl3, tx1, tx2, tx3, ty1, ty2, ty3, tz1, tz2, tz3, texels);
+				//}
+				return;
 			}
 		}
 		

@@ -49,7 +49,7 @@ public class SettingPanel extends Panel {
 		else if(client.leftClickInRegion(x + 150, y + 192, x + 192, y + 207))
 			Config.def.setSMOOTH_FOG(!Config.def.isSMOOTH_FOG());
 		else if(client.leftClickInRegion(x + 150, y + 216, x + 192, y + 231))
-			Config.def.setDISPLAY_NAMES(!Config.def.isSMOOTH_FOG());
+			Config.def.setDISPLAY_NAMES(!Config.def.isDISPLAY_NAMES());
 		else if(client.leftClickInRegion(x + 150, y + 240, x + 192, y + 255)) {
 			Config.def.setROOF_OFF(!Config.def.isROOF_OFF());
 		} else if(client.leftClickInRegion(x + 150, y + 264, x + 192, y + 279))

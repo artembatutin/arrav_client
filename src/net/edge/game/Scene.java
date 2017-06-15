@@ -248,7 +248,7 @@ public final class Scene {
 					hoverX = x;
 					hoverY = y;
 				}
-				if(!Config.def.isGROUND_MATERIALS() || (ground.texId == null || ground.texId[i] == -1)) {
+				if((ground.texId == null || ground.texId[i] == -1)) {
 					if(ground.color1[i] != 12345678) {
 						Rasterizer3D.drawGouraudTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i]);
 					}

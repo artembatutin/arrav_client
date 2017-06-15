@@ -6248,31 +6248,9 @@ public class Client extends ClientEngine {
 					hash = hash >> 14 & 0xFFFFFF;
 					final int mapFunction = LocationType.getPrecise((int) hash).mapFunction;
 					if(mapFunction >= 0) {
-						int x2 = x;
-						int y2 = y;
-						if(mapFunction != 22 && mapFunction != 29 && mapFunction != 34 && mapFunction != 36 && mapFunction != 46 && mapFunction != 47 && mapFunction != 48) {
-							/*final byte tilesX = 104;
-							final byte tilesY = 104;
-							final int[][] flagmap = collisionMaps[cameraPlane].flagMap;
-							for(int i = 0; i < 10; i++) {
-								final int random = (int) (Math.random() * 4D);
-								if(random == 0 && x2 > 0 && x2 > x - 3 && (flagmap[x2 - 1][y2] & 0x1280108) == 0) {
-									x2--;
-								}
-								if(random == 1 && x2 < tilesX - 1 && x2 < x + 3 && (flagmap[x2 + 1][y2] & 0x1280180) == 0) {
-									x2++;
-								}
-								if(random == 2 && y2 > 0 && y2 > y - 3 && (flagmap[x2][y2 - 1] & 0x1280102) == 0) {
-									y2--;
-								}
-								if(random == 3 && y2 < tilesY - 1 && y2 < y + 3 && (flagmap[x2][y2 + 1] & 0x1280120) == 0) {
-									y2++;
-								}
-							}*/
-						}
 						mapFunctionImage[mapFunctionCount] = mapFunctions[mapFunction];
-						mapFunctionX[mapFunctionCount] = x2;
-						mapFunctionY[mapFunctionCount] = y2;
+						mapFunctionX[mapFunctionCount] = x;
+						mapFunctionY[mapFunctionCount] = y;
 						mapFunctionCount++;
 					}
 				}
