@@ -45,7 +45,7 @@ public class TitleActivity extends Activity {
 	/**
 	 * The connection index selected.
 	 */
-	private int connection;
+	public static int connection;
 	
 	/**
 	 * Scroll state condition.
@@ -295,9 +295,6 @@ public class TitleActivity extends Activity {
 	public void initialize() {
 		started = false;
 		titleGraphics = new GraphicalComponent(client.windowWidth, client.windowHeight);
-		if(!Constants.JAGGRAB_ENABLED) {
-			connection = 1;
-		}
 	}
 
 	/**
@@ -344,7 +341,4 @@ public class TitleActivity extends Activity {
 		}
 	}
 	
-	public int getConnection() {
-		return connection;
-	}
 }

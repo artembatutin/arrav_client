@@ -645,6 +645,7 @@ public class Client extends ClientEngine {
 			if(args != null && args.length > 0) {
 				Constants.JAGGRAB_ENABLED = Boolean.parseBoolean(args[0]);
 				Constants.USER_HOME_FILE_STORE = Boolean.parseBoolean(args[1]);
+				TitleActivity.connection = Integer.parseInt(args[2]);
 			}
 			SignLink.storeId = 32;
 			SignLink.startPriv(InetAddress.getLocalHost());
@@ -926,7 +927,7 @@ public class Client extends ClientEngine {
 	@Override
 	public URL getCodeBase() {
 		try {
-			return new URL((longToIp(TitleActivity.CONNECTIONS[titleActivity.getConnection()].getIp())) + ":" + 80); // Returns the server's URL.
+			return new URL((longToIp(TitleActivity.CONNECTIONS[TitleActivity.connection].getIp())) + ":" + 80); // Returns the server's URL.
 		} catch(final Exception _ex) {
 			//empty
 		}
@@ -3081,7 +3082,7 @@ public class Client extends ClientEngine {
 			while(TitleActivity.scrollValue < 110) {
 				titleActivity.update();
 			}
-			socketStream = new Session(this, openSocket(TitleActivity.CONNECTIONS[titleActivity.getConnection()].getPort()));
+			socketStream = new Session(this, openSocket(TitleActivity.CONNECTIONS[TitleActivity.connection].getPort()));
 			final long nameAsLong = StringUtils.encryptName(username);
 			final int i = (int) (nameAsLong >> 16 & 31L);
 			outBuffer.pos = 0;
@@ -3409,7 +3410,7 @@ public class Client extends ClientEngine {
 	}
 
 	public Socket openSocket(int port) throws IOException {
-		long ip = TitleActivity.CONNECTIONS[titleActivity.getConnection()].getIp();
+		long ip = TitleActivity.CONNECTIONS[TitleActivity.connection].getIp();
 		return new Socket(InetAddress.getByName(longToIp(ip)), port);
 	}
 
@@ -6013,18 +6014,18 @@ public class Client extends ClientEngine {
 					return true;
 
 				case 34:
-					final int i9 = inBuffer.getUShort();
-					final Interface class9_2 = Interface.cache[i9];
+					final int widget = inBuffer.getUShort();
+					final Interface class9_2 = Interface.cache[widget];
 					while(inBuffer.pos < pktSize) {
-						final int j20 = inBuffer.getUSmart();
-						final int i23 = inBuffer.getUShort();
+						final int slot = inBuffer.getUByte();
+						final int item = inBuffer.getUShort();
 						int l25 = inBuffer.getUByte();
 						if(l25 == 255) {
 							l25 = inBuffer.getInt();
 						}
-						if(j20 >= 0 && j20 < class9_2.invId.length) {
-							class9_2.invId[j20] = i23;
-							class9_2.invAmt[j20] = l25;
+						if(slot >= 0 && slot < class9_2.invId.length) {
+							class9_2.invId[slot] = item;
+							class9_2.invAmt[slot] = l25;
 						}
 					}
 					pktType = -1;
