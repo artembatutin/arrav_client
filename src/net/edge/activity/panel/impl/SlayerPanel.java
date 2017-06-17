@@ -65,7 +65,8 @@ public class SlayerPanel extends Panel {
 		}
 		
 		/* Main background */
-		Rasterizer2D.fillRoundedRectangle(beginX, beginY + 8, 500, 328, 4, 0x000701, 200);
+		Rasterizer2D.fillRectangle(beginX, beginY + 8, 500, 328, 0x000000, 200);
+		Rasterizer2D.drawRectangle(beginX, beginY + 8, 500, 328, 0x63625e);
 		
 		fancyFont.drawCenteredString("Exit", beginX + 467, beginY + 27, 0xF3B13F);
 		Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 60);

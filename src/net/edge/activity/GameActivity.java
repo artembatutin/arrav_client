@@ -485,11 +485,11 @@ public class GameActivity extends Activity {
 					if(client.mouseWheelAmt != 0) {
 						client.cameraZoom += client.mouseWheelAmt * 20;
 					}
-					if(client.cameraZoom < -200) {
-						client.cameraZoom = -200;
+					if(client.cameraZoom < -150) {
+						client.cameraZoom = -150;
 					}
-					if(client.cameraZoom > 200) {
-						client.cameraZoom = 200;
+					if(client.cameraZoom > 150) {
+						client.cameraZoom = 150;
 					}
 				}
 				build3dScreenMenu();
@@ -1467,6 +1467,8 @@ public class GameActivity extends Activity {
 				xClick = client.clickX - (client.windowWidth - 182 + 25);
 				yClick = client.clickY - 4;
 			}
+			if(!client.panelHandler.action())
+				return;
 			if(xClick >= 0 && yClick >= 0 && xClick < 146 && yClick < 151) {
 				xClick -= 73;
 				yClick -= 75;
