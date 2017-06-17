@@ -131,7 +131,8 @@ public class CounterPanel extends Panel {
 		}
 
 		/* Main background */
-		Rasterizer2D.fillRoundedRectangle(beginX, beginY + 8, 500, 328, 4, 0x000000, 200);
+		Rasterizer2D.fillRectangle(beginX, beginY + 8, 500, 328, 0x000000, 200);
+		Rasterizer2D.drawRectangle(beginX, beginY + 8, 500, 328, 0x63625e);
 		
 		fancyFont.drawLeftAlignedEffectString("Shop Counter", beginX + 20, beginY + 33, 0xF3B13F, true);
 		boldFont.drawCenteredEffectString("Quick shops:", beginX + 240, beginY + 143, 0xF3B13F, true);

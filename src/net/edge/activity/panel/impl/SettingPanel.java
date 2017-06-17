@@ -104,7 +104,8 @@ public class SettingPanel extends Panel {
 		}
 
 		/* Main background */
-		Rasterizer2D.fillRoundedRectangle(x + 10, y + 10, 500, 325, 8, 0x000000, 150);
+		Rasterizer2D.fillRectangle(x + 10, y + 8, 500, 328, 0x000000, 200);
+		Rasterizer2D.drawRectangle(x + 10, y + 8, 500, 328, 0x63625e);
 		/* Details */
 		drawSection(x + 20, y + 20, 310, 180, "Details");
 		for(int button = 0; button < 12; button++) {

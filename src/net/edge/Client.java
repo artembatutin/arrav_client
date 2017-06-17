@@ -5904,7 +5904,7 @@ public class Client extends ClientEngine {
 					} else if(l7 == 65530) {//-6
 						panelHandler.open(new MinigamePanel());
 					} else if(l7 == 65531) {//-5
-						//panelHandler.open(new TitlesPanel(true));
+						panelHandler.open(new IronManSelectionPanel());
 					} else if(l7 == 65532) {//-4
 						panelHandler.open(new SkillPanel());
 					} else if(l7 == 65533) {//-3
@@ -6004,7 +6004,7 @@ public class Client extends ClientEngine {
 					if(inputDialogState != 0) {
 						inputDialogState = 0;
 					}
-					if(panelHandler.isActive() && !panelHandler.isBlocked()) {
+					if(panelHandler.isActive()) {
 						panelHandler.close();
 					}
 					openInterfaceID = -1;
@@ -8544,7 +8544,7 @@ public class Client extends ClientEngine {
 		}
 		final int k1 = j1 & 0x1f;
 		final int l1 = j1 >> 6 & 3;
-		if(panelHandler.isActive())
+		if(!panelHandler.action())
 			return false;
 		if(k1 == 10 || k1 == 11 || k1 == 22) {
 			final LocationType class46 = LocationType.getPrecise(i1);

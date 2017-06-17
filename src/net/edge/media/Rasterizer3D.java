@@ -2697,7 +2697,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				
 				if(force)
 					drawMaterializedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, hsl1, hsl2, hsl3, tx1, tx2, tx3, ty1, ty2, ty3, tz1, tz2, tz3, texels);
-				else ///if(textured) {
+				else //if(textured) {
 					drawHDTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, hsl1, hsl2, hsl3, tx1, tx2, tx3, ty1, ty2, ty3, tz1, tz2, tz3, texels);
 				///} else {
 				//	drawMaterializedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, hsl1, hsl2, hsl3, tx1, tx2, tx3, ty1, ty2, ty3, tz1, tz2, tz3, texels);

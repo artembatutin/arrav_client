@@ -155,5 +155,12 @@ public class PanelHandler {
 	public boolean isSumOpen() {
 		return currentPanel != null && currentPanel.getId() == 13;
 	}
+	
+	/**
+	 * Determines if the iron man selection panel is open.
+	 */
+	public boolean isIronSelect() {
+		return currentPanel != null && currentPanel.getId() == 14;
+	}
 
 }
