@@ -57,9 +57,9 @@ public class OrbHandler {
 			} else if(skill == 5) {
 				prayerValue = client.currentStats[5] + "";
 				prayerFill = client.currentStats[5] / (float) client.maxStats[5];
-			} else if(skill == 22) {
-				summoningValue = client.currentStats[22] + "";
-				summoningFill = client.currentStats[22] / (float) client.maxStats[22];
+			} else if(skill == 23) {
+				summoningValue = client.currentStats[23] + "";
+				summoningFill = client.currentStats[23] / (float) client.maxStats[23];
 			}
 		}
 	}

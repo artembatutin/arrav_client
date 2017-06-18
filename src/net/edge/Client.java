@@ -3685,7 +3685,6 @@ public class Client extends ClientEngine {
 		}
 		if(code == 679 && !aBoolean1149) {
 			outBuffer.putOpcode(40);
-			outBuffer.putShort(arg3);
 			aBoolean1149 = true;
 		}
 		if(code == 431) {
@@ -4982,21 +4981,20 @@ public class Client extends ClientEngine {
 
 				case 71:
 					int interfaceId = inBuffer.getUShort();
-					int tabId = inBuffer.getReversedOppositeUByte();
-					int isNewerTabs = inBuffer.getReversedOppositeUByte();
+					int tabOld = inBuffer.getReversedOppositeUByte();
+					int tabNew = inBuffer.getReversedOppositeUByte();
 					if(interfaceId == 65535) {
 						interfaceId = -1;
 					}
-					if(isNewerTabs == 2) {
-						olderTabInterfaces[tabId] = interfaceId;
-						newerTabInterfaces[tabId] = interfaceId;
-					} else {
-						(isNewerTabs == 0 ? olderTabInterfaces : newerTabInterfaces)[tabId] = interfaceId;
-					}
-					if(interfaceId == -1 && invTab == tabId) {
-						if(uiRenderer.getId() == 562) {
+					olderTabInterfaces[tabOld] = interfaceId;
+					newerTabInterfaces[tabNew] = interfaceId;
+					
+					if(uiRenderer.getId() == 562) {
+						if(interfaceId == -1 && invTab == tabNew) {
 							invTab = 4;
-						} else {
+						}
+					} else {
+						if(interfaceId == -1 && invTab == tabOld) {
 							invTab = 3;
 						}
 					}
@@ -5899,7 +5897,7 @@ public class Client extends ClientEngine {
 					} else if(l7 == 65527) {//-9
 						panelHandler.open(new MonsterPanel());
 					} else if(l7 == 65528) {//-8
-						//panelHandler.open(new TitlesPanel(false));
+						panelHandler.open(new SummoningPanel());
 					} else if(l7 == 65529) {//-7
 						panelHandler.open(new BossPanel());
 					} else if(l7 == 65530) {//-6
@@ -6018,11 +6016,13 @@ public class Client extends ClientEngine {
 					final Interface class9_2 = Interface.cache[widget];
 					while(inBuffer.pos < pktSize) {
 						final int slot = inBuffer.getUByte();
-						final int item = inBuffer.getUShort();
+						int item = inBuffer.getUShort();
 						int l25 = inBuffer.getUByte();
 						if(l25 == 255) {
 							l25 = inBuffer.getInt();
 						}
+						if(widget >= 270 && widget <= 279)
+							item -= 1;
 						if(slot >= 0 && slot < class9_2.invId.length) {
 							class9_2.invId[slot] = item;
 							class9_2.invAmt[slot] = l25;
@@ -6047,11 +6047,13 @@ public class Client extends ClientEngine {
 					return true;
 
 				case 106:
-					int tab = inBuffer.getOppositeUByte();
-					if(uiRenderer.getId() == 317 || uiRenderer.getId() == 474) {
-						invTab = tab - (invTab > 3 ? 1 : 0);
-					} else
-						invTab = tab;
+					int tabOldForce = inBuffer.getUByte();
+					int tabNewForce = inBuffer.getUByte();
+					if(uiRenderer.getId() == 562) {
+						invTab = tabNewForce;
+					} else {
+						invTab = tabOldForce;
+					}
 					updateInventory = true;
 					if(!showTab)
 						showTab = true;
@@ -6702,6 +6704,15 @@ public class Client extends ClientEngine {
 			if(j == -1) {
 				break;
 			}
+			System.out.println(j);
+			if(j == 9) {
+				tabToReplyPm();
+				return;
+			}
+			if(j == 32 && (forcedChatWidgetId == 356 || forcedChatWidgetId == 359 || forcedChatWidgetId == 363 || forcedChatWidgetId == 368 || forcedChatWidgetId == 306) && !aBoolean1149) {
+				outBuffer.putOpcode(40);
+				aBoolean1149 = true;
+			}
 			if(openInterfaceID != -1 && openInterfaceID == reportAbuseInterfaceID) {
 				if(j == 8 && reportAbuseInput.length() > 0) {
 					reportAbuseInput = reportAbuseInput.substring(0, reportAbuseInput.length() - 1);
@@ -7141,9 +7152,6 @@ public class Client extends ClientEngine {
 						if(chatInput.equals("::m0") || chatInput.equals("::m1") || chatInput.equals("::m2")) {
 							setMode(Integer.parseInt(chatInput.substring(3)));
 						}
-						if(chatInput.equals("::sum")) {
-							panelHandler.open(new SummoningPanel());
-						}
 						if(chatInput.equals("::custom")) {
 							uiRenderer.switchRevision(1);
 						}
@@ -7152,9 +7160,6 @@ public class Client extends ClientEngine {
 						}
 						if(chatInput.equals("::459")) {
 							uiRenderer.switchRevision(459);
-						}
-						if(chatInput.equals("::474")) {
-							uiRenderer.switchRevision(474);
 						}
 						if(chatInput.equals("::525")) {
 							uiRenderer.switchRevision(525);
@@ -8999,7 +9004,44 @@ public class Client extends ClientEngine {
 		return "";
 	}
 	
-	
+	public void tabToReplyPm() {
+		String name = null;
+		for(int j = 0; j < 100; j++) {
+			if(chatMessage[j] != null) {
+				int chatType = this.chatType[j];
+				if(chatType == 2 || chatType == 7) {
+					name = chatAuthor[j];
+					break;
+				}
+			}
+		}
+		if(name == null)
+			pushMessage("You have not recieved any messages.", 0, "");
+		try {
+			if(name != null) {
+				long namel = StringUtils.encryptName(name.trim());
+				int node = -1;
+				for(int count = 0; count < friendsCount; count++) {
+					if(friendsListAsLongs[count] != namel)
+						continue;
+					node = count;
+					break;
+				}
+				if(node != -1 && friendsNodeIDs[node] > 0) {
+					inputDialogState = 0;
+					messagePromptRaised = true;
+					promptInput = "";
+					friendsListAction = 3;
+					aLong953 = friendsListAsLongs[node];
+					promptInputTitle = "Enter message to send to " + friendsList[node];
+				} else {
+					pushMessage("That player is currently offline.", 0, "");
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	public CRC32 getCrc() {
 		return crc;

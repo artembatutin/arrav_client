@@ -60,8 +60,6 @@ public class SettingPanel extends Panel {
 			Config.def.setTEN_X_HITS(!Config.def.isTEN_X_HITS());
 		else if(client.leftClickInRegion(x + 220, y + 188, x + 246, y + 203))
 			client.uiRenderer.switchRevision(459);
-		else if(client.leftClickInRegion(x + 260, y + 188, x + 288, y + 203))
-			client.uiRenderer.switchRevision(474);
 		else if(client.leftClickInRegion(x + 301, y + 188, x + 326, y + 203))
 			client.uiRenderer.switchRevision(525);
 		else if(client.leftClickInRegion(x + 341, y + 188, x + 371, y + 203))

@@ -2855,12 +2855,19 @@ public final class Model extends Entity {
 			} else if((triType[i] & 1) == 0) {
 				final int tex = triFill[i];
 				final int type = triType[i];
-				int light = lightness + (lightx * vectorX[x3d] + lighty * vectorY[x3d] + lightz * vectorZ[x3d]) / (contrast * vectorMagnitude[x3d]);
-				triCol1[i] = adjustLightness(tex, light, type);
-				light = lightness + (lightx * vectorX[y3d] + lighty * vectorY[y3d] + lightz * vectorZ[y3d]) / (contrast * vectorMagnitude[y3d]);
-				triCol2[i] = adjustLightness(tex, light, type);
-				light = lightness + (lightx * vectorX[z3d] + lighty * vectorY[z3d] + lightz * vectorZ[z3d]) / (contrast * vectorMagnitude[z3d]);
-				triCol3[i] = adjustLightness(tex, light, type);
+				int light;
+				if(x3d < vectorX.length) {
+					light = lightness + (lightx * vectorX[x3d] + lighty * vectorY[x3d] + lightz * vectorZ[x3d]) / (contrast * vectorMagnitude[x3d]);
+					triCol1[i] = adjustLightness(tex, light, type);
+				}
+				if(y3d < vectorX.length) {
+					light = lightness + (lightx * vectorX[y3d] + lighty * vectorY[y3d] + lightz * vectorZ[y3d]) / (contrast * vectorMagnitude[y3d]);
+					triCol2[i] = adjustLightness(tex, light, type);
+				}
+				if(z3d < vectorX.length) {
+					light = lightness + (lightx * vectorX[z3d] + lighty * vectorY[z3d] + lightz * vectorZ[z3d]) / (contrast * vectorMagnitude[z3d]);
+					triCol3[i] = adjustLightness(tex, light, type);
+				}
 			}
 		}
 		super.vectorX = null;

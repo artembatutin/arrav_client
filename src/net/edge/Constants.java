@@ -30,7 +30,7 @@ public final class Constants {
 	public static final byte UI_FIXED = 0;
 	public static final byte UI_RESIZABLE = 1;
 	public static final byte UI_FULLSCREEN = 2;
-	public static final short[] SELECTABLE_GAMEFRAMES = {459, 474, 525, 562, 2, 1};
+	public static final short[] SELECTABLE_GAMEFRAMES = {459, 525, 562, 2, 1};
 
 	/*
 	 * Message constants
@@ -76,7 +76,7 @@ public final class Constants {
 			4, 2, 4, 0, 4, 0, 0, 0, 4, 3,//80
 			-2, 8, 0, 7, 2, 0, 6, 0, 0, 0,//90
 			0, 0, 0, 0, 0, 0, 2, 0, 1, -1,//100
-			2, 0, 0, -1, 4, 1, 0, 0, 0, 1,//110
+			2, 0, 0, -1, 4, 2, 0, 0, 0, 1,//110
 			1, 0, 0, 2, 0, 0, 15, 0, 0, 0,//120
 			-2, 4, 0, 0, 0, -2, 0, 0, 0, 0,//130
 			0, 0, 0, 9, 2, 0, 0, 0, 0, 0,//140

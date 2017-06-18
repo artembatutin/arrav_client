@@ -228,11 +228,11 @@ public class FixedUI_562 extends FixedUI {
 			client.menuItemCode[1] = 1052;
 			client.menuPos = 2;
 		} else if(Config.def.isDRAW_ORBS() && client.mouseX > 704 && client.mouseX < 761 && client.mouseY > 51 && client.mouseY < 84) {
-			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
-			client.menuItemCode[client.menuPos] = 1053;
-			client.menuPos++;
 			client.menuItemName[client.menuPos] = "Select quick prayers";
 			client.menuItemCode[client.menuPos] = 1054;
+			client.menuPos++;
+			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
+			client.menuItemCode[client.menuPos] = 1053;
 			client.menuPos++;
 		}
 	}
