@@ -248,11 +248,11 @@ public class ResizableUI_OS extends ResizableUI {
 			client.menuItemCode[1] = 1051;
 			client.menuPos = 2;
 		} else if(Config.def.isDRAW_ORBS() && client.mouseInRegion(client.windowWidth - 212, 72, client.windowWidth - 155, 105)) {
-			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
-			client.menuItemCode[client.menuPos] = 1053;
-			client.menuPos++;
 			client.menuItemName[client.menuPos] = "Select quick prayers";
 			client.menuItemCode[client.menuPos] = 1054;
+			client.menuPos++;
+			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
+			client.menuItemCode[client.menuPos] = 1053;
 			client.menuPos++;
 		}
 	}
@@ -578,7 +578,7 @@ public class ResizableUI_OS extends ResizableUI {
 	private void displayOrb(int x, int y, int orb, boolean hover) {
 		ImageCache.get(hover && client.mouseInRegion(x, y, x + 57, y + 33) ? 1922 : 1921).drawImage(x, y);
 		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 15, y + 26, OrbHandler.getColor(orb), true);
-		ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 73 : orb == Constants.ORB_HEALTH && OrbHandler.poisoned ? 78 : 56 + orb).drawImage(x + 27, y + 3);
+		ImageCache.get(OrbHandler.getOrb(orb)).drawImage(x + 27, y + 3);
 		Rasterizer2D.setClip(x + 27, y + 3, x + 58, y + 3 + OrbHandler.getFill(orb, 27));
 		ImageCache.get(60).drawImage(x + 27, y + 3);
 		Rasterizer2D.removeClip();

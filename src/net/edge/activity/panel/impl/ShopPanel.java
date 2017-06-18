@@ -279,7 +279,7 @@ public class ShopPanel extends Panel {
 			offset += i % 6 == 5 ? 55 : 0;
 		}
 		if(!tooltip.isEmpty()) {
-			boolean off = (client.mouseX + smallFont.getStringWidth(tooltip)) > 490;
+			boolean off = (client.mouseX - beginX + 8 + smallFont.getStringWidth(tooltip)) > 490;
 			Rasterizer2D.fillRoundedRectangle(client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 18) : 8), client.mouseY - 3, smallFont.getStringWidth(tooltip) + 7, 15, 3, 0x000000, 200);
 			smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 14) : 12), client.mouseY + 9, 0xF3B13F, true);
 		}

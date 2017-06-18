@@ -9,102 +9,10 @@ import net.edge.media.img.BitmapImage;
 
 public class SummoningPanel extends Panel {
 	
-	private enum Familiar {
-		SPIRIT_WOLF("Spirit wolf", 12047, "Howl", 12425, 1),
-		DREADFOWL("Dreadfowl", 12043, "Dreadfowl Strike", 12445, 4),
-		SPIRIT_SPIDER("Spirit spider", 12059, "Egg Spawn", 12428, 10),
-		THORNY_SNAIL("Thorny snail", 12019, "Slime Spray", 12459, 13),
-		GRANITE_CRAB("Granite crab", 12009, "Stony Shell", 12533, 16),
-		SPIRIT_MOSQUITO("Spirit mosquito", 12778, "Pester", 12838, 17),
-		DESERT_WYRM("Desert wyrm", 12049, "Electric Lash", 12460, 18),
-		SPIRIT_SCORPION("Spirit scorpion", 12055, "Venom Shot", 12432, 19),
-		SPIRIT_TZ_KIH("Spirit tz-kih", 12808, "Fireball Assault", 12839, 22),
-		ALBINO_RAT("Albino rat", 12067, "Cheese Feast", 12430, 23),
-		SPIRIT_KALPHITE("Spirit kalphite", 12063, "Sandstorm", 12446, 25),
-		COMPOST_MOUND("Compost mound", 12091, "Generate Compost", 12440, 28),
-		GIANT_CHINCHOMPA("Giant chinchompa", 12800, "Explode", 12834, 29),
-		VAMPIRE_BAT("Vampire bat", 12053, "Vampire Touch", 12447, 31),
-		HONEY_BADGER("Honey badger", 12065, "Insane Ferocity", 12433, 32),
-		BEAVER("Beaver", 12021, "Multichop", 12429, 33),
-		VOID_RAVAGER("Void ravager", 12818, "Call of Arms", 12443, 34),
-		VOID_SPINNER("Void spinner", 12780, "Call of Arms", 12443, 34),
-		VOID_TORCHER("Void torcher", 12798, "Call of Arms", 12443, 34),
-		VOID_SHIFTER("Void shifter", 12814, "Call of Arms", 12443, 34),
-		BRONZE_MINOTAUR("Bronze minotaur", 12073, "Bronze Bull Rush", 12461, 36),
-		BULL_ANT("Bull ant", 12087, "Unburden", 12431, 40),
-		MACAW("Macaw", 12071, "Herbcall", 12422, 41),
-		//EVIL_TURNIP("Evil turnip", 12051, "Evil Flames", 12448, 42),
-		SP_COCKATRICE("Sp. cockatrice", 12095, "Petrifying gaze", 12458, 43),
-		SP_GUTHATRICE("Sp. guthatrice", 12097, "Petrifying gaze", 12458, 43),
-		SP_SARATRICE("Sp. saratrice", 12099, "Petrifying gaze", 12458, 43),
-		SP_ZAMATRICE("Sp. zamatrice", 12101, "Petrifying gaze", 12458, 43),
-		SP_PENGATRICE("Sp. pengatrice", 12103, "Petrifying gaze", 12458, 43),
-		SP_CORAXATRICE("Sp. coraxatrice", 12105, "Petrifying gaze", 12458, 43),
-		SP_VULATRICE("Sp. vulatrice", 12107, "Petrifying gaze", 12458, 43),
-		IRON_MINOTAUR("Iron minotaur", 12075, "Iron Bull Rush", 12462, 46);
-		/*PYRELORD("Pyrelord", 12816, "Immense Heat", 12829, 46),
-		MAGPIE("Magpie", 12041, "Thieving Fingers", 12426, 47),
-		BLOATED_LEECH("Bloated leech", 12061, "Blood Drain", 12444, 49),
-		SPIRIT_TERRORBIRD("Spirit terrorbird", 12007, "Tireless Run", 12441, 52),
-		ABYSSAL_PARASITE("Abyssal parasite", 12035, "Abyssal Drain", 12454, 54),
-		SPIRIT_JELLY("Spirit jelly", 12027, "Dissolve", 12453, 55),
-		STEEL_MINOTAUR("Steel minotaur", 12077, "Steel Bull Rush", 12463, 56),
-		IBIS("Ibis", 12531, "Fish Rain", 12424, 56),
-		SPIRIT_GRAAHK("Spirit graahk", 12810, "Goad", 12835, 57),
-		SPIRIT_KYATT("Spirit kyatt", 12812, "Ambush", 12836, 57),
-		SPIRIT_LARUPIA("Spirit larupia", 12784, "Rending", 12840, 57),
-		KARAM_OVERLORD("Karam. overlord", 12023, "Doomsphere Device", 12455, 58),
-		SMOKE_DEVIL("Smoke devil", 12085, "Dust Cloud", 12468, 61),
-		ABYSSAL_LURKER("Abyssal lurker", 12037, "Abyssal Stealth", 12427, 62),
-		SPIRIT_COBRA("Spirit cobra", 12015, "Ophidian Incubation", 12436, 63),
-		STRANGER_PLANT("Stranger plant", 12045, "Poisonous Blast", 12467, 64),
-		MITHRIL_MINOTAUR("Mithril minotaur", 12079, "Mithril Bull Rush", 12464, 66),
-		BARKER_TOAD("Barker toad", 12123, "Toad Bark", 12452, 66),
-		WAR_TORTOISE("War tortoise", 12031, "Testudo", 12439, 67),
-		BUNYIP("Bunyip", 12029, "Swallow Whole", 12438, 68),
-		FRUIT_BAT("Fruit bat", 12033, "Fruitfall", 12423, 69),
-		RAVENOUS_LOCUST("Ravenous locust", 12820, "Famine", 12830, 70),
-		ARCTIC_BEAR("Arctic bear", 12057, "Arctic Blast", 12451, 71),
-		PHOENIX("Phoenix", 14623, "Rise from the Ashes", 14622, 72),
-		OBSIDIAN_GOLEM("Obsidian golem", 12792, "Volcanic Strength", 12826, 73),
-		GRANITE_LOBSTER("Granite lobster", 12069, "Crushing Claw", 12449, 74),
-		PRAYING_MANTIS("Praying mantis", 12011, "Mantis Strike", 12450, 75),
-		ADAMANT_MINOTAUR("Adamant minotaur", 12081, "Adamant Bull Rush", 12465, 76),
-		FORGE_REGENT("Forge regent", 12782, "Inferno", 12841, 76),
-		TALON_BEAST("Talon beast", 12794, "Deadly Claw", 12831, 77),
-		GIANT_ENT("Giant ent", 12013, "Acorn Missile", 12457, 78),
-		FIRE_TITAN("Fire titan", 12802, "Titan's Consitution", 12824, 79),
-		MOSS_TITAN("Moss titan", 12804, "Titan's Consitution", 12824, 79),
-		ICE_TITAN("Ice titan", 12806, "Titan's Consitution", 12824, 79),
-		HYDRA("Hydra", 12025, "Regrowth", 12442, 80),
-		SPIRIT_DAGANNOTH("Spirit dagannoth", 12017, "Spike Shot", 12456, 83),
-		LAVA_TITAN("Lava titan", 12788, "Ebon Thunder", 12837, 83),
-		SWAMP_TITAN("Swamp titan", 12776, "Swamp Plague", 12832, 85),
-		RUNE_MINOTAUR("Rune minotaur", 12083, "Rune Bull Rush", 12466, 86),
-		UNICORN_STALLION("Unicorn stallion", 12039, "Healing Aura", 12434, 88),
-		GEYSER_TITAN("Geyser titan", 12786, "Boil", 12833, 89),
-		WOLPERTINGER("Wolpertinger", 12089, "Magic Focus", 12437, 92),
-		ABYSSAL_TITAN("Abyssal titan", 12796, "Essence Shipment", 12827, 93),
-		IRON_TITAN("Iron titan", 12822, "Iron Within", 12828, 95),
-		PACK_YAK("Pack yak", 12093, "Winter Storage", 12435, 96),
-		STEEL_TITAN("Steel titan", 12790, "Steel of Legends", 12825, 99);*/
-		
-		String pouchName, scrollName;
-		int pouchId, scrollId, level;
-		
-		Familiar(String pouchName, int pouchId, String scrollName, int scrollId, int level) {
-			this.pouchName = pouchName;
-			this.pouchId = pouchId;
-			this.scrollName = scrollName;
-			this.scrollId = scrollId;
-			this.level = level;
-		}
-	}
-	
 	/**
 	 * An array of all familiars.
 	 */
-	private final Familiar[] familiars = Familiar.values();
+	private final SummoningData[] familiars = SummoningData.values();
 	
 	/**
 	 * Summoning level
@@ -130,11 +38,6 @@ public class SummoningPanel extends Panel {
 	 * The scrolling dragging position.
 	 */
 	private int scrollDragPos = 0;
-	
-	/**
-	 * Condition if back button displayed.
-	 */
-	private static boolean back = false;
 
 	@Override
 	public boolean process() {
@@ -150,7 +53,7 @@ public class SummoningPanel extends Panel {
 			Interface.cache[259] = Interface.addInterface(259);
 		}
 
-		scrollMax = Math.max(55 * ((client.currentShopInterfacePrices.length + 5) / 6) - 285, 0);
+		scrollMax = Math.max(55 * ((familiars.length + 5) / 6) - 285, 0);
 
 		/* Scrolling */
 		if(client.mouseInRegion(beginX + 5, beginY + 40, beginX + 493, beginY + 365)) {
@@ -199,56 +102,14 @@ public class SummoningPanel extends Panel {
 			return true;
 		}
 		
-		if(back) {
-			if(client.leftClickInRegion(beginX + 382, beginY + 12, beginX + 438, beginY + 42)) {
-				client.panelHandler.open(new CounterPanel());
+		int offset = -scrollPos + 45;
+		for(int i = 0; i < familiars.length; i++) {
+			int x = i % 6 * 78;
+			if(client.leftClickInRegion(beginX + 8 + x, beginY + offset, beginX + 80 + x, beginY + offset + 50)) {
+				client.outBuffer.putOpcode(186);
+				client.outBuffer.putByte(i);
 			}
-		}
-
-		/* Adding item */
-		if(client.mouseInRegion(beginX + 5, beginY + 40, beginX + 493, beginY + 330)) {
-			int offset = -scrollPos + 45;
-			for(int i = 0; i < client.currentShopInterfacePrices.length; i++) {
-				int icon = Interface.cache[3900].invId[i];
-				if(icon == 0)
-					continue;
-				int x = i % 6 * 78;
-				//if(beginY + offset + 38 > 366) {
-				//	break;
-				//}
-				
-				if(client.rightClickInRegion(beginX + 8 + x, beginY + offset, beginX + 80 + x, beginY + offset + 50)) {
-					client.menuOpened = false;
-					String name = ObjectType.get(icon).name;
-					String[] actions = {"C", "200", "50", "10", "5", "1", "0"};
-					client.menuPos = 0;
-					for(int p = 0; p < actions.length; p++) {
-						if(actions[p].equals("C")) {
-							client.menuItemName[p] = "Cancel";
-							client.menuItemCode[p] = 1107;
-							client.menuPos++;
-						} else {
-							boolean value = actions[p].equals("0");
-							client.menuItemName[p] = value ? "Value @ban@" + name : "Buy " + actions[p] + " @ban@" + name;
-							client.menuItemCode[p] = 1900;
-							client.menuItemArg3[p] = Integer.parseInt(actions[p]);
-							client.menuItemArg2[p] = i;
-							client.menuItemArg1[p] = icon;
-							client.menuPos++;
-						}
-					}
-				}
-				
-				if(!client.menuOpened && client.leftClickInRegion(beginX + 8 + x, beginY + offset, beginX + 80 + x, beginY + offset + 50)) {
-					client.menuOpened = false;
-					client.outBuffer.putOpcode(145);
-					client.outBuffer.putShortPlus128(3900);
-					client.outBuffer.putShortPlus128(0);
-					client.outBuffer.putShortPlus128(icon);
-				}
-				
-				offset += i % 6 == 5 ? 55 : 0;
-			}
+			offset += i % 6 == 5 ? 55 : 0;
 		}
 
 		return false;
@@ -273,13 +134,6 @@ public class SummoningPanel extends Panel {
 		if(client.mouseInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
 		}
-		if(back) {
-			fancyFont.drawCenteredString("Back", beginX + 407, beginY + 27, 0xF3B13F);
-			Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
-			if(client.mouseInRegion(beginX + 382, beginY + 12, beginX + 438, beginY + 42)) {
-				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
-			}
-		}
 		fancyFont.drawLeftAlignedEffectString("Summoning Pouch Creation - Level: " + summoningLevel, beginX + 20, beginY + 28, 0xF3B13F, true);
 
 		/* Shop content */
@@ -288,26 +142,46 @@ public class SummoningPanel extends Panel {
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
 		int offset = -scrollPos + 45;
 		String tooltip = "";
+		int familiar = -1;
 		for(int i = 0; i < familiars.length; i++) {
 			int x = i % 6 * 78;
+			ObjectType pouch = ObjectType.get(familiars[i].getPouchId());
 			Rasterizer2D.fillRoundedRectangle(beginX + 8 + x, beginY + offset, 72, 50, 3, 0x000000, 100);
 			if(!client.menuOpened && client.mouseInRegion(beginX + 8 + x, beginY + offset, beginX + 80 + x, beginY + offset + 50)) {
 				Rasterizer2D.fillRectangle(beginX + 8 + x, beginY + offset, 72, 50, 0, 40);
-				tooltip = familiars[i].pouchName;
+				if(pouch != null && pouch.name != null)
+					tooltip = pouch.name;
+				familiar = i;
 			}
+			int reqLvl = familiars[i].getLevelRequired();
 			final BitmapImage img = ObjectType.getIcon(familiars[i].pouchId, 1, 0);
 			if(img != null) {
-				img.drawImage(beginX + 28 + x, beginY + offset + 2);
+				img.drawImage(beginX + 28 + x, beginY + offset + 2, summoningLevel < reqLvl ? 100 : 255);
 			}
-			int reqLvl = familiars[i].level;
-			smallFont.drawLeftAlignedEffectString((summoningLevel >= reqLvl ? "@or1@" : "@red@") + reqLvl, beginX + 12 + x, beginY + offset + 14, 0xF3B13F, true);
-			smallFont.drawCenteredEffectString((summoningLevel >= reqLvl ? "@or1@Lvl " : "@or2@Lvl ") + reqLvl, beginX + 44 + x, beginY + offset + 46, 0xF3B13F, true);
+			//smallFont.drawLeftAlignedEffectString((summoningLevel >= reqLvl ? "@or1@" : "@red@") + reqLvl, beginX + 12 + x, beginY + offset + 14, 0xF3B13F, true);
+			smallFont.drawCenteredEffectString((summoningLevel >= reqLvl ? "@or1@Lvl " : "@red@Lvl ") + reqLvl, beginX + 44 + x, beginY + offset + 46, 0xF3B13F, true);
 			offset += i % 6 == 5 ? 55 : 0;
 		}
-		if(!tooltip.isEmpty()) {
-			boolean off = (client.mouseX + smallFont.getStringWidth(tooltip)) > 490;
-			Rasterizer2D.fillRoundedRectangle(client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 18) : 8), client.mouseY - 3, smallFont.getStringWidth(tooltip) + 7, 15, 3, 0x000000, 200);
-			smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 14) : 12), client.mouseY + 9, 0xF3B13F, true);
+		if(!tooltip.isEmpty() && familiar != -1) {
+			int count = familiars[familiar].getItems().length;
+			int width = count * 35;
+			boolean off = (client.mouseX - beginX + 8 + width) > 490;
+			boolean offY = (client.mouseY - beginY + 8 + 60) > 270;
+			int itemOffsetX = 0;
+			int offsetY = offY ? - 70 : 0;
+			
+			Rasterizer2D.fillRoundedRectangle(client.mouseX + (off ? -(width + 18) : 8), client.mouseY - 3 + offsetY, width + 7, 60, 3, 0x000000, 200);
+			smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(width + 14) : 12), client.mouseY + 9 + offsetY, 0xF3B13F, true);
+			for(Item item : familiars[familiar].getItems()) {
+				final BitmapImage img = ObjectType.getIcon(item.getId(), item.getAmount(), 0);
+				if(img != null) {
+					img.drawImage(client.mouseX + (off ? -(width + 12) : 14) + itemOffsetX, client.mouseY + 14 + offsetY);
+					if(item.getAmount() != 1)
+						smallFont.drawLeftAlignedString("" + item.getAmount(), client.mouseX + (off ? -(width + 14) : 12) + itemOffsetX, client.mouseY + 20 + offsetY, 0xFFFFFF);
+				}
+				itemOffsetX += 36;
+			}
+			
 		}
 		Rasterizer2D.drawRectangle(476 + beginX, 45 + beginY, 12, 280, 0xffffff, 60);
 		int height = 278;
@@ -339,6 +213,578 @@ public class SummoningPanel extends Panel {
 	@Override
 	public boolean blockedMove() {
 		return false;
+	}
+	
+	
+	/**
+	 * An enumeration of all {@link SummoningData} pouches.
+	 */
+	public enum SummoningData {
+		
+		/**
+		 * Represents a spirit wolf familiar.
+		 */
+		SPIRIT_WOLF(0, 12047, 1, 4.8, 6829, 0.1, 1, 6, new Item(12158), new Item(2859), new Item(12155), new Item(12183, 7)),
+		
+		/**
+		 * Represents a dreadfowl familiar.
+		 */
+		DREADFOWL(1, 12043, 4, 9.3, 6825, 0.1, 1, 4, new Item(12158), new Item(2138), new Item(12155), new Item(12183, 8)),
+		
+		/**
+		 * Represents a spirit spider familiar.
+		 */
+		SPIRIT_SPIDER(2, 12059, 10, 12.6, 6841, 0.2, 2, 15, new Item(12158), new Item(6291), new Item(12155), new Item(12183, 8)),
+		
+		/**
+		 * Represents a thorny snail familiar.
+		 */
+		THORNY_SNAIL(3, 12019, 13, 12.6, 6806, 0.2, 2, 16, new Item(12158), new Item(3363), new Item(12155), new Item(12183, 9)),
+		
+		/**
+		 * Represents a granite crab familiar.
+		 */
+		GRANITE_CRAB(4, 12009, 16, 31.6, 6796, 0.2, 2, 18, new Item(12158), new Item(440), new Item(12155), new Item(12183, 7)),
+		
+		/**
+		 * Represents a spirit mosquito familiar.
+		 */
+		SPIRIT_MOSQUITO(5, 12778, 17, 46.5, 7331, 0.5, 2, 12, new Item(12158), new Item(6319), new Item(12155), new Item(12183, 1)),
+		
+		/**
+		 * Represents a desrrt wyrm familiar.
+		 */
+		DESERT_WYRM(6, 12049, 18, 31.2, 6831, 0.4, 1, 19, new Item(12159), new Item(1783), new Item(12155), new Item(12183, 45)),
+		
+		/**
+		 * Represents a spirit scorpion familiar.
+		 */
+		SPIRIT_SCORPION(7, 12055, 19, 83.2, 6837, 0.9, 2, 17, new Item(12160), new Item(3095), new Item(12155), new Item(12183, 57)),
+		
+		/**
+		 * Represents a spirit tz-kih familiar.
+		 */
+		SPIRIT_TZ_KIH(8, 12808, 22, 96.8, 7361, 1.1, 3, 18, new Item(12160), new Item(12168), new Item(12155), new Item(12183, 64)),
+		
+		/**
+		 * Represents an albino rat familiar.
+		 */
+		ALBINO_RAT(9, 12067, 23, 202.4, 6847, 2.3, 1, 22, new Item(12163), new Item(2134), new Item(12155), new Item(12183, 75)),
+		
+		/**
+		 * Represents a spirit kalphite familiar.
+		 */
+		SPIRIT_KALPHITE(10, 12063, 25, 220, 6994, 2.5, 3, 22, new Item(12163), new Item(3138), new Item(12155), new Item(12183, 51)),
+		
+		/**
+		 * Represents a compost mound familiar.
+		 */
+		COMPOST_MOUND(11, 12091, 28, 49.8, 6871, 0.6, 6, 24, new Item(12159), new Item(6032), new Item(12155), new Item(12183, 47)),
+		
+		/**
+		 * Represents a giant chinchompa familiar.
+		 */
+		GIANT_CHINCHOMPA(12, 12800, 29, 255.2, 7353, 2.9, 1, 31, new Item(12163), new Item(10033), new Item(12155), new Item(12183, 84)),
+		
+		/**
+		 * Represents a vampire bat familiar.
+		 */
+		VAMPYRE_BAT(13, 12053, 31, 136, 6835, 1.5, 4, 33, new Item(12160), new Item(3325), new Item(12155), new Item(12183, 81)),
+		
+		/**
+		 * Represents a honey badger familiar.
+		 */
+		HONEY_BADGER(14, 12065, 32, 140.8, 6845, 1.6, 4, 25, new Item(12160), new Item(12156), new Item(12155), new Item(12183, 84)),
+		
+		/**
+		 * Represents a beaver familiar.
+		 */
+		BEAVER(15, 12021, 33, 57.6, 6808, 0.7, 4, 27, new Item(12159), new Item(1519), new Item(12155), new Item(12183, 72)),
+		
+		/**
+		 * Represents a void ravager familiar.
+		 */
+		VOID_RAVAGER(16, 12818, 34, 59.6, 7370, 0.7, 4, 27, new Item(12159), new Item(12164), new Item(12155), new Item(12183, 74)),
+		
+		/**
+		 * Represents a void spinner familiar.
+		 */
+		VOID_SPINNER(17, 12780, 34, 59.6, 7333, 0.7, 4, 27, new Item(12163), new Item(12166), new Item(12155), new Item(12183, 74)),
+		
+		/**
+		 * Represents a void torcher familiar.
+		 */
+		VOID_TORCHER(18, 12798, 34, 59.6, 7351, 0.7, 4, 94, new Item(12163), new Item(12167), new Item(12155), new Item(12183, 74)),
+		
+		/**
+		 * Represents a void shifter familiar.
+		 */
+		VOID_SHIFTER(19, 12814, 34, 59.6, 7367, 0.7, 4, 94, new Item(12163), new Item(12165), new Item(12155), new Item(12183, 74)),
+		
+		/**
+		 * Represents a bronze minotaur familiar.
+		 */
+		BRONZE_MINOTAUR(64, 12073, 36, 316.8, 6853, 3.6, 3, 30, new Item(12163), new Item(2349), new Item(12155), new Item(12183, 102)),
+		
+		/**
+		 * Represents a bull ant familiar.
+		 */
+		BULL_ANT(20, 12087, 40, 52.8, 6867, 0.6, 5, 30, new Item(12158), new Item(6010), new Item(12155), new Item(12183, 11)),
+		
+		/**
+		 * Represents a macaw familiar.
+		 */
+		MACAW(21, 12071, 41, 72.4, 6851, 0.8, 5, 31, new Item(12159), new Item(249), new Item(12155), new Item(12183, 78)),
+		
+		/**
+		 * Represents an evil turnip familiar.
+		 */
+		EVIL_TURNIP(22, 12051, 42, 184.8, 6833, 2.1, 5, 30, new Item(12160), new Item(12153), new Item(12155), new Item(12183, 104)),
+		
+		/**
+		 * Represents a spirit cockatrice familiar.
+		 */
+		SPIRIT_COCKATRICE(23, 12095, 43, 75.2, 6875, 0.9, 5, 36, new Item(12159), new Item(12109), new Item(12155), new Item(12183, 88)),
+		
+		/**
+		 * Represents a spirit guthatrice familiar.
+		 */
+		SPIRIT_GUTHATRICE(24, 12097, 43, 75.2, 6877, 0.9, 5, 36, new Item(12159), new Item(12111), new Item(12155), new Item(12183, 88)),
+		
+		/**
+		 * Represents a spirit saratrice familiar.
+		 */
+		SPIRIT_SARATRICE(25, 12099, 43, 75.2, 6879, 0.9, 5, 36, new Item(12159), new Item(12113), new Item(12155), new Item(12183, 88)),
+		
+		/**
+		 * Represents a spirit zamatrice familiar.
+		 */
+		SPIRIT_ZAMATRICE(26, 12101, 43, 75.2, 6881, 0.9, 5, 36, new Item(12159), new Item(12115), new Item(12155), new Item(12183, 88)),
+		
+		/**
+		 * Represents a spirit pengatrice familiar.
+		 */
+		SPIRIT_PENGATRICE(27, 12103, 43, 75.2, 6883, 0.9, 5, 36, new Item(12159), new Item(12117), new Item(12155), new Item(12183, 88)),
+		
+		/**
+		 * Represents a coraxatrice familiar.
+		 */
+		SPIRIT_CORAXATRICE(28, 12105, 43, 75.2, 6885, 0.9, 5, 36, new Item(12159), new Item(12119), new Item(12155), new Item(12183, 88)),
+		
+		/**
+		 * Represents a vulatrice familiar.
+		 */
+		SPIRIT_VULATRICE(29, 12107, 43, 75.2, 6887, 0.9, 5, 36, new Item(12159), new Item(12121), new Item(12155), new Item(12183, 88)),
+		
+		/**
+		 * Represents an iron minotaur familiar.
+		 */
+		IRON_MINOTAUR(65, 12075, 46, 404.8, 6855, 4.6, 9, 37, new Item(12163), new Item(2351), new Item(12155), new Item(12183, 125)),
+		
+		/**
+		 * Represents a pyrelord familiar.
+		 */
+		PYRELORD(30, 12816, 46, 202.4, 7377, 2.3, 5, 32, new Item(12160), new Item(590), new Item(12155), new Item(12183, 111)),
+		
+		/**
+		 * Represents a magpie familiar.
+		 */
+		MAGPIE(31, 12041, 47, 83.2, 6824, 0.9, 5, 34, new Item(12159), new Item(1635), new Item(12155), new Item(12183, 88)),
+		
+		/**
+		 * Represents a bloated leech familiar.
+		 */
+		BLOATED_LEECH(32, 12061, 49, 215.2, 6843, 2.4, 5, 34, new Item(12160), new Item(2132), new Item(12155), new Item(12183, 117)),
+		
+		/**
+		 * Represents a spirit terrorbird familiar.
+		 */
+		SPIRIT_TERRORBIRD(33, 12007, 52, 68.4, 6794, 0.8, 6, 36, new Item(12158), new Item(9978), new Item(12155), new Item(12183, 12)),
+		
+		/**
+		 * Represents an abyssal parasite familiar.
+		 */
+		ABYSSAL_PARASITE(34, 12035, 54, 94.8, 6818, 1.1, 6, 30, new Item(12159), new Item(12161), new Item(12155), new Item(12183, 106)),
+		
+		/**
+		 * Represents a spirit jelly familiar.
+		 */
+		SPIRIT_JELLY(35, 12027, 55, 484, 6992, 5.5, 6, 43, new Item(12163), new Item(1937), new Item(12155), new Item(12183, 151)),
+		
+		/**
+		 * Represents a steel minotaur familiar.
+		 */
+		STEEL_MINOTAUR(66, 12077, 56, 492.8, 6857, 5.6, 9, 46, new Item(12163), new Item(2353), new Item(12155), new Item(12183, 141)),
+		
+		
+		/**
+		 * Represents an ibis familiar.
+		 */
+		IBIS(36, 12531, 56, 98.8, 6991, 1.1, 6, 38, new Item(12159), new Item(311), new Item(12155), new Item(12183, 109)),
+		
+		/**
+		 * Represents a spirit kyatt familiar.
+		 */
+		SPIRIT_KYATT(37, 12812, 57, 501.6, 7365, 5.7, 6, 49, new Item(12163), new Item(10103), new Item(12155), new Item(12183, 153)),
+		
+		/**
+		 * Represents a spirit larupia familiar.
+		 */
+		SPIRIT_LARUPIA(38, 12784, 57, 501.6, 7337, 5.7, 6, 49, new Item(12163), new Item(10095), new Item(12155), new Item(12183, 155)),
+		
+		/**
+		 * Represents a spirit graahk familiar.
+		 */
+		SPIRIT_GRAAHK(39, 12810, 57, 501.6, 7363, 5.7, 6, 49, new Item(12163), new Item(10099), new Item(12155), new Item(12183, 154)),
+		
+		/**
+		 * Represents a karamthulhu overlord familiar.
+		 */
+		KARAMTHULHU(40, 12023, 58, 510.4, 6809, 5.8, 6, 44, new Item(12163), new Item(6667), new Item(12155), new Item(12183, 144)),
+		
+		/**
+		 * Represents a smoke devil familiar.
+		 */
+		SMOKE_DEVIL(41, 12085, 61, 268, 6865, 3, 7, 48, new Item(12160), new Item(9736), new Item(12155), new Item(12183, 141)),
+		
+		/**
+		 * Represents an abyssal lurker familiar.
+		 */
+		ABYSSAL_LUKRER(42, 12037, 62, 109.6, 6820, 1.9, 9, 41, new Item(12159), new Item(12161), new Item(12155), new Item(12183, 119)),
+		
+		/**
+		 * Represents a spirit cobra familiar.
+		 */
+		SPIRIT_COBRA(43, 12015, 63, 276.8, 6802, 3.1, 6, 56, new Item(12160), new Item(6287), new Item(12155), new Item(12183, 116)),
+		
+		/**
+		 * Represents a stranger plant familiar.
+		 */
+		STRANGER_PLANT(44, 12045, 64, 281.6, 6827, 3.2, 6, 49, new Item(12160), new Item(8431), new Item(12155), new Item(12183, 128)),
+		
+		/**
+		 * Represents a mithril minotaur familiar.
+		 */
+		MITHRIL_MINOTAUR(67, 12079, 66, 580.8, 6859, 6.6, 9, 55, new Item(12163), new Item(2359), new Item(12155), new Item(12183, 152)),
+		
+		/**
+		 * Represents a barker toad familiar.
+		 */
+		BARKER_TOAD(45, 12123, 66, 87, 6889, 1, 7, 8, new Item(12158), new Item(2150), new Item(12155), new Item(12183, 11)),
+		
+		/**
+		 * Represents a war tortoise familiar.
+		 */
+		WAR_TORTOISE(46, 12031, 67, 58.6, 6815, 0.7, 7, 43, new Item(12158), new Item(7939), new Item(12155), new Item(12183, 1)),
+		
+		/**
+		 * Represents a bunyip familiar.
+		 */
+		BUNYIP(47, 12029, 68, 119.2, 6813, 1.4, 7, 44, new Item(12159), new Item(383), new Item(12155), new Item(12183, 110)),
+		
+		/**
+		 * Represents a fruit bat familiar.
+		 */
+		FRUIT_BAT(48, 12033, 69, 121.2, 6817, 1.4, 8, 45, new Item(12159), new Item(1963), new Item(12155), new Item(12183, 130)),
+		
+		/**
+		 * Represents a ravenous locust familiar.
+		 */
+		RAVENOUS_LOCUST(49, 12820, 70, 132, 7372, 1.5, 4, 24, new Item(12160), new Item(1933), new Item(12155), new Item(12183, 79)),
+		
+		/**
+		 * Represents an arctic bear familiar.
+		 */
+		ARCTIC_BEAR(50, 12057, 71, 93.2, 6839, 1.1, 8, 28, new Item(12158), new Item(10117), new Item(12155), new Item(12183, 14)),
+		
+		/**
+		 * Represents an obsidian golem familiar.
+		 */
+		OBSIDIAN_GOLEM(51, 12792, 73, 642.4, 7345, 7.3, 8, 55, new Item(12163), new Item(12168), new Item(12155), new Item(12183, 195)),
+		
+		/**
+		 * Represents a granite lobster familiar.
+		 */
+		GRANITE_LOBSTER(52, 12069, 74, 325.6, 6849, 3.7, 8, 47, new Item(12160), new Item(6979), new Item(12155), new Item(12183, 166)),
+		
+		/**
+		 * Represents a praying mantis familiar.
+		 */
+		PRAYING_MANTIS(53, 12011, 75, 329.6, 6798, 3.6, 8, 69, new Item(12160), new Item(2460), new Item(12155), new Item(12183, 168)),
+		
+		/**
+		 * Represents an adamant minotaur familiar.
+		 */
+		ADAMANT_MINOTAUR(68, 12081, 76, 668.8, 6861, 7.6, 9, 66, new Item(12163), new Item(2361), new Item(12155), new Item(12183, 144)),
+		
+		/**
+		 * Represents a forge regent familiar.
+		 */
+		FORGE_REGENT_BEAST(54, 12782, 76, 134, 7335, 1.5, 9, 45, new Item(12159), new Item(10020), new Item(12155), new Item(12183, 141)),
+		
+		/**
+		 * Represents a talon beast familiar.
+		 */
+		TALON_BEAST(55, 12794, 77, 1015.2, 7347, 3.8, 9, 49, new Item(12160), new Item(12162), new Item(12155), new Item(12183, 174)),
+		
+		/**
+		 * Represents a giant ent familiar.
+		 */
+		GIANT_ENT(56, 12013, 78, 136.8, 6800, 1.6, 8, 49, new Item(12159), new Item(5933), new Item(12155), new Item(12183, 124)),
+		
+		/**
+		 * Represents a fire titan familiar.
+		 */
+		FIRE_TITAN(57, 12802, 79, 695.2, 7355, 7.9, 9, 62, new Item(12163), new Item(1442), new Item(12155), new Item(12183, 198)),
+		
+		/**
+		 * Represents a moss titan familiar.
+		 */
+		MOSS_TITAN(58, 12804, 79, 695.2, 7357, 7.9, 9, 58, new Item(12163), new Item(1440), new Item(12155), new Item(12183, 198)),
+		
+		/**
+		 * Represents an ice titan familiar.
+		 */
+		ICE_TITAN(59, 12806, 79, 695.2,7359, 7.9, 9, 64, new Item(12163), new Item(1438), new Item(1444), new Item(12155), new Item(12183, 198)),
+		
+		/**
+		 * Represents a hydra familiar.
+		 */
+		HYDRA(60, 12025, 80, 140.8, 6811, 1.6, 9, 49, new Item(12159), new Item(571), new Item( 12183, 128)),
+		
+		/**
+		 * Represents a spirit dagannoth familiar.
+		 */
+		SPIRIT_DAGANNOTH(61, 12017, 83, 364.8, 6804, 4.1, 9, 57, new Item(12160), new Item(6155), new Item( 12183, 1)),
+		
+		/**
+		 * Represents a lava titan familiar.
+		 */
+		LAVA_TITAN(62, 12788, 83, 730.4, 7341, 8.3, 9, 61, new Item(12163), new Item(12168), new Item(12155), new Item(12183, 219)),
+		
+		/**
+		 * Represents a swamp titan familiar.
+		 */
+		SWAMP_TITAN(63, 12776, 85, 373.6, 7329, 4.2, 9, 56, new Item(12160), new Item(10149), new Item(12155), new Item(12183, 150)),
+		
+		/**
+		 * Represents a rune minotaur familiar.
+		 */
+		RUNE_MINOTAUR(69, 12083, 86, 756.8, 6863, 8.6, 9, 151, new Item(12163), new Item(2363), new Item(12155), new Item(12183, 1)),
+		
+		/**
+		 * Represents a unicorn stallion familiar.
+		 */
+		UNICORN_STALLION(70, 12039, 89, 154.4, 6822, 1.8, 9, 54, new Item(12159), new Item(237),  new Item( 12183, 203)),
+		
+		/**
+		 * Represents a geyser titan familiar.
+		 */
+		GEYSER_TITAN(71, 12786, 89, 783.2, 7339, 8.9, 9, 69, new Item(12163), new Item(1444), new Item(12155), new Item(12183, 222)),
+		
+		/**
+		 * Represents a wolpertinger familiar.
+		 */
+		WOLPERTINGER(72, 12089, 92, 404.8, 6869, 4.5, 10, 62, new Item(12160), new Item(2859), new Item(3226), new Item( 12183, 203)),
+		
+		/**
+		 * Represents an abyssal titan familiar.
+		 */
+		ABYSSAL_TITAN(73, 12796, 93, 163.2, 7349, 1.9, 10, 42, new Item(12159), new Item(12161), new Item(12155), new Item(12183, 113)),
+		
+		/**
+		 * Represents an iron titan familiar.
+		 */
+		IRON_TITAN(74, 12822, 95, 417.6, 7375, 4.7, 10, 60, new Item(12160), new Item(1115), new Item(12155), new Item(12183, 198)),
+		
+		/**
+		 * Represents a pack yak familiar.
+		 */
+		PACK_YAK(75, 12093, 96, 422.4, 6873, 4.8, 10, 58, new Item(12160), new Item(10818), new Item( 12183, 211)),
+		
+		/**
+		 * Represents a steel titan familiar.
+		 */
+		STEEL_TITAN(76, 12790, 99, 435.2, 7343, 4.9, 10, 64, new Item(12160), new Item(1119), new Item(12155), new Item(12183, 178));
+		
+		/**
+		 * The slot id.
+		 */
+		private final int slot;
+		
+		/**
+		 * The pouch item id.
+		 */
+		private final int pouchId;
+		
+		/**
+		 * The level required to create this familiar.
+		 */
+		private final int levelRequired;
+		
+		/**
+		 * The experience gained when creating this familiar.
+		 */
+		private final double createExperience;
+		
+		/**
+		 * The familiar npc id.
+		 */
+		private final int npcId;
+		
+		/**
+		 * The experience gained when summoning the familiar.
+		 */
+		private final double summonExperience;
+		
+		/**
+		 * The summon cost.
+		 */
+		private final int summonCost;
+		
+		/**
+		 * The lifespan of this familiar in minutes.
+		 */
+		private final int life;
+		
+		/**
+		 * The items required to create this pouch.
+		 */
+		private final Item[] items;
+		
+		/**
+		 * Constructs a new {@code SummoningData} {@code Object}.
+		 * @param pouchId          The pouch item id.
+		 * @param levelRequired    The level required to create.
+		 * @param createExperience The experience gained when creating a pouch.
+		 * @param npcId            The familiar's NPC id.
+		 * @param summonExperience The experience gained when summoning.
+		 * @param summonCost       The amount of summoning points to drain when summoned.
+		 * @param items            The items required to create this familiar.
+		 */
+		SummoningData(int slot, int pouchId, int levelRequired, double createExperience, int npcId, double summonExperience, int summonCost, int life, Item... items) {
+			this.slot = slot;
+			this.pouchId = pouchId;
+			this.levelRequired = levelRequired;
+			this.createExperience = createExperience;
+			this.npcId = npcId;
+			this.summonExperience = summonExperience;
+			this.summonCost = summonCost;
+			this.life = life;
+			this.items = items;
+		}
+		
+		/**
+		 * @return the pouchId
+		 */
+		public int getPouchId() {
+			return pouchId;
+		}
+		
+		/**
+		 * @return the levelRequired
+		 */
+		public int getLevelRequired() {
+			return levelRequired;
+		}
+		
+		/**
+		 * @return the createExperience
+		 */
+		public double getCreateExperience() {
+			return createExperience;
+		}
+		
+		/**
+		 * @return the npcId
+		 */
+		public int getNpcId() {
+			return npcId;
+		}
+		
+		/**
+		 * @return the summonExperience
+		 */
+		public double getSummonExperience() {
+			return summonExperience;
+		}
+		
+		/**
+		 * Gets the amount of points to decrease the summoning points with when summoned.
+		 * @return The amount of points.
+		 */
+		public int getSummonCost() {
+			return summonCost;
+		}
+		
+		/**
+		 * @return the items
+		 */
+		public Item[] getItems() {
+			return items;
+		}
+		
+		/**
+		 * @return life
+		 */
+		public int getLife() {
+			return life;
+		}
+		
+		/**
+		 * @return the slot
+		 */
+		public int getSlot() {
+			return slot;
+		}
+	}
+	
+	public static final class Item {
+		
+		/**
+		 * The identification of this item.
+		 */
+		private final int id;
+		
+		/**
+		 * The quantity of this item.
+		 */
+		private final int amount;
+		
+		/**
+		 * Creates a new {@link Item}.
+		 * @param id     the identification of this item.
+		 */
+		public Item(int id) {
+			this.id = id;
+			this.amount = 1;
+		}
+		
+		/**
+		 * Creates a new {@link Item}.
+		 * @param id     the identification of this item.
+		 * @param amount the quantity of this item.
+		 */
+		public Item(int id, int amount) {
+			this.id = id;
+			this.amount = amount;
+		}
+		
+		/**
+		 * Gets the identification of this item.
+		 * @return the identification.
+		 */
+		public final int getId() {
+			return id;
+		}
+		
+		/**
+		 * Gets the quantity of this item.
+		 * @return the quantity.
+		 */
+		public final int getAmount() {
+			return amount;
+		}
 	}
 	
 }

@@ -150,8 +150,6 @@ public class UIRenderer {
 	public FixedUI getFixed(int id) {
 		if(id == 459)
 			return new FixedUI_459();
-		if(id == 474)
-			return new FixedUI_474();
 		if(id == 525)
 			return new FixedUI_525();
 		if(id == 562)
@@ -169,8 +167,6 @@ public class UIRenderer {
 	public ResizableUI getResizable(int id) {
 		if(id == 459)
 			return new ResizableUI_459();
-		if(id == 474)
-			return new ResizableUI_474();
 		if(id == 525)
 			return new ResizableUI_525();
 		if(id == 562)

@@ -103,12 +103,14 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 		}
 		frame = new ClientFrame(this, width, height, undecorated, resizable);
 		frame.addWindowListener(this);
+		frame.setFocusTraversalKeysEnabled(false);
 		graphics = frame.getGraphics();
 		getComponent().addMouseListener(this);
 		getComponent().addMouseMotionListener(this);
 		getComponent().addKeyListener(this);
 		getComponent().addFocusListener(this);
 		getComponent().addMouseWheelListener(this);
+		getComponent().setFocusTraversalKeysEnabled(false);
 	}
 
 	/**
@@ -226,8 +228,10 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 		component.addKeyListener(this);
 		component.addFocusListener(this);
 		component.addMouseWheelListener(this);
+		component.setFocusTraversalKeysEnabled(false);
 		if(frame != null) {
 			frame.addWindowListener(this);
+			frame.setFocusTraversalKeysEnabled(false);
 		}
 		int opos = 0;
 		int count = 0;

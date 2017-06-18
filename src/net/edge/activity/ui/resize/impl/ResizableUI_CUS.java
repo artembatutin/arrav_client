@@ -323,7 +323,7 @@ public class ResizableUI_CUS extends ResizableUI {
 			client.menuItemName[1] = "Face North";
 			client.menuItemCode[1] = 1014;
 			client.menuPos = 2;
-		} else if(!client.panelHandler.isActive() && client.mouseInRegion(150, 58, 177, 84)) {
+		} else if(!client.panelHandler.isActive() && client.mouseInRegion(149, 57, 177, 86)) {
 			client.menuItemName[1] = "Run";
 			client.menuItemCode[1] = 1051;
 			client.menuPos = 2;
@@ -336,6 +336,14 @@ public class ResizableUI_CUS extends ResizableUI {
 			client.menuItemName[1] = "Logout";
 			client.menuItemCode[1] = 1052;
 			client.menuPos = 2;
+		} else if(client.mouseInRegion(83, 56, 113, 88)) {
+			client.menuPos = 0;
+			client.menuItemName[client.menuPos] = "Select quick prayers";
+			client.menuItemCode[client.menuPos] = 1054;
+			client.menuPos++;
+			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
+			client.menuItemCode[client.menuPos] = 1053;
+			client.menuPos++;
 		}
 	}
 
@@ -700,7 +708,7 @@ public class ResizableUI_CUS extends ResizableUI {
 		}
 		int move = orb == Constants.ORB_RUN ? orb * 68 : orb == Constants.ORB_SUMMONING ? orb * 68 : orb * 70;
 		ImageCache.get(1645).drawAlphaImage(move, 42);
-		ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 73 : 56 + orb).drawImage(12 + move, 54);
+		ImageCache.get(OrbHandler.getOrb(orb)).drawImage(12 + move, 54);
 		Rasterizer2D.setClip(12 + move, 54, 43 + move, 54 + OrbHandler.getFill(orb, 27));
 		ImageCache.get(60).drawImage(12 + move, 54);
 		Rasterizer2D.removeClip();
