@@ -27,12 +27,12 @@ public class IronManSelectionPanel extends Panel {
 		//iron man
 		if(client.leftClickInRegion(beginX + 370, beginY + 120, beginX + 470, beginY + 150)) {
 			client.outBuffer.putOpcode(185);
-			client.outBuffer.putShort(100);
+			client.outBuffer.putShort(200);
 		}
 		//regular
 		if(client.leftClickInRegion(beginX + 190, beginY + 270, beginX + 290, beginY + 300)) {
 			client.outBuffer.putOpcode(185);
-			client.outBuffer.putShort(101);
+			client.outBuffer.putShort(201);
 		}
 		return false;
 	}
@@ -55,12 +55,12 @@ public class IronManSelectionPanel extends Panel {
 		Rasterizer2D.fillRoundedRectangle(beginX + 20, beginY + 40, 470, 160, 5, 0xcf9d47, 30);
 		if(client.mouseInRegion(beginX + 190, beginY + 230, beginX + 285, beginY + 260)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 190, beginY + 230, 100, 30, 2, 0xcf9d47, 60);
-			Rasterizer2D.fillRectangle(beginX + 20, beginY + 200, 330, 10, 0xcf9d47, 30);
-			Rasterizer2D.fillRectangle(beginX + 350, beginY + 40, 5, 160, 0x000000, 100);
-			int offset = 48;
+			Rasterizer2D.fillRectangle(beginX + 20, beginY + 200, 310, 10, 0xcf9d47, 30);
+			Rasterizer2D.fillRectangle(beginX + 330, beginY + 40, 5, 160, 0x000000, 100);
+			int offset = 58;
 			for(int i = 0; i < itemsReg.length; i++) {
 				int icon = itemsReg[i];
-				int x = i % 7 * 48;
+				int x = i % 7 * 44;
 				final BitmapImage img = ObjectType.getIcon(icon, icon == 19000 ? 50 : 10000, 0);
 				if(img != null) {
 					img.drawImage(beginX + 28 + x, beginY + offset + 2);
@@ -107,7 +107,7 @@ public class IronManSelectionPanel extends Panel {
 		fancyFont.drawLeftAlignedString("Select", beginX + 402, beginY + 140, 0xF3B13F);
 		
 		//regular
-		Rasterizer2D.fillRoundedRectangle(beginX + 20, beginY + 210, 330, 110, 5, 0xcf9d47, 30);
+		Rasterizer2D.fillRoundedRectangle(beginX + 20, beginY + 210, 310, 110, 5, 0xcf9d47, 30);
 		fancyFont.drawLeftAlignedString("Regular player:", beginX + 60, beginY + 268, 0xF3B13F);
 		
 		Rasterizer2D.fillRoundedRectangle(beginX + 190, beginY + 230, 100, 30, 2, 0xcf9d47, 60);
@@ -122,8 +122,8 @@ public class IronManSelectionPanel extends Panel {
 		plainFont.drawLeftAlignedString("Combat: x1500", beginX + 370, beginY + 245, 0xF3B13F);
 		plainFont.drawLeftAlignedString("Prayer: x100", beginX + 379, beginY + 265, 0xF3B13F);
 		plainFont.drawLeftAlignedString("Skills: x40", beginX + 385, beginY + 285, 0xF3B13F);
-		plainFont.drawLeftAlignedString("Rates become slower", beginX + 358, beginY + 305, 0xeec557);
-		plainFont.drawLeftAlignedString("after maxing out skill.", beginX + 355, beginY + 320, 0xeec557);
+		plainFont.drawLeftAlignedString("Combat rate becomes slower", beginX + 336, beginY + 305, 0xeec557);
+		plainFont.drawLeftAlignedString("after maxing skill out.", beginX + 355, beginY + 320, 0xeec557);
 	}
 	
 	@Override
