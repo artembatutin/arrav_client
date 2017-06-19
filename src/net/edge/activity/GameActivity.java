@@ -485,11 +485,11 @@ public class GameActivity extends Activity {
 					if(client.mouseWheelAmt != 0) {
 						client.cameraZoom += client.mouseWheelAmt * 20;
 					}
-					if(client.cameraZoom < -150) {
-						client.cameraZoom = -150;
+					if(client.cameraZoom < -120) {
+						client.cameraZoom = -120;
 					}
-					if(client.cameraZoom > 150) {
-						client.cameraZoom = 150;
+					if(client.cameraZoom > 120) {
+						client.cameraZoom = 120;
 					}
 				}
 				build3dScreenMenu();
@@ -2197,11 +2197,11 @@ public class GameActivity extends Activity {
 			}
 			if(client.keyPressed[6] == 1 || client.keyPressed[7] == 1) {
 				client.cameraZoom += client.keyPressed[6] == 1 ? -15 : 15;
-				if(client.cameraZoom < -100) {
-					client.cameraZoom = -100;
+				if(client.cameraZoom < -120) {
+					client.cameraZoom = -120;
 				}
-				if(client.cameraZoom > 100) {
-					client.cameraZoom = 100;
+				if(client.cameraZoom > 120) {
+					client.cameraZoom = 120;
 				}
 			}
 			client.cameraAngleX = client.cameraAngleX + client.anInt1186 / 2 & 0x7ff;

@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import net.edge.activity.GameActivity;
 import net.edge.activity.TitleActivity;
 import net.edge.activity.panel.PanelHandler;
+import net.edge.activity.panel.impl.ObjectCreationPanel.ConstructionObject;
 import net.edge.activity.ui.UIComponent;
 import net.edge.activity.ui.util.ConstitutionHandler;
 import net.edge.activity.ui.util.OrbHandler;
@@ -156,7 +157,7 @@ public class Client extends ClientEngine {
 	public final int[] chatOffsetsX;
 	public final int[] chatColors = {0xffff00, 0xff0000, 0xff00, 0xffff, 0xff00ff, 0xffffff, 0x4080ff, 0xff8000};
 	private final int[] anIntArray1177 = {0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3};
-	private final int[][][] anIntArrayArrayArray1129;
+	private final int[][][] constructRegionData;
 	private final long[] ignoreListAsLongs;
 	private boolean rollCharacterInInterface;
 
@@ -570,7 +571,7 @@ public class Client extends ClientEngine {
 		promptInputTitle = "";
 		atPlayerActions = new String[5];
 		atPlayerArray = new boolean[5];
-		anIntArrayArrayArray1129 = new int[4][13][13];
+		constructRegionData = new int[4][13][13];
 		cameraOffsetYChange = 2;
 		mapFunctionImage = new BitmapImage[1000];
 		inTutorialIsland = false;
@@ -5031,26 +5032,26 @@ public class Client extends ClientEngine {
 						loadGeneratedMap = false;
 					}
 					if(pktType == 241) {
-						i11 = inBuffer.getUShortMinus128();
-						inBuffer.beginBitAccess();
-						for(int j16 = 0; j16 < 4; j16++) {
-							for(int l20 = 0; l20 < 13; l20++) {
-								for(int j23 = 0; j23 < 13; j23++) {
-									final int i26 = inBuffer.getBits(1);
-									if(i26 == 1) {
-										anIntArrayArrayArray1129[j16][l20][j23] = inBuffer.getBits(26);
+						l2 = inBuffer.getUShortMinus128();
+						i11 = inBuffer.getUShort();
+						for (int z = 0; z < 4; z++) {
+							for (int x = 0; x < 13; x++) {
+								for (int y = 0; y < 13; y++) {
+									int i26 = inBuffer.getUByte();
+									if (i26 == 5) {
+										int val = inBuffer.getInt();
+										constructRegionData[z][x][y] = val;
 									} else {
-										anIntArrayArrayArray1129[j16][l20][j23] = -1;
+										constructRegionData[z][x][y] = -1;
 									}
 								}
 							}
 						}
-						inBuffer.endBitAccess();
-						l2 = inBuffer.getUShort();
 						loadGeneratedMap = true;
 					}
 					if(regionX == l2 && regionY == i11 && loadingStage == 2) {
 						pktType = -1;
+						loadRegion();
 						return true;
 					}
 					regionX = l2;
@@ -5110,7 +5111,7 @@ public class Client extends ClientEngine {
 						for(int i24 = 0; i24 < 4; i24++) {
 							for(int k26 = 0; k26 < 13; k26++) {
 								for(int l28 = 0; l28 < 13; l28++) {
-									final int k30 = anIntArrayArrayArray1129[i24][k26][l28];
+									final int k30 = constructRegionData[i24][k26][l28];
 									if(k30 != -1) {
 										final int k31 = k30 >> 14 & 0x3ff;
 										final int i32 = k30 >> 3 & 0x7ff;
@@ -5584,6 +5585,25 @@ public class Client extends ClientEngine {
 					}
 					pktType = -1;
 					return true;
+					
+				case 130:
+					int count = inBuffer.getUByte();
+					ObjectCreationPanel.getObjects().clear();
+					for(int i4 = 0; i4 < count; i4++) {
+						int furObj = inBuffer.getUShort();
+						int furLvl = inBuffer.getUByte();
+						int furItemsCount = inBuffer.getUByte();
+						Item[] items = new Item[furItemsCount];
+						for(int i2 = 0; i2 < furItemsCount; i2++) {
+							items[i2] = new Item(inBuffer.getUShort(), inBuffer.getUShort());
+						}
+						ConstructionObject obj = new ConstructionObject(furObj, furLvl, items);
+						ObjectCreationPanel.getObjects().add(obj);
+					}
+					panelHandler.open(new ObjectCreationPanel());
+					pktType = -1;
+					return true;
+					
 
 				case 85:
 					anInt1269 = inBuffer.getOppositeUByte();
@@ -5886,6 +5906,8 @@ public class Client extends ClientEngine {
 						aBoolean1149 = false;
 						pktType = -1;
 						return true;
+					} else if(l7 == 65522) {//-14
+						panelHandler.open(new RoomCreationPanel());
 					} else if(l7 == 65523) {//-13
 						panelHandler.open(new CounterPanel());
 					} else if(l7 == 65524) {//-12
@@ -6078,6 +6100,7 @@ public class Client extends ClientEngine {
 			logOut();
 		} catch(final IOException _ex) {
 			dropClient();
+			_ex.printStackTrace();
 		} catch(final Exception exception) {
 			exception.printStackTrace();
 			String s2 = "T2 - " + pktType + "," + anInt842 + "," + anInt843 + " - " + pktSize + "," + (baseX + localPlayer.smallX[0]) + "," + (baseY + localPlayer.smallY[0]) + " - ";
@@ -8158,7 +8181,7 @@ public class Client extends ClientEngine {
 				for(int j3 = 0; j3 < 4; j3++) {
 					for(int k4 = 0; k4 < 13; k4++) {
 						for(int j6 = 0; j6 < 13; j6++) {
-							final int l7 = anIntArrayArrayArray1129[j3][k4][j6];
+							final int l7 = constructRegionData[j3][k4][j6];
 							if(l7 != -1) {
 								final int i9 = l7 >> 24 & 3;
 								final int l9 = l7 >> 1 & 3;
@@ -8179,7 +8202,7 @@ public class Client extends ClientEngine {
 				}
 				for(int l4 = 0; l4 < 13; l4++) {
 					for(int k6 = 0; k6 < 13; k6++) {
-						final int i8 = anIntArrayArrayArray1129[0][l4][k6];
+						final int i8 = constructRegionData[0][l4][k6];
 						if(i8 == -1) {
 							region.method174(k6 << 3, 8, 8, l4 << 3);
 						}
@@ -8189,7 +8212,7 @@ public class Client extends ClientEngine {
 				for(int l6 = 0; l6 < 4; l6++) {
 					for(int j8 = 0; j8 < 13; j8++) {
 						for(int j9 = 0; j9 < 13; j9++) {
-							final int i10 = anIntArrayArrayArray1129[l6][j8][j9];
+							final int i10 = constructRegionData[l6][j8][j9];
 							if(i10 != -1) {
 								final int k10 = i10 >> 24 & 3;
 								final int i11 = i10 >> 1 & 3;

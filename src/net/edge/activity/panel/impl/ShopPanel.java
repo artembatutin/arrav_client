@@ -255,7 +255,7 @@ public class ShopPanel extends Panel {
 		Rasterizer2D.fillRectangle(beginX + 5, beginY + 40, 488, 290, 0xffffff, 60);
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
 		int offset = -scrollPos + 45;
-		String tooltip = "";
+		String tooltip = null;
 		for(int i = 0; i < client.currentShopInterfacePrices.length; i++) {
 			int icon = Interface.cache[3900].invId[i];
 			if(icon == 0)
@@ -278,7 +278,7 @@ public class ShopPanel extends Panel {
 			smallFont.drawCenteredString(client.currentShopInterfacePrices[i] == 0 ? "free" : formatPrice(client.currentShopInterfacePrices[i]), beginX + 44 + x, beginY + offset + 46, 0xF3B13F);
 			offset += i % 6 == 5 ? 55 : 0;
 		}
-		if(!tooltip.isEmpty()) {
+		if(tooltip != null) {
 			boolean off = (client.mouseX - beginX + 8 + smallFont.getStringWidth(tooltip)) > 490;
 			Rasterizer2D.fillRoundedRectangle(client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 18) : 8), client.mouseY - 3, smallFont.getStringWidth(tooltip) + 7, 15, 3, 0x000000, 200);
 			smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 14) : 12), client.mouseY + 9, 0xF3B13F, true);
