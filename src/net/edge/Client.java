@@ -4866,8 +4866,8 @@ public class Client extends ClientEngine {
 					return true;
 
 				case 64:
-					anInt1268 = inBuffer.getOppositeUByte();
-					anInt1269 = inBuffer.getReversedUByte();
+					anInt1268 = inBuffer.getUByte();
+					anInt1269 = inBuffer.getUByte();
 					for(int j = anInt1268; j < anInt1268 + 8; j++) {
 						for(int l9 = anInt1269; l9 < anInt1269 + 8; l9++) {
 							if(sceneItems[cameraPlane][j][l9] != null) {
@@ -5205,11 +5205,11 @@ public class Client extends ClientEngine {
 							}
 						}
 					}
-					for(WorldObjectSpawn class30_sub1_1 = (WorldObjectSpawn) aClass19_1179.getFirst(); class30_sub1_1 != null; class30_sub1_1 = (WorldObjectSpawn) aClass19_1179.getNext()) {
-						class30_sub1_1.anInt1297 -= i17;
-						class30_sub1_1.anInt1298 -= j21;
-						if(class30_sub1_1.anInt1297 < 0 || class30_sub1_1.anInt1298 < 0 || class30_sub1_1.anInt1297 >= 104 || class30_sub1_1.anInt1298 >= 104) {
-							class30_sub1_1.unlinkPrimary();
+					for(WorldObjectSpawn worldObj = (WorldObjectSpawn) aClass19_1179.getFirst(); worldObj != null; worldObj = (WorldObjectSpawn) aClass19_1179.getNext()) {
+						worldObj.anInt1297 -= i17;
+						worldObj.anInt1298 -= j21;
+						if(worldObj.anInt1297 < 0 || worldObj.anInt1298 < 0 || worldObj.anInt1297 >= 104 || worldObj.anInt1298 >= 104) {
+							worldObj.unlinkPrimary();
 						}
 					}
 					if(walkX != 0) {
@@ -5603,6 +5603,16 @@ public class Client extends ClientEngine {
 					panelHandler.open(new ObjectCreationPanel());
 					pktType = -1;
 					return true;
+					
+					
+				case 131:
+					for(WorldObjectSpawn class30_sub1 = (WorldObjectSpawn) aClass19_1179.getFirst(); class30_sub1 != null; class30_sub1 = (WorldObjectSpawn) aClass19_1179.getNext()) {
+						method142(class30_sub1.anInt1298, class30_sub1.anInt1295, class30_sub1.anInt1300, class30_sub1.anInt1301, class30_sub1.anInt1297, class30_sub1.anInt1296, class30_sub1.anInt1299);
+						class30_sub1.unlinkPrimary();
+					}
+					pktType = -1;
+					return true;
+					
 					
 
 				case 85:
@@ -6301,12 +6311,12 @@ public class Client extends ClientEngine {
 					if(class30_sub1.anInt1302 > 0) {
 						class30_sub1.anInt1302--;
 					}
-					if(class30_sub1.anInt1302 == 0 && class30_sub1.anInt1297 >= 1 && class30_sub1.anInt1298 >= 1 && class30_sub1.anInt1297 <= 102 && class30_sub1.anInt1298 <= 102 && (class30_sub1.anInt1291 < 0 || MapDecoder.method178(class30_sub1.anInt1291, class30_sub1.anInt1293))) {
-						method142(class30_sub1.anInt1298, class30_sub1.anInt1295, class30_sub1.anInt1292, class30_sub1.anInt1293, class30_sub1.anInt1297, class30_sub1.anInt1296, class30_sub1.anInt1291);
+					if(class30_sub1.anInt1302 == 0 && class30_sub1.anInt1297 >= 1 && class30_sub1.anInt1298 >= 1 && class30_sub1.anInt1297 <= 102 && class30_sub1.anInt1298 <= 102 && (class30_sub1.anInt1291 < 0 || MapDecoder.method178(class30_sub1.anInt1291, class30_sub1.id))) {
+						method142(class30_sub1.anInt1298, class30_sub1.anInt1295, class30_sub1.face, class30_sub1.id, class30_sub1.anInt1297, class30_sub1.anInt1296, class30_sub1.anInt1291);
 						class30_sub1.anInt1302 = -1;
 						if(class30_sub1.anInt1291 == class30_sub1.anInt1299 && class30_sub1.anInt1299 == -1) {
 							class30_sub1.unlinkPrimary();
-						} else if(class30_sub1.anInt1291 == class30_sub1.anInt1299 && class30_sub1.anInt1292 == class30_sub1.anInt1300 && class30_sub1.anInt1293 == class30_sub1.anInt1301) {
+						} else if(class30_sub1.anInt1291 == class30_sub1.anInt1299 && class30_sub1.face == class30_sub1.anInt1300 && class30_sub1.id == class30_sub1.anInt1301) {
 							class30_sub1.unlinkPrimary();
 						}
 						passed = true;
@@ -7659,30 +7669,30 @@ public class Client extends ClientEngine {
 		}
 	}
 
-	private void method130(int j, int k, int l, int i1, int j1, int k1, int l1, int i2, int j2) {
-		WorldObjectSpawn class30_sub1 = null;
-		for(WorldObjectSpawn class30_sub1_1 = (WorldObjectSpawn) aClass19_1179.getFirst(); class30_sub1_1 != null; class30_sub1_1 = (WorldObjectSpawn) aClass19_1179.getNext()) {
-			if(class30_sub1_1.anInt1295 != l1 || class30_sub1_1.anInt1297 != i2 || class30_sub1_1.anInt1298 != j1 || class30_sub1_1.anInt1296 != i1) {
+	private void method130(int j, int k, int face, int i1, int j1, int id, int l1, int i2, int j2) {
+		WorldObjectSpawn object = null;
+		for(WorldObjectSpawn obj = (WorldObjectSpawn) aClass19_1179.getFirst(); obj != null; obj = (WorldObjectSpawn) aClass19_1179.getNext()) {
+			if(obj.anInt1295 != l1 || obj.anInt1297 != i2 || obj.anInt1298 != j1 || obj.anInt1296 != i1) {
 				continue;
 			}
-			class30_sub1 = class30_sub1_1;
+			object = obj;
 			break;
 		}
 
-		if(class30_sub1 == null) {
-			class30_sub1 = new WorldObjectSpawn();
-			class30_sub1.anInt1295 = l1;
-			class30_sub1.anInt1296 = i1;
-			class30_sub1.anInt1297 = i2;
-			class30_sub1.anInt1298 = j1;
-			method89(class30_sub1);
-			aClass19_1179.addLast(class30_sub1);
+		if(object == null) {
+			object = new WorldObjectSpawn();
+			object.anInt1295 = l1;
+			object.anInt1296 = i1;
+			object.anInt1297 = i2;
+			object.anInt1298 = j1;
+			method89(object);
+			aClass19_1179.addLast(object);
 		}
-		class30_sub1.anInt1291 = k;
-		class30_sub1.anInt1293 = k1;
-		class30_sub1.anInt1292 = l;
-		class30_sub1.anInt1302 = j2;
-		class30_sub1.anInt1294 = j;
+		object.anInt1291 = k;
+		object.id = id;
+		object.face = face;
+		object.anInt1302 = j2;
+		object.anInt1294 = j;
 	}
 
 	private void method134(Buffer stream) {
@@ -8123,6 +8133,8 @@ public class Client extends ClientEngine {
 			}
 		}
 	}
+	
+	private MapDecoder decoder;
 
 	public void loadRegion() {
 		try {
@@ -8142,7 +8154,7 @@ public class Client extends ClientEngine {
 					}
 				}
 			}
-			final MapDecoder region = new MapDecoder(tiles, sceneGroundZ);
+			decoder = new MapDecoder(tiles, sceneGroundZ);
 			final int dataLength = terrainData.length;
 			outBuffer.putOpcode(0);
 			if(!loadGeneratedMap) {
@@ -8151,7 +8163,7 @@ public class Client extends ClientEngine {
 					final int offsetY = ((mapCoordinates[i3] & 0xff) << 6) - baseY;
 					final byte data[] = terrainData[i3];
 					if(data != null) {
-						region.method180(data, offsetY, offsetX, (regionX - 6) << 3, (regionY - 6) << 3, collisionMaps);
+						decoder.method180(data, offsetY, offsetX, (regionX - 6) << 3, (regionY - 6) << 3, collisionMaps);
 					}
 				}
 				for(int j4 = 0; j4 < dataLength; j4++) {
@@ -8159,7 +8171,7 @@ public class Client extends ClientEngine {
 					final int offsetY = ((mapCoordinates[j4] & 0xff) << 6) - baseY;
 					final byte data[] = terrainData[j4];
 					if(data == null && regionY < 800) {
-						region.method174(offsetY, 64, 64, offsetX);
+						decoder.method174(offsetY, 64, 64, offsetX);
 					}
 				}
 				pkt238Count++;
@@ -8173,7 +8185,7 @@ public class Client extends ClientEngine {
 					if(data != null) {
 						final int offsetX = ((mapCoordinates[i6] >> 8) << 6) - baseX;
 						final int offsetY = ((mapCoordinates[i6] & 0xff) << 6) - baseY;
-						region.method190(offsetX, collisionMaps, offsetY, scene, data, oldMap);
+						decoder.method190(offsetX, collisionMaps, offsetY, scene, data, oldMap);
 					}
 				}
 			}
@@ -8192,7 +8204,7 @@ public class Client extends ClientEngine {
 									if(mapCoordinates[l11] != j11 || terrainData[l11] == null) {
 										continue;
 									}
-									region.method179(i9, l9, collisionMaps, k4 << 3, (j10 & 7) << 3, terrainData[l11], (l10 & 7) << 3, j3, j6 * 8);
+									decoder.method179(i9, l9, collisionMaps, k4 << 3, (j10 & 7) << 3, terrainData[l11], (l10 & 7) << 3, j3, j6 * 8);
 									break;
 								}
 
@@ -8204,7 +8216,7 @@ public class Client extends ClientEngine {
 					for(int k6 = 0; k6 < 13; k6++) {
 						final int i8 = constructRegionData[0][l4][k6];
 						if(i8 == -1) {
-							region.method174(k6 << 3, 8, 8, l4 << 3);
+							decoder.method174(k6 << 3, 8, 8, l4 << 3);
 						}
 					}
 				}
@@ -8224,7 +8236,7 @@ public class Client extends ClientEngine {
 										continue;
 									}
 									final boolean oldMap = onDemandRequester.mapOld(objectDataIds[k12]);
-									region.method183(collisionMaps, scene, k10, j8 << 3, (i12 & 7) << 3, l6, objectData[k12], (k11 & 7) * 8, i11, j9 * 8, oldMap);
+									decoder.method183(collisionMaps, scene, k10, j8 << 3, (i12 & 7) << 3, l6, objectData[k12], (k11 & 7) * 8, i11, j9 * 8, oldMap);
 									break;
 								}
 							}
@@ -8233,7 +8245,7 @@ public class Client extends ClientEngine {
 				}
 			}
 			outBuffer.putOpcode(0);
-			region.set(collisionMaps, scene);
+			decoder.set(collisionMaps, scene);
 			gameGraphics.setCanvas();
 			outBuffer.putOpcode(0);
 			int plane = MapDecoder.setPlane;
