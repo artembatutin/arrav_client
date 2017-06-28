@@ -138,6 +138,173 @@ public final class Interface {
 		cache[34000].child(1, 34002, 455, 280);
 		cache[34000].child(0, 34003, 420, 260);
 		//pack();
+		Pestpanel2(fonts);
+		Pestpanel(fonts);
+		addPestControlRewardWidget(fonts);
+	}
+	
+	public static void addPestControlRewardWidget(BitmapFont[] tda) {
+		Interface main = addInterface(37000);
+		addSprite(37001, 1936);
+		addButton(37002, 1937, "Confirm");
+		addClickableText(37003, "10 points", "Confirm", tda, 1, 0xFF981F, true, true, 80);
+		addHoverButton(37004, 1939, 21, 21, "Close", -1, 37005, 3);
+		addHoveredButton(37005, 1940, 21, 21, 37006);
+		addText(37007, "1,000 pts", tda, 2, 0xFF981F, false, true);
+		
+		setChildren(7, main);
+		setBounds(37001, 0, 0, 0, main);
+		setBounds(37002, 181, 273, 1, main);
+		setBounds(37003, 253, 300, 2, main);
+		setBounds(37004, 463, 14, 3, main);
+		setBounds(37005, 463, 14, 4, main);
+		setBounds(37007, 35, 19, 5, main);
+		setBounds(37010, 27, 43, 6, main);
+		
+		Interface scroll = addInterface(37010);
+		scroll.width = 442;
+		scroll.height = 221;
+		scroll.scrollMax = 450;
+		setChildren(68, scroll);
+		int x = 5;
+		int y = 5;
+		int imageId = 5;
+		String[] names = new String[] {
+				"Attack - 10,000 xp", "Defence - 10,000 xp", "Magic - 10,000 xp",
+				"Prayer - 1,000 xp", "Strength - 10,000 xp", "Range - 10,000 xp",
+				"Hitpoints - 3,300 xp"};
+		int count = 0;
+		for (int index = 0; index < 35; index += 5) {
+			addSprite(37012 + index, 1939 + count);
+			addText(37013 + index, names[index / 5], tda, 1, 0x339900, false, true);
+			addClickableText(37014 + index, "(1 Pt)", "(1 Pt)", tda, 0, 0xFF981F, false, true, 40);
+			addClickableText(37015 + index, "(10 Pts)", "(10 Pts)", tda, 0, 0xFF981F, false, true, 40);
+			addClickableText(37016 + index, "(100 Pts)", "(100 Pts)", tda, 0, 0xFF981F, false, true, 40);
+			setBounds(37012 + index, x, y, index, scroll);
+			setBounds(37013 + index, x + 32, y, index + 1, scroll);
+			setBounds(37014 + index, x + 32, y + 16, index + 2, scroll);
+			setBounds(37015 + index, x + 70, y + 16, index + 3, scroll);
+			setBounds(37016 + index, x + 120, y + 16, index + 4, scroll);
+			y += 40;
+			if (imageId == 8) {
+				x += 210;
+				y = 5;
+			}
+			count++;
+			imageId++;
+		}
+		addSprite(37050, 1938);
+		setBounds(37050, 53, 165, 35, scroll);
+		addSprite(37051, 1938);
+		setBounds(37051, 53, 265, 36, scroll);
+		x = 5;
+		y = 180;
+		names = new String[] {
+				"Herb Pack", "Seed Pack", "Mineral Pack", "Void Knight Mace", "Void Knight Robe", "Void Mage Helm",
+				"Void Melee Helm", "Void Knight Top", "Void Knight Gloves", "Void Range Helm"
+		};
+		int[] items = new int[] {
+				257, 5295, 449, 8841, 8840, 11663, 11665, 8839, 8842, 11664
+		};
+		String[] costs = new String[] {
+				"(30 Pts)", "(15 Pts)", "(15 Pts)", "(250 Pts)", "(250 Pts)",
+				"(200 Pts)", "(200 Pts)", "(250 Pts)", "(150 Pts)", "(200 Pts)"
+		};
+		for (int index = 0; index < 30; index += 3) {
+			addText(37052 + index, names[index / 3], tda, 1, 0x339900, false, true);
+			addClickableText(37053 + index, costs[index / 3], costs[index / 3], tda, 0, 0xFF981F, false, true, 40);
+			addToItemGroup(37054 + index, 1, 1, 0, 0, false, "", "", "");
+			cache[37054 + index].invId = new int[] { items[index / 3] + 1 };
+			cache[37054 + index].invAmt = new int[] { 1 };
+			setBounds(37052 + index, x + 36, y, 37 + index, scroll);
+			setBounds(37053 + index, x + 36, y + 16, 37 + index + 1, scroll);
+			setBounds(37054 + index, x, y, 37 + index + 2, scroll);
+			y += 40;
+			if (y == 220 && x == 215) {
+				x = 5;
+				y = 280;
+			}
+			if (x == 5 && y == 440) {
+				x += 210;
+				y = 280;
+			}
+			if (y == 260) {
+				x += 210;
+				y = 180;
+			}
+		}
+		darken(37084, 200, 40, 0x000000, (byte) 100);
+		setBounds(37084, 0, 0, 67, scroll);
+	}
+	
+	public static void darken(int identity, int width, int height, int color, byte transparency) {
+		Interface component = addInterface(identity);
+		component.id = identity;
+		component.type = 17;
+		component.width = width;
+		component.height = height;
+		component.color = color;
+		component.alpha = transparency;
+	}
+	
+	public static void Pestpanel(BitmapFont[] tda) {
+		Interface RSinterface = addInterface(21119);
+		addText(21120, "Next Departure: ", 0x999999, false, true, 52, tda, 1);
+		addText(21121, "Players Ready: ", 0x33cc00, false, true, 52, tda, 1);
+		addText(21122, "(Need minimum 5 players)", 0xFFcc33, false, true, 52, tda, 1);
+		addText(21123, "Points", 0x33ccff, false, true, 52, tda, 1);
+		int last = 4;
+		RSinterface.subId = new int[last];
+		RSinterface.subX = new int[last];
+		RSinterface.subY = new int[last];
+		setBounds(21120, 15, 12, 0, RSinterface);
+		setBounds(21121, 15, 30, 1, RSinterface);
+		setBounds(21122, 15, 48, 2, RSinterface);
+		setBounds(21123, 15, 66, 3, RSinterface);
+	}
+	
+	public static void Pestpanel2(BitmapFont tda[]) {
+		Interface RSinterface = addInterface(21100);
+		addSprite(21101, 1930);
+		addSprite(21102, 1931);
+		addSprite(21103, 1932);
+		addSprite(21104, 1933);
+		addSprite(21105, 1934);
+		addSprite(21106, 1935);
+		addText(21107, "", 0xcc00cc, false, true, 52, tda, 1);
+		addText(21108, "", 255, false, true, 52, tda, 1);
+		addText(21109, "", 0xffff44, false, true, 52, tda, 1);
+		addText(21110, "", 0xcc0000, false, true, 52, tda, 1);
+		addText(21111, "250", 0x99ff33, false, true, 52, tda, 1);
+		addText(21112, "250", 0x99ff33, false, true, 52, tda, 1);
+		addText(21113, "250", 0x99ff33, false, true, 52, tda, 1);
+		addText(21114, "250", 0x99ff33, false, true, 52, tda, 1);
+		addText(21115, "200", 0x99ff33, false, true, 52, tda, 1);
+		addText(21116, "0", 0x99ff33, false, true, 52, tda, 1);
+		addText(21117, "Time Remaining:", 0xffffff, false, true, 52, tda, 0);
+		addText(21118, "", 0xffffff, false, true, 52, tda, 0);
+		int last = 18;
+		RSinterface.subId = new int[last];
+		RSinterface.subX = new int[last];
+		RSinterface.subY = new int[last];
+		setBounds(21101, 361, 26, 0, RSinterface);
+		setBounds(21102, 396, 26, 1, RSinterface);
+		setBounds(21103, 436, 26, 2, RSinterface);
+		setBounds(21104, 474, 26, 3, RSinterface);
+		setBounds(21105, 3, 21, 4, RSinterface);
+		setBounds(21106, 3, 50, 5, RSinterface);
+		setBounds(21107, 371, 60, 6, RSinterface);
+		setBounds(21108, 409, 60, 7, RSinterface);
+		setBounds(21109, 443, 60, 8, RSinterface);
+		setBounds(21110, 479, 60, 9, RSinterface);
+		setBounds(21111, 362, 10, 10, RSinterface);
+		setBounds(21112, 398, 10, 11, RSinterface);
+		setBounds(21113, 436, 10, 12, RSinterface);
+		setBounds(21114, 475, 10, 13, RSinterface);
+		setBounds(21115, 32, 32, 14, RSinterface);
+		setBounds(21116, 32, 62, 15, RSinterface);
+		setBounds(21117, 8, 88, 16, RSinterface);
+		setBounds(21118, 87, 88, 17, RSinterface);
 	}
 	
 	private static void boltEnchantInterface(BitmapFont[] tda) {
@@ -1242,6 +1409,31 @@ public final class Interface {
 	private static void textSize(int id, BitmapFont tda[], int idx) {
 		final Interface rsi = cache[id];
 		rsi.fontId = idx;
+	}
+	
+	public static void addToItemGroup(int id, int w, int h, int x, int y, boolean actions, String action1, String action2, String action3) {
+		addToItemGroup(addInterface(id), w, h, x, y, actions, action1, action2, action3);
+	}
+	
+	public static void addToItemGroup(Interface rsi, int w, int h, int x, int y, boolean actions, String action1, String action2, String action3) {
+		rsi.width = w;
+		rsi.height = h;
+		rsi.invId = new int[w * h];
+		rsi.invAmt = new int[w * h];
+		rsi.invUse = false;
+		rsi.isInv = false;
+		rsi.invPadX = x;
+		rsi.invPadY = y;
+		rsi.invIconX = new int[20];
+		rsi.invIconY = new int[20];
+		rsi.invIcon = new int[20];
+		rsi.actions = new String[5];
+		if (actions) {
+			rsi.actions[0] = action1;
+			rsi.actions[1] = action2;
+			rsi.actions[2] = action3;
+		}
+		rsi.type = 2;
 	}
 
 	public static Interface addContainer(int id) {

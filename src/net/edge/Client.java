@@ -6737,7 +6737,6 @@ public class Client extends ClientEngine {
 			if(j == -1) {
 				break;
 			}
-			System.out.println(j);
 			if(j == 9) {
 				tabToReplyPm();
 				return;
