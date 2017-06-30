@@ -106,6 +106,8 @@ public final class LocationType {
 		loc.read(data);
 		if(id == 28139)
 			loc.name = "Edge Portal";
+		if(id >= 2980 && id <= 2987)
+			loc.actions = new String[]{"Pick-up", null, null, null, null};
 		if(id == 24124)
 			loc.actions = new String[]{"Access", null, null, null, null};
 		if(id == 38828 || id == 38827)
