@@ -8978,9 +8978,11 @@ public class Client extends ClientEngine {
 
 	@Override
 	public void setTab(int id) {
-		if(uiRenderer.getId() == 562 && id > 1) {
-			id++;
-		}
+		boolean more = uiRenderer.getId() == 562;
+		if(more && newerTabInterfaces[id] == -1)
+			return;
+		if(!more && olderTabInterfaces[id] == -1)
+			return;
 		super.invTab = id;
 	}
 

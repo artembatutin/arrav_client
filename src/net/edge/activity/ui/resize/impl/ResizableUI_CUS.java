@@ -517,6 +517,11 @@ public class ResizableUI_CUS extends ResizableUI {
 						tabClick += 1;
 					}
 				}
+				if(SettingPanel.selectedBinding != -1) {
+					SettingPanel.hotkeys[SettingPanel.selectedBinding] = tabClick;
+					SettingPanel.selectedBinding = -1;
+					return;
+				}
 				if(tabClick == client.invTab && client.showTab) {
 					client.showTab = false;
 				} else if(client.olderTabInterfaces[tabClick] != -1) {
@@ -526,6 +531,11 @@ public class ResizableUI_CUS extends ResizableUI {
 			}
 		} else if(client.clickX > client.windowWidth - 458 && client.clickY > client.windowHeight - 42) {
 			final int tabClick = (client.clickX - (client.windowWidth - 458)) / 38 + (client.mouseX > client.windowWidth - 78 ? 1 : 0);
+			if(SettingPanel.selectedBinding != -1) {
+				SettingPanel.hotkeys[SettingPanel.selectedBinding] = tabClick;
+				SettingPanel.selectedBinding = -1;
+				return;
+			}
 			if(tabClick == client.invTab && client.showTab) {
 				client.showTab = false;
 			} else if(client.olderTabInterfaces[tabClick] != -1) {
@@ -569,7 +579,12 @@ public class ResizableUI_CUS extends ResizableUI {
 	public Point getOnScreenWidgetOffsets() {
 		return super.getOnScreenWidgetOffsets();
 	}
-
+	
+	@Override
+	public BitmapImage getSide(int index) {
+		return index < 0 || index >= 12 ? null : ImageCache.get(index + 216);
+	}
+	
 	/**
 	 * Displays the chat channel buttons.
 	 */
@@ -669,7 +684,7 @@ public class ResizableUI_CUS extends ResizableUI {
 	private void displaySideIcons() {
 		if(client.windowWidth < 1000) {
 			for(int i = 0; i < 12; i++) {
-				if(client.olderTabInterfaces[i] != -1) {
+				if(client.olderTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1) {
 					int xOffset = 16 - ImageCache.get(i + 22).imageWidth / 2;
 					int yOffset = 18 - ImageCache.get(i + 22).imageHeight / 2;
 					if(i <= 5) {
@@ -683,7 +698,7 @@ public class ResizableUI_CUS extends ResizableUI {
 			for(int i = 0; i < 12; i++) {
 				int xOffset = 16 - ImageCache.get(i + 22).imageWidth / 2;
 				int yOffset = 18 - ImageCache.get(i + 22).imageHeight / 2;
-				if(client.olderTabInterfaces[i] != -1) {
+				if(client.olderTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1) {
 					ImageCache.get(216 + i).drawAlphaImage(xOffset + client.windowWidth - 463 + 38 * i, yOffset + client.windowHeight - 48);
 				}
 			}

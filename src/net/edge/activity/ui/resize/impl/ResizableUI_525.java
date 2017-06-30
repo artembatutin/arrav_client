@@ -1,6 +1,7 @@
 package net.edge.activity.ui.resize.impl;
 
 import net.edge.Constants;
+import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.activity.ui.util.OrbHandler;
 import net.edge.Config;
 import net.edge.activity.ui.UIComponent;
@@ -428,6 +429,11 @@ public class ResizableUI_525 extends ResizableUI {
 				if(client.clickY > client.windowHeight - 36) {
 					tabClick += 7;
 				}
+				if(SettingPanel.selectedBinding != -1) {
+					SettingPanel.hotkeys[SettingPanel.selectedBinding] = tabClick;
+					SettingPanel.selectedBinding = -1;
+					return;
+				}
 				if(tabClick == client.invTab && client.showTab) {
 					client.showTab = false;
 				} else if(client.olderTabInterfaces[tabClick] != -1) {
@@ -437,6 +443,11 @@ public class ResizableUI_525 extends ResizableUI {
 			}
 		} else if(client.clickX > client.windowWidth - 462 && client.clickY > client.windowHeight - 36) {
 			final int tabClick = (client.clickX - (client.windowWidth - 462)) / 33;
+			if(SettingPanel.selectedBinding != -1) {
+				SettingPanel.hotkeys[SettingPanel.selectedBinding] = tabClick;
+				SettingPanel.selectedBinding = -1;
+				return;
+			}
 			if(tabClick == client.invTab && client.showTab) {
 				client.showTab = false;
 			} else if(client.olderTabInterfaces[tabClick] != -1) {
@@ -481,7 +492,12 @@ public class ResizableUI_525 extends ResizableUI {
 	public Point getOnScreenWidgetOffsets() {
 		return super.getOnScreenWidgetOffsets();
 	}
-
+	
+	@Override
+	public BitmapImage getSide(int index) {
+		return index < 0 || index >= client.sideIcons.length ? null : client.sideIcons[index];
+	}
+	
 	@Override
 	public boolean allowScene() {
 		if(client.showChat && !(client.messagePromptRaised || client.bankSearching || client.inputDialogState > 0 || client.chatBoxStatement != null || client.forcedChatWidgetId != -1 || client.chatWidgetId != -1)) {
@@ -602,7 +618,7 @@ public class ResizableUI_525 extends ResizableUI {
 	private void displaySideIcons() {
 		if(client.windowWidth < 980) {
 			for(int i = 0; i < 14; i++) {
-				if(client.olderTabInterfaces[i] != -1) {
+				if(client.olderTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1) {
 					int xOffset = 16 - client.sideIcons[i].imageWidth / 2;
 					int yOffset = 18 - client.sideIcons[i].imageHeight / 2;
 					if(i < 7) {
@@ -616,7 +632,7 @@ public class ResizableUI_525 extends ResizableUI {
 			for(int i = 0; i < 14; i++) {
 				int xOffset = 16 - client.sideIcons[i].imageWidth / 2;
 				int yOffset = 18 - client.sideIcons[i].imageHeight / 2;
-				if(client.olderTabInterfaces[i] != -1) {
+				if(client.olderTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1) {
 					client.sideIcons[i].drawImage(xOffset + client.windowWidth - 462 + 33 * i, yOffset + client.windowHeight - 36);
 				}
 			}

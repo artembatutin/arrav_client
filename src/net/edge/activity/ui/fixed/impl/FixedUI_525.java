@@ -1,6 +1,7 @@
 package net.edge.activity.ui.fixed.impl;
 
 import net.edge.Constants;
+import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.activity.ui.fixed.FixedUI;
 import net.edge.activity.ui.util.OrbHandler;
 import net.edge.game.model.Model;
@@ -395,7 +396,12 @@ public class FixedUI_525 extends FixedUI {
 		}
 		final short[][] tabClickPositions474 = {{524, 561, 168, 205}, {562, 594, 168, 205}, {595, 626, 168, 205}, {627, 660, 168, 205}, {661, 693, 168, 205}, {694, 725, 168, 205}, {726, 765, 168, 205}, {524, 561, 466, 503}, {562, 594, 466, 503}, {595, 627, 466, 503}, {627, 664, 466, 503}, {661, 694, 466, 503}, {695, 725, 466, 503}, {726, 765, 466, 503},};
 		for(int i = 0; i < 13; i++) {
-			if(client.clickX >= tabClickPositions474[i][0] && client.clickX <= tabClickPositions474[i][1] && client.clickY >= tabClickPositions474[i][2] && client.clickY < tabClickPositions474[i][3] && client.olderTabInterfaces[i] != -1) {
+			if(client.clickX >= tabClickPositions474[i][0] && client.clickX <= tabClickPositions474[i][1] && client.clickY >= tabClickPositions474[i][2] && client.clickY < tabClickPositions474[i][3] && (client.olderTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1)) {
+				if(SettingPanel.selectedBinding != -1) {
+					SettingPanel.hotkeys[SettingPanel.selectedBinding] = i;
+					SettingPanel.selectedBinding = -1;
+					return;
+				}
 				client.invTab = i;
 				client.updateInventory = true;
 			}
@@ -547,7 +553,7 @@ public class FixedUI_525 extends FixedUI {
 	 */
 	private void displaySideIcons() {
 		for(int i = 0; i < 14; i++) {
-			if(client.olderTabInterfaces[i] != -1) {
+			if(client.olderTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1) {
 				final int xOffset = 16 - client.sideIcons[i].imageWidth / 2;
 				final int yOffset = 18 - client.sideIcons[i].imageHeight / 2;
 				if(i < 7) {

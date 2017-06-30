@@ -6,9 +6,29 @@ import net.edge.activity.panel.Panel;
 import net.edge.cache.unit.ImageCache;
 import net.edge.game.Scene;
 import net.edge.media.Rasterizer2D;
+import net.edge.media.img.BitmapImage;
 
 public class SettingPanel extends Panel {
-
+	
+	public static int selectedBinding = -1;
+	
+	public static int[] hotkeys = {
+			3,
+			0,
+			1,
+			2,
+			4,
+			5,
+			6,
+			7,
+			8,
+			9,
+			11,
+			12
+	};
+	
+	public boolean bindings;
+ 
 	@Override
 	public boolean process() {
 
@@ -23,7 +43,29 @@ public class SettingPanel extends Panel {
 		if(client.leftClickInRegion(x + 452, y + 23, x + 500, y + 44)) {
 			Scene.hoverX = -1;
 			client.panelHandler.close();
-		} else if(client.leftClickInRegion(x + 230, y + 60, x + 284, y + 102)) {
+		}
+		if(client.leftClickInRegion(x + 389, y + 306, x + 493, y + 321)) {
+			bindings = !bindings;
+		}
+		if(bindings) {
+			int xOff = 0;
+			int yOff = 0;
+			for(int i = 0; i < hotkeys.length; i++) {
+				if(client.uiRenderer.resizable != null) {
+					if(client.leftClickInRegion(x + 45 + xOff, y + 69 + yOff, x + 145 + xOff, y + 106 + yOff))
+						selectedBinding = i;
+				}
+				yOff += 60;
+				if(i % 4 == 3) {
+					xOff += 110;
+					yOff = 0;
+				}
+			}
+			return false;
+		}
+		
+		
+		if(client.leftClickInRegion(x + 230, y + 60, x + 284, y + 102)) {
 			if(client.uiRenderer.getId() == 1) {
 				client.pushMessage("This gameframe is only available in resizable or fullscreen mode.", 0, "System");
 				return true;
@@ -58,21 +100,21 @@ public class SettingPanel extends Panel {
 			Config.def.setDRAW_SKILL_ORBS(!Config.def.isDRAW_SKILL_ORBS());
 		else if(client.leftClickInRegion(x + 150, y + 312, x + 192, y + 327))
 			Config.def.setTEN_X_HITS(!Config.def.isTEN_X_HITS());
-		else if(client.leftClickInRegion(x + 220, y + 188, x + 246, y + 203))
+		else if(client.leftClickInRegion(x + 246, y + 188, x + 273, y + 203))
 			client.uiRenderer.switchRevision(459);
-		else if(client.leftClickInRegion(x + 301, y + 188, x + 326, y + 203))
+		else if(client.leftClickInRegion(x + 286, y + 188, x + 314, y + 203))
 			client.uiRenderer.switchRevision(525);
-		else if(client.leftClickInRegion(x + 341, y + 188, x + 371, y + 203))
+		else if(client.leftClickInRegion(x + 326, y + 188, x + 355, y + 203))
 			client.uiRenderer.switchRevision(562);
-		else if(client.leftClickInRegion(x + 381, y + 188, x + 418, y + 203))
+		else if(client.leftClickInRegion(x + 366, y + 188, x + 403, y + 203))
 			client.uiRenderer.switchRevision(2);
-		else if(client.leftClickInRegion(x + 431, y + 188, x + 476, y + 203)) {
+		else if(client.leftClickInRegion(x + 414, y + 188, x + 459, y + 203)) {
 			if(client.uiRenderer.isResizableOrFull()) {
 				client.uiRenderer.switchRevision(1);
 			} else {
 				client.pushMessage("This gameframe is only available in resizable or fullscreen mode.", 0, "System");
 			}
-		} else if(client.leftClickInRegion(x + 391, y + 309, x + 432, y + 323)) {
+		} else if(client.leftClickInRegion(x + 391, y + 279, x + 432, y + 293)) {
 			if(Config.def.getSELECTED_MENU() == 6)
 				Config.def.setSELECTED_MENU(1);
 			else
@@ -82,7 +124,7 @@ public class SettingPanel extends Panel {
 				Config.def.setHITBARS(0);
 			else
 				Config.def.setHITBARS(Config.def.getHITBARS() + 1);
-		} else if(client.leftClickInRegion(x + 431, y + 283, x + 472, y + 297)) {
+		} else if(client.leftClickInRegion(x + 451, y + 273, x + 492, y + 292)) {
 			if(Config.def.getHITSPLATS() == 3)
 				Config.def.setHITSPLATS(0);
 			else
@@ -102,16 +144,51 @@ public class SettingPanel extends Panel {
 		}
 
 		/* Main background */
-		Rasterizer2D.fillRectangle(x + 10, y + 8, 500, 328, 0x000000, 200);
+		Rasterizer2D.fillRectangle(x + 10, y + 8, 500, 328, 0x000000, bindings ? 150 : 200);
 		Rasterizer2D.drawRectangle(x + 10, y + 8, 500, 328, 0x63625e);
+		
+		if(bindings) {
+			drawSection(x + 20, y + 20, 310, 480, "Hot keys and bindings");
+			boldFont.drawCenteredString("To bind hot keys:", x + 435, y + 150, 0xffffff);
+			smallFont.drawLeftAlignedString("1. Select the F key", x + 385, y + 190, 0xffffff);
+			smallFont.drawLeftAlignedString("2. Click on the tab", x + 385, y + 210, 0xffffff);
+			int xOff = 0;
+			int yOff = 0;
+			for(int i = 0; i < hotkeys.length; i++) {
+				if(client.uiRenderer.resizable != null) {
+					BitmapImage icon = client.uiRenderer.resizable.getSide(hotkeys[i]);
+					Rasterizer2D.fillRoundedRectangle(x + 45 + xOff, y + 69 + yOff, 100, 37, 4, 0xffffff, 30);
+					if(selectedBinding == i)
+						Rasterizer2D.fillRoundedRectangle(x + 45 + xOff, y + 69 + yOff, 100, 37, 4, 0xffffff, 30);
+					if(client.mouseInRegion(x + 45 + xOff, y + 69 + yOff, x + 145 + xOff, y + 106 + yOff))
+						Rasterizer2D.fillRoundedRectangle(x + 45 + xOff, y + 69 + yOff, 100, 37, 4, 0xffffff, 30);
+					if(icon != null) {
+						icon.drawImage(x + 110 + xOff, y + 74 + yOff);
+					}
+					plainFont.drawLeftAlignedString("F"+ (1 + i) + " key", x + 60 + xOff, y + 90 + yOff, 0xffffff);
+				}
+				yOff += 60;
+				if(i % 4 == 3) {
+					xOff += 110;
+					yOff = 0;
+				}
+			}
+			drawTitleButton("Back to main panel", x + 388, y + 303, 0xdb8145);
+			if(client.mouseInRegion(x + 452, y + 23, x + 500, y + 44))
+				Rasterizer2D.fillRectangle(x + 452, y + 22, 46, 19, 0x000000, 70);
+			Rasterizer2D.fillRectangle(x + 450, y + 20, 50, 23, 0xffffff, 20);
+			Rasterizer2D.fillRectangle(x + 452, y + 22, 46, 19, 0x000000, 70);
+			fancyFont.drawLeftAlignedEffectString("Exit", x + 460, y + 37, 0xFFFFFF, true);
+			return;
+		}
+		
 		/* Details */
 		drawSection(x + 20, y + 20, 310, 180, "Details");
 		for(int button = 0; button < 12; button++) {
 			Rasterizer2D.drawHorizontalLine(x + 20, y + 59 + (button * 24), 130, 0xDBB047, 90);
 			drawTitleButton("Switch", x + 150, y + 45 + (button * 24), 0xDBB047);
 		}
-
-
+		
 		plainFont.drawLeftAlignedEffectString((Config.def.isLOW_MEM() ? "@gre@" : "@red@") + "Low memory mode", x + 20, y + 55, 0, true);
 		plainFont.drawLeftAlignedEffectString((Config.def.isTWEENING() ? "@gre@" : "@red@") + "Animation tweening", x + 20, y + 77, 0, true);
 		plainFont.drawLeftAlignedEffectString((Config.def.isMAP_ANTIALIASING() ? "@gre@" : "@red@") + "Minimap antialiasing", x + 20, y + 99, 0, true);
@@ -138,39 +215,40 @@ public class SettingPanel extends Panel {
 			ImageCache.get(11).drawAlphaImage(x + 330, y + 60);
 		if(client.mouseInRegion(x + 429, y + 60, x + 484, y + 102))
 			ImageCache.get(13).drawAlphaImage(x + 430, y + 60);
-		
+			
 		/* Game-frames */
 		drawSection(x + 215, y + 130, 80, 285, "Game-Frame");
 		fancyFont.drawCenteredEffectString("Selected: " + (client.uiRenderer.id == 1 ? "Custom" : (client.uiRenderer.id == 2 ? "OSRS" : client.uiRenderer.id)), x + 355, y + 175, 0xFFFFFF, true);
 		for(int id = 0; id < Constants.SELECTABLE_GAMEFRAMES.length; id++) {
 			int frame = Constants.SELECTABLE_GAMEFRAMES[id];
 			if(frame == 1) {
-				drawTitleButton("Custom", x + 220 + (id * 42), y + 185, 0xDB6147);
+				drawTitleButton("Custom", x + 245 + (id * 42), y + 185, 0xDB6147);
 			} else if (frame == 2) {
-				drawTitleButton("OSRS", x + 220 + (id * 40), y + 185, 0x9a7155);
+				drawTitleButton("OSRS", x + 245 + (id * 40), y + 185, 0x9a7155);
 			} else {
-				drawTitleButton(Constants.SELECTABLE_GAMEFRAMES[id] + "", x + 220 + (id * 40), y + 185, 0xDBB047);
+				drawTitleButton(Constants.SELECTABLE_GAMEFRAMES[id] + "", x + 245 + (id * 40), y + 185, 0xDBB047);
 			}
 		}
 		
 		/* Menus */
 		drawSection(x + 215, y + 220, 110, 285, "Preferences");
+		drawTitleButton("Hot keys / bindings", x + 388, y + 303, 0xdb8145);
 		client.gameActivity.drawer.drawMenu(x + 217, y + 267, true);
-		Rasterizer2D.drawHorizontalLine(x + 376, y + 312, 14, 0xDBB047, 90);
-		drawTitleButton("Switch", x + 390, y + 305, 0xDBB047);
+		Rasterizer2D.drawHorizontalLine(x + 376, y + 282, 14, 0xDBB047, 90);
+		drawTitleButton("Switch", x + 390, y + 275, 0xDBB047);
 
 		int hitmark = Config.def.getHITSPLATS();
 		if(hitmark == 0) {
-			ImageCache.get(1653).drawAlphaImage(x + 440, y + 250);
+			ImageCache.get(1653).drawAlphaImage(x + 460, y + 245);
 		} else if(hitmark == 1) {
-			ImageCache.get(1654).drawAlphaImage(x + 438, y + 250);
+			ImageCache.get(1654).drawAlphaImage(x + 458, y + 245);
 		} else if(hitmark == 2) {
-			ImageCache.get(1652).drawAlphaImage(x + 430, y + 250);
+			ImageCache.get(1652).drawAlphaImage(x + 450, y + 245);
 		} else {
-			ImageCache.get(1664).drawAlphaImage(x + 430, y + 250);
+			ImageCache.get(1664).drawAlphaImage(x + 450, y + 245);
 		}
-		Rasterizer2D.drawVerticalLine(x + 450, y + 270, 10, 0xDBB047, 90);
-		drawTitleButton("Switch", x + 430, y + 280, 0xDBB047);
+		Rasterizer2D.drawVerticalLine(x + 470, y + 265, 10, 0xDBB047, 90);
+		drawTitleButton("Switch", x + 450, y + 275, 0xDBB047);
 
 		int hitbar = Config.def.getHITBARS();
 		if(hitbar == 0) {
@@ -198,10 +276,14 @@ public class SettingPanel extends Panel {
 
 	@Override
 	public void initialize() {
+		bindings = false;
+		selectedBinding = -1;
 	}
 
 	@Override
 	public void reset() {
+		selectedBinding = -1;
+		Config.def.save();
 	}
 
 	@Override

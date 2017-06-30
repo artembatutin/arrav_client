@@ -2,6 +2,7 @@ package net.edge.activity.ui.fixed.impl;
 
 import net.edge.Config;
 import net.edge.Constants;
+import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.activity.ui.fixed.FixedUI;
 import net.edge.activity.ui.util.OrbHandler;
 import net.edge.game.model.Player;
@@ -390,7 +391,12 @@ public class FixedUI_459 extends FixedUI {
 		}
 		final short[][] tabClickPositions317 = {{539, 570, 171, 205}, {571, 598, 171, 205}, {599, 626, 171, 205}, {627, 670, 171, 203}, {671, 697, 171, 205}, {698, 725, 171, 205}, {726, 756, 171, 205}, {537, 569, 460, 213}, {570, 598, 464, 503}, {599, 625, 464, 503}, {626, 669, 467, 503}, {670, 698, 464, 503}, {699, 725, 464, 503}, {726, 755, 461, 503}};
 		for(int i = 0; i < 14; i++) {
-			if(client.clickX >= tabClickPositions317[i][0] && client.clickX <= tabClickPositions317[i][1] && client.clickY >= tabClickPositions317[i][2] && client.clickY < tabClickPositions317[i][3] && client.olderTabInterfaces[i] != -1) {
+			if(client.clickX >= tabClickPositions317[i][0] && client.clickX <= tabClickPositions317[i][1] && client.clickY >= tabClickPositions317[i][2] && client.clickY < tabClickPositions317[i][3] && (client.olderTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1)) {
+				if(SettingPanel.selectedBinding != -1) {
+					SettingPanel.hotkeys[SettingPanel.selectedBinding] = i;
+					SettingPanel.selectedBinding = -1;
+					return;
+				}
 				client.invTab = i;
 				client.updateInventory = true;
 			}
