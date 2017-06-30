@@ -16,7 +16,7 @@ public class MinigamePanel extends Panel {
 		DUEL_ARENA(true, 1687),
 		FIST_OF_GUTHIX(false, 1688),
 		MAGE_ARENA(false, 1689),
-		PEST_CONTROL(false, 1690),
+		PEST_CONTROL(true, 1690),
 		SOUL_WARS(false, 1691),
 		FIGHT_PIT(false, 1692),
 		WARRIORS_GUILD(true, 1911);

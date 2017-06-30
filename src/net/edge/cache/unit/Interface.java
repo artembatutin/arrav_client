@@ -146,20 +146,20 @@ public final class Interface {
 	public static void addPestControlRewardWidget(BitmapFont[] tda) {
 		Interface main = addInterface(37000);
 		addSprite(37001, 1936);
-		addButton(37002, 1937, "Confirm");
-		addClickableText(37003, "10 points", "Confirm", tda, 1, 0xFF981F, true, true, 80);
+		//addButton(37002, 1937, "Confirm");
+		//addClickableText(37003, "10 points", "Confirm", tda, 1, 0xFF981F, true, true, 80);
 		addHoverButton(37004, 1939, 21, 21, "Close", -1, 37005, 3);
 		addHoveredButton(37005, 1940, 21, 21, 37006);
 		addText(37007, "1,000 pts", tda, 2, 0xFF981F, false, true);
 		
-		setChildren(7, main);
+		setChildren(5, main);
 		setBounds(37001, 0, 0, 0, main);
-		setBounds(37002, 181, 273, 1, main);
-		setBounds(37003, 253, 300, 2, main);
-		setBounds(37004, 463, 14, 3, main);
-		setBounds(37005, 463, 14, 4, main);
-		setBounds(37007, 35, 19, 5, main);
-		setBounds(37010, 27, 43, 6, main);
+		//setBounds(37002, 181, 273, 1, main);
+		//setBounds(37003, 253, 300, 2, main);
+		setBounds(37004, 463, 14, 1, main);
+		setBounds(37005, 463, 14, 2, main);
+		setBounds(37007, 35, 19, 3, main);
+		setBounds(37010, 27, 43, 4, main);
 		
 		Interface scroll = addInterface(37010);
 		scroll.width = 442;
@@ -170,12 +170,12 @@ public final class Interface {
 		int y = 5;
 		int imageId = 5;
 		String[] names = new String[] {
-				"Attack - 10,000 xp", "Defence - 10,000 xp", "Magic - 10,000 xp",
-				"Prayer - 1,000 xp", "Strength - 10,000 xp", "Range - 10,000 xp",
-				"Hitpoints - 3,300 xp"};
+				"Attack xp", "Defence xp", "Magic xp",
+				"Prayer xp", "Strength xp", "Range xp",
+				"Hitpoints xp"};
 		int count = 0;
 		for (int index = 0; index < 35; index += 5) {
-			addSprite(37012 + index, 1939 + count);
+			addSprite(37012 + index, 1941 + count);
 			addText(37013 + index, names[index / 5], tda, 1, 0x339900, false, true);
 			addClickableText(37014 + index, "(1 Pt)", "(1 Pt)", tda, 0, 0xFF981F, false, true, 40);
 			addClickableText(37015 + index, "(10 Pts)", "(10 Pts)", tda, 0, 0xFF981F, false, true, 40);
@@ -201,7 +201,7 @@ public final class Interface {
 		y = 180;
 		names = new String[] {
 				"Herb Pack", "Seed Pack", "Mineral Pack", "Void Knight Mace", "Void Knight Robe", "Void Mage Helm",
-				"Void Melee Helm", "Void Knight Top", "Void Knight Gloves", "Void Range Helm"
+				"Void Melee Helm", "Void Knight Top", "Void Knight Gloves", "Void Ranger Helm"
 		};
 		int[] items = new int[] {
 				257, 5295, 449, 8841, 8840, 11663, 11665, 8839, 8842, 11664
@@ -215,7 +215,7 @@ public final class Interface {
 			addClickableText(37053 + index, costs[index / 3], costs[index / 3], tda, 0, 0xFF981F, false, true, 40);
 			addToItemGroup(37054 + index, 1, 1, 0, 0, false, "", "", "");
 			cache[37054 + index].invId = new int[] { items[index / 3] + 1 };
-			cache[37054 + index].invAmt = new int[] { 1 };
+			cache[37054 + index].invAmt = new int[] { items[index / 3] == 5295 ? 30 : 1 };
 			setBounds(37052 + index, x + 36, y, 37 + index, scroll);
 			setBounds(37053 + index, x + 36, y + 16, 37 + index + 1, scroll);
 			setBounds(37054 + index, x, y, 37 + index + 2, scroll);
