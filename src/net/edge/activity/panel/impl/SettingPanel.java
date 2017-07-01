@@ -132,7 +132,7 @@ public class SettingPanel extends Panel {
 		} else {
 			return false;
 		}
-		return true;
+		return false;
 	}
 
 	public void update() {
