@@ -1355,9 +1355,7 @@ public class GameActivity extends Activity {
 			}
 			int fogRgb = (x >= 270 && x <= 465 && y >= 335 && y <= 495) ? 0xc8c0a8 : 0;
 			client.scene.drawScene(client.cameraLocationX, client.cameraLocationY, client.cameraLocationZ, client.cameraYaw, client.cameraRoll, camPlane, fogRgb);
-			for(EntityUnit proj : client.scene.getTempEntities()) {
-				client.removeEntity(proj);
-			}
+			client.scene.removeEntityUnit1s();
 		}
 		updateEntities();
 		drawHeadIcon();

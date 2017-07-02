@@ -248,7 +248,6 @@ public class Client extends ClientEngine {
 	public int chatTypeView;
 	public int clanChatMode;
 	public int npcListSize;
-	public int previousNpcListSize;
 	public int privateChatMode;
 	public int openInterfaceID;
 	public int cameraZoom = 0;
@@ -258,7 +257,6 @@ public class Client extends ClientEngine {
 	public int cameraRoll;
 	public int cameraYaw;
 	public int playerCount;
-	public int previousPlayerCount;
 	public int friendsCount;
 	public int crossX;
 	public int crossY;
@@ -1067,8 +1065,6 @@ public class Client extends ClientEngine {
 		method134(buffer);
 		addPlayers(buffer, i);
 		method49(buffer);
-		if(playerCount > previousPlayerCount)
-			previousPlayerCount = playerCount;
 		for(int k = 0; k < anInt839; k++) {
 			final int l = anIntArray840[k];
 			if(playerList[l].anInt1537 != loopCycle) {
@@ -1093,8 +1089,6 @@ public class Client extends ClientEngine {
 		updateNPCMovement(buffer);
 		addNewNPC(psize, buffer);
 		method86(buffer);
-		if(npcListSize > previousNpcListSize)
-			previousNpcListSize = npcListSize;
 		for(int k = 0; k < anInt839; k++) {
 			final int l = anIntArray840[k];
 			if(npcList[l].anInt1537 != loopCycle) {
@@ -3195,9 +3189,7 @@ public class Client extends ClientEngine {
 				walkX = 0;
 				walkY = 0;
 				playerCount = 0;
-				previousPlayerCount = 0;
 				npcListSize = 0;
-				previousNpcListSize = 0;
 				for(int i2 = 0; i2 < maxPlayers; i2++) {
 					playerList[i2] = null;
 					playerBuffer[i2] = null;
@@ -6469,20 +6461,10 @@ public class Client extends ClientEngine {
 	}
 
 	public void method26(boolean flag) {
-		int count = npcListSize > previousNpcListSize ? npcListSize : previousNpcListSize;
-		for(int j = 0; j < count; j++) {
+		for(int j = 0; j < npcListSize; j++) {
 			final NPC npc = npcList[npcEntryList[j]];
 			long hash = 0x4000000000L + (npcEntryList[j] << 14);
-			EntityUnit u = scene.getEntities().get(hash);
-			if(npc == null) {
-				removeEntity(u);
-				continue;
-			}
-			if(j >= previousNpcListSize) {
-				removeEntity(u);
-				continue;
-			}
-			if(!npc.isVisible() || npc.type.visible != flag) {
+			if(npc == null || !npc.isVisible() || npc.type.visible != flag) {
 				continue;
 			}
 			final int l = npc.x >> 7;
@@ -6499,15 +6481,8 @@ public class Client extends ClientEngine {
 			if(!npc.type.clickable) {
 				hash += 0x100000000L;
 			}
-			u = scene.getEntities().get(hash);
-			removeEntity(u);
 			scene.addEntity(cameraPlane, npc.yaw, method42(cameraPlane, npc.x, npc.y), hash, npc.y, (npc.anInt1540 - 1) * 64 + 60, npc.x, npc, npc.aBoolean1541);
 		}
-	}
-	
-	public void removeEntity(EntityUnit u) {
-		if(u != null)
-			scene.removeEntityUnit(u);
 	}
 
 	public void method37() {//TODO: REMOVED, add it back efficiently.
@@ -6636,7 +6611,7 @@ public class Client extends ClientEngine {
 		if(localPlayer.x >> 7 == walkX && localPlayer.y >> 7 == walkY) {
 			walkX = 0;
 		}
-		int count = playerCount > previousPlayerCount ? playerCount : previousPlayerCount;
+		int count = playerCount;
 		if(flag) {
 			count = 1;
 		}
@@ -6650,13 +6625,7 @@ public class Client extends ClientEngine {
 				player = playerList[playerEntryList[l]];
 				hash = playerEntryList[l] << 14;
 			}
-			EntityUnit u = scene.getEntities().get(hash);
-			if(l >= previousPlayerCount && !flag) {
-				removeEntity(u);
-				continue;
-			}
 			if(player == null || !player.isVisible()) {
-				removeEntity(u);
 				continue;
 			}
 			player.noTransform = (!Config.def.isLOW_MEM() && playerCount > 50 || playerCount > 200) && !flag && player.idleAnim == player.anInt1511;
@@ -6668,7 +6637,6 @@ public class Client extends ClientEngine {
 			if(player.aModel_1714 != null && loopCycle >= player.anInt1707 && loopCycle < player.anInt1708) {
 				player.noTransform = false;
 				player.anInt1709 = method42(cameraPlane, player.x, player.y);
-				removeEntity(u);
 				scene.addPlayer(cameraPlane, player.y, player, player.yaw, player.anInt1722, player.x, player.anInt1709, player.anInt1719, player.anInt1721, hash, player.anInt1720);
 				continue;
 			}
@@ -6679,11 +6647,8 @@ public class Client extends ClientEngine {
 				anIntArrayArray929[j1][k1] = anInt1265;
 			}
 			player.anInt1709 = method42(cameraPlane, player.x, player.y);
-			removeEntity(u);
 			scene.addEntity(cameraPlane, player.yaw, player.anInt1709, hash, player.y, 60, player.x, player, player.aBoolean1541);
 		}
-		if(!flag && previousPlayerCount > playerCount)
-			previousPlayerCount = 0;
 	}
 
 	public void method55() {

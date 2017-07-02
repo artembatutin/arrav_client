@@ -21,8 +21,8 @@ public final class Scene {
 	private final int[][][] heightMap3d;
 	private final Tile[][][] tileMap;
 	private int currentPlane;
-	private final Long2ObjectOpenHashMap<EntityUnit> entities;
-	private final ObjectList<EntityUnit> tempEntities;
+	private int entity1Count;
+	private EntityUnit[] entities1;
 	private final int[][][] heightMap2d;
 	private static int anInt446;
 	private static int cameraPlane;
@@ -87,8 +87,7 @@ public final class Scene {
 		final int tilesY = 104;
 		final int tilesX = 104;
 		final int planes = 4;
-		entities = new Long2ObjectOpenHashMap<>();
-		tempEntities = new ObjectArrayList<>();
+		entities1 = new EntityUnit[5000];
 		anIntArray486 = new int[10000];
 		anIntArray487 = new int[10000];
 		planesDisplayed = planes;
@@ -1067,7 +1066,6 @@ public final class Scene {
 	}
 
 	public void clear() {
-		entities.clear();
 		for(int plane = 0; plane < planesDisplayed; plane++) {
 			for(int x = 0; x < tilesDisplayedX; x++) {
 				for(int y = 0; y < tilesDisplayedY; y++) {
@@ -1081,6 +1079,10 @@ public final class Scene {
 			}
 			perspectiveCount[plane] = 0;
 		}
+		for(int k1 = 0; k1 < entity1Count; k1++) {
+			entities1[k1] = null;
+		}
+		entity1Count = 0;
 		for(int l1 = 0; l1 < entities2.length; l1++) {
 			entities2[l1] = null;
 		}
@@ -1143,6 +1145,15 @@ public final class Scene {
 			final int j2 = y * 128 + 64 * sizeY;
 			return addEntityUnit(plane, x, y, sizeX, sizeY, i2, j2, j, entity, j1, false, hash, byte0);
 		}
+	}
+	
+	public void removeEntityUnit1s() {
+		for(int i = 0; i < entity1Count; i++) {
+			final EntityUnit entity = entities1[i];
+			removeEntityUnit(entity);
+			entities1[i] = null;
+		}
+		entity1Count = 0;
 	}
 
 	public boolean addEntity(int z, int j, int k, long hash, int y, int j1, int x, Entity entity, boolean flag) {
@@ -1827,12 +1838,7 @@ public final class Scene {
 				}
 			}
 		}
-		EntityUnit spawn = entities.get(hash);
-		if(spawn == null)
-			spawn = new EntityUnit();
-		else {
-			removeEntityUnit(spawn);
-		}
+		final EntityUnit spawn = new EntityUnit();
 		spawn.hash = hash;
 		spawn.config = config;
 		spawn.plane = plane;
@@ -1873,11 +1879,8 @@ public final class Scene {
 				tile_1.entityUnitAmount++;
 			}
 		}
-		if(flag && hash == -1) {
-			tempEntities.add(spawn);
-		}
 		if(flag) {
-			entities.put(hash, spawn);
+			entities1[entity1Count++] = spawn;
 		}
 		return true;
 	}
@@ -2069,11 +2072,4 @@ public final class Scene {
 		tileMap[plane][x][y].wall = wall;
 	}
 	
-	public Long2ObjectOpenHashMap<EntityUnit> getEntities() {
-		return entities;
-	}
-	
-	public ObjectList<EntityUnit> getTempEntities() {
-		return tempEntities;
-	}
 }
