@@ -1,5 +1,6 @@
 package net.edge;
 
+import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.activity.ui.UIRenderer;
 import net.edge.sign.SignLink;
 
@@ -349,7 +350,7 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 	}
 
 	public void setTab(int id) {
-
+	
 	}
 
 	@Override
@@ -357,20 +358,30 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 		idleTime = 0;
 		final int keyCode = keyevent.getKeyCode();
 		int keyCharacter = keyevent.getKeyChar();
-		if(keyCode == KeyEvent.VK_F12) {
-			takeScreenshot();
-		} else if(keyCode == KeyEvent.VK_ESCAPE) {
-			setTab(3);
-		} else if(keyCode == KeyEvent.VK_F1) {
-			setTab(3);
+		if(keyCode == KeyEvent.VK_F1) {
+			setTab(SettingPanel.hotkeys[0]);
 		} else if(keyCode == KeyEvent.VK_F2) {
-			setTab(4);
+			setTab(SettingPanel.hotkeys[1]);
 		} else if(keyCode == KeyEvent.VK_F3) {
-			setTab(5);
+			setTab(SettingPanel.hotkeys[2]);
 		} else if(keyCode == KeyEvent.VK_F4) {
-			setTab(6);
+			setTab(SettingPanel.hotkeys[3]);
 		} else if(keyCode == KeyEvent.VK_F5) {
-			setTab(0);
+			setTab(SettingPanel.hotkeys[4]);
+		} else if(keyCode == KeyEvent.VK_F6) {
+			setTab(SettingPanel.hotkeys[5]);
+		} else if(keyCode == KeyEvent.VK_F7) {
+			setTab(SettingPanel.hotkeys[6]);
+		} else if(keyCode == KeyEvent.VK_F8) {
+			setTab(SettingPanel.hotkeys[7]);
+		} else if(keyCode == KeyEvent.VK_F9) {
+			setTab(SettingPanel.hotkeys[8]);
+		} else if(keyCode == KeyEvent.VK_F10) {
+			setTab(SettingPanel.hotkeys[9]);
+		} else if(keyCode == KeyEvent.VK_F11) {
+			setTab(SettingPanel.hotkeys[10]);
+		} else if(keyCode == KeyEvent.VK_F12) {
+			setTab(SettingPanel.hotkeys[11]);
 		}
 		if(keyCharacter < 30) {
 			keyCharacter = 0;

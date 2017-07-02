@@ -1,6 +1,7 @@
 package net.edge.activity.ui.resize;
 
 import net.edge.activity.ui.UI;
+import net.edge.media.img.BitmapImage;
 
 import java.awt.*;
 
@@ -20,4 +21,11 @@ public abstract class ResizableUI extends UI {
 		}
 		return new Point(x, y);
 	}
+	
+	/**
+	 * Gets the side image as an index.
+	 * @param index index
+	 * @return the side icon image.
+	 */
+	public abstract BitmapImage getSide(int index);
 }

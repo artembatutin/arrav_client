@@ -31,7 +31,7 @@ public class AssetDrawer {
 	}
 
 	public void drawBar(Mobile obj) {
-		if(obj.special <= 100) {
+		if(obj.special != 101) {
 			int offset = -5;
 			switch(Config.def.getHITBARS()) {
 				case 0:

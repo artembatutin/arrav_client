@@ -1,5 +1,6 @@
 package net.edge;
 
+import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.sign.SignLink;
 import net.edge.util.FileToolkit;
 import net.edge.util.io.Buffer;
@@ -83,7 +84,7 @@ public class Config {
 	 * Saves the configurations.
 	 */
 	public void save() {
-		Buffer data = new Buffer(new byte[19]);
+		Buffer data = new Buffer(new byte[31]);
 		//17 bytes and 1 short.
 		data.putShort(GAME_FRAME);
 		data.putByte(SELECTED_MENU);
@@ -103,6 +104,9 @@ public class Config {
 		data.putByte(DISPLAY_NAMES ? 1 : 0);
 		data.putByte(CHARACTER_PREVIEW ? 1 : 0);
 		data.putByte(ROOF_OFF ? 1 : 0);
+		for(int key : SettingPanel.hotkeys) {
+			data.putByte(key);
+		}
 		FileToolkit.writeFile(SignLink.getCacheDir() + "settings", data.data);
 	}
 
@@ -110,28 +114,35 @@ public class Config {
 	 * Loads the configurations on startup.
 	 */
 	public void load() {
-		byte[] data = FileToolkit.readFile(SignLink.getCacheDir() + "settings");
-		if(data != null && data.length > 0) {
-			Buffer buf = new Buffer(data);
-			GAME_FRAME = buf.getUShort();
-			System.out.println(GAME_FRAME);
-			SELECTED_MENU = buf.getUByte();
-			HITSPLATS = buf.getUByte();
-			HITBARS = buf.getUByte();
-			TEN_X_HITS = buf.getBoolean();
-			FPS_ON = buf.getBoolean();
-			LOW_MEM = buf.getBoolean();
-			GROUND_DECORATION = buf.getBoolean();
-			GROUND_MATERIALS = buf.getBoolean();
-			SMOOTH_FOG = buf.getBoolean();
-			TWEENING = buf.getBoolean();
-			RETAIN_MODEL_PRECISION = buf.getBoolean();
-			MAP_ANTIALIASING = buf.getBoolean();
-			DRAW_ORBS = buf.getBoolean();
-			DRAW_SKILL_ORBS = buf.getBoolean();
-			DISPLAY_NAMES = buf.getBoolean();
-			CHARACTER_PREVIEW = buf.getBoolean();
-			ROOF_OFF = buf.getBoolean();
+		try {
+			byte[] data = FileToolkit.readFile(SignLink.getCacheDir() + "settings");
+			if(data != null && data.length > 0) {
+				Buffer buf = new Buffer(data);
+				GAME_FRAME = buf.getUShort();
+				System.out.println(GAME_FRAME);
+				SELECTED_MENU = buf.getUByte();
+				HITSPLATS = buf.getUByte();
+				HITBARS = buf.getUByte();
+				TEN_X_HITS = buf.getBoolean();
+				FPS_ON = buf.getBoolean();
+				LOW_MEM = buf.getBoolean();
+				GROUND_DECORATION = buf.getBoolean();
+				GROUND_MATERIALS = buf.getBoolean();
+				SMOOTH_FOG = buf.getBoolean();
+				TWEENING = buf.getBoolean();
+				RETAIN_MODEL_PRECISION = buf.getBoolean();
+				MAP_ANTIALIASING = buf.getBoolean();
+				DRAW_ORBS = buf.getBoolean();
+				DRAW_SKILL_ORBS = buf.getBoolean();
+				DISPLAY_NAMES = buf.getBoolean();
+				CHARACTER_PREVIEW = buf.getBoolean();
+				ROOF_OFF = buf.getBoolean();
+				for(int i = 0; i < SettingPanel.hotkeys.length; i++) {
+					SettingPanel.hotkeys[i] = buf.getUByte();
+				}
+			}
+		} catch(Exception e) {
+		
 		}
 	}
 	
