@@ -642,9 +642,10 @@ public class Client extends ClientEngine {
 	public static void main(String[] args) {
 		try {
 			if(args != null && args.length > 0) {
-				Constants.JAGGRAB_ENABLED = Boolean.parseBoolean(args[0]);
-				Constants.USER_HOME_FILE_STORE = Boolean.parseBoolean(args[1]);
-				TitleActivity.connection = Integer.parseInt(args[2]);
+				boolean dev = Boolean.parseBoolean(args[0]);
+				Constants.JAGGRAB_ENABLED = !dev;
+				Constants.USER_HOME_FILE_STORE = !dev;
+				TitleActivity.connection = dev ? 1 : 0;
 			}
 			SignLink.storeId = 32;
 			SignLink.startPriv(InetAddress.getLocalHost());

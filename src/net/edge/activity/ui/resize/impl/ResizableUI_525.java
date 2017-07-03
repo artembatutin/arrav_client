@@ -621,6 +621,8 @@ public class ResizableUI_525 extends ResizableUI {
 				if(client.olderTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1) {
 					int xOffset = 16 - client.sideIcons[i].imageWidth / 2;
 					int yOffset = 18 - client.sideIcons[i].imageHeight / 2;
+					if(i == 13)
+						i = 14;
 					if(i < 7) {
 						client.sideIcons[i].drawImage(xOffset + client.windowWidth - 231 + 33 * i, yOffset + client.windowHeight - 72);
 					} else {
@@ -633,6 +635,8 @@ public class ResizableUI_525 extends ResizableUI {
 				int xOffset = 16 - client.sideIcons[i].imageWidth / 2;
 				int yOffset = 18 - client.sideIcons[i].imageHeight / 2;
 				if(client.olderTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1) {
+					if(i == 13)
+						i = 14;
 					client.sideIcons[i].drawImage(xOffset + client.windowWidth - 462 + 33 * i, yOffset + client.windowHeight - 36);
 				}
 			}

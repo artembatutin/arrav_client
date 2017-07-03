@@ -556,6 +556,8 @@ public class FixedUI_525 extends FixedUI {
 			if(client.olderTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1) {
 				final int xOffset = 16 - client.sideIcons[i].imageWidth / 2;
 				final int yOffset = 18 - client.sideIcons[i].imageHeight / 2;
+				if(i == 13)
+					i = 14;
 				if(i < 7) {
 					client.sideIcons[i].drawImage(xOffset + 9 + 33 * i, yOffset);
 				} else {
