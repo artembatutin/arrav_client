@@ -6,9 +6,7 @@ import net.edge.activity.TitleActivity;
 import net.edge.activity.panel.PanelHandler;
 import net.edge.activity.panel.impl.ObjectCreationPanel.ConstructionObject;
 import net.edge.activity.ui.UIComponent;
-import net.edge.activity.ui.util.ConstitutionHandler;
-import net.edge.activity.ui.util.OrbHandler;
-import net.edge.activity.ui.util.TaskHandler;
+import net.edge.activity.ui.util.*;
 import net.edge.cache.CacheArchive;
 import net.edge.cache.CacheIndex;
 import net.edge.cache.CacheUnpacker;
@@ -36,7 +34,6 @@ import net.edge.util.string.StringEncoder;
 import net.edge.activity.Activity;
 import net.edge.activity.panel.impl.*;
 import net.edge.activity.ui.UI;
-import net.edge.activity.ui.util.SkillOrbHandler;
 import net.edge.cache.unit.*;
 import net.edge.game.model.*;
 import net.edge.game.tile.Wall;
@@ -611,7 +608,7 @@ public class Client extends ClientEngine {
 	@Override
 	void initialize() {
 		Activity.client = this;
-		SkillOrbHandler.client = this;
+		CounterHandler.client = this;
 		OrbHandler.client = this;
 		Interface.client = this;
 		Player.client = this;
@@ -3352,7 +3349,6 @@ public class Client extends ClientEngine {
 					} catch(final Exception _ex) {
 					}
 				}
-
 				connect(username, password);
 				return;
 			}
@@ -3506,6 +3502,10 @@ public class Client extends ClientEngine {
 		if(code >= 2000) {
 			code -= 2000;
 		}
+		if(code == 1050) {
+			outBuffer.putOpcode(185);
+			outBuffer.putShort(1164);
+		}
 		if(code == 1051) {
 			outBuffer.putOpcode(185);
 			outBuffer.putShort(152);
@@ -3523,6 +3523,12 @@ public class Client extends ClientEngine {
 		if(code == 1054) {
 			outBuffer.putOpcode(185);
 			outBuffer.putShort(49);
+		}
+		if(code == 1055) {
+			CounterHandler.toggleCounter();
+		}
+		if(code == 1056) {
+			CounterHandler.resetCounter();
 		}
 		if(code == 582 && panelHandler.action()) {
 			final NPC npc = npcList[arg1];
@@ -4952,6 +4958,8 @@ public class Client extends ClientEngine {
 					final int skill = inBuffer.getUByte();
 					final int exp = inBuffer.getMixEndInt();
 					final int level = inBuffer.getInt();
+					final int dif = exp - currentExp[skill];
+					boolean first = currentExp[skill] == 0;
 					currentExp[skill] = exp;
 					currentStats[skill] = level;
 					maxStats[skill] = 1;
@@ -4961,6 +4969,8 @@ public class Client extends ClientEngine {
 						}
 					}
 					OrbHandler.updateOrbs(skill);
+					if(dif > 0 && !first)
+						CounterHandler.add(new CounterHandler.SkillUpdate(skill, dif));
 					pktType = -1;
 					return true;
 
@@ -5909,12 +5919,14 @@ public class Client extends ClientEngine {
 						aBoolean1149 = false;
 						pktType = -1;
 						return true;
+					} else if(l7 == 65521) {//-14
+						panelHandler.open(new PvPPanel());
 					} else if(l7 == 65522) {//-14
 						panelHandler.open(new RoomCreationPanel());
 					} else if(l7 == 65523) {//-13
 						panelHandler.open(new CounterPanel());
 					} else if(l7 == 65524) {//-12
-						panelHandler.open(new PvPPanel());
+						panelHandler.open(new ScoreBoardPanel());
 					} else if(l7 == 65525) {//-11
 						panelHandler.open(new DropPanel());
 					} else if(l7 == 65526) {//-10
@@ -5955,6 +5967,18 @@ public class Client extends ClientEngine {
 							panelHandler.close();
 					}
 					aBoolean1149 = false;
+					pktType = -1;
+					return true;
+					
+				case 150:
+					int ammm = inBuffer.getUByte();
+					System.out.println(ammm);
+					PvPPanel.xCoords = new int[ammm];
+					PvPPanel.yCoords = new int[ammm];
+					for(int pker = 0; pker < ammm; pker++) {
+						PvPPanel.xCoords[pker] = inBuffer.getUByte();
+						PvPPanel.yCoords[pker] = inBuffer.getUByte();
+					}
 					pktType = -1;
 					return true;
 

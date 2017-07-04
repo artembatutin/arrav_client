@@ -270,6 +270,10 @@ public class ResizableUI_562 extends ResizableUI {
 			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
 			client.menuItemCode[client.menuPos] = 1053;
 			client.menuPos++;
+		} else if(client.mouseInRegion(client.windowWidth - 44, 132, client.windowWidth - 9, 167)) {
+			client.menuItemName[1] = "Check wilderness";
+			client.menuItemCode[1] = 1050;
+			client.menuPos = 2;
 		}
 	}
 
@@ -395,6 +399,11 @@ public class ResizableUI_562 extends ResizableUI {
 			displayOrb(client.windowWidth - 212, 72, Constants.ORB_PRAYER, true);
 			displayOrb(client.windowWidth - 200, 106, Constants.ORB_RUN, true);
 			displayOrb(client.windowWidth - 177, 140, Constants.ORB_SUMMONING, true);
+		}
+		ImageCache.get(83).drawImage(xOffset + 135, 125);
+		ImageCache.get(238).drawImage(xOffset + 140, 130);
+		if(client.mouseInRegion(client.windowWidth - 44, 132, client.windowWidth - 9, 167)) {
+			ImageCache.get(239).drawImage(xOffset + 140, 130);
 		}
 		client.gameGraphics.setCanvas();
 	}

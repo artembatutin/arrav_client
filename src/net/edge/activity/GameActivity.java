@@ -4,14 +4,13 @@ import net.edge.Config;
 import net.edge.Constants;
 import net.edge.activity.ui.UIComponent;
 import net.edge.game.Scene;
-import net.edge.game.tile.EntityUnit;
 import net.edge.media.Rasterizer2D;
 import net.edge.media.Rasterizer3D;
 import net.edge.sign.SignLink;
 import net.edge.util.collect.LinkedDeque;
 import net.edge.Client;
 import net.edge.activity.ui.util.AssetDrawer;
-import net.edge.activity.ui.util.SkillOrbHandler;
+import net.edge.activity.ui.util.CounterHandler;
 import net.edge.cache.unit.*;
 import net.edge.game.model.*;
 import net.edge.media.GraphicalComponent;
@@ -411,13 +410,15 @@ public class GameActivity extends Activity {
 			drawWorldOverlay();
 			if(client.uiRenderer.isFixed()) {
 				client.uiRenderer.displayFrameArea();
-				SkillOrbHandler.drawOrbs();
+				CounterHandler.drawOrbs();
+				CounterHandler.drawCounter();
 				client.taskHandler.processCompletedTasks();
 				client.uiRenderer.fixed.updateMap();
 				client.uiRenderer.fixed.updateInventory();
 				client.uiRenderer.fixed.updateChat();
 			} else {
-				SkillOrbHandler.drawOrbs();
+				CounterHandler.drawOrbs();
+				CounterHandler.drawCounter();
 				client.taskHandler.processCompletedTasks();
 				client.uiRenderer.resizable.updateMap();
 				client.uiRenderer.resizable.updateInventory();
@@ -1791,7 +1792,7 @@ public class GameActivity extends Activity {
 				if(client.uiRenderer.getId() < 500 && client.uiRenderer.getId() != 1)
 					ImageCache.get(1926).drawImage(client.windowWidth - 30, 140);
 				else
-					ImageCache.get(15).drawImage(client.windowWidth - 35, 149);
+					ImageCache.get(15).drawImage(client.windowWidth - 35, 170);
 			} else {
 				if(client.uiRenderer.getId() < 500 && client.uiRenderer.getId() != 1)
 					ImageCache.get(1926).drawImage(485, 310);

@@ -803,12 +803,42 @@ public final class MapDecoder {
 		if(p >= 4) {
 			p = 0;
 		}
-		int k1 = heightMap3d[p][x][y];
-		int l1 = heightMap3d[p][x + 1][y];
-		int i2 = heightMap3d[p][x + 1][y + 1];
-		int j2 = heightMap3d[p][x][y + 1];
-		final int k2 = k1 + l1 + i2 + j2 >> 2;
 		final LocationType loc = LocationType.getSpecific(id, oldMap);
+		int sizeY;
+		int sizeX;
+		if(j1 != 1 && j1 != 3) {
+			sizeX = loc.sizeX;
+			sizeY = loc.sizeY;
+		} else {
+			sizeX = loc.sizeY;
+			sizeY = loc.sizeX;
+		}
+		
+		int editX;
+		int editX2;
+		if(x + sizeX <= 104) {
+			editX = x + (sizeX >> 1);
+			editX2 = x + (1 + sizeX >> 1);
+		} else {
+			editX = x;
+			editX2 = 1 + x;
+		}
+		
+		int editY;
+		int editY2;
+		if(sizeY + y <= 104) {
+			editY = (sizeY >> 1) + y;
+			editY2 = y + (1 + sizeY >> 1);
+		} else {
+			editY = y;
+			editY2 = 1 + y;
+		}
+		int k1 = heightMap3d[p][editX][editY];
+		int l1 = heightMap3d[p][editX2][editY];
+		int i2 = heightMap3d[p][editX2][editY2];
+		int j2 = heightMap3d[p][editX][editY2];
+		final int k2 = k1 + l1 + i2 + j2 >> 2;
+		
 		id = loc.id;
 		if(id == 38453 || id == 38447)
 			return;

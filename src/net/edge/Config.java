@@ -5,8 +5,6 @@ import net.edge.sign.SignLink;
 import net.edge.util.FileToolkit;
 import net.edge.util.io.Buffer;
 
-import java.io.*;
-
 public class Config {
 	
 	public static Config def = new Config();
@@ -63,7 +61,7 @@ public class Config {
 	private boolean SMOOTH_FOG = false;
 	private boolean TWEENING = false;
 	private boolean RETAIN_MODEL_PRECISION = true;
-	private boolean MAP_ANTIALIASING = true;
+	private boolean HD_MINIMAP = true;
 
 	/*
 	 * View toggle configurations
@@ -98,7 +96,7 @@ public class Config {
 		data.putByte(SMOOTH_FOG ? 1 : 0);
 		data.putByte(TWEENING ? 1 : 0);
 		data.putByte(RETAIN_MODEL_PRECISION ? 1 : 0);
-		data.putByte(MAP_ANTIALIASING ? 1 : 0);
+		data.putByte(HD_MINIMAP ? 1 : 0);
 		data.putByte(DRAW_ORBS ? 1 : 0);
 		data.putByte(DRAW_SKILL_ORBS ? 1 : 0);
 		data.putByte(DISPLAY_NAMES ? 1 : 0);
@@ -131,7 +129,7 @@ public class Config {
 				SMOOTH_FOG = buf.getBoolean();
 				TWEENING = buf.getBoolean();
 				RETAIN_MODEL_PRECISION = buf.getBoolean();
-				MAP_ANTIALIASING = buf.getBoolean();
+				HD_MINIMAP = buf.getBoolean();
 				DRAW_ORBS = buf.getBoolean();
 				DRAW_SKILL_ORBS = buf.getBoolean();
 				DISPLAY_NAMES = buf.getBoolean();
@@ -270,12 +268,12 @@ public class Config {
 		save();
 	}
 	
-	public boolean isMAP_ANTIALIASING() {
-		return MAP_ANTIALIASING;
+	public boolean isHD_MINIMAP() {
+		return HD_MINIMAP;
 	}
 	
-	public void setMAP_ANTIALIASING(boolean MAP_ANTIALIASING) {
-		this.MAP_ANTIALIASING = MAP_ANTIALIASING;
+	public void setHD_MINIMAP(boolean HD_MINIMAP) {
+		this.HD_MINIMAP = HD_MINIMAP;
 		save();
 	}
 	

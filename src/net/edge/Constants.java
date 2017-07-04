@@ -5,8 +5,8 @@ public final class Constants {
 	private Constants() {
 	}
 	
-	public static boolean JAGGRAB_ENABLED = false;
-	public static boolean USER_HOME_FILE_STORE = false;
+	public static boolean JAGGRAB_ENABLED = true;
+	public static boolean USER_HOME_FILE_STORE = true;
 
 	/*
 	 * Miscellaneous constants
@@ -80,7 +80,7 @@ public final class Constants {
 			1, 0, 0, 2, 0, 0, 15, 0, 0, 0,//120
 			-2, 4, 0, 0, 0, -2, 0, 0, 0, -1,//130
 			0, 0, 0, 9, 2, 0, 0, 0, 0, 0,//140
-			0, 2, 0, 0, 0, 0, 14, 0, 0, 0,//150
+			0, 2, 0, 0, 0, 0, 14, 0, 0, -2,//150
 			6, 0, 0, 0, 0, 3, 0, 0, 0, 4,//160
 			0, 0, 0, 2, 0, 6, 0, 0, 0, 0,//170
 			3, 0, 0, 0, 0, 0, 6, 0, 0, 0,//180

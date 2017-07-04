@@ -1,17 +1,28 @@
 package net.edge.activity.ui.util;
 
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.edge.Client;
 import net.edge.Config;
 import net.edge.cache.unit.ImageCache;
 import net.edge.media.Rasterizer2D;
 
-public class SkillOrbHandler {
+import java.util.Iterator;
 
+public class CounterHandler {
+	
+	public static final ObjectList<SkillUpdate> updates = new ObjectArrayList<>();
+	public static boolean counterToggled;
+	public static int gainedUnits;
+	public static int gainedThousands;
+	public static int gainedMillions;
+	public static int gainedBillions;
+	
 	public static Client client;
 	private static boolean login = true;
 	private static int drawingLevelUp = -1;
 	private static int[] savedExp = new int[24];
-	private static SkillOrbHandler[] orbs = new SkillOrbHandler[24];
+	private static CounterHandler[] orbs = new CounterHandler[24];
 	private static boolean[] updated = new boolean[24];
 	private int levelUpTo;
 	private int levelUpCycle;
@@ -20,11 +31,75 @@ public class SkillOrbHandler {
 	private int lastUpdateCycle;
 	private int appearCycle;
 
-	private SkillOrbHandler(int skill) {
+	private CounterHandler(int skill) {
 		position = -1;
 		appearCycle = client.loopCycle;
 		progress = getProgress(skill);
 		levelUpTo = -1;
+	}
+	
+	public static void drawCounter() {
+		Iterator<SkillUpdate> it = updates.iterator();
+		int y = 0;
+		while(it.hasNext()) {
+			SkillUpdate update = it.next();
+			update.move += 1;
+			y += 25;
+			if(update.move > 40) {
+				update.alpha -= 10;
+			}
+			if(update.move > 60) {
+				it.remove();
+				continue;
+			}
+			if(counterToggled) {
+				ImageCache.get(update.skill + 791).drawImage(445, 120 + update.move - y, update.alpha);
+				client.smallFont.drawLeftAlignedString("" + update.xp, 470, 140 + update.move - y, 0xffffff);
+			}
+		}
+		if(counterToggled) {
+			int x = 0;
+			if(client.uiRenderer.isFixed() && client.uiRenderer.getId() > 500) {
+				ImageCache.get(1954).drawImage(515 - (x += 10), 55);
+				ImageCache.get(1953).drawImage(515 - (x += 10), 55);
+				ImageCache.get(1953).drawImage(515 - (x += 10), 55);
+				client.smallFont.drawRightAlignedString("" + gainedUnits, 507, 68, 0xffffff);
+				if(gainedThousands > 0) {
+					ImageCache.get(1953).drawImage(515 - (x += 10), 55);
+					ImageCache.get(1953).drawImage(515 - (x += 10), 55);
+					Rasterizer2D.drawVerticalLine(485, 59, 2, 0xffffff);
+					client.smallFont.drawRightAlignedString("" + gainedThousands, 484, 68, 0xffffff);
+				}
+				if(gainedMillions > 0) {
+					ImageCache.get(1953).drawImage(515 - (x += 10), 55);
+					ImageCache.get(1953).drawImage(515 - (x += 10), 55);
+					Rasterizer2D.drawVerticalLine(464, 59, 2, 0xffffff);
+					client.smallFont.drawRightAlignedString("" + gainedMillions, 462, 68, 0xffffff);
+				}
+				if(gainedBillions > 0) {
+					ImageCache.get(1953).drawImage(515 - (x += 10), 55);
+					ImageCache.get(1953).drawImage(515 - (x += 10), 55);
+					Rasterizer2D.drawVerticalLine(444, 59, 2, 0xffffff);
+					client.smallFont.drawRightAlignedString("" + gainedBillions, 442, 68, 0xffffff);
+				}
+				ImageCache.get(1952).drawImage(515 - (x + 7), 55);
+			}
+		}
+	}
+	
+	public static void toggleCounter() {
+		counterToggled = !counterToggled;
+	}
+	
+	public static void resetCounter() {
+		gainedUnits = 0;
+		gainedThousands = 0;
+		gainedMillions = 0;
+		gainedBillions = 0;
+	}
+	
+	public static boolean isCounterOn() {
+		return counterToggled;
 	}
 
 	private static void checkForUpdates() {
@@ -95,7 +170,7 @@ public class SkillOrbHandler {
 			return;
 		}
 		if(orbs[skill] == null) {
-			orbs[skill] = new SkillOrbHandler(skill);
+			orbs[skill] = new CounterHandler(skill);
 		}
 		if(updated[skill]) {
 			orbs[skill].lastUpdateCycle = client.loopCycle;
@@ -169,7 +244,7 @@ public class SkillOrbHandler {
 	private static int getAvailablePosition() {
 		for(int i = 1; i < orbs.length + 1; i++) {
 			boolean used = false;
-			for(final SkillOrbHandler orb : orbs) {
+			for(final CounterHandler orb : orbs) {
 				if(orb == null) {
 					continue;
 				}
@@ -223,5 +298,39 @@ public class SkillOrbHandler {
 	private void levelUp(int level) {
 		levelUpCycle = client.loopCycle;
 		levelUpTo = level;
+	}
+	
+	public static void add(SkillUpdate update) {
+		gainedUnits += update.xp;
+		if(gainedUnits >= 1000) {
+			int move = gainedUnits / 1000;
+			gainedThousands += move;
+			gainedUnits -= move * 1000;
+		}
+		if(gainedThousands >= 1000) {
+			int move = gainedThousands / 1000;
+			gainedMillions += move;
+			gainedThousands -= move * 1000;
+		}
+		if(gainedMillions >= 1000) {
+			int move = gainedMillions / 1000;
+			gainedBillions += move;
+			gainedMillions -= move * 1000;
+		}
+		updates.add(update);
+	}
+	
+	public static class SkillUpdate {
+		
+		private final int skill;
+		private final int xp;
+		private int move = 0;
+		private int alpha = 250;
+		
+		public SkillUpdate(int skill, int xp) {
+			this.skill = skill;
+			this.xp = xp;
+		}
+		
 	}
 }

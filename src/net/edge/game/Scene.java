@@ -1,8 +1,5 @@
 package net.edge.game;
 
-import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.ObjectArrayList;
-import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.edge.Constants;
 import net.edge.game.model.Model;
 import net.edge.Config;
@@ -1988,66 +1985,234 @@ public final class Scene {
 		}
 		tileMap[plane][x][y].shapedGround = ground;
 	}
-
-	public void setMinimapFloorColor(int[] raster, int index, int plane, int x, int y) {
-		final int offset = 512;
-		final Tile tile = tileMap[plane][x][y];
-		if(tile == null) {
-			return;
-		}
-		final QuadGround floor = tile.quadGround;
-		if(floor != null) {
-			final int color = floor.mapcolor;
-			if(color == 0) {
+	
+	
+	
+	public void setMinimapFloorColor(int raster[], int index, int plane, int x, int y) {
+		if (Config.def.isHD_MINIMAP()) {
+			final Tile tile = tileMap[plane][x][y];
+			if(tile == null) {
 				return;
 			}
-			for(int row = 0; row < 4; row++) {
-				raster[index] = color;
-				raster[index + 1] = color;
-				raster[index + 2] = color;
-				raster[index + 3] = color;
+			final QuadGround class43 = tile.quadGround;//open this class
+			if(class43 != null) {
+				if (class43.color1 != 12345678 && class43.color3 != 12345678) {
+					if (class43.mapcolor == 0) {
+						return;
+					}
+					int hs = class43.color1 & ~0x7f;
+					int l1 = class43.color4 & 0x7f;
+					int l2 = class43.color3 & 0x7f;
+					int l3 = (class43.color1 & 0x7f) - l1;
+					int l4 = (class43.color2 & 0x7f) - l2;
+					l1 <<= 2;
+					l2 <<= 2;
+					for(int k1 = 0; k1 < 4; k1++) {
+						if (!class43.solid) {
+							raster[index] = Rasterizer3D.hslToRgbMap[hs | (l1 >> 2)];
+							raster[index + 1] = Rasterizer3D.hslToRgbMap[hs | (l1 * 3 + l2 >> 4)];
+							raster[index + 2] = Rasterizer3D.hslToRgbMap[hs | (l1 + l2 >> 3)];
+							raster[index + 3] = Rasterizer3D.hslToRgbMap[hs | (l1 + l2 * 3 >> 4)];
+						} else {
+							int j1 = class43.mapcolor;
+							int lig = 0xff - ((l1 >> 1) * (l1 >> 1) >> 8);
+							raster[index] = ((j1 & 0xff00ff) * lig & ~0xff00ff) + ((j1 & 0xff00) * lig & 0xff0000) >> 8;
+							lig = 0xff - ((l1 * 3 + l2 >> 3) * (l1 * 3 + l2 >> 3) >> 8);
+							raster[index + 1] = ((j1 & 0xff00ff) * lig & ~0xff00ff) + ((j1 & 0xff00) * lig & 0xff0000) >> 8;
+							lig = 0xff - ((l1 + l2 >> 2) * (l1 + l2 >> 2) >> 8);
+							raster[index + 2] = ((j1 & 0xff00ff) * lig & ~0xff00ff) + ((j1 & 0xff00) * lig & 0xff0000) >> 8;
+							lig = 0xff - ((l1 + l2 * 3 >> 3) * (l1 + l2 * 3 >> 3) >> 8);
+							raster[index + 3] = ((j1 & 0xff00ff) * lig & ~0xff00ff) + ((j1 & 0xff00) * lig & 0xff0000) >> 8;
+						}
+						l1 += l3;
+						l2 += l4;
+						index += 512;
+					}
+					return;
+				}
+				int mapColor = class43.mapcolor;
+				if(mapColor == 0) {
+					return;
+				}
+				for(int k1 = 0; k1 < 4; k1++) {
+					raster[index] = mapColor;
+					raster[index + 1] = mapColor;
+					raster[index + 2] = mapColor;
+					raster[index + 3] = mapColor;
+					index += 512;
+				}
+				return;
+			}
+			ShapedGround class40 = tile.shapedGround;
+			if(class40 == null) {
+				return;
+			}
+			int l1 = class40.firstHalfShape;
+			int i2 = class40.secondHalfShape;
+			int j2 = class40.firstMinimapColor;
+			int k2 = class40.secondMinimapColor;
+			int ai1[] = firstFloorHalfShapes[l1];
+			int ai2[] = secondFloorHalfShapes[i2];
+			int l2 = 0;
+			if (class40.color62 != 12345678) {
+				int hs1 = class40.color62 & ~0x7f;
+				int l11 = class40.color92 & 0x7f;
+				int l21 = class40.color82 & 0x7f;
+				int l31 = (class40.color62 & 0x7f) - l11;
+				int l41 = (class40.color72 & 0x7f) - l21;
+				l11 <<= 2;
+				l21 <<= 2;
+				for(int k1 = 0; k1 < 4; k1++) {
+					if (!class40.textured) {
+						if(ai1[ai2[l2++]] != 0) {
+							raster[index] = Rasterizer3D.hslToRgbMap[hs1 | (l11 >> 2)];
+						}
+						if(ai1[ai2[l2++]] != 0) {
+							raster[index + 1] = Rasterizer3D.hslToRgbMap[hs1 | (l11 * 3 + l21 >> 4)];
+						}
+						if(ai1[ai2[l2++]] != 0) {
+							raster[index + 2] = Rasterizer3D.hslToRgbMap[hs1 | (l11 + l21 >> 3)];
+						}
+						if(ai1[ai2[l2++]] != 0) {
+							raster[index + 3] = Rasterizer3D.hslToRgbMap[hs1 | (l11 + l21 * 3 >> 4)];
+						}
+					} else {
+						int j1 = k2;
+						if(ai1[ai2[l2++]] != 0) {
+							int lig = 0xff - ((l11 >> 1) * (l11 >> 1) >> 8);
+							raster[index] = ((j1 & 0xff00ff) * lig & ~0xff00ff) + ((j1 & 0xff00) * lig & 0xff0000) >> 8;
+						}
+						if(ai1[ai2[l2++]] != 0) {
+							int lig = 0xff - ((l11 * 3 + l21 >> 3) * (l11 * 3 + l21 >> 3) >> 8);
+							raster[index + 1] = ((j1 & 0xff00ff) * lig & ~0xff00ff) + ((j1 & 0xff00) * lig & 0xff0000) >> 8;
+						}
+						if(ai1[ai2[l2++]] != 0) {
+							int lig = 0xff - ((l11 + l21 >> 2) * (l11 + l21 >> 2) >> 8);
+							raster[index + 2] = ((j1 & 0xff00ff) * lig & ~0xff00ff) + ((j1 & 0xff00) * lig & 0xff0000) >> 8;
+						}
+						if(ai1[ai2[l2++]] != 0) {
+							int lig = 0xff - ((l11 + l21 * 3 >> 3) * (l11 + l21 * 3 >> 3) >> 8);
+							raster[index + 3] = ((j1 & 0xff00ff) * lig & ~0xff00ff) + ((j1 & 0xff00) * lig & 0xff0000) >> 8;
+						}
+					}
+					l11 += l31;
+					l21 += l41;
+					index += 512;
+				}
+				if (j2 != 0 && class40.color61 != 12345678) {
+					index -= 512 << 2;
+					l2 -= 16;
+					hs1 = class40.color61 & ~0x7f;
+					l11 = class40.color91 & 0x7f;
+					l21 = class40.color81 & 0x7f;
+					l31 = (class40.color61 & 0x7f) - l11;
+					l41 = (class40.color71 & 0x7f) - l21;
+					l11 <<= 2;
+					l21 <<= 2;
+					for(int k1 = 0; k1 < 4; k1++) {
+						if(ai1[ai2[l2++]] == 0) {
+							raster[index] = Rasterizer3D.hslToRgbMap[hs1 | (l11 >> 2)];
+						}
+						if(ai1[ai2[l2++]] == 0) {
+							raster[index + 1] = Rasterizer3D.hslToRgbMap[hs1 | (l11 * 3 + l21 >> 4)];
+						}
+						if(ai1[ai2[l2++]] == 0) {
+							raster[index + 2] = Rasterizer3D.hslToRgbMap[hs1 | (l11 + l21 >> 3)];
+						}
+						if(ai1[ai2[l2++]] == 0) {
+							raster[index + 3] = Rasterizer3D.hslToRgbMap[hs1 | (l11 + l21 * 3 >> 4)];
+						}
+						l11 += l31;
+						l21 += l41;
+						index += 512;
+					}
+				}
+				return;
+			}
+			if(j2 != 0) {
+				for(int i3 = 0; i3 < 4; i3++) {
+					raster[index] = ai1[ai2[l2++]] != 0 ? k2 : j2;
+					raster[index + 1] = ai1[ai2[l2++]] != 0 ? k2 : j2;
+					raster[index + 2] = ai1[ai2[l2++]] != 0 ? k2 : j2;
+					raster[index + 3] = ai1[ai2[l2++]] != 0 ? k2 : j2;
+					index += 512;
+				}
+				return;
+			}
+			for(int j3 = 0; j3 < 4; j3++) {
+				if(ai1[ai2[l2++]] != 0) {
+					raster[index] = k2;
+				}
+				if(ai1[ai2[l2++]] != 0) {
+					raster[index + 1] = k2;
+				}
+				if(ai1[ai2[l2++]] != 0) {
+					raster[index + 2] = k2;
+				}
+				if(ai1[ai2[l2++]] != 0) {
+					raster[index + 3] = k2;
+				}
+				index += 512;
+			}
+		} else {
+			final int offset = 512;
+			final Tile tile = tileMap[plane][x][y];
+			if(tile == null) {
+				return;
+			}
+			final QuadGround floor = tile.quadGround;
+			if(floor != null) {
+				final int color = floor.mapcolor;
+				if(color == 0) {
+					return;
+				}
+				for(int row = 0; row < 4; row++) {
+					raster[index] = color;
+					raster[index + 1] = color;
+					raster[index + 2] = color;
+					raster[index + 3] = color;
+					index += offset;
+				}
+				return;
+			}
+			final ShapedGround floorAdvanced = tile.shapedGround;
+			if(floorAdvanced == null) {
+				return;
+			}
+			final int firstHalfShape = floorAdvanced.firstHalfShape;
+			final int secondHalfShape = floorAdvanced.secondHalfShape;
+			final int color_2 = floorAdvanced.firstMinimapColor;
+			final int color = floorAdvanced.secondMinimapColor;
+			final int[] shape = firstFloorHalfShapes[firstHalfShape];
+			final int[] shape_2 = secondFloorHalfShapes[secondHalfShape];
+			int shapePixel = 0;
+			if(color_2 != 0) {
+				for(int row = 0; row < 4; row++) {
+					raster[index] = shape[shape_2[shapePixel++]] != 0 ? color : color_2;
+					raster[index + 1] = shape[shape_2[shapePixel++]] != 0 ? color : color_2;
+					raster[index + 2] = shape[shape_2[shapePixel++]] != 0 ? color : color_2;
+					raster[index + 3] = shape[shape_2[shapePixel++]] != 0 ? color : color_2;
+					index += offset;
+				}
+				
+				return;
+			}
+			for(int j3 = 0; j3 < 4; j3++) {
+				if(shape[shape_2[shapePixel++]] != 0) {
+					raster[index] = color;
+				}
+				if(shape[shape_2[shapePixel++]] != 0) {
+					raster[index + 1] = color;
+				}
+				if(shape[shape_2[shapePixel++]] != 0) {
+					raster[index + 2] = color;
+				}
+				if(shape[shape_2[shapePixel++]] != 0) {
+					raster[index + 3] = color;
+				}
 				index += offset;
 			}
-			return;
 		}
-		final ShapedGround floorAdvanced = tile.shapedGround;
-		if(floorAdvanced == null) {
-			return;
-		}
-		final int firstHalfShape = floorAdvanced.firstHalfShape;
-		final int secondHalfShape = floorAdvanced.secondHalfShape;
-		final int color_2 = floorAdvanced.firstMinimapColor;
-		final int color = floorAdvanced.secondMinimapColor;
-		final int[] shape = firstFloorHalfShapes[firstHalfShape];
-		final int[] shape_2 = secondFloorHalfShapes[secondHalfShape];
-		int shapePixel = 0;
-		if(color_2 != 0) {
-			for(int row = 0; row < 4; row++) {
-				raster[index] = shape[shape_2[shapePixel++]] != 0 ? color : color_2;
-				raster[index + 1] = shape[shape_2[shapePixel++]] != 0 ? color : color_2;
-				raster[index + 2] = shape[shape_2[shapePixel++]] != 0 ? color : color_2;
-				raster[index + 3] = shape[shape_2[shapePixel++]] != 0 ? color : color_2;
-				index += offset;
-			}
-
-			return;
-		}
-		for(int j3 = 0; j3 < 4; j3++) {
-			if(shape[shape_2[shapePixel++]] != 0) {
-				raster[index] = color;
-			}
-			if(shape[shape_2[shapePixel++]] != 0) {
-				raster[index + 1] = color;
-			}
-			if(shape[shape_2[shapePixel++]] != 0) {
-				raster[index + 2] = color;
-			}
-			if(shape[shape_2[shapePixel++]] != 0) {
-				raster[index + 3] = color;
-			}
-			index += offset;
-		}
-
 	}
 
 	void setWallDecor(Entity model1, Entity model2, int plane, int x, int y, int height, int face1, int face2, long hash, byte config) {

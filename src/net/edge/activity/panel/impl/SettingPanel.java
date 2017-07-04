@@ -13,18 +13,32 @@ public class SettingPanel extends Panel {
 	public static int selectedBinding = -1;
 	
 	public static int[] hotkeys = {
-			3,
-			0,
-			1,
-			2,
 			4,
 			5,
 			6,
 			7,
-			8,
+			0,
+			1,
 			9,
+			10,
 			11,
-			12
+			12,
+			13,
+			3
+	};
+	public final static int[] DEFAULTS = {
+			4,
+			5,
+			6,
+			7,
+			0,
+			1,
+			9,
+			10,
+			11,
+			12,
+			13,
+			3
 	};
 	
 	public boolean bindings;
@@ -50,6 +64,9 @@ public class SettingPanel extends Panel {
 		if(bindings) {
 			int xOff = 0;
 			int yOff = 0;
+			if(client.leftClickInRegion(x + 389, y + 286, x + 493, y + 301)) {
+				System.arraycopy(DEFAULTS, 0, hotkeys, 0, DEFAULTS.length);
+			}
 			for(int i = 0; i < hotkeys.length; i++) {
 				if(client.uiRenderer.resizable != null) {
 					if(client.leftClickInRegion(x + 45 + xOff, y + 69 + yOff, x + 145 + xOff, y + 106 + yOff))
@@ -79,9 +96,10 @@ public class SettingPanel extends Panel {
 			Config.def.setLOW_MEM(!Config.def.isLOW_MEM());
 		else if(client.leftClickInRegion(x + 150, y + 72, x + 192, y + 87))
 			Config.def.setTWEENING(!Config.def.isTWEENING());
-		else if(client.leftClickInRegion(x + 150, y + 96, x + 192, y + 111))
-			Config.def.setMAP_ANTIALIASING(!Config.def.isMAP_ANTIALIASING());
-		else if(client.leftClickInRegion(x + 150, y + 120, x + 192, y + 135))
+		else if(client.leftClickInRegion(x + 150, y + 96, x + 192, y + 111)) {
+			Config.def.setHD_MINIMAP(!Config.def.isHD_MINIMAP());
+			client.renderMinimap(client.cameraPlane);
+		}else if(client.leftClickInRegion(x + 150, y + 120, x + 192, y + 135))
 			Config.def.setRETAIN_MODEL_PRECISION(!Config.def.isRETAIN_MODEL_PRECISION());
 		else if(client.leftClickInRegion(x + 150, y + 144, x + 192, y + 159)) {
 			Config.def.setGROUND_DECORATION(!Config.def.isGROUND_DECORATION());
@@ -151,7 +169,7 @@ public class SettingPanel extends Panel {
 			drawSection(x + 20, y + 20, 310, 480, "Hot keys and bindings");
 			boldFont.drawCenteredString("To bind hot keys:", x + 435, y + 150, 0xffffff);
 			smallFont.drawLeftAlignedString("1. Select the F key", x + 385, y + 190, 0xffffff);
-			smallFont.drawLeftAlignedString("2. Click on the tab", x + 385, y + 210, 0xffffff);
+			smallFont.drawLeftAlignedString("2. Click on the tab ->", x + 385, y + 210, 0xffffff);
 			int xOff = 0;
 			int yOff = 0;
 			for(int i = 0; i < hotkeys.length; i++) {
@@ -173,6 +191,7 @@ public class SettingPanel extends Panel {
 					yOff = 0;
 				}
 			}
+			drawTitleButton("Set default keys", x + 388, y + 283, 0xdb8145);
 			drawTitleButton("Back to main panel", x + 388, y + 303, 0xdb8145);
 			if(client.mouseInRegion(x + 452, y + 23, x + 500, y + 44))
 				Rasterizer2D.fillRectangle(x + 452, y + 22, 46, 19, 0x000000, 70);
@@ -191,7 +210,7 @@ public class SettingPanel extends Panel {
 		
 		plainFont.drawLeftAlignedEffectString((Config.def.isLOW_MEM() ? "@gre@" : "@red@") + "Low memory mode", x + 20, y + 55, 0, true);
 		plainFont.drawLeftAlignedEffectString((Config.def.isTWEENING() ? "@gre@" : "@red@") + "Animation tweening", x + 20, y + 77, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.isMAP_ANTIALIASING() ? "@gre@" : "@red@") + "Minimap antialiasing", x + 20, y + 99, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.isHD_MINIMAP() ? "@gre@" : "@red@") + "Enhanced Minimap", x + 20, y + 99, 0, true);
 		plainFont.drawLeftAlignedEffectString((Config.def.isRETAIN_MODEL_PRECISION() ? "@gre@" : "@red@") + "Model precision", x + 20, y + 123, 0, true);
 
 		plainFont.drawLeftAlignedEffectString((Config.def.isGROUND_DECORATION() ? "@gre@" : "@red@") + "Ground decorations", x + 20, y + 147, 0, true);

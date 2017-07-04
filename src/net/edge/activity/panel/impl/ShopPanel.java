@@ -234,7 +234,7 @@ public class ShopPanel extends Panel {
 		if(client.mouseInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
 		}
-		if(false) {
+		if(client.localPrivilege == 4) {
 			fancyFont.drawCenteredString("Edit", beginX + 350, beginY + 27, 0xF3B13F);
 			Rasterizer2D.fillRoundedRectangle(beginX + 323, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
 			if(client.mouseInRegion(beginX + 325, beginY + 12, beginX + 381, beginY + 42)) {

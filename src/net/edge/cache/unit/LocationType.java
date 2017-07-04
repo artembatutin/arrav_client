@@ -106,6 +106,8 @@ public final class LocationType {
 		loc.read(data);
 		if(id == 28139)
 			loc.name = "Edge Portal";
+		if(loc.id == 29947)
+			loc.actions = new String[]{"Renew-points", null, "Infuse-pouches", null, null};
 		if(id >= 2980 && id <= 2987)
 			loc.actions = new String[]{"Pick-up", null, null, null, null};
 		if(id == 24124)
@@ -234,7 +236,7 @@ public final class LocationType {
 			} else if(opcode == 14)
 				offsetAmplifier = buffer.getUByte();
 			else if(opcode == 15)
-				ambient = buffer.getUByte();
+				ambient = buffer.getUByte();//ye its custom haha so, your readvalues arent normal? umm different opcodes
 			else if(opcode == 16)
 				diffuse = buffer.getUByte();
 			else if(opcode >= 40 && opcode < 50) {

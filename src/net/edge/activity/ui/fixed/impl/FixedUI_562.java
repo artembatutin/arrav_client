@@ -5,6 +5,7 @@ import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.activity.ui.UIComponent;
 import net.edge.activity.ui.fixed.FixedUI;
 import net.edge.activity.ui.util.OrbHandler;
+import net.edge.activity.ui.util.CounterHandler;
 import net.edge.game.model.Model;
 import net.edge.game.model.Player;
 import net.edge.media.Rasterizer2D;
@@ -235,6 +236,17 @@ public class FixedUI_562 extends FixedUI {
 			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
 			client.menuItemCode[client.menuPos] = 1053;
 			client.menuPos++;
+		} else if(client.mouseInRegion(526, 127, 562, 159)) {
+			client.menuItemName[1] = "Check wilderness";
+			client.menuItemCode[1] = 1050;
+			client.menuPos = 2;
+		} else if(client.mouseInRegion(521, 54, 550, 81)) {
+			client.menuItemName[client.menuPos] = "Reset counter";
+			client.menuItemCode[client.menuPos] = 1056;
+			client.menuPos++;
+			client.menuItemName[client.menuPos] = "Turn counter " + (CounterHandler.isCounterOn() ? "off" : "on");
+			client.menuItemCode[client.menuPos] = 1055;
+			client.menuPos++;
 		}
 	}
 
@@ -355,6 +367,10 @@ public class FixedUI_562 extends FixedUI {
 		Rasterizer2D.fillRectangle(106, 79, 3, 3, 0xffffff);
 		ImageCache.get(18).drawImage(0, 0);
 		ImageCache.get(1700).drawAffineTransformedImage(8, 8, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
+		ImageCache.get(1950).drawAlphaImage(-2, 47);
+		if(client.mouseInRegion(521, 54, 550, 81)) {
+			ImageCache.get(1951).drawAlphaImage(-2, 47);
+		}
 		if(Config.def.isDRAW_ORBS()) {
 			displayOrb(164, 9, Constants.ORB_HEALTH, false);
 			displayOrb(185, 47, Constants.ORB_PRAYER, true);
@@ -365,6 +381,9 @@ public class FixedUI_562 extends FixedUI {
 			client.gameActivity.drawer.drawMenu(-519, 0, false);
 		}
 		displayLogout();
+		if(client.mouseInRegion(526, 127, 562, 159)) {
+			ImageCache.get(239).drawAlphaImage(8, 123);
+		}
 		client.mapGraphics.drawGraphics(519, 0, client.graphics);
 		client.gameGraphics.setCanvas();
 	}

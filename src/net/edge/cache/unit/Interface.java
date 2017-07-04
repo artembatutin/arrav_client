@@ -10,6 +10,9 @@ import net.edge.cache.CacheArchive;
 import net.edge.media.font.BitmapFont;
 import net.edge.util.DataToolkit;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public final class Interface {
@@ -141,6 +144,19 @@ public final class Interface {
 		Pestpanel2(fonts);
 		Pestpanel(fonts);
 		addPestControlRewardWidget(fonts);
+		try {
+			BufferedWriter w = new BufferedWriter(new FileWriter(new File("./int_free.txt")));
+			for(int i = 0; i < cache.length; i++) {
+				if(cache[i] == null) {
+					w.write(i + "");
+					w.newLine();
+				}
+			}
+			w.flush();
+			w.close();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public static void addPestControlRewardWidget(BitmapFont[] tda) {

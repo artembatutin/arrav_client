@@ -44,7 +44,7 @@ public class TitleActivity extends Activity {
 	/**
 	 * The connection index selected.
 	 */
-	public static int connection;
+	public static int connection = 0;
 	
 	/**
 	 * Scroll state condition.
