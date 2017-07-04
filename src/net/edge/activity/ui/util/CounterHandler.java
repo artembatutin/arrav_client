@@ -11,12 +11,11 @@ import java.util.Iterator;
 
 public class CounterHandler {
 	
-	public static final ObjectList<SkillUpdate> updates = new ObjectArrayList<>();
-	public static boolean counterToggled;
-	public static int gainedUnits;
-	public static int gainedThousands;
-	public static int gainedMillions;
-	public static int gainedBillions;
+	private static final ObjectList<SkillUpdate> updates = new ObjectArrayList<>();
+	private static boolean counterToggled;
+	private static int gainedXPWidth = 5;
+	private static int movable = 0;
+	public static int gainedXP;
 	
 	public static Client client;
 	private static boolean login = true;
@@ -40,11 +39,13 @@ public class CounterHandler {
 	
 	public static void drawCounter() {
 		Iterator<SkillUpdate> it = updates.iterator();
-		int y = 0;
+		int x = client.uiRenderer.isFixed() ? 510 : client.windowWidth - 223;
+		int yMove = (client.uiRenderer.isResizableOrFull() ? 15 : client.uiRenderer.getId() > 500 ? -15 : 20) - 30;
 		while(it.hasNext()) {
 			SkillUpdate update = it.next();
 			update.move += 1;
-			y += 25;
+			if(movable < -20)
+				movable++;
 			if(update.move > 40) {
 				update.alpha -= 10;
 			}
@@ -53,37 +54,26 @@ public class CounterHandler {
 				continue;
 			}
 			if(counterToggled) {
-				ImageCache.get(update.skill + 791).drawImage(445, 120 + update.move - y, update.alpha);
-				client.smallFont.drawLeftAlignedString("" + update.xp, 470, 140 + update.move - y, 0xffffff);
+				ImageCache.get(update.skill + 1957).drawImage(x - 25 - update.width, 80 + update.move - yMove, update.alpha);
+				client.smallFont.drawRightAlignedString("" + update.xp, x, 100 + update.move - yMove, 0xffffff);
 			}
 		}
 		if(counterToggled) {
-			int x = 0;
-			if(client.uiRenderer.isFixed() && client.uiRenderer.getId() > 500) {
-				ImageCache.get(1954).drawImage(515 - (x += 10), 55);
-				ImageCache.get(1953).drawImage(515 - (x += 10), 55);
-				ImageCache.get(1953).drawImage(515 - (x += 10), 55);
-				client.smallFont.drawRightAlignedString("" + gainedUnits, 507, 68, 0xffffff);
-				if(gainedThousands > 0) {
-					ImageCache.get(1953).drawImage(515 - (x += 10), 55);
-					ImageCache.get(1953).drawImage(515 - (x += 10), 55);
-					Rasterizer2D.drawVerticalLine(485, 59, 2, 0xffffff);
-					client.smallFont.drawRightAlignedString("" + gainedThousands, 484, 68, 0xffffff);
-				}
-				if(gainedMillions > 0) {
-					ImageCache.get(1953).drawImage(515 - (x += 10), 55);
-					ImageCache.get(1953).drawImage(515 - (x += 10), 55);
-					Rasterizer2D.drawVerticalLine(464, 59, 2, 0xffffff);
-					client.smallFont.drawRightAlignedString("" + gainedMillions, 462, 68, 0xffffff);
-				}
-				if(gainedBillions > 0) {
-					ImageCache.get(1953).drawImage(515 - (x += 10), 55);
-					ImageCache.get(1953).drawImage(515 - (x += 10), 55);
-					Rasterizer2D.drawVerticalLine(444, 59, 2, 0xffffff);
-					client.smallFont.drawRightAlignedString("" + gainedBillions, 442, 68, 0xffffff);
-				}
-				ImageCache.get(1952).drawImage(515 - (x + 7), 55);
+			int y = client.uiRenderer.isResizableOrFull() ? 15 : client.uiRenderer.getId() > 500 ? 56 : 10;
+			int width = gainedXPWidth + 7;
+			if(gainedXPWidth == 5 && gainedXP > 0) {
+				gainedXPWidth = client.smallFont.getStringWidth("" + gainedXP);
 			}
+			if(client.uiRenderer.getId() > 500) {
+				Rasterizer2D.fillRectangle(x - width, y, width, 15, 0x4d493e, 170);
+				Rasterizer2D.drawRectangle(x - width, y, width, 15, 0xad7d3f);
+				Rasterizer2D.drawRectangle(x - width - 1, y - 1, width + 2, 17, 0x91825c, 100);
+			} else {
+				Rasterizer2D.fillRectangle(x - width, y, width, 15, client.uiRenderer.getId() == 1 ? 0x000000 : 0x413c34, 170);
+				Rasterizer2D.drawRectangle(x - width, y, width, 15, 0x5b5348);
+				Rasterizer2D.drawRectangle(x - width - 1, y - 1, width + 2, 17, 0x383322);
+			}
+			client.smallFont.drawRightAlignedString("" + gainedXP, x - 3, y + 12, 0xffffff);
 		}
 	}
 	
@@ -92,10 +82,8 @@ public class CounterHandler {
 	}
 	
 	public static void resetCounter() {
-		gainedUnits = 0;
-		gainedThousands = 0;
-		gainedMillions = 0;
-		gainedBillions = 0;
+		gainedXP = 0;
+		gainedXPWidth = 5;
 	}
 	
 	public static boolean isCounterOn() {
@@ -301,22 +289,8 @@ public class CounterHandler {
 	}
 	
 	public static void add(SkillUpdate update) {
-		gainedUnits += update.xp;
-		if(gainedUnits >= 1000) {
-			int move = gainedUnits / 1000;
-			gainedThousands += move;
-			gainedUnits -= move * 1000;
-		}
-		if(gainedThousands >= 1000) {
-			int move = gainedThousands / 1000;
-			gainedMillions += move;
-			gainedThousands -= move * 1000;
-		}
-		if(gainedMillions >= 1000) {
-			int move = gainedMillions / 1000;
-			gainedBillions += move;
-			gainedMillions -= move * 1000;
-		}
+		gainedXP += update.xp;
+		gainedXPWidth = client.smallFont.getStringWidth("" + gainedXP);
 		updates.add(update);
 	}
 	
@@ -324,12 +298,16 @@ public class CounterHandler {
 		
 		private final int skill;
 		private final int xp;
+		private final int width;
 		private int move = 0;
 		private int alpha = 250;
 		
 		public SkillUpdate(int skill, int xp) {
 			this.skill = skill;
 			this.xp = xp;
+			this.width = client.smallFont.getStringWidth("" + xp);
+			movable -= 25;
+			this.move = movable;
 		}
 		
 	}

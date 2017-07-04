@@ -57,6 +57,7 @@ public class SkillPanel extends Panel {
 				if(client.leftClickInRegion(beginX + 8 + x, beginY + offset, beginX + 125 + x, beginY + offset + 50)) {
 					client.outBuffer.putOpcode(185);
 					client.outBuffer.putShort(skill + 5);
+					return true;
 				}
 			}
 			offset += i % 4 == 3 ? 55 : 0;

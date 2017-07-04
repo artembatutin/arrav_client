@@ -377,13 +377,13 @@ public class FixedUI_562 extends FixedUI {
 			displayOrb(185, 86, Constants.ORB_RUN, true);
 			displayOrb(170, 125, Constants.ORB_SUMMONING, true);
 		}
+		if(client.mouseInRegion(526, 127, 562, 159)) {
+			ImageCache.get(239).drawAlphaImage(8, 123);
+		}
 		if(client.menuOpened) {
 			client.gameActivity.drawer.drawMenu(-519, 0, false);
 		}
 		displayLogout();
-		if(client.mouseInRegion(526, 127, 562, 159)) {
-			ImageCache.get(239).drawAlphaImage(8, 123);
-		}
 		client.mapGraphics.drawGraphics(519, 0, client.graphics);
 		client.gameGraphics.setCanvas();
 	}

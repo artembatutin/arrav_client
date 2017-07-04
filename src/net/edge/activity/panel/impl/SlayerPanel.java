@@ -25,14 +25,17 @@ public class SlayerPanel extends Panel {
 		if(client.leftClickInRegion(beginX + 180, beginY + 65, beginX + 234, beginY + 85)) {
 			client.outBuffer.putOpcode(185);
 			client.outBuffer.putShort(112);
+			return true;
 		}
 		if(client.leftClickInRegion(beginX + 120, beginY + 65, beginX + 174, beginY + 85)) {
 			client.outBuffer.putOpcode(185);
 			client.outBuffer.putShort(111);
+			return true;
 		}
 		if(client.leftClickInRegion(beginX + 50, beginY + 65, beginX + 114, beginY + 85)) {
 			client.outBuffer.putOpcode(185);
 			client.outBuffer.putShort(110);
+			return true;
 		}
 		for(int i = 0; i < 5; i++) {
 			int off = i * 30;
@@ -40,6 +43,7 @@ public class SlayerPanel extends Panel {
 				if(client.leftClickInRegion(beginX + 422, beginY + 177 + off, beginX + 476, beginY + 192 + off)) {
 					client.outBuffer.putOpcode(185);
 					client.outBuffer.putShort(113 + i);
+					return true;
 				}
 			}
 		}

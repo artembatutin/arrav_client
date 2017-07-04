@@ -28,11 +28,13 @@ public class IronManSelectionPanel extends Panel {
 		if(client.leftClickInRegion(beginX + 370, beginY + 120, beginX + 470, beginY + 150)) {
 			client.outBuffer.putOpcode(185);
 			client.outBuffer.putShort(200);
+			return true;
 		}
 		//regular
 		if(client.leftClickInRegion(beginX + 190, beginY + 270, beginX + 290, beginY + 300)) {
 			client.outBuffer.putOpcode(185);
 			client.outBuffer.putShort(201);
+			return true;
 		}
 		return false;
 	}

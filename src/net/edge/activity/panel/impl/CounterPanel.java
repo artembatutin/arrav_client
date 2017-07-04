@@ -111,6 +111,7 @@ public class CounterPanel extends Panel {
 					if(client.leftClickInRegion(beginX + 6 + x, beginY + offset, beginX + 230 + x, beginY + 30 + offset)) {
 						client.outBuffer.putOpcode(20);
 						client.outBuffer.putShort(s.getId());
+						return true;
 					}
 					offset += i % 2 == 1 ? 41 : 0;
 					i++;

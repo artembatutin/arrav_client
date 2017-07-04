@@ -40,6 +40,7 @@ public class MonsterPanel extends Panel {
 				if(!DISABLED[i]) {
 					client.outBuffer.putOpcode(185);
 					client.outBuffer.putShort(i + 70);
+					return true;
 				}
 			}
 			offset += i % 6 == 5 ? 55 : 0;

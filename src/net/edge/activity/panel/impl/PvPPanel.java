@@ -57,6 +57,7 @@ public class PvPPanel extends Panel {
 			if(client.leftClickInRegion(beginX + 190 + p.x, beginY + 27 + p.y, beginX + 210 + p.x, beginY + 57 + p.y)) {
 				client.outBuffer.putOpcode(185);
 				client.outBuffer.putShort(i + 420);
+				return true;
 			}
 			i++;
 		}
@@ -91,7 +92,7 @@ public class PvPPanel extends Panel {
 		Rasterizer2D.fillRectangle(beginX + 5, beginY + 40, 488, 290, 0xffffff, 60);
 		
 		smallFont.drawLeftAlignedString("Caution: Don't get fooled by certain hot spots.", beginX + 200, beginY + 33, 0xffffff);
-		plainFont.drawLeftAlignedString("Players in wilderness: ", beginX + 10, beginY + 60, 0xffffff);
+		plainFont.drawLeftAlignedString("Players in wilderness: 131", beginX + 10, beginY + 60, 0xffffff);
 		
 		Rasterizer2D.drawRectangle(beginX + 10, beginY + 70, 170, 170, 0x000000);
 		Rasterizer2D.drawHorizontalLine(beginX + 10, beginY + 90, 170, 0x000000);
@@ -148,6 +149,16 @@ public class PvPPanel extends Panel {
 			client.scoreKills = new int[20];
 		}
 		int offset = 67;
+		client.scoreNames[0] = "Avro";
+		client.scoreNames[1] = "Valkyrian";
+		client.scoreNames[2] = "Bigshot";
+		client.scoreNames[3] = "Mk2";
+		client.scoreNames[4] = "Pkerpro";
+		client.scoreNames[5] = "Ouf yo fam";
+		client.scoreNames[6] = "Staniv";
+		client.scoreNames[7] = "Dhruv";
+		client.scoreNames[8] = "Compass";
+		client.scoreNames[9] = "Miris";
 		for(int i = 0; i < client.killstreak.length - 10; i++) {
 			offset += 15;
 			smallFont.drawLeftAlignedEffectString("" + (i + 1), beginX + 22, beginY + offset + 19, 0xF3B13F, true);

@@ -703,6 +703,7 @@ public class Client extends ClientEngine {
 	@Override
 	public void reset() {
 		SignLink.reportError = false;
+		Config.def.save();
 		try {
 			//Socket stream clean-up.
 			if(socketStream != null) {
@@ -3505,30 +3506,37 @@ public class Client extends ClientEngine {
 		if(code == 1050) {
 			outBuffer.putOpcode(185);
 			outBuffer.putShort(1164);
+			return;
 		}
 		if(code == 1051) {
 			outBuffer.putOpcode(185);
 			outBuffer.putShort(152);
+			return;
 		}
 		if(code == 1052) {
 			if(uiRenderer.getId() > 560)
 				invTab = 16;
 			else
 				invTab = 10;
+			return;
 		}
 		if(code == 1053) {
 			outBuffer.putOpcode(185);
 			outBuffer.putShort(48);
+			return;
 		}
 		if(code == 1054) {
 			outBuffer.putOpcode(185);
 			outBuffer.putShort(49);
+			return;
 		}
 		if(code == 1055) {
 			CounterHandler.toggleCounter();
+			return;
 		}
 		if(code == 1056) {
 			CounterHandler.resetCounter();
+			return;
 		}
 		if(code == 582 && panelHandler.action()) {
 			final NPC npc = npcList[arg1];
@@ -4041,6 +4049,7 @@ public class Client extends ClientEngine {
 		if(code == 1014) {
 			cameraAngleX = 0;
 			mapVerticalRotation = 120;
+			return;
 		}
 		if(code == 493) {
 			outBuffer.putOpcode(75);

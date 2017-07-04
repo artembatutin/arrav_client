@@ -2,6 +2,7 @@ package net.edge.activity.ui.resize.impl;
 
 import net.edge.Constants;
 import net.edge.activity.panel.impl.SettingPanel;
+import net.edge.activity.ui.util.CounterHandler;
 import net.edge.activity.ui.util.OrbHandler;
 import net.edge.Config;
 import net.edge.activity.ui.UIComponent;
@@ -256,6 +257,7 @@ public class ResizableUI_525 extends ResizableUI {
 			client.menuItemCode[1] = 1051;
 			client.menuPos = 2;
 		} else if(Config.def.isDRAW_ORBS() && client.mouseInRegion(client.windowWidth - 212, 72, client.windowWidth - 155, 105)) {
+			client.menuPos = 0;
 			client.menuItemName[client.menuPos] = "Select quick prayers";
 			client.menuItemCode[client.menuPos] = 1054;
 			client.menuPos++;
@@ -266,6 +268,14 @@ public class ResizableUI_525 extends ResizableUI {
 			client.menuItemName[1] = "Check wilderness";
 			client.menuItemCode[1] = 1050;
 			client.menuPos = 2;
+		} else if(client.mouseInRegion(client.windowWidth - 212, 5, client.windowWidth - 183, 32)) {
+			client.menuPos = 0;
+			client.menuItemName[client.menuPos] = "Reset counter";
+			client.menuItemCode[client.menuPos] = 1056;
+			client.menuPos++;
+			client.menuItemName[client.menuPos] = "Turn counter " + (CounterHandler.isCounterOn() ? "off" : "on");
+			client.menuItemCode[client.menuPos] = 1055;
+			client.menuPos++;
 		}
 	}
 
@@ -395,6 +405,10 @@ public class ResizableUI_525 extends ResizableUI {
 		ImageCache.get(238).drawImage(xOffset + 140, 130);
 		if(client.mouseInRegion(client.windowWidth - 44, 132, client.windowWidth - 9, 167)) {
 			ImageCache.get(239).drawImage(xOffset + 140, 130);
+		}
+		ImageCache.get(1950).drawAlphaImage(client.windowWidth - 212, 5);
+		if(client.mouseInRegion(client.windowWidth - 212, 5, client.windowWidth - 183, 32)) {
+			ImageCache.get(1951).drawAlphaImage(client.windowWidth - 212, 5);
 		}
 		client.gameGraphics.setCanvas();
 	}

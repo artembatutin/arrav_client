@@ -1,6 +1,7 @@
 package net.edge;
 
 import net.edge.activity.panel.impl.SettingPanel;
+import net.edge.activity.ui.util.CounterHandler;
 import net.edge.sign.SignLink;
 import net.edge.util.FileToolkit;
 import net.edge.util.io.Buffer;
@@ -82,8 +83,9 @@ public class Config {
 	 * Saves the configurations.
 	 */
 	public void save() {
-		Buffer data = new Buffer(new byte[31]);
+		Buffer data = new Buffer(new byte[35]);
 		//17 bytes and 1 short.
+		data.putInt(CounterHandler.gainedXP);
 		data.putShort(GAME_FRAME);
 		data.putByte(SELECTED_MENU);
 		data.putByte(HITSPLATS);
@@ -116,6 +118,7 @@ public class Config {
 			byte[] data = FileToolkit.readFile(SignLink.getCacheDir() + "settings");
 			if(data != null && data.length > 0) {
 				Buffer buf = new Buffer(data);
+				CounterHandler.gainedXP = buf.getInt();
 				GAME_FRAME = buf.getUShort();
 				System.out.println(GAME_FRAME);
 				SELECTED_MENU = buf.getUByte();

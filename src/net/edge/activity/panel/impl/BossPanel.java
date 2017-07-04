@@ -65,6 +65,7 @@ public class BossPanel extends Panel {
 			if(bosses[i].enabled && client.leftClickInRegion(beginX + 12 + x, beginY + offset, beginX + 82 + x, beginY + offset + 70)) {
 				client.outBuffer.putOpcode(185);
 				client.outBuffer.putShort(i + 50);
+				return true;
 			}
 			offset += i % 6 == 5 ? 95 : 0;
 		}

@@ -5,6 +5,7 @@ import net.edge.Constants;
 import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.activity.ui.fixed.FixedUI;
 import net.edge.activity.ui.UIComponent;
+import net.edge.activity.ui.util.CounterHandler;
 import net.edge.activity.ui.util.OrbHandler;
 import net.edge.cache.unit.ImageCache;
 import net.edge.cache.unit.Interface;
@@ -226,6 +227,13 @@ public class FixedUI_OS extends FixedUI {
 			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
 			client.menuItemCode[client.menuPos] = 1053;
 			client.menuPos++;
+		} else if(client.mouseInRegion(718, 25, 748, 52)) {
+			client.menuItemName[client.menuPos] = "Reset counter";
+			client.menuItemCode[client.menuPos] = 1056;
+			client.menuPos++;
+			client.menuItemName[client.menuPos] = "Turn counter " + (CounterHandler.isCounterOn() ? "off" : "on");
+			client.menuItemCode[client.menuPos] = 1055;
+			client.menuPos++;
 		}
 	}
 	
@@ -347,6 +355,10 @@ public class FixedUI_OS extends FixedUI {
 			displayOrb(-2, 87, Constants.ORB_PRAYER, true);
 			displayOrb(24, 122, Constants.ORB_RUN, true);
 			displaySpecialOrb(178, 117, Constants.ORB_SUMMONING, true);
+		}
+		ImageCache.get(1955).drawAlphaImage(195, 17);
+		if(client.mouseInRegion(718, 25, 748, 52)) {
+			ImageCache.get(1956).drawAlphaImage(195, 17);
 		}
 		if(client.menuOpened) {
 			client.gameActivity.drawer.drawMenu(-519, 0, false);

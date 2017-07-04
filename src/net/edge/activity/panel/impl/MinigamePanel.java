@@ -59,6 +59,7 @@ public class MinigamePanel extends Panel {
 			if(mgs[i].enabled && client.leftClickInRegion(beginX + 12 + x, beginY + offset, beginX + 82 + x, beginY + offset + 70)) {
 				client.outBuffer.putOpcode(185);
 				client.outBuffer.putShort(i + 30);
+				return true;
 			}
 			offset += i % 6 == 5 ? 95 : 0;
 		}

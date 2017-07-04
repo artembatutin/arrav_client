@@ -82,6 +82,7 @@ public class RoomCreationPanel extends Panel {
 			if(client.leftClickInRegion(beginX + 6 + x, beginY + offset, beginX + 164 + x, beginY + offset + 30)) {
 				client.outBuffer.putOpcode(10);
 				client.outBuffer.putByte(i);
+				return true;
 			}
 			offset += i % 3 == 2 ? 31 : 0;
 			i++;

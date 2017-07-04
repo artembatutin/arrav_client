@@ -1,6 +1,7 @@
 package net.edge.activity.ui.resize.impl;
 
 import net.edge.Constants;
+import net.edge.activity.ui.util.CounterHandler;
 import net.edge.activity.ui.util.OrbHandler;
 import net.edge.cache.unit.DeformSequence;
 import net.edge.game.model.Player;
@@ -343,6 +344,14 @@ public class ResizableUI_CUS extends ResizableUI {
 			client.menuPos++;
 			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
 			client.menuItemCode[client.menuPos] = 1053;
+			client.menuPos++;
+		} else if(client.mouseInRegion(client.windowWidth - 212, 5, client.windowWidth - 183, 32)) {
+			client.menuPos = 0;
+			client.menuItemName[client.menuPos] = "Reset counter";
+			client.menuItemCode[client.menuPos] = 1056;
+			client.menuPos++;
+			client.menuItemName[client.menuPos] = "Turn counter " + (CounterHandler.isCounterOn() ? "off" : "on");
+			client.menuItemCode[client.menuPos] = 1055;
 			client.menuPos++;
 		}
 	}

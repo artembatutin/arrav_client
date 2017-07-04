@@ -58,6 +58,7 @@ public class ObjectCreationPanel extends Panel {
 			if(client.leftClickInRegion(beginX + 6 + x, beginY + offset, beginX + 248 + x, beginY + offset + 40)) {
 				client.outBuffer.putOpcode(10);
 				client.outBuffer.putByte(i + 40);
+				return true;
 			}
 			offset += i % 2 == 1 ? 41 : 0;
 			i++;

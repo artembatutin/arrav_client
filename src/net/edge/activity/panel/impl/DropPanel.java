@@ -235,6 +235,7 @@ public class DropPanel extends Panel {
 						client.outBuffer.putOpcode(134);
 						client.outBuffer.putShort(seekable[i].id);
 						client.panelSearchInput = null;
+						return true;
 					}
 					offset += 31;
 				}

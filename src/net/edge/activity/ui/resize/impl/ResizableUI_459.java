@@ -5,6 +5,7 @@ import net.edge.Constants;
 import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.activity.ui.UIComponent;
 import net.edge.activity.ui.resize.ResizableUI;
+import net.edge.activity.ui.util.CounterHandler;
 import net.edge.activity.ui.util.OrbHandler;
 import net.edge.game.model.Model;
 import net.edge.game.model.Player;
@@ -249,11 +250,20 @@ public class ResizableUI_459 extends ResizableUI {
 			client.menuItemCode[1] = 1051;
 			client.menuPos = 2;
 		} else if(Config.def.isDRAW_ORBS() && client.mouseInRegion(client.windowWidth - 212, 72, client.windowWidth - 155, 105)) {
+			client.menuPos = 0;
 			client.menuItemName[client.menuPos] = "Select quick prayers";
 			client.menuItemCode[client.menuPos] = 1054;
 			client.menuPos++;
 			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
 			client.menuItemCode[client.menuPos] = 1053;
+			client.menuPos++;
+		} else if(client.mouseInRegion(client.windowWidth - 217, 5, client.windowWidth - 188, 32)) {
+			client.menuPos = 0;
+			client.menuItemName[client.menuPos] = "Reset counter";
+			client.menuItemCode[client.menuPos] = 1056;
+			client.menuPos++;
+			client.menuItemName[client.menuPos] = "Turn counter " + (CounterHandler.isCounterOn() ? "off" : "on");
+			client.menuItemCode[client.menuPos] = 1055;
 			client.menuPos++;
 		}
 	}
@@ -375,6 +385,10 @@ public class ResizableUI_459 extends ResizableUI {
 			displayOrb(client.windowWidth - 212, 72, Constants.ORB_PRAYER, true);
 			displayOrb(client.windowWidth - 200, 106, Constants.ORB_RUN, true);
 			displayOrb(client.windowWidth - 177, 140, Constants.ORB_SUMMONING, true);
+		}
+		ImageCache.get(1955).drawAlphaImage(client.windowWidth - 217, 5);
+		if(client.mouseInRegion(client.windowWidth - 217, 5, client.windowWidth - 188, 32)) {
+			ImageCache.get(1956).drawAlphaImage(client.windowWidth - 217, 5);
 		}
 		Rasterizer2D.fillRectangle(xOffset + 97, 78, 3, 3, 0xffffff);
 		client.gameGraphics.setCanvas();

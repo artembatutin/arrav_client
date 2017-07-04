@@ -369,15 +369,15 @@ public class FixedUI_525 extends FixedUI {
 			displayOrb(185, 86, Constants.ORB_RUN, true);
 			displayOrb(170, 125, Constants.ORB_SUMMONING, true);
 		}
-		if(client.menuOpened) {
-			client.gameActivity.drawer.drawMenu(-519, 0, false);
-		}
 		ImageCache.get(1950).drawAlphaImage(-2, 47);
 		if(client.mouseInRegion(521, 54, 550, 81)) {
 			ImageCache.get(1951).drawAlphaImage(-2, 47);
 		}
 		if(client.mouseInRegion(526, 127, 562, 159)) {
 			ImageCache.get(239).drawAlphaImage(8, 123);
+		}
+		if(client.menuOpened) {
+			client.gameActivity.drawer.drawMenu(-519, 0, false);
 		}
 		client.mapGraphics.drawGraphics(519, 0, client.graphics);
 		client.gameGraphics.setCanvas();

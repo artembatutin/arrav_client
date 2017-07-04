@@ -57,20 +57,25 @@ public class SettingPanel extends Panel {
 		if(client.leftClickInRegion(x + 452, y + 23, x + 500, y + 44)) {
 			Scene.hoverX = -1;
 			client.panelHandler.close();
+			return true;
 		}
 		if(client.leftClickInRegion(x + 389, y + 306, x + 493, y + 321)) {
 			bindings = !bindings;
+			return true;
 		}
 		if(bindings) {
 			int xOff = 0;
 			int yOff = 0;
 			if(client.leftClickInRegion(x + 389, y + 286, x + 493, y + 301)) {
 				System.arraycopy(DEFAULTS, 0, hotkeys, 0, DEFAULTS.length);
+				return true;
 			}
 			for(int i = 0; i < hotkeys.length; i++) {
 				if(client.uiRenderer.resizable != null) {
-					if(client.leftClickInRegion(x + 45 + xOff, y + 69 + yOff, x + 145 + xOff, y + 106 + yOff))
+					if(client.leftClickInRegion(x + 45 + xOff, y + 69 + yOff, x + 145 + xOff, y + 106 + yOff)) {
 						selectedBinding = i;
+						return true;
+					}
 				}
 				yOff += 60;
 				if(i % 4 == 3) {
@@ -150,7 +155,7 @@ public class SettingPanel extends Panel {
 		} else {
 			return false;
 		}
-		return false;
+		return true;
 	}
 
 	public void update() {

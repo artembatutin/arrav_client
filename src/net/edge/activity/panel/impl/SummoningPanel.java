@@ -109,6 +109,7 @@ public class SummoningPanel extends Panel {
 			if(client.leftClickInRegion(beginX + 8 + x, beginY + offset, beginX + 80 + x, beginY + offset + 50)) {
 				client.outBuffer.putOpcode(186);
 				client.outBuffer.putByte(i);
+				return true;
 			}
 			offset += i % 6 == 5 ? 55 : 0;
 		}

@@ -158,11 +158,13 @@ public class ShopPanel extends Panel {
 			if(client.leftClickInRegion(beginX + 325, beginY + 12, beginX + 381, beginY + 42)) {
 				client.outBuffer.putOpcode(185);
 				client.outBuffer.putShort(124);
+				return true;
 			}
 		}
 		if(back) {
 			if(client.leftClickInRegion(beginX + 382, beginY + 12, beginX + 438, beginY + 42)) {
 				client.panelHandler.open(new CounterPanel());
+				return true;
 			}
 		}
 
@@ -206,8 +208,8 @@ public class ShopPanel extends Panel {
 					client.outBuffer.putShortPlus128(3900);
 					client.outBuffer.putShortPlus128(0);
 					client.outBuffer.putShortPlus128(icon);
+					return true;
 				}
-				
 				offset += i % 6 == 5 ? 55 : 0;
 			}
 		}
