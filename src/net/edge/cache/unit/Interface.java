@@ -144,7 +144,7 @@ public final class Interface {
 		Pestpanel2(fonts);
 		Pestpanel(fonts);
 		addPestControlRewardWidget(fonts);
-		try {
+		/*try {
 			BufferedWriter w = new BufferedWriter(new FileWriter(new File("./int_free.txt")));
 			for(int i = 0; i < cache.length; i++) {
 				if(cache[i] == null) {
@@ -156,7 +156,7 @@ public final class Interface {
 			w.close();
 		} catch(IOException e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 	
 	public static void addPestControlRewardWidget(BitmapFont[] tda) {
