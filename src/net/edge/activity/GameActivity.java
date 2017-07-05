@@ -1038,13 +1038,10 @@ public class GameActivity extends Activity {
 			if(client.chatTypeView == Constants.MSG_GAME) {
 				break;
 			}
-			if(name != null && name.startsWith("@cr")) {
-				name = name.substring(5);
-			}
 			if(type == 0) {
 				line++;
 			}
-			if((type == 1 || type == 2) && (type == 1 || client.publicChatMode == 0 || client.publicChatMode == 1 && client.isFriendOrSelf(name))) {
+			if((type == 1 || type == 2 || type == 9) && (type == 1 || client.publicChatMode == 0 || client.publicChatMode == 1 && client.isFriendOrSelf(name))) {
 				if(j > ypos - 14 && j <= ypos && !name.equals(client.localPlayer.name)) {
 					if(client.localPrivilege >= 1) {
 						client.menuItemName[client.menuPos] = "Report abuse @whi@" + name;
@@ -1113,9 +1110,6 @@ public class GameActivity extends Activity {
 			if(k1 < -23) {
 				break;
 			}
-			if(s != null && s.startsWith("@cr")) {
-				s = s.substring(5);
-			}
 			if((j1 == 1 || j1 == 2) && (j1 == 1 || client.publicChatMode == 0 || client.publicChatMode == 1 && client.isFriendOrSelf(s))) {
 				if(j > k1 - 14 && j <= k1 && !s.equals(client.localPlayer.name)) {
 					if(client.localPrivilege >= 1) {
@@ -1157,11 +1151,7 @@ public class GameActivity extends Activity {
 				}
 				final int type = client.chatType[j];
 				String name = client.chatAuthor[j];
-				byte privilege = 0;
-				if(name != null && name.startsWith("@cr")) {
-					privilege = Byte.parseByte(Character.toString(name.charAt(3)));
-					name = name.substring(5);
-				}
+				int privilege = client.chatPriv[j];
 				if(type == 2 && (client.privateChatMode == 0 || client.privateChatMode == 1 && (client.isFriendOrSelf(name) || privilege != 0))) {
 					final int l = 329 - i * 13;
 					if(client.mouseX > 4 && client.mouseY > l - 10 + y && client.mouseY <= l + 3 + y) {
@@ -1210,9 +1200,6 @@ public class GameActivity extends Activity {
 			if(k1 < -23) {
 				break;
 			}
-			if(s != null && s.startsWith("@cr")) {
-				s = s.substring(5);
-			}
 			if(client.chatTypeView == 3 && j1 == 4 && (client.tradeMode == 0 || client.tradeMode == 1 && client.isFriendOrSelf(s))) {
 				if(j > k1 - 14 && j <= k1) {
 					client.menuItemName[client.menuPos] = "Accept trade @whi@" + s;
@@ -1254,9 +1241,6 @@ public class GameActivity extends Activity {
 			final int k1 = 70 - l * 14 + 42 + client.chatScrollPos + 4 + 5;
 			if(k1 < -23) {
 				break;
-			}
-			if(s != null && s.startsWith("@cr")) {
-				s = s.substring(5);
 			}
 			if((j1 == 5 || j1 == 6) && (client.splitPrivateChat == 0 || client.chatTypeView == 2) && (j1 == 6 || client.privateChatMode == 0 || client.privateChatMode == 1 && client.isFriendOrSelf(s))) {
 				l++;
@@ -1863,11 +1847,7 @@ public class GameActivity extends Activity {
 				}
 				final int type = client.chatType[j];
 				String name = client.chatAuthor[j];
-				byte rights = 0;
-				if(name != null && name.startsWith("@cr")) {
-					rights = Byte.parseByte(Character.toString(name.charAt(3)));
-					name = name.substring(5);
-				}
+				int rights = client.chatPriv[j];
 				if(type == 2 && (client.privateChatMode == 0 || client.privateChatMode == 1 && (client.isFriendOrSelf(name) || rights != 0))) {
 					final int l = 329 - i * 13;
 					int k1 = 4 + x;

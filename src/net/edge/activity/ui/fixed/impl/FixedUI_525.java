@@ -62,8 +62,15 @@ public class FixedUI_525 extends FixedUI {
 			}
 			client.menuPos = 5;
 			client.hoveredChannelButton = 5;
-		} else if(client.mouseX >= 404 && client.mouseX <= 514 && client.mouseY >= 482 && client.mouseY <= 503) {
+		} else if(client.mouseX >= 347 && client.mouseX <= 402 && client.mouseY >= 482 && client.mouseY <= 503) {
+			for(int i = 0; i <= 3; i++) {
+				client.menuItemName[i + 1] = modes[3 - i] + " yell";
+				client.menuItemCode[i + 1] = 887 - i;
+			}
+			client.menuPos = 5;
 			client.hoveredChannelButton = 6;
+		} else if(client.mouseX >= 404 && client.mouseX <= 514 && client.mouseY >= 482 && client.mouseY <= 503) {
+			client.hoveredChannelButton = 7;
 		} else if(client.hoveredChannelButton != -1) {
 			client.hoveredChannelButton = -1;
 		}
@@ -135,11 +142,7 @@ public class FixedUI_525 extends FixedUI {
 					final int type = client.chatType[i];
 					String author = client.chatAuthor[i];
 					final String msg = client.chatMessage[i];
-					byte rights = 0;
-					if(author != null && author.startsWith("@cr")) {
-						rights = Byte.parseByte(Character.toString(author.charAt(3)));
-						author = author.substring(5);
-					}
+					int rights = client.chatPriv[i];
 					if(!client.uiRenderer.canSeeMessage(type, view, rights, author)) {
 						continue;
 					}
@@ -188,6 +191,16 @@ public class FixedUI_525 extends FixedUI {
 						client.plainFont.drawLeftAlignedString(msg, x, y, 0x800000);
 					} else if(type == 8) {
 						client.plainFont.drawLeftAlignedString(author + " " + msg, x, y, orangeFontColor);
+					} else if(type == 9) {
+						final int split = author.indexOf(":");
+						author = author.substring(split + 1);
+						if(rights >= 1) {
+							ImageCache.get(1984 + rights - 1).drawImage(x, y - 12);
+							x += 13;
+						}
+						client.plainFont.drawLeftAlignedString(author + ":", x, y, 0);
+						x += client.plainFont.getStringWidth(author) + 6;
+						client.plainFont.drawLeftAlignedString(msg, x, y, 0x235148);
 					}
 					line++;
 				}
@@ -503,7 +516,7 @@ public class FixedUI_525 extends FixedUI {
 	private void displayChannelButtons() {
 		final String text[] = {"On", "Friends", "Off", "Hide"};
 		final int textColor[] = {65280, 0xffff00, 0xff0000, 65535};
-		for(int i = 0; i <= 5; i++) {
+		for(int i = 0; i <= 6; i++) {
 			if(client.selectedChannelButton == i) {
 				client.chatButtons[1].drawImage(5 + 57 * i, 143);
 			}
@@ -515,7 +528,7 @@ public class FixedUI_525 extends FixedUI {
 				}
 			}
 		}
-		if(client.hoveredChannelButton == 6) {
+		if(client.hoveredChannelButton == 7) {
 			client.chatButtons[3].drawImage(404, 142);
 		}
 		client.smallFont.drawLeftAlignedEffectString("Report Abuse", 425, 157, 0xffffff, true);
@@ -525,9 +538,9 @@ public class FixedUI_525 extends FixedUI {
 		client.smallFont.drawLeftAlignedEffectString("Private", 187, 154, 0xffffff, true);
 		client.smallFont.drawLeftAlignedEffectString("Clan", 249, 154, 0xffffff, true);
 		client.smallFont.drawLeftAlignedEffectString("Trade", 304, 154, 0xffffff, true);
-		client.smallFont.drawCenteredEffectString("Assist", 374, 154, 0xffffff, true);
+		client.smallFont.drawCenteredEffectString("Yell", 374, 154, 0xffffff, true);
 		client.smallFont.drawCenteredEffectString("On", 90, 164, 65280, true);
-		client.smallFont.drawCenteredEffectString("Disabled", 374, 164, 0xff0000, true);
+		client.smallFont.drawCenteredEffectString(text[client.yellChatMode], 374, 164, textColor[client.yellChatMode], true);
 		client.smallFont.drawCenteredEffectString(text[client.publicChatMode], 147, 165, textColor[client.publicChatMode], true);
 		client.smallFont.drawCenteredEffectString(text[client.privateChatMode], 205, 165, textColor[client.privateChatMode], true);
 		client.smallFont.drawCenteredEffectString(text[client.clanChatMode], 260, 165, textColor[client.clanChatMode], true);

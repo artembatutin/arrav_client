@@ -131,11 +131,7 @@ public class FixedUI_459 extends FixedUI {
 					final int type = client.chatType[i];
 					String author = client.chatAuthor[i];
 					final String message = client.chatMessage[i];
-					byte rights = 0;
-					if(author != null && author.startsWith("@cr")) {
-						rights = Byte.parseByte(Character.toString(author.charAt(3)));
-						author = author.substring(5);
-					}
+					int rights = client.chatPriv[i];
 					if(!client.uiRenderer.canSeeMessage(type, view, rights, author)) {
 						continue;
 					}
@@ -182,10 +178,18 @@ public class FixedUI_459 extends FixedUI {
 						client.plainFont.drawLeftAlignedString(author + ":", x, yPos, 0);
 						x += client.plainFont.getStringWidth(author) + 6;
 						client.plainFont.drawLeftAlignedString(message, x, yPos, 0x800000);
-					} else if(type == 4) {
-						client.plainFont.drawLeftAlignedString(author + " " + message, x, yPos, purpleFontColor);
 					} else if(type == 8) {
 						client.plainFont.drawLeftAlignedString(author + " " + message, x, yPos, orangeFontColor);
+					} else if(type == 9) {
+						final int split = author.indexOf(":");
+						author = author.substring(split + 1);
+						if(rights >= 1) {
+							ImageCache.get(1984 + rights - 1).drawImage(x, yPos - 12);
+							x += 13;
+						}
+						client.plainFont.drawLeftAlignedString(author + ":", x, yPos, 0);
+						x += client.plainFont.getStringWidth(author) + 6;
+						client.plainFont.drawLeftAlignedString(message, x, yPos, 0x235148);
 					}
 					msgpos++;
 				}

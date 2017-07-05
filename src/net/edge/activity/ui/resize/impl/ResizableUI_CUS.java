@@ -180,11 +180,7 @@ public class ResizableUI_CUS extends ResizableUI {
 					}
 					int type = client.chatType[i];
 					String name = client.chatAuthor[i];
-					byte rights = 0;
-					if(name != null && name.startsWith("@cr")) {
-						rights = Byte.parseByte(Character.toString(name.charAt(3)));
-						name = name.substring(5);
-					}
+					int rights = client.chatPriv[i];
 					if(!client.uiRenderer.canSeeMessage(type, view, rights, name)) {
 						continue;
 					}
@@ -245,6 +241,7 @@ public class ResizableUI_CUS extends ResizableUI {
 							client.smallFont.drawLeftAlignedEffectString(name + ": " + chatMessage[0], xPos, yPos, orangeFontColor, true);
 							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, orangeFontColor, true);
 						}
+						
 					} else {
 						if(type == 0) {
 							Rasterizer2D.fillRectangle(xPos - 2, yPos - 13, 329, 30, 0x000000, 100);

@@ -217,7 +217,7 @@ public class CacheUnpacker {
 		}
 		client.anIntArray1190 = new int[32768];
 		client.anIntArray1191 = new int[32768];
-		client.randomizeBackground(null);
+		client.randomizeBackground();
 		if(!successfullyLoaded) {
 			successfullyLoaded = true;
 			client.startThread(client, 2);

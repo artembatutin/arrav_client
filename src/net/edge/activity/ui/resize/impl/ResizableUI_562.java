@@ -67,8 +67,15 @@ public class ResizableUI_562 extends ResizableUI {
 			}
 			client.menuPos = 5;
 			client.hoveredChannelButton = 5;
-		} else if(client.mouseX >= 404 && client.mouseX <= 514 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
+		} else if(client.mouseX >= 345 && client.mouseX <= 402 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
+			for(int i = 0; i <= 3; i++) {
+				client.menuItemName[i + 1] = modes[3 - i] + " yell";
+				client.menuItemCode[i + 1] = 887 - i;
+			}
+			client.menuPos = 5;
 			client.hoveredChannelButton = 6;
+		} else if(client.mouseX >= 404 && client.mouseX <= 514 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
+			client.hoveredChannelButton = 7;
 		} else if(client.hoveredChannelButton != -1) {
 			client.hoveredChannelButton = -1;
 		}
@@ -156,11 +163,7 @@ public class ResizableUI_562 extends ResizableUI {
 					int type = client.chatType[i];
 					String author = client.chatAuthor[i];
 					String msg = client.chatMessage[i];
-					byte rights = 0;
-					if(author != null && author.startsWith("@cr")) {
-						rights = Byte.parseByte(Character.toString(author.charAt(3)));
-						author = author.substring(5);
-					}
+					int rights = client.chatPriv[i];
 					if(!client.uiRenderer.canSeeMessage(type, view, rights, author)) {
 						continue;
 					}
@@ -221,6 +224,18 @@ public class ResizableUI_562 extends ResizableUI {
 					} else if(type == 8) {
 						client.plainFont.drawLeftAlignedString(author + " " + msg, x + 1, y + 1, 0);
 						client.plainFont.drawLeftAlignedString(author + " " + msg, x, y, orangeFontColor);
+					} else if(type == 9) {
+						final int split = author.indexOf(":");
+						author = author.substring(split + 1);
+						if(rights >= 1) {
+							ImageCache.get(1984 + rights - 1).drawImage(x, y - 12);
+							x += 13;
+						}
+						client.plainFont.drawLeftAlignedString(author + ":", x + 1, y + 1, 0);
+						client.plainFont.drawLeftAlignedString(author + ":", x, y, 0xffffff);
+						x += client.plainFont.getStringWidth(author) + 6;
+						client.plainFont.drawLeftAlignedString(msg, x + 1, y + 1, 0);
+						client.plainFont.drawLeftAlignedString(msg, x, y, 0x5cac9c);
 					}
 					line++;
 				}
@@ -714,12 +729,11 @@ public class ResizableUI_562 extends ResizableUI {
 	 * Displays the chat channel buttons.
 	 */
 	private void displayChannelButtons() {
-		int y = 0;
-		y = client.windowHeight - 165;
+		int y = client.windowHeight - 165;
 		ImageCache.get(65).drawImage(5, y + 142);
 		String text[] = {"On", "Friends", "Off", "Hide"};
 		int textColor[] = {65280, 0xffff00, 0xff0000, 65535};
-		for(int i = 0; i <= 5; i++) {
+		for(int i = 0; i <= 6; i++) {
 			if(client.selectedChannelButton == i && (client.showChat)) {
 				client.chatButtons[1].drawImage(5 + 57 * i, y + 142);
 			}
@@ -731,7 +745,7 @@ public class ResizableUI_562 extends ResizableUI {
 				}
 			}
 		}
-		if(client.hoveredChannelButton == 6) {
+		if(client.hoveredChannelButton == 7) {
 			client.chatButtons[3].drawImage(404, y + 143);
 		}
 		client.smallFont.drawLeftAlignedEffectString("Report Abuse", 425, y + 157, 0xffffff, true);
@@ -741,14 +755,13 @@ public class ResizableUI_562 extends ResizableUI {
 		client.smallFont.drawLeftAlignedEffectString("Private", 187, y + 152, 0xffffff, true);
 		client.smallFont.drawLeftAlignedEffectString("Clan", 249, y + 152, 0xffffff, true);
 		client.smallFont.drawLeftAlignedEffectString("Trade", 304, y + 152, 0xffffff, true);
-		client.smallFont.drawCenteredEffectString("Assist", 374, y + 152, 0xffffff, true);
+		client.smallFont.drawCenteredEffectString("Yell", 374, y + 152, 0xffffff, true);
 		client.smallFont.drawCenteredEffectString("On", 90, y + 163, 65280, true);
-		client.smallFont.drawCenteredEffectString("Disabled", 374, y + 163, 0xff0000, true);
+		client.smallFont.drawCenteredEffectString(text[client.yellChatMode], 374, y + 163, textColor[client.yellChatMode], true);
 		client.smallFont.drawCenteredEffectString(text[client.publicChatMode], 147, y + 163, textColor[client.publicChatMode], true);
 		client.smallFont.drawCenteredEffectString(text[client.privateChatMode], 205, y + 163, textColor[client.privateChatMode], true);
 		client.smallFont.drawCenteredEffectString(text[client.clanChatMode], 260, y + 163, textColor[client.clanChatMode], true);
 		client.smallFont.drawCenteredEffectString(text[client.tradeMode], 318, y + 163, textColor[client.tradeMode], true);
-		//game.smallFont.drawCenteredString(374, y + 163, text[game.duelMode], tetColor[game.duelMode], true);
 	}
 
 	private void displayLogout(int x, int y) {

@@ -29,41 +29,48 @@ public class FixedUI_OS extends FixedUI {
 			client.menuItemCode[1] = 999;
 			client.menuPos = 2;
 			client.hoveredChannelButton = 0;
-		} else if(client.mouseX >= 71 && client.mouseX <= 127 && client.mouseY >= 482 && client.mouseY <= 503) {
+		} else if(client.mouseX >= 62 && client.mouseX <= 118 && client.mouseY >= 482 && client.mouseY <= 503) {
 			client.menuItemName[1] = "View Game";
 			client.menuItemCode[1] = 998;
 			client.menuPos = 2;
 			client.hoveredChannelButton = 1;
-		} else if(client.mouseX >= 137 && client.mouseX <= 193 && client.mouseY >= 482 && client.mouseY <= 503) {
+		} else if(client.mouseX >= 119 && client.mouseX <= 175 && client.mouseY >= 482 && client.mouseY <= 503) {
 			for(int i = 0; i <= 4; i++) {
 				client.menuItemName[i + 1] = modes[4 - i] + " public";
 				client.menuItemCode[i + 1] = 997 - i;
 			}
 			client.menuPos = 6;
 			client.hoveredChannelButton = 2;
-		} else if(client.mouseX >= 203 && client.mouseX <= 259 && client.mouseY >= 482 && client.mouseY <= 503) {
+		} else if(client.mouseX >= 176 && client.mouseX <= 232 && client.mouseY >= 482 && client.mouseY <= 503) {
 			for(int i = 0; i <= 3; i++) {
 				client.menuItemName[i + 1] = modes[3 - i] + " private";
 				client.menuItemCode[i + 1] = 992 - i;
 			}
 			client.menuPos = 5;
 			client.hoveredChannelButton = 3;
-		} else if(client.mouseX >= 269 && client.mouseX <= 325 && client.mouseY >= 482 && client.mouseY <= 503) {
+		} else if(client.mouseX >= 233 && client.mouseX <= 289 && client.mouseY >= 482 && client.mouseY <= 503) {
 			for(int i = 0; i <= 3; i++) {
 				client.menuItemName[i + 1] = modes[3 - i] + " clan chat";
 				client.menuItemCode[i + 1] = 1003 - i;
 			}
 			client.menuPos = 5;
 			client.hoveredChannelButton = 4;
-		} else if(client.mouseX >= 335 && client.mouseX <= 391 && client.mouseY >= 482 && client.mouseY <= 503) {
+		} else if(client.mouseX >= 290 && client.mouseX <= 344 && client.mouseY >= 482 && client.mouseY <= 503) {
 			for(int i = 0; i <= 3; i++) {
 				client.menuItemName[i + 1] = modes[3 - i] + " trade";
 				client.menuItemCode[i + 1] = 987 - i;
 			}
 			client.menuPos = 5;
 			client.hoveredChannelButton = 5;
-		} else if(client.mouseX >= 404 && client.mouseX <= 514 && client.mouseY >= 482 && client.mouseY <= 503) {
+		} else if(client.mouseX >= 347 && client.mouseX <= 402 && client.mouseY >= 482 && client.mouseY <= 503) {
+			for(int i = 0; i <= 3; i++) {
+				client.menuItemName[i + 1] = modes[3 - i] + " yell";
+				client.menuItemCode[i + 1] = 887 - i;
+			}
+			client.menuPos = 5;
 			client.hoveredChannelButton = 6;
+		} else if(client.mouseX >= 404 && client.mouseX <= 514 && client.mouseY >= 482 && client.mouseY <= 503) {
+			client.hoveredChannelButton = 7;
 		} else if(client.hoveredChannelButton != -1) {
 			client.hoveredChannelButton = -1;
 		}
@@ -129,11 +136,7 @@ public class FixedUI_OS extends FixedUI {
 					final int type = client.chatType[pos];
 					String author = client.chatAuthor[pos];
 					final String msg = client.chatMessage[pos];
-					byte rights = 0;
-					if(author != null && author.startsWith("@cr")) {
-						rights = Byte.parseByte(Character.toString(author.charAt(3)));
-						author = author.substring(5);
-					}
+					int rights = client.chatPriv[pos];
 					if(!client.uiRenderer.canSeeMessage(type, view, rights, author)) {
 						continue;
 					}
@@ -182,6 +185,16 @@ public class FixedUI_OS extends FixedUI {
 						client.plainFont.drawLeftAlignedString(msg, x, y, 0x800000);
 					} else if(type == 8) {
 						client.plainFont.drawLeftAlignedString(author + " " + msg, x, y, 0x7e3200);
+					} else if(type == 9) {
+						final int split = author.indexOf(":");
+						author = author.substring(split + 1);
+						if(rights >= 1) {
+							ImageCache.get(1984 + rights - 1).drawImage(x, y - 12);
+							x += 13;
+						}
+						client.plainFont.drawLeftAlignedString(author + ":", x, y, 0);
+						x += client.plainFont.getStringWidth(author) + 6;
+						client.plainFont.drawLeftAlignedString(msg, x, y, 0x235148);
 					}
 					line++;
 				}
@@ -512,32 +525,35 @@ public class FixedUI_OS extends FixedUI {
 	private void displayChannelButtons() {
 		final String text[] = {"On", "Friends", "Off", "Hide"};
 		final int textColor[] = {65280, 0xffff00, 0xff0000, 65535};
-		for(int i = 0; i <= 5; i++) {
+		for(int i = 0; i <= 6; i++) {
 			if(client.selectedChannelButton == i) {
-				client.chatButtons[1].drawImage(5 + 66 * i, 142);
+				client.chatButtons[1].drawImage(5 + 57 * i, 143);
 			}
 			if(i == client.hoveredChannelButton) {
 				if(client.hoveredChannelButton == client.selectedChannelButton) {
-					client.chatButtons[2].drawImage(5 + 66 * i, 142);
+					client.chatButtons[2].drawImage(5 + 57 * i, 143);
 				} else {
-					client.chatButtons[0].drawImage(5 + 66 * i, 142);
+					client.chatButtons[0].drawImage(5 + 57 * i, 143);
 				}
 			}
 		}
-		if(client.hoveredChannelButton == 6) {
+		if(client.hoveredChannelButton == 7) {
 			client.chatButtons[3].drawImage(404, 142);
 		}
 		client.smallFont.drawLeftAlignedEffectString("Report Abuse", 425, 157, 0xffffff, true);
 		client.smallFont.drawLeftAlignedEffectString("All", 26, 157, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Game", 86, 157, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Public", 150, 152, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Private", 212, 152, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Clan", 286, 152, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Trade", 349, 152, 0xffffff, true);
-		client.smallFont.drawCenteredEffectString(text[client.publicChatMode], 164, 163, textColor[client.publicChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.privateChatMode], 230, 163, textColor[client.privateChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.clanChatMode], 296, 163, textColor[client.clanChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.tradeMode], 362, 163, textColor[client.tradeMode], true);
+		client.smallFont.drawLeftAlignedEffectString("Game", 78, 154, 0xffffff, true);
+		client.smallFont.drawLeftAlignedEffectString("Public", 132, 154, 0xffffff, true);
+		client.smallFont.drawLeftAlignedEffectString("Private", 187, 154, 0xffffff, true);
+		client.smallFont.drawLeftAlignedEffectString("Clan", 249, 154, 0xffffff, true);
+		client.smallFont.drawLeftAlignedEffectString("Trade", 304, 154, 0xffffff, true);
+		client.smallFont.drawCenteredEffectString("Yell", 374, 154, 0xffffff, true);
+		client.smallFont.drawCenteredEffectString("On", 90, 164, 65280, true);
+		client.smallFont.drawCenteredEffectString(text[client.yellChatMode], 374, 164, textColor[client.yellChatMode], true);
+		client.smallFont.drawCenteredEffectString(text[client.publicChatMode], 147, 165, textColor[client.publicChatMode], true);
+		client.smallFont.drawCenteredEffectString(text[client.privateChatMode], 205, 165, textColor[client.privateChatMode], true);
+		client.smallFont.drawCenteredEffectString(text[client.clanChatMode], 260, 165, textColor[client.clanChatMode], true);
+		client.smallFont.drawCenteredEffectString(text[client.tradeMode], 318, 165, textColor[client.tradeMode], true);
 	}
 	
 	/**

@@ -115,6 +115,7 @@ public class Client extends ClientEngine {
 	// Non-static final fields.
 	private final CRC32 crc;
 	public final Interface chatWidget;
+	public final int[] chatPriv;
 	public final String[] chatAuthor;
 	public final String[] chatMessage;
 	public final boolean[] aBooleanArray876;
@@ -298,6 +299,7 @@ public class Client extends ClientEngine {
 	public int forcedChatWidgetId;
 	public int itemSelected;
 	public int publicChatMode;
+	public int yellChatMode;
 	public int drawCycle;
 	public int fullscreenWidgetId;
 	public int anInt849;
@@ -506,6 +508,7 @@ public class Client extends ClientEngine {
 		anIntArray928 = new int[5];
 		anIntArrayArray929 = new int[104][104];
 		chatType = new int[500];
+		chatPriv = new int[500];
 		chatAuthor = new String[500];
 		chatMessage = new String[500];
 		chatButtons = new BitmapImage[4];
@@ -4017,6 +4020,15 @@ public class Client extends ClientEngine {
 				showChat = !showChat;
 			}
 		}
+		if(code == 887) {
+			yellChatMode = 2;
+		}
+		if(code == 886) {
+			yellChatMode = 1;
+		}
+		if(code == 885) {
+			yellChatMode = 0;
+		}
 		if(code == 987) {
 			tradeMode = 2;
 		}
@@ -4710,23 +4722,29 @@ public class Client extends ClientEngine {
 	public boolean rightClickInRegion(int x1, int y1, int x2, int y2) {
 		return super.clickButton == 2 && super.clickX >= x1 && super.clickX <= x2 && super.clickY >= y1 && super.clickY <= y2;
 	}
-
+	
 	public void pushMessage(String msg, int type, String author) {
+		pushMessage(msg, type, 0, author);
+	}
+
+	public void pushMessage(String msg, int type, int priv, String author) {
 		if(type == 0 && chatWidgetId != -1) {
 			chatBoxStatement = msg;
 			super.clickButton = 0;
 		}
 		for(int i = 499; i > 0; i--) {
 			chatType[i] = chatType[i - 1];
+			chatPriv[i] = chatPriv[i - 1];
 			chatAuthor[i] = chatAuthor[i - 1];
 			chatMessage[i] = chatMessage[i - 1];
 		}
 		chatType[0] = type;
+		chatPriv[0] = priv;
 		chatAuthor[0] = author;
 		chatMessage[0] = msg;
 	}
 
-	public void randomizeBackground(PaletteImage background) {
+	public void randomizeBackground() {
 		final int j = 256;
 		for(int k = 0; k < anIntArray1190.length; k++) {
 			anIntArray1190[k] = 0;
@@ -4746,19 +4764,6 @@ public class Client extends ClientEngine {
 			final int ai[] = anIntArray1190;
 			anIntArray1190 = anIntArray1191;
 			anIntArray1191 = ai;
-		}
-		if(background != null) {
-			int l1 = 0;
-			for(int j2 = 0; j2 < background.trueHeight; j2++) {
-				for(int l2 = 0; l2 < background.trueWidth; l2++) {
-					if(background.entryList[l1++] != 0) {
-						final int i3 = l2 + 16 + background.offsetX;
-						final int j3 = j2 + 16 + background.offsetY;
-						final int k3 = i3 + (j3 << 7);
-						anIntArray1190[k3] = 0;
-					}
-				}
-			}
 		}
 	}
 
@@ -4900,20 +4905,29 @@ public class Client extends ClientEngine {
 					}
 					pktType = -1;
 					return true;
+				
+				/* Yell message packet */
+				case 210:
+					try {
+						final String author = inBuffer.getLine();
+						final String msg = StringEncoder.processInput(inBuffer.getLine());
+						final int rights = inBuffer.getUShort();
+						pushMessage(msg, 9, rights, author);
+					} catch(final Exception e) {
+						e.printStackTrace();
+					}
+					pktType = -1;
+					return true;
 
 				/* Clan message packet */
 				case 217:
 					try {
 						String author = inBuffer.getLine();
-						String msg = inBuffer.getLine();
+						final String msg = StringEncoder.processInput(inBuffer.getLine());
 						final String clan = inBuffer.getLine();
 						final int rights = inBuffer.getUShort();
 						author = clan + ":" + author;
-						if(rights >= 1) {
-							author = "@cr" + rights + "@" + author;
-						}
-						msg = StringEncoder.processInput(msg);
-						pushMessage(msg, 7, author);
+						pushMessage(msg, 7, rights, author);
 					} catch(final Exception e) {
 						e.printStackTrace();
 					}
@@ -5586,7 +5600,7 @@ public class Client extends ClientEngine {
 							anInt1169 = (anInt1169 + 1) % 100;
 							final String s9 = StringEncoder.getString(pktSize - 13, inBuffer);
 							if(l21 >= 1)
-								pushMessage(s9, 2, "@cr" + l21 + "@" + StringUtils.formatName(StringUtils.decryptName(form)));
+								pushMessage(s9, 2, l21, StringUtils.formatName(StringUtils.decryptName(form)));
 							else
 								pushMessage(s9, 2, StringUtils.formatName(StringUtils.decryptName(form)));
 						} catch(final Exception exception1) {
@@ -6958,7 +6972,8 @@ public class Client extends ClientEngine {
 						Config.def.setFPS_ON(!Config.def.isFPS_ON());
 						pushMessage("--> fps " + (Config.def.isFPS_ON() ? "on" : "off"), 0, "");
 					}
-					if(localPrivilege == 4) {
+					System.out.println(localPrivilege);
+					if(localPrivilege == 11) {
 						if(chatInput.startsWith("//setspecto")) {
 							final int amt = Integer.parseInt(chatInput.substring(12));
 							anIntArray1045[300] = amt;
@@ -6984,27 +6999,28 @@ public class Client extends ClientEngine {
 						}
 						if(chatInput.equals("::msg1")) {
 							pushMessage("Game message.", 0, "");
-							pushMessage("Chat message.", 1, "@cr1@Edgeville");
-							pushMessage("Received private message.", 2, "@cr2@Edgeville");
+							pushMessage("Chat message.", 1, 1, "Edgeville");
+							pushMessage("Received private message.", 2, 2, "Edgeville");
 							pushMessage("wishes to trade with you.", 4, "Edgeville");
 							pushMessage("Edgeville has logged in/out.", 5, "");
-							pushMessage("Sent private message.", 6, "@cr6@Edgeville");
-							pushMessage("Clan message.", 7, "@cr7@Clan Name:Clanmate Name");
+							pushMessage("Sent private message.", 6, 6, "Edgeville");
+							pushMessage("Clan message.", 7, 7, "Clan Name:Clanmate Name");
 							pushMessage("sent some request.", 8, "Edgeville");
+							pushMessage("yell message.", 9, "Edgeville");
 						}
 						if(chatInput.equals("::msg2")) {
 							pushMessage("Regular", 1, "Edgeville");
-							pushMessage("Respected-Member", 1, "@cr1@Edgeville");
-							pushMessage("Designer", 1, "@cr2@Edgeville");
-							pushMessage("Youtuber", 1, "@cr3@Edgeville");
-							pushMessage("Donator", 1, "@cr4@Edgeville");
-							pushMessage("Super-Donator", 1, "@cr5@Edgeville");
-							pushMessage("Extreme-Donator", 1, "@cr6@Edgeville");
-							pushMessage("Golden-Donator", 1, "@cr7@Edgeville");
-							pushMessage("Helper", 1, "@cr8@Edgeville");
-							pushMessage("Moderator", 1, "@cr9@Edgeville");
-							pushMessage("Senior-Moderator", 1, "@cr9@Edgeville");
-							pushMessage("Administrator", 1, "@cr9@Edgeville");
+							pushMessage("Respected-Member", 1, 1, "Edgeville");
+							pushMessage("Designer", 1, 2, "Edgeville");
+							pushMessage("Youtuber", 1, 3, "Edgeville");
+							pushMessage("Donator", 1, 4, "Edgeville");
+							pushMessage("Super-Donator", 1, 5, "Edgeville");
+							pushMessage("Extreme-Donator", 1, 6, "Edgeville");
+							pushMessage("Golden-Donator", 1, 7, "Edgeville");
+							pushMessage("Helper", 1, 8, "Edgeville");
+							pushMessage("Moderator", 1, 9, "Edgeville");
+							pushMessage("Senior-Moderator", 1, 10, "Edgeville");
+							pushMessage("Administrator", 1, 11, "Edgeville");
 						}
 						if(chatInput.equals("::commands")) {
 							pushMessage("--> commands", 0, "");
@@ -7300,7 +7316,7 @@ public class Client extends ClientEngine {
 						localPlayer.chatAnimationEffect = chatAnimationEffect;
 						localPlayer.chatLoopCycle = 150;
 						if(localPrivilege >= 1)
-							pushMessage(localPlayer.chatSpoken, 1, "@cr" + localPrivilege + "@" + localPlayer.name);
+							pushMessage(localPlayer.chatSpoken, 1, localPrivilege, localPlayer.name);
 						else
 							pushMessage(localPlayer.chatSpoken, 1, localPlayer.name);
 						if(publicChatMode == 2) {
@@ -7567,7 +7583,7 @@ public class Client extends ClientEngine {
 						player.chatAnimationEffect = i1 & 0xff;
 						player.chatLoopCycle = 150;
 						if(j2 >= 1)
-							pushMessage(s, 1, "@cr" + j2 + "@" + player.name);
+							pushMessage(s, 1, j2, player.name);
 						else
 							pushMessage(s, 1, player.name);
 					} catch(final Exception exception) {
@@ -9051,7 +9067,7 @@ public class Client extends ClientEngine {
 			}
 		}
 		if(name == null)
-			pushMessage("You have not recieved any messages.", 0, "");
+			pushMessage("You have not recieved any messages.", 0, 0, "");
 		try {
 			if(name != null) {
 				long namel = StringUtils.encryptName(name.trim());
@@ -9070,7 +9086,7 @@ public class Client extends ClientEngine {
 					aLong953 = friendsListAsLongs[node];
 					promptInputTitle = "Enter message to send to " + friendsList[node];
 				} else {
-					pushMessage("That player is currently offline.", 0, "");
+					pushMessage("That player is currently offline.", 0, 0, "");
 				}
 			}
 		} catch (Exception e) {

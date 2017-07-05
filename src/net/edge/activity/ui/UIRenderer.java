@@ -66,7 +66,7 @@ public class UIRenderer {
 			case 8:
 				return (client.tradeMode == 0 || client.tradeMode == 1 && client.isFriendOrSelf(name)) && (view == Constants.MSG_REQUEST || view == Constants.MSG_ALL);
 			case 9:
-				return false;
+				return (client.yellChatMode == 0 || client.yellChatMode == 1 && client.isFriendOrSelf(name)) && (view == Constants.MSG_REQUEST || view == Constants.MSG_ALL);
 			default:
 				return false;
 		}
