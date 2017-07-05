@@ -96,12 +96,12 @@ public final class NPCType {
 		}
 		if(id == 8027) {
 			npc.actions = new String[] {"Talk-to", null, null, null, null, null};
-			npc.name = "Night's watch orb";
+			npc.name = "Ironmen orb";
 		}
 		if(id == 6183 || id == 6184) {
 			npc.actions = new String[] {"Talk-to", null, null, null, null, null};
 			npc.combatLevel = 99;
-			npc.name = "Night's watch guard";
+			npc.name = "Ironmen guard";
 		}
 		if(id == 7605) {
 			npc.actions = new String[] {"Bank", null, "Trade", null, null, null};
