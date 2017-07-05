@@ -833,7 +833,7 @@ public final class ObjectType {
 		modifiedModelColors = new int[] { color };
 		originalModelColors  = new int[] { 33715 };
 		groundActions = new String[] { null, null, "Take", null, null };
-		actions = new String[] { "Drink", null, null, null, "Drop" };
+		actions = new String[] { itemname.equalsIgnoreCase("empty") ? null : "Drink", null, null, null, "Drop" };
 		int model = 61741;
 		if (dose == 6) model = 61732;
 		if (dose == 5) model = 61729;
