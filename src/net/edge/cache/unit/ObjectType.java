@@ -105,10 +105,10 @@ public final class ObjectType {
 			obj.actions = new String[] { "Claim", null, null, null, null };
 		}
 		if(obj.id == 18741) {
-			obj.name = "Nightmare cape";
+			obj.name = "Ironmen cape";
 		}
 		if(obj.id == 18740) {
-			obj.name = "Nightmare master cape";
+			obj.name = "Ironmen master cape";
 			System.out.println(obj.maleEquip);
 		}
 		if(obj.id == 693) {

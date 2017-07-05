@@ -91,7 +91,7 @@ public final class NPCType {
 			npc.actions = new String[] {"Talk-to", null, "Trade", null, "Max-out", null};
 			npc.modelId[6] = 4443;
 			npc.headIcon = -1;
-			npc.name = "Night's watch captain";
+			npc.name = "Ironmen captain";
 			npc.fixPriority = true;
 		}
 		if(id == 8027) {
