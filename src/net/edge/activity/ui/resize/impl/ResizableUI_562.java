@@ -168,7 +168,7 @@ public class ResizableUI_562 extends ResizableUI {
 						client.plainFont.drawLeftAlignedEffectString(msg, x, y, basicFontColor, fontShadow);
 					} else if(type == 1) {
 						if(rights >= 1) {
-							client.modIcons[rights - 1].drawImage(x + 1, y - 12);
+							ImageCache.get(1984 + rights - 1).drawImage(x + 1, y - 12);
 							x += 14;
 						}
 						client.plainFont.drawLeftAlignedString(author + ":", x + 1, y + 1, 0);
@@ -181,7 +181,7 @@ public class ResizableUI_562 extends ResizableUI {
 						client.plainFont.drawLeftAlignedString("From", x, y, redFontColor);
 						x += client.plainFont.getStringWidth("From ") + 12;
 						if(rights >= 1) {
-							client.modIcons[rights - 1].drawImage(x, y - 12);
+							ImageCache.get(1984 + rights - 1).drawImage(x, y - 12);
 						} else {
 							x -= 12;
 						}
@@ -210,7 +210,7 @@ public class ResizableUI_562 extends ResizableUI {
 						client.plainFont.drawLeftAlignedString("]", x, y, 0xffffff);
 						x += 7;
 						if(rights >= 1) {
-							client.modIcons[rights - 1].drawImage(x, y - 12);
+							ImageCache.get(1984 + rights - 1).drawImage(x, y - 12);
 							x += 13;
 						}
 						client.plainFont.drawLeftAlignedString(author + ":", x + 1, y + 1, 0);

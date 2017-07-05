@@ -37,9 +37,6 @@ public class MediaLoader implements CacheLoader {
 		for(int j3 = 0; j3 <= 14; j3++) {
 			client.sideIcons[j3] = new BitmapImage(archive, "sideicons", j3);
 		}
-		for(int l4 = 0; l4 < 9; l4++) {
-			client.modIcons[l4] = new PaletteImage(archive, "mod_icons", l4);
-		}
 		for(int k3 = 0; k3 < 92; k3++) {
 			client.mapScenes[k3] = new PaletteImage(archive, "mapscene", k3);
 		}

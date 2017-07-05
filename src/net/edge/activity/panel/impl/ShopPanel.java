@@ -15,6 +15,7 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Optional;
 
 public class ShopPanel extends Panel {
 	
@@ -26,7 +27,9 @@ public class ShopPanel extends Panel {
 		AGILITY_ARENA_TICKETS(-1),
 		BLOOD_MONEY(1917),
 		EDGE_TOKENS(1918),
-		VOTE_POINTS(-1);
+		VOTE_POINTS(1983),
+		PEST_POINTS(-1),
+		STAR_DUST(1982);
 		
 		/**
 		 * The image that is represented by this element.

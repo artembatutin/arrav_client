@@ -129,19 +129,19 @@ public class FixedUI_OS extends FixedUI {
 					final int type = client.chatType[pos];
 					String author = client.chatAuthor[pos];
 					final String msg = client.chatMessage[pos];
-					byte priv = 0;
+					byte rights = 0;
 					if(author != null && author.startsWith("@cr")) {
-						priv = Byte.parseByte(Character.toString(author.charAt(3)));
+						rights = Byte.parseByte(Character.toString(author.charAt(3)));
 						author = author.substring(5);
 					}
-					if(!client.uiRenderer.canSeeMessage(type, view, priv, author)) {
+					if(!client.uiRenderer.canSeeMessage(type, view, rights, author)) {
 						continue;
 					}
 					if(type == 0) {
 						client.plainFont.drawLeftAlignedEffectString(msg, x, y, 0, false);
 					} else if(type == 1) {
-						if(priv >= 1) {
-							client.modIcons[priv - 1].drawImage(x + 1, y - 12);
+						if(rights >= 1) {
+							ImageCache.get(1984 + rights - 1).drawImage(x + 1, y - 12);
 							x += 14;
 						}
 						client.plainFont.drawLeftAlignedString(author + ":", x, y, 0);
@@ -150,8 +150,8 @@ public class FixedUI_OS extends FixedUI {
 					} else if(type == 2) {
 						client.plainFont.drawLeftAlignedString("From", x, y, 0x800000);
 						x += client.plainFont.getStringWidth("From ");
-						if(priv >= 1) {
-							client.modIcons[priv - 1].drawImage(x, y - 12);
+						if(rights >= 1) {
+							ImageCache.get(1984 + rights - 1).drawImage(x, y - 12);
 							x += 12;
 						}
 						client.plainFont.drawLeftAlignedString(author + ":", x, y, 0x800000);
@@ -173,8 +173,8 @@ public class FixedUI_OS extends FixedUI {
 						x += client.plainFont.getStringWidth(clan);
 						client.plainFont.drawLeftAlignedString("]", x, y, 0);
 						x += 7;
-						if(priv >= 1) {
-							client.modIcons[priv - 1].drawImage(x, y - 12);
+						if(rights >= 1) {
+							ImageCache.get(1984 + rights - 1).drawImage(x, y - 12);
 							x += 13;
 						}
 						client.plainFont.drawLeftAlignedString(author + ":", x, y, 0);

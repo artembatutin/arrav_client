@@ -31,7 +31,7 @@ public class GameActivity extends Activity {
 		if(client.anInt1011 > 0) {
 			client.anInt1011--;
 		}
-		for(int i = 0; i < 5; i++) {
+		for(int i = 0; i < 10; i++) {
 			if(!client.parsePacket()) {
 				break;
 			}
@@ -1863,19 +1863,19 @@ public class GameActivity extends Activity {
 				}
 				final int type = client.chatType[j];
 				String name = client.chatAuthor[j];
-				byte privilege = 0;
+				byte rights = 0;
 				if(name != null && name.startsWith("@cr")) {
-					privilege = Byte.parseByte(Character.toString(name.charAt(3)));
+					rights = Byte.parseByte(Character.toString(name.charAt(3)));
 					name = name.substring(5);
 				}
-				if(type == 2 && (client.privateChatMode == 0 || client.privateChatMode == 1 && (client.isFriendOrSelf(name) || privilege != 0))) {
+				if(type == 2 && (client.privateChatMode == 0 || client.privateChatMode == 1 && (client.isFriendOrSelf(name) || rights != 0))) {
 					final int l = 329 - i * 13;
 					int k1 = 4 + x;
 					font.drawLeftAlignedString("From", k1, y + l, 0);
 					font.drawLeftAlignedString("From", k1, y + l - 1, Config.def.getSPLIT_PRIVATE_CHAT_COLOR());
 					k1 += font.getStringWidth("From ");
-					if(privilege >= 1) {
-						client.modIcons[privilege - 1].drawImage(k1, y + l - 12);
+					if(rights >= 1) {
+						ImageCache.get(1984 + rights - 1).drawImage(k1, y + l - 12);
 						k1 += 12;
 					}
 					font.drawLeftAlignedString(name + ": " + client.chatMessage[j], k1, y + l, 0);

@@ -110,16 +110,18 @@ public class PvPPanel extends Panel {
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
 		
 		ImageCache.get(1949).drawImage(beginX + 200, beginY + 37);
-		for(int i = 0; i < xCoords.length; i++) {
-			for(int x = 0; x < 12; x++) {
-				for(int y = 0; y < 12; y++) {
-					Rasterizer2D.drawPoint(beginX + 200 + (xCoords[i] * 2) + y, beginY + 37 - (yCoords[i] * 2) + x + 295, 0x9600ff, (12 - x) * (12 - y));
-					Rasterizer2D.drawPoint(beginX + 199 + (xCoords[i] * 2) - y, beginY + 37 - (yCoords[i] * 2) + x + 295, 0x9600ff, (12 - x) * (12 - y));
-					Rasterizer2D.drawPoint(beginX + 200 + (xCoords[i] * 2) + y, beginY + 36 - (yCoords[i] * 2) - x + 295, 0x9600ff, (12 - x) * (12 - y));
-					Rasterizer2D.drawPoint(beginX + 199 + (xCoords[i] * 2) - y, beginY + 36 - (yCoords[i] * 2) - x + 295, 0x9600ff, (12 - x) * (12 - y));
+		if(xCoords != null) {
+			for(int i = 0; i < xCoords.length; i++) {
+				for(int x = 0; x < 12; x++) {
+					for(int y = 0; y < 12; y++) {
+						Rasterizer2D.drawPoint(beginX + 200 + (xCoords[i] * 2) + y, beginY + 37 - (yCoords[i] * 2) + x + 295, 0x9600ff, (12 - x) * (12 - y));
+						Rasterizer2D.drawPoint(beginX + 199 + (xCoords[i] * 2) - y, beginY + 37 - (yCoords[i] * 2) + x + 295, 0x9600ff, (12 - x) * (12 - y));
+						Rasterizer2D.drawPoint(beginX + 200 + (xCoords[i] * 2) + y, beginY + 36 - (yCoords[i] * 2) - x + 295, 0x9600ff, (12 - x) * (12 - y));
+						Rasterizer2D.drawPoint(beginX + 199 + (xCoords[i] * 2) - y, beginY + 36 - (yCoords[i] * 2) - x + 295, 0x9600ff, (12 - x) * (12 - y));
+					}
 				}
+				//Rasterizer2D.fillCircle(beginX + 200 + xCoords[i], beginY + 37 + yCoords[i], 6, 0xffcc00, 200);
 			}
-			//Rasterizer2D.fillCircle(beginX + 200 + xCoords[i], beginY + 37 + yCoords[i], 6, 0xffcc00, 200);
 		}
 		for(Portal p : portals) {
 			Rasterizer2D.fillCircle(beginX + 200 + p.x, beginY + 37 + p.y, 6, 0xffffff, 100);

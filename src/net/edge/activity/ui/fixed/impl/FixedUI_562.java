@@ -146,7 +146,7 @@ public class FixedUI_562 extends FixedUI {
 						client.plainFont.drawLeftAlignedEffectString(msg, x, y, basicFontColor, false);
 					} else if(type == 1) {
 						if(rights >= 1) {
-							client.modIcons[rights - 1].drawImage(x + 1, y - 12);
+							ImageCache.get(1984 + rights - 1).drawImage(x + 1, y - 12);
 							x += 14;
 						}
 						client.plainFont.drawLeftAlignedString(author + ":", x, y, basicFontColor);
@@ -156,7 +156,7 @@ public class FixedUI_562 extends FixedUI {
 						client.plainFont.drawLeftAlignedString("From", x, y, redFontColor);
 						x += client.plainFont.getStringWidth("From ");
 						if(rights >= 1) {
-							client.modIcons[rights - 1].drawImage(x, y - 12);
+							ImageCache.get(1984 + rights - 1).drawImage(x, y - 12);
 							x += 12;
 						}
 						client.plainFont.drawLeftAlignedString(author + ":", x, y, redFontColor);
@@ -179,7 +179,7 @@ public class FixedUI_562 extends FixedUI {
 						client.plainFont.drawLeftAlignedString("]", x, y, 0);
 						x += 7;
 						if(rights >= 1) {
-							client.modIcons[rights - 1].drawImage(x, y - 12);
+							ImageCache.get(1984 + rights - 1).drawImage(x, y - 12);
 							x += 13;
 						}
 						client.plainFont.drawLeftAlignedString(author + ":", x, y, 0);

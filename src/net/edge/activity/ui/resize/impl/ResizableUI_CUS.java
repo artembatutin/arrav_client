@@ -199,7 +199,7 @@ public class ResizableUI_CUS extends ResizableUI {
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x000000, 100);
 							if(rights != 0) {
 								Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 18, 30, 0x000000, 100);
-								client.modIcons[rights - 1].drawImage(xPos, yPos - 5);
+								ImageCache.get(1984 + rights - 1).drawImage(xPos, yPos - 5);
 								xPos += 18;
 							}
 							client.smallFont.drawLeftAlignedEffectString(name + ": " + chatMessage[0], xPos, yPos, blueFontColor, true);
@@ -209,7 +209,7 @@ public class ResizableUI_CUS extends ResizableUI {
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x3C1414, 100);
 							if(rights != 0) {
 								Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 18, 30, 0x000000, 100);
-								client.modIcons[rights - 1].drawImage(xPos, yPos - 5);
+								ImageCache.get(1984 + rights - 1).drawImage(xPos, yPos - 5);
 								xPos += 18;
 							}
 							client.smallFont.drawLeftAlignedEffectString("From: " + name + ":  " + chatMessage[0], xPos, yPos, redFontColor, true);
@@ -228,7 +228,7 @@ public class ResizableUI_CUS extends ResizableUI {
 						if(type == 6) {
 							if(rights != 0) {
 								Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 18, 30, 0x000000, 100);
-								client.modIcons[rights - 1].drawImage(xPos, yPos - 5);
+								ImageCache.get(1984 + rights - 1).drawImage(xPos, yPos - 5);
 								xPos += 18;
 							}
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x3C1414, 100);
@@ -238,7 +238,7 @@ public class ResizableUI_CUS extends ResizableUI {
 						if(type == 8) {
 							if(rights != 0) {
 								Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 18, 30, 0x000000, 100);
-								client.modIcons[rights - 1].drawImage(xPos, yPos - 5);
+								ImageCache.get(1984 + rights - 1).drawImage(xPos, yPos - 5);
 								xPos += 18;
 							}
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x3C1414, 100);
@@ -254,7 +254,7 @@ public class ResizableUI_CUS extends ResizableUI {
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x000000, 100);
 							if(rights != 0) {
 								Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 18, 30, 0x000000, 100);
-								client.modIcons[rights - 1].drawImage(xPos, yPos - 5);
+								ImageCache.get(1984 + rights - 1).drawImage(xPos, yPos - 5);
 								xPos += 18;
 							}
 							client.smallFont.drawLeftAlignedEffectString(name + ": " + chatMessage[0], xPos, yPos + 7, blueFontColor, true);
@@ -263,7 +263,7 @@ public class ResizableUI_CUS extends ResizableUI {
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x3C1414, 100);
 							if(rights != 0) {
 								Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 18, 30, 0x000000, 100);
-								client.modIcons[rights - 1].drawImage(xPos, yPos - 5);
+								ImageCache.get(1984 + rights - 1).drawImage(xPos, yPos - 5);
 								xPos += 18;
 							}
 							client.smallFont.drawLeftAlignedEffectString("From " + name + ":  " + chatMessage[0], xPos, yPos + 7, redFontColor, true);
@@ -275,7 +275,7 @@ public class ResizableUI_CUS extends ResizableUI {
 						if(type == 6) {
 							if(rights != 0) {
 								Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 18, 30, 0x000000, 100);
-								client.modIcons[rights - 1].drawImage(xPos, yPos - 5);
+								ImageCache.get(1984 + rights - 1).drawImage(xPos, yPos - 5);
 								xPos += 18;
 							}
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x3C1414, 100);
@@ -284,7 +284,7 @@ public class ResizableUI_CUS extends ResizableUI {
 						if(type == 8) {
 							if(rights != 0) {
 								Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 18, 30, 0x000000, 100);
-								client.modIcons[rights - 1].drawImage(xPos, yPos - 5);
+								ImageCache.get(1984 + rights - 1).drawImage(xPos, yPos - 5);
 								xPos += 18;
 							}
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x3C1414, 100);

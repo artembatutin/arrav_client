@@ -13,6 +13,7 @@ public final class Player extends Mobile {
 	public int privelege;
 	private long aLong1697;
 	public NPCType desc;
+	public boolean iron;
 	public boolean noTransform;
 	public final int[] characterParts;
 	public int team;

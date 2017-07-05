@@ -115,7 +115,6 @@ public class Client extends ClientEngine {
 	// Non-static final fields.
 	private final CRC32 crc;
 	public final Interface chatWidget;
-	public final PaletteImage[] modIcons;
 	public final String[] chatAuthor;
 	public final String[] chatMessage;
 	public final boolean[] aBooleanArray876;
@@ -590,7 +589,6 @@ public class Client extends ClientEngine {
 		minimapAngleChange = 2;
 		chatContentHeight = 114;
 		promptInput = "";
-		modIcons = new PaletteImage[9];
 		minimapLineLengths = new int[151];
 		collisionMaps = new CollisionMap[4];
 		anIntArray1240 = new int[100];
@@ -6996,15 +6994,17 @@ public class Client extends ClientEngine {
 						}
 						if(chatInput.equals("::msg2")) {
 							pushMessage("Regular", 1, "Edgeville");
-							pushMessage("Moderator", 1, "@cr1@Edgeville");
-							pushMessage("Super-Moderator", 1, "@cr2@Edgeville");
-							pushMessage("Administrator", 1, "@cr3@Edgeville");
-							pushMessage("Developer", 1, "@cr4@Edgeville");
-							pushMessage("Designer", 1, "@cr5@Edgeville");
-							pushMessage("Respected-Member", 1, "@cr6@Edgeville");
-							pushMessage("Donator", 1, "@cr7@Edgeville");
-							pushMessage("Super-Donator", 1, "@cr8@Edgeville");
-							pushMessage("Extreme-Donator", 1, "@cr9@Edgeville");
+							pushMessage("Respected-Member", 1, "@cr1@Edgeville");
+							pushMessage("Designer", 1, "@cr2@Edgeville");
+							pushMessage("Youtuber", 1, "@cr3@Edgeville");
+							pushMessage("Donator", 1, "@cr4@Edgeville");
+							pushMessage("Super-Donator", 1, "@cr5@Edgeville");
+							pushMessage("Extreme-Donator", 1, "@cr6@Edgeville");
+							pushMessage("Golden-Donator", 1, "@cr7@Edgeville");
+							pushMessage("Helper", 1, "@cr8@Edgeville");
+							pushMessage("Moderator", 1, "@cr9@Edgeville");
+							pushMessage("Senior-Moderator", 1, "@cr9@Edgeville");
+							pushMessage("Administrator", 1, "@cr9@Edgeville");
 						}
 						if(chatInput.equals("::commands")) {
 							pushMessage("--> commands", 0, "");
