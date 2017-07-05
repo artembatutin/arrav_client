@@ -107,14 +107,14 @@ public final class NPCType {
 			npc.actions = new String[] {"Bank", null, "Trade", null, null, null};
 		}
 		if(id == 8091) {//star sprite
-			npc.actions = new String[] {"Talk-to", null, "Exchange-stardust", null, null, null};
+			npc.actions = new String[] {"Talk-to", null, "Exchange-stardust", null, "Trade", null};
 		}
 		if(id == 13926) {//scoreboard manager
 			npc.name = "Scoreboard manager";
 			npc.actions = new String[] {"Talk-to", null, "Claim-rewards", null, null, null};
 		}
 		if(id == 3400 || id == 669) {//culinaromancer and bmoney store
-			npc.actions = new String[] {"Talk-to", null, "Open-Shop", null, null, null};
+			npc.actions = new String[] {"Talk-to", null, "Trade", null, null, null};
 		}
 		if(id == 5913) {//aubury
 			npc.actions = new String[] {"Talk-to", null, "Get-Skillcape", null, "Teleport", null};
