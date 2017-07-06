@@ -11,7 +11,7 @@ public final class Constants {
 	/*
 	 * Miscellaneous constants
 	 */
-	public static final int BUILD = 23;
+	public static final int BUILD = 24;
 	public static final boolean ANTI_BOT_ENABLED = true;
 	public static final int CACHE_INDEX_COUNT = 8;
 
