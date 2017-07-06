@@ -5788,16 +5788,37 @@ public class Client extends ClientEngine {
 					pktType = -1;
 					return true;
 				
+				case 40:
+					final int widget = inBuffer.getUShort();
+					if(Interface.cache[widget] != null && Interface.cache[widget].invId != null) {
+						for(int j25 = 0; j25 < Interface.cache[widget].invId.length; j25++) {
+							Interface.cache[widget].invId[j25] = 0;
+							Interface.cache[widget].invAmt[j25] = 0;
+							if(widget == 3900) {
+								currentShopInterfacePrices[j25] = 0;
+							}
+						}
+					}
+					pktType = -1;
+					return true;
+				
 				case 53:
 					final int itemGroupID = inBuffer.getUShort();
 					final Interface group = Interface.cache[itemGroupID];
 					int total = inBuffer.getUShort();
+					final int countable = inBuffer.getUShort();
+					group.invId = new int[total];
+					group.invAmt = new int[total];
 					if(itemGroupID == 3900) {
-						group.invId = new int[total];
-						group.invAmt = new int[total];
 						currentShopInterfacePrices = new int[total];
 					}
-					for(int j22 = 0; j22 < total; j22++) {
+					if(countable == 0) {
+						pktType = -1;
+						return true;
+					}
+					int found = 0;
+					int index = 0;
+					while(found < countable) {
 						boolean provided = false;
 						if(itemGroupID == 3900) {
 							provided = inBuffer.getBoolean();
@@ -5809,17 +5830,20 @@ public class Client extends ClientEngine {
 								i25 = inBuffer.getMidEndInt();
 							}
 						}
-						group.invId[j22] = inBuffer.getLitEndUShortMinus128();
-						group.invAmt[j22] = i25;
+						group.invId[index] = inBuffer.getLitEndUShortMinus128();
+						group.invAmt[index] = i25;
+						if(group.invId[index] != 0)
+							found++;
 						if(itemGroupID == 3900) {
 							int price = inBuffer.getUByte();
 							if(price == 255) {
 								price = inBuffer.getMidEndInt();
 							}
-							currentShopInterfacePrices[j22] = price;
+							currentShopInterfacePrices[index] = price;
 						}
+						index++;
 					}
-					for(int j25 = total; j25 < group.invId.length; j25++) {
+					for(int j25 = index; j25 < group.invId.length; j25++) {
 						group.invId[j25] = 0;
 						group.invAmt[j25] = 0;
 						if(itemGroupID == 3900) {
@@ -6081,8 +6105,8 @@ public class Client extends ClientEngine {
 					return true;
 
 				case 34:
-					final int widget = inBuffer.getUShort();
-					final Interface class9_2 = Interface.cache[widget];
+					final int int2 = inBuffer.getUShort();
+					final Interface class9_2 = Interface.cache[int2];
 					while(inBuffer.pos < pktSize) {
 						final int slot = inBuffer.getUByte();
 						int item = inBuffer.getUShort();
@@ -6090,7 +6114,7 @@ public class Client extends ClientEngine {
 						if(l25 == 255) {
 							l25 = inBuffer.getInt();
 						}
-						if(widget >= 270 && widget <= 279)
+						if(int2 >= 270 && int2 <= 279)
 							item -= 1;
 						if(slot >= 0 && slot < class9_2.invId.length) {
 							class9_2.invId[slot] = item;

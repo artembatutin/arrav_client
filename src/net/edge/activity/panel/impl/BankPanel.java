@@ -325,7 +325,7 @@ public class BankPanel extends Panel {
 					destSlot = -i;
 					Rasterizer2D.fillRoundedRectangle(beginX + 14 + x, beginY + 11, 36, 36, 2, 0xF3B13F, 20);
 				}
-				if(icon != 0) {
+				if(icon > 0) {
 					final BitmapImage img = ObjectType.getIcon(icon, Interface.cache[270 + i - 1].invAmt[first], 0);
 					if(img != null) {
 						img.drawImage(beginX + 16 + x, beginY + 13);
