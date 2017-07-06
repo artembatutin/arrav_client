@@ -5993,7 +5993,6 @@ public class Client extends ClientEngine {
 					
 				case 150:
 					int ammm = inBuffer.getUByte();
-					System.out.println(ammm);
 					PvPPanel.xCoords = new int[ammm];
 					PvPPanel.yCoords = new int[ammm];
 					for(int pker = 0; pker < ammm; pker++) {

@@ -71,7 +71,6 @@ public final class ObjectType {
 	private int maleEquipOffsetY;
 	private int maleEquipOffsetX;
 	private int[] campaigns;
-	private boolean fixPriority;
 
 	public ObjectType() {
 		id = -1;
@@ -213,6 +212,8 @@ public final class ObjectType {
 		final int endX = Rasterizer2D.clipEndX;
 		final int startY = Rasterizer2D.clipStartY;
 		final int endY = Rasterizer2D.clipEndY;
+		
+		Rasterizer3D.textured = false;
 		Rasterizer2D.setCanvas(sprite2.imageRaster, 32, 32);
 		Rasterizer2D.fillRectangle(0, 0, 32, 32, 0);
 		Rasterizer3D.viewport = new Viewport(0, 0, 32, 32, 32);
@@ -290,6 +291,7 @@ public final class ObjectType {
 		Rasterizer2D.setCanvas(pixels, height, width);
 		Rasterizer2D.setClip(startX, startY, endX, endY);
 		Rasterizer3D.viewport = viewport;
+		Rasterizer3D.textured = true;
 		if(obj.stackable) {
 			sprite2.imageOriginalWidth = 33;
 		} else {
@@ -439,12 +441,6 @@ public final class ObjectType {
 				model.setTexture(retextureSrc[i1], retextureDst[i1]);
 			}
 		}
-		if(fixPriority) {
-			if(model.triPri != null) {
-				for(int p = 0; p < model.triPri.length; p++)
-					model.triPri[p] = 10;
-			}
-		}
 		return model;
 	}
 
@@ -483,12 +479,6 @@ public final class ObjectType {
 		}
 		model.calculateLighting(64 + anInt196, 768 + anInt184, -50, -10, -50, true);
 		model.hoverable = true;
-		if(fixPriority) {
-			if(model.triPri != null) {
-				for(int j = 0; j < model.triPri.length; j++)
-					model.triPri[j] = 10;
-			}
-		}
 		modelcache.put(id, model);
 		return model;
 	}
@@ -1033,15 +1023,15 @@ public final class ObjectType {
 			noteTemplateId = 799;
 			noteId = 19014;
 			break;
-		case 20763:
+		/*case 20763:
 		case 21371:
 		case 21372:
 		case 21373:
 		case 21374:
-		case 21375:
+		case 21375: can u go to your "getSprite" method
 		case 20769:
-			fixPriority = true;
-			break;
+			fixPriority = true;*/
+			//break;
 		case 21462:
 		case 21463:
 		case 21464:
@@ -1106,7 +1096,7 @@ public final class ObjectType {
 			iconVerticalOffset = 0;
 			iconYaw = 533;
 			iconRoll = 333;
-			fixPriority = true;
+			//fixPriority = true;
 			break;
 		case 14207:
 			flask("Empty", -1, 0);

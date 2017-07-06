@@ -267,7 +267,6 @@ public final class Scene {
 	 * values.
 	 */
 	public void drawScene(int camX, int camY, int camZ, int camYaw, int camRoll, int camPlane, int fogRgb) {
-		Rasterizer3D.saveDepth = Config.def.isSMOOTH_FOG();
 		Rasterizer3D.clearDepthBuffer();
 		focalLength = Rasterizer3D.viewport.width;
 		if(camX < 0) {
@@ -371,7 +370,6 @@ public final class Scene {
 							hasClicked = false;
 							focalLength = 512;
 							Rasterizer3D.drawFog(Constants.FOG_BEGIN, Constants.FOG_END, fogRgb);
-							Rasterizer3D.saveDepth = false;
 							return;
 						}
 					}
@@ -419,7 +417,6 @@ public final class Scene {
 							hasClicked = false;
 							focalLength = 512;
 							Rasterizer3D.drawFog(Constants.FOG_BEGIN, Constants.FOG_END, fogRgb);
-							Rasterizer3D.saveDepth = false;
 							return;
 						}
 					}
@@ -429,7 +426,6 @@ public final class Scene {
 		hasClicked = false;
 		focalLength = 512;
 		Rasterizer3D.drawFog(Constants.FOG_BEGIN, Constants.FOG_END, fogRgb);
-		Rasterizer3D.saveDepth = false;
 	}
 
 	private void drawTile(Tile tile, boolean flag) {
@@ -494,12 +490,12 @@ public final class Scene {
 					}
 					final Wall wall = tile_2.wall;
 					if(wall != null) {
-						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash);
+						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash, Rasterizer3D.TYPES[6]);
 					}
 					for(int i2 = 0; i2 < tile_2.entityUnitAmount; i2++) {
 						final EntityUnit entity = tile_2.entityUnit[i2];
 						if(entity != null) {
-							entity.model.drawModel(entity.yaw, rollSine, rollCosine, yawSine, yawCosine, entity.x - cameraPixelX, entity.y - cameraPixelY, entity.z - cameraPixelZ, entity.hash);
+							entity.model.drawModel(entity.yaw, rollSine, rollCosine, yawSine, yawCosine, entity.x - cameraPixelX, entity.y - cameraPixelY, entity.z - cameraPixelZ, entity.hash, entity.model.getType());
 						}
 					}
 				}
@@ -554,15 +550,15 @@ public final class Scene {
 						tile1.anInt1325 = 0;
 					}
 					if((wall.face1 & j2) != 0 && !method321(z, x, y, wall.face1)) {
-						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash);
+						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash, Rasterizer3D.TYPES[6]);
 					}
 					if((wall.face2 & j2) != 0 && !method321(z, x, y, wall.face2)) {
-						wall.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash);
+						wall.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash, Rasterizer3D.TYPES[6]);
 					}
 				}
 				if(walldecor != null && !method322(z, x, y, walldecor.model.maxVerticalDistUp)) {
 					if((walldecor.face & j2) != 0) {
-						walldecor.model.drawModel(walldecor.anInt503, rollSine, rollCosine, yawSine, yawCosine, walldecor.x - cameraPixelX, walldecor.y - cameraPixelY, walldecor.z - cameraPixelZ, walldecor.hash);
+						walldecor.model.drawModel(walldecor.anInt503, rollSine, rollCosine, yawSine, yawCosine, walldecor.x - cameraPixelX, walldecor.y - cameraPixelY, walldecor.z - cameraPixelZ, walldecor.hash, Rasterizer3D.TYPES[5]);
 					} else if((walldecor.face & 0x300) != 0) {
 						final int j4 = walldecor.x - cameraPixelX;
 						final int l5 = walldecor.y - cameraPixelY;
@@ -583,30 +579,30 @@ public final class Scene {
 						if((walldecor.face & 0x100) != 0 && k10 < k9) {
 							final int i11 = j4 + anIntArray463[i8];
 							final int k11 = k6 + anIntArray464[i8];
-							walldecor.model.drawModel(i8 * 512 + 256, rollSine, rollCosine, yawSine, yawCosine, i11, l5, k11, walldecor.hash);
+							walldecor.model.drawModel(i8 * 512 + 256, rollSine, rollCosine, yawSine, yawCosine, i11, l5, k11, walldecor.hash, Rasterizer3D.TYPES[5]);
 						}
 						if((walldecor.face & 0x200) != 0 && k10 > k9) {
 							final int j11 = j4 + anIntArray465[i8];
 							final int l11 = k6 + anIntArray466[i8];
-							walldecor.model.drawModel(i8 * 512 + 1280 & 0x7ff, rollSine, rollCosine, yawSine, yawCosine, j11, l5, l11, walldecor.hash);
+							walldecor.model.drawModel(i8 * 512 + 1280 & 0x7ff, rollSine, rollCosine, yawSine, yawCosine, j11, l5, l11, walldecor.hash, Rasterizer3D.TYPES[5]);
 						}
 					}
 				}
 				if(groundExists) {
 					final GroundDecoration grounddecor = tile1.groundDecor;
 					if(grounddecor != null) {
-						grounddecor.model.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, grounddecor.x - cameraPixelX, grounddecor.y - cameraPixelY, grounddecor.z - cameraPixelZ, grounddecor.hash);
+						grounddecor.model.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, grounddecor.x - cameraPixelX, grounddecor.y - cameraPixelY, grounddecor.z - cameraPixelZ, grounddecor.hash, Rasterizer3D.TYPES[4]);
 					}
 					final ObjectUnit object = tile1.objectUnit;
 					if(object != null && object.anInt52 == 0) {
 						if(object.model2 != null) {
-							object.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, object.x - cameraPixelX, object.y - cameraPixelY, object.z - cameraPixelZ, object.hash);
+							object.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, object.x - cameraPixelX, object.y - cameraPixelY, object.z - cameraPixelZ, object.hash, Rasterizer3D.TYPES[0]);
 						}
 						if(object.model3 != null) {
-							object.model3.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, object.x - cameraPixelX, object.y - cameraPixelY, object.z - cameraPixelZ, object.hash);
+							object.model3.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, object.x - cameraPixelX, object.y - cameraPixelY, object.z - cameraPixelZ, object.hash, Rasterizer3D.TYPES[0]);
 						}
 						if(object.model1 != null) {
-							object.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, object.x - cameraPixelX, object.y - cameraPixelY, object.z - cameraPixelZ, object.hash);
+							object.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, object.x - cameraPixelX, object.y - cameraPixelY, object.z - cameraPixelZ, object.hash, Rasterizer3D.TYPES[0]);
 						}
 					}
 				}
@@ -651,7 +647,7 @@ public final class Scene {
 				if(flag2) {
 					final Wall wall = tile1.wall;
 					if(!method321(z, x, y, wall.face1)) {
-						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash);
+						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash, Rasterizer3D.TYPES[6]);
 					}
 					tile1.anInt1325 = 0;
 				}
@@ -739,7 +735,7 @@ public final class Scene {
 						final EntityUnit npcspw = entities2[l3];
 						npcspw.anInt528 = drawCycle;
 						if(!method323(z, npcspw.tileX, npcspw.sizeX, npcspw.tileY, npcspw.sizeY, npcspw.model.maxVerticalDistUp)) {
-							npcspw.model.drawModel(npcspw.yaw, rollSine, rollCosine, yawSine, yawCosine, npcspw.x - cameraPixelX, npcspw.y - cameraPixelY, npcspw.z - cameraPixelZ, npcspw.hash);
+							npcspw.model.drawModel(npcspw.yaw, rollSine, rollCosine, yawSine, yawCosine, npcspw.x - cameraPixelX, npcspw.y - cameraPixelY, npcspw.z - cameraPixelZ, npcspw.hash, npcspw.model.getType());
 						}
 						for(int k7 = npcspw.tileX; k7 <= npcspw.sizeX; k7++) {
 							for(int l8 = npcspw.tileY; l8 <= npcspw.sizeY; l8++) {
@@ -793,20 +789,20 @@ public final class Scene {
 			final ObjectUnit itemspw = tile1.objectUnit;
 			if(itemspw != null && itemspw.anInt52 != 0) {
 				if(itemspw.model2 != null) {
-					itemspw.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, itemspw.x - cameraPixelX, itemspw.y - cameraPixelY - itemspw.anInt52, itemspw.z - cameraPixelZ, itemspw.hash);
+					itemspw.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, itemspw.x - cameraPixelX, itemspw.y - cameraPixelY - itemspw.anInt52, itemspw.z - cameraPixelZ, itemspw.hash, Rasterizer3D.TYPES[0]);
 				}
 				if(itemspw.model3 != null) {
-					itemspw.model3.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, itemspw.x - cameraPixelX, itemspw.y - cameraPixelY - itemspw.anInt52, itemspw.z - cameraPixelZ, itemspw.hash);
+					itemspw.model3.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, itemspw.x - cameraPixelX, itemspw.y - cameraPixelY - itemspw.anInt52, itemspw.z - cameraPixelZ, itemspw.hash, Rasterizer3D.TYPES[0]);
 				}
 				if(itemspw.model1 != null) {
-					itemspw.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, itemspw.x - cameraPixelX, itemspw.y - cameraPixelY - itemspw.anInt52, itemspw.z - cameraPixelZ, itemspw.hash);
+					itemspw.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, itemspw.x - cameraPixelX, itemspw.y - cameraPixelY - itemspw.anInt52, itemspw.z - cameraPixelZ, itemspw.hash, Rasterizer3D.TYPES[0]);
 				}
 			}
 			if(tile1.anInt1328 != 0) {
 				final WallDecoration walldec = tile1.wallDecor;
 				if(walldec != null && !method322(z, x, y, walldec.model.maxVerticalDistUp)) {
 					if((walldec.face & tile1.anInt1328) != 0) {
-						walldec.model.drawModel(walldec.anInt503, rollSine, rollCosine, yawSine, yawCosine, walldec.x - cameraPixelX, walldec.y - cameraPixelY, walldec.z - cameraPixelZ, walldec.hash);
+						walldec.model.drawModel(walldec.anInt503, rollSine, rollCosine, yawSine, yawCosine, walldec.x - cameraPixelX, walldec.y - cameraPixelY, walldec.z - cameraPixelZ, walldec.hash, Rasterizer3D.TYPES[5]);
 					} else if((walldec.face & 0x300) != 0) {
 						final int xoff = walldec.x - cameraPixelX;
 						final int zoff = walldec.y - cameraPixelY;
@@ -827,22 +823,22 @@ public final class Scene {
 						if((walldec.face & 0x100) != 0 && l7 >= j6) {
 							final int i9 = xoff + anIntArray463[k5];
 							final int i10 = yoff + anIntArray464[k5];
-							walldec.model.drawModel(k5 * 512 + 256, rollSine, rollCosine, yawSine, yawCosine, i9, zoff, i10, walldec.hash);
+							walldec.model.drawModel(k5 * 512 + 256, rollSine, rollCosine, yawSine, yawCosine, i9, zoff, i10, walldec.hash, Rasterizer3D.TYPES[5]);
 						}
 						if((walldec.face & 0x200) != 0 && l7 <= j6) {
 							final int j9 = xoff + anIntArray465[k5];
 							final int j10 = yoff + anIntArray466[k5];
-							walldec.model.drawModel(k5 * 512 + 1280 & 0x7ff, rollSine, rollCosine, yawSine, yawCosine, j9, zoff, j10, walldec.hash);
+							walldec.model.drawModel(k5 * 512 + 1280 & 0x7ff, rollSine, rollCosine, yawSine, yawCosine, j9, zoff, j10, walldec.hash, Rasterizer3D.TYPES[5]);
 						}
 					}
 				}
 				final Wall wall = tile1.wall;
 				if(wall != null) {
 					if((wall.face2 & tile1.anInt1328) != 0 && !method321(z, x, y, wall.face2)) {
-						wall.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash);
+						wall.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash, Rasterizer3D.TYPES[6]);
 					}
 					if((wall.face1 & tile1.anInt1328) != 0 && !method321(z, x, y, wall.face1)) {
-						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash);
+						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash, Rasterizer3D.TYPES[6]);
 					}
 				}
 			}

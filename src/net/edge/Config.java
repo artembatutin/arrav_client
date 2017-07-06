@@ -120,7 +120,6 @@ public class Config {
 				Buffer buf = new Buffer(data);
 				CounterHandler.gainedXP = buf.getInt();
 				GAME_FRAME = buf.getUShort();
-				System.out.println(GAME_FRAME);
 				SELECTED_MENU = buf.getUByte();
 				HITSPLATS = buf.getUByte();
 				HITBARS = buf.getUByte();

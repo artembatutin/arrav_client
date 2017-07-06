@@ -384,7 +384,7 @@ public class BankPanel extends Panel {
 				int x = i % 7 * 65;
 				int icon = Interface.cache[270 + tab].invId[i];
 				Rasterizer2D.fillRoundedRectangle(beginX + 14 + x, beginY + offset, 60, 44, 3, 0x000000, 80);
-				if(icon == 0) {
+				if(icon <= 0) {
 					offset += i % 7 == 6 ? 50 : 0;
 					continue;
 				}

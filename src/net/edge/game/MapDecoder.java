@@ -584,8 +584,9 @@ public final class MapDecoder {
 									}
 								}
 								int rgb_bitset_randomized = 0;
+								int shadow = Config.def.isHD_MINIMAP() ? 52 : 96;
 								if(hsl != -1) {
-									rgb_bitset_randomized = Rasterizer3D.hslToRgbMap[adjustLightness(adjhs, 96)];
+									rgb_bitset_randomized = Rasterizer3D.hslToRgbMap[adjustLightness(adjhs, shadow)];
 								}
 								if(overlayFloId == 0 && underlayFloId - 1 >= UnderlayFloorType.cache.length) {
 									overlayFloId = 1;
@@ -612,7 +613,7 @@ public final class MapDecoder {
 										overlay_texture = -1;
 									} else {
 										flohsl = getHSLHashCode(overlayFlo.hue, overlayFlo.saturation, overlayFlo.lightness);
-										mapColor = Rasterizer3D.hslToRgbMap[method185(overlayFlo.hsl, 96)];
+										mapColor = Rasterizer3D.hslToRgbMap[method185(overlayFlo.hsl, shadow)];
 									}
 									scene.setGround(z, x, y, lay, k23, underlay_floor_texture, overlay_texture, j19, k19, l19, i20, adjustLightness(hsl, j20), adjustLightness(hsl, k20), adjustLightness(hsl, l20), adjustLightness(hsl, i21), method185(flohsl, j20), method185(flohsl, k20), method185(flohsl, l20), method185(flohsl, i21), rgb_bitset_randomized, mapColor);
 

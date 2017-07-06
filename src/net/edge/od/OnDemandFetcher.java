@@ -619,7 +619,7 @@ public final class OnDemandFetcher implements Runnable {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		try {
+		/*try {
 			FileWriter outFile = new FileWriter(SignLink.getCacheDir() + "/jaggrab/" + name + "_crc.txt");
 			PrintWriter out = new PrintWriter(outFile);
 			for(int index = 0; index < client.cacheIdx[type + 1].getFileCount(); index++) {
@@ -628,7 +628,7 @@ public final class OnDemandFetcher implements Runnable {
 			out.close();
 		} catch(Exception e) {
 			e.printStackTrace();
-		}
+		}*/
 	}
 
 	/**

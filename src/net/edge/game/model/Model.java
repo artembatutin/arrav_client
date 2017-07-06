@@ -1095,7 +1095,6 @@ public final class Model extends Entity {
 					vectorY = new int[i_119_];
 					vectorZ = new int[i_119_];
 					vectorMagnitude = new int[i_119_];
-					System.out.println(i_119_);
 					for(int i_120_ = 0; i_119_ > i_120_; i_120_++) {
 						int i_121_ = buffers[0].getUShort();
 						int i_122_ = buffers[0].getUShort();
@@ -1788,7 +1787,7 @@ public final class Model extends Entity {
 						int code = texType[var8] & 0xff;
 						x = texVertex1[var8] & 0xffff;
 						y = texVertex2[var8] & 0xffff;
-						z = texVertex3[var8] & 0xffff;
+						z = texVertex3[var8] & 0xffff;//search for -5000
 						if(code != 0) {
 							x = a;
 							y = b;
@@ -1909,7 +1908,8 @@ public final class Model extends Entity {
 
 
 	@Override
-	public void drawModel(int modelYaw, int rollSin, int rollCos, int yawSin, int yawCos, int camX, int camY, int camZ, long hash) {
+	public void drawModel(int modelYaw, int rollSin, int rollCos, int yawSin, int yawCos, int camX, int camY, int camZ, long hash, double type) {
+		Rasterizer3D.renderType = type;
 		final int j2 = camZ * yawCos - camX * yawSin >> 16;
 		final int k2 = camY * rollSin + j2 * rollCos >> 16;
 		final int l2 = maxHorizontalDist * rollCos >> 16;
