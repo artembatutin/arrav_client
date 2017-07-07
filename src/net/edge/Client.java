@@ -207,6 +207,7 @@ public class Client extends ClientEngine {
 	public BitmapImage mapDotItem;
 	public BitmapImage mapDotNPC;
 	public BitmapImage mapDotPlayer;
+	public BitmapImage mapDotIronman;
 	public BitmapImage mapDotFriend;
 	public BitmapImage mapDotTeam;
 	public BitmapImage minimapImage;
@@ -719,8 +720,8 @@ public class Client extends ClientEngine {
 	 */
 	@Override
 	public void reset() {
-		SignLink.reportError = false;
 		Config.def.save();
+		SignLink.reportError = false;
 		try {
 			//Socket stream clean-up.
 			if(socketStream != null) {
@@ -1851,15 +1852,15 @@ public class Client extends ClientEngine {
 	public void drawSoak(int damage, int opacity, int drawPos, int x) {
 		x -= 12;
 		int soakLength = (int) Math.log10(damage) + 1;
-		ImageCache.get(188).drawAlphaImage(spriteDrawX + x, drawPos - 12, opacity);
+		ImageCache.get(188).drawImage(spriteDrawX + x, drawPos - 12, opacity);
 		x += 20;
-		ImageCache.get(180).drawAlphaImage(spriteDrawX + x, drawPos - 12, opacity);
+		ImageCache.get(180).drawImage(spriteDrawX + x, drawPos - 12, opacity);
 		x += 4;
 		for(int i = 0; i < soakLength * 2; i++) {
-			ImageCache.get(181).drawAlphaImage(spriteDrawX + x, drawPos - 12, opacity);
+			ImageCache.get(181).drawImage(spriteDrawX + x, drawPos - 12, opacity);
 			x += 4;
 		}
-		ImageCache.get(182).drawAlphaImage(spriteDrawX + x, drawPos - 10, opacity);
+		ImageCache.get(182).drawImage(spriteDrawX + x, drawPos - 10, opacity);
 		smallHitFont.drawCenteredString(damage + "", spriteDrawX - 8 + x + (soakLength == 1 ? 5 : 0), drawPos + 32, 0xffffff, opacity);
 	}
 
@@ -2798,7 +2799,7 @@ public class Client extends ClientEngine {
 		}
 	}
 
-	private void handleSettings(int index) {
+	public void handleSettings(int index) {
 		final int optionToChange = VariancePopulation.cache[index].anInt709;
 		if(optionToChange == 0) {
 			return;
@@ -3447,6 +3448,7 @@ public class Client extends ClientEngine {
 		gameActivity.reset();
 		panelHandler.close();
 		titleActivity.initialize();
+		Config.def.save();
 	}
 
 	public void dropClient() {
@@ -3521,9 +3523,6 @@ public class Client extends ClientEngine {
 		int code = menuItemCode[item];
 		if(code >= 2000) {
 			code -= 2000;
-		}
-		if(code == 315 && arg3 == 19577) {
-			panelHandler.open(new PlayerPanel());
 		}
 		if(code == 1050) {
 			outBuffer.putOpcode(185);
@@ -3636,6 +3635,10 @@ public class Client extends ClientEngine {
 		if(code == 315) {
 			final Interface class9 = Interface.cache[arg3];
 			boolean flag8 = true;
+			if(arg3 == 19577) {
+				panelHandler.open(new PlayerPanel());
+				return;
+			}
 			if(class9.contentType > 0) {
 				flag8 = promptUserForInput(class9);
 			}
@@ -4141,9 +4144,13 @@ public class Client extends ClientEngine {
 			final Interface class9_2 = Interface.cache[arg3];
 			if(class9_2.valueIndexArray != null && class9_2.valueIndexArray[0][0] == 5) {
 				final int i2 = class9_2.valueIndexArray[0][1];
+				System.out.println(class9_2.requiredValues[0]);
 				if(variousSettings[i2] != class9_2.requiredValues[0]) {
 					variousSettings[i2] = class9_2.requiredValues[0];
 					handleSettings(i2);
+					if(i2 == 166) {
+						Config.def.brightness = class9_2.requiredValues[0];
+					}
 				}
 			}
 			switch(arg3) {

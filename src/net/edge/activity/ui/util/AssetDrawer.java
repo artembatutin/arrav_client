@@ -121,7 +121,7 @@ public class AssetDrawer {
 					if(Config.def.getHITSPLATS() == 0)
 						ImageCache.get(988 + obj.oldHitMarkTypes[id]).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 12);
 					else
-						ImageCache.get(997 + obj.oldHitMarkTypes[id]).drawAlphaImage(client.spriteDrawX - 12, client.spriteDrawY - 12);
+						ImageCache.get(997 + obj.oldHitMarkTypes[id]).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 12);
 					client.smallFont.drawCenteredString(obj.hitArray[id] + "", client.spriteDrawX, client.spriteDrawY + 4, 0);
 					client.smallFont.drawCenteredString(obj.hitArray[id] + "", client.spriteDrawX - 1, client.spriteDrawY + 3, 0xffffff);
 				}
@@ -189,20 +189,20 @@ public class AssetDrawer {
 					icon = 5;
 			}
 			if(icon != 255) {
-				ImageCache.get(icon + (config == 3 ? 1659 : 183)).drawAlphaImage(client.spriteDrawX - 34 + x + (config == 3 ? 5 : 0), drawPos - 14, opacity);
+				ImageCache.get(icon + (config == 3 ? 1659 : 183)).drawImage(client.spriteDrawX - 34 + x + (config == 3 ? 5 : 0), drawPos - 14, opacity);
 			}
 
 			if(config == 2) {
 				end1 = ImageCache.get((type * 3) + 150);
 				middle = ImageCache.get((type * 3) + 151);
 				end2 = ImageCache.get((type * 3) + 152);
-				end1.drawAlphaImage(client.spriteDrawX - 12 + x, drawPos - 12, opacity);
+				end1.drawImage(client.spriteDrawX - 12 + x, drawPos - 12, opacity);
 				x += 4;
 				for(int i = 0; i < hitLength * 2; i++) {
-					middle.drawAlphaImage(client.spriteDrawX - 12 + x, drawPos - 12, opacity);
+					middle.drawImage(client.spriteDrawX - 12 + x, drawPos - 12, opacity);
 					x += 4;
 				}
-				end2.drawAlphaImage(client.spriteDrawX - 12 + x, drawPos - 12, opacity);
+				end2.drawImage(client.spriteDrawX - 12 + x, drawPos - 12, opacity);
 				(type == 1 ? client.bigHitFont : client.smallHitFont).drawCenteredString(damage + "", client.spriteDrawX + 4 + (soak > 0 ? -16 : 0), drawPos + (type == 1 ? 2 : 32), 0xffffff, opacity);
 			} else {
 				String text = damage + "";
@@ -214,7 +214,7 @@ public class AssetDrawer {
 				client.drawSoak(soak, opacity, drawPos, x);
 			}
 		} else {
-			ImageCache.get(149).drawAlphaImage(client.spriteDrawX - 12, drawPos - 14, opacity);
+			ImageCache.get(149).drawImage(client.spriteDrawX - 12, drawPos - 14, opacity);
 		}
 	}
 

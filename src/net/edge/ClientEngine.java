@@ -52,6 +52,7 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 	private int windowOriginX = 0;
 	private int windowOriginY = 0;
 	boolean mouseWheelDown;
+	public boolean shiftDown;
 
 	/**
 	 * ClientShell instance.
@@ -435,6 +436,9 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 			keyQueue[keyInputPos] = keyCharacter;
 			keyInputPos = keyInputPos + 1 & 0x7f;
 		}
+		if(keyCode == 16) {
+			shiftDown = true;
+		}
 	}
 
 	@Override
@@ -480,6 +484,9 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 		}
 		if(keyCharacter > 0 && keyCharacter < '\200') {
 			keyPressed[keyCharacter] = 0;
+		}
+		if(keyCode == 16) {
+			shiftDown = false;
 		}
 	}
 

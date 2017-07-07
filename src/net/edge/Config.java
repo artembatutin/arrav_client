@@ -2,6 +2,7 @@ package net.edge;
 
 import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.activity.ui.util.CounterHandler;
+import net.edge.cache.unit.Interface;
 import net.edge.sign.SignLink;
 import net.edge.util.FileToolkit;
 import net.edge.util.io.Buffer;
@@ -9,6 +10,11 @@ import net.edge.util.io.Buffer;
 public class Config {
 	
 	public static Config def = new Config();
+	
+	/**
+	 * The brightness to be saved.
+	 */
+	public int brightness = 3;
 
 	/**
 	 * Selected Menus
@@ -83,8 +89,7 @@ public class Config {
 	 * Saves the configurations.
 	 */
 	public void save() {
-		Buffer data = new Buffer(new byte[35]);
-		//17 bytes and 1 short.
+		Buffer data = new Buffer(new byte[36]);
 		data.putInt(CounterHandler.gainedXP);
 		data.putShort(GAME_FRAME);
 		data.putByte(SELECTED_MENU);
@@ -104,6 +109,7 @@ public class Config {
 		data.putByte(DISPLAY_NAMES ? 1 : 0);
 		data.putByte(CHARACTER_PREVIEW ? 1 : 0);
 		data.putByte(ROOF_OFF ? 1 : 0);
+		data.putByte(brightness);
 		for(int key : SettingPanel.hotkeys) {
 			data.putByte(key);
 		}
@@ -137,12 +143,13 @@ public class Config {
 				DISPLAY_NAMES = buf.getBoolean();
 				CHARACTER_PREVIEW = buf.getBoolean();
 				ROOF_OFF = buf.getBoolean();
+				brightness = buf.getUByte();
 				for(int i = 0; i < SettingPanel.hotkeys.length; i++) {
 					SettingPanel.hotkeys[i] = buf.getUByte();
 				}
 			}
 		} catch(Exception e) {
-		
+		e.printStackTrace();
 		}
 	}
 	
@@ -152,7 +159,6 @@ public class Config {
 	
 	public void setSELECTED_MENU(int SELECTED_MENU) {
 		this.SELECTED_MENU = SELECTED_MENU;
-		save();
 	}
 	
 	public int getHITSPLATS() {
@@ -161,7 +167,6 @@ public class Config {
 	
 	public void setHITSPLATS(int HITSPLATS) {
 		this.HITSPLATS = HITSPLATS;
-		save();
 	}
 	
 	public int getHITBARS() {
@@ -170,7 +175,6 @@ public class Config {
 	
 	public void setHITBARS(int HITBARS) {
 		this.HITBARS = HITBARS;
-		save();
 	}
 	
 	public boolean isTEN_X_HITS() {
@@ -179,7 +183,6 @@ public class Config {
 	
 	public void setTEN_X_HITS(boolean TEN_X_HITS) {
 		this.TEN_X_HITS = TEN_X_HITS;
-		save();
 	}
 	
 	public int getGAME_FRAME() {
@@ -188,7 +191,6 @@ public class Config {
 	
 	public void setGAME_FRAME(int GAME_FRAME) {
 		this.GAME_FRAME = GAME_FRAME;
-		save();
 	}
 	
 	public boolean isDEBUG_DATA() {
@@ -205,7 +207,6 @@ public class Config {
 	
 	public void setFPS_ON(boolean FPS_ON) {
 		this.FPS_ON = FPS_ON;
-		save();
 	}
 	
 	public boolean isDEBUG_INDEXES() {
@@ -222,7 +223,6 @@ public class Config {
 	
 	public void setLOW_MEM(boolean LOW_MEM) {
 		this.LOW_MEM = LOW_MEM;
-		save();
 	}
 	
 	public boolean isGROUND_DECORATION() {
@@ -231,7 +231,6 @@ public class Config {
 	
 	public void setGROUND_DECORATION(boolean GROUND_DECORATION) {
 		this.GROUND_DECORATION = GROUND_DECORATION;
-		save();
 	}
 	
 	public boolean isGROUND_MATERIALS() {
@@ -240,7 +239,6 @@ public class Config {
 	
 	public void setGROUND_MATERIALS(boolean GROUND_MATERIALS) {
 		this.GROUND_MATERIALS = GROUND_MATERIALS;
-		save();
 	}
 	
 	public boolean isSMOOTH_FOG() {
@@ -249,7 +247,6 @@ public class Config {
 	
 	public void setSMOOTH_FOG(boolean SMOOTH_FOG) {
 		this.SMOOTH_FOG = SMOOTH_FOG;
-		save();
 	}
 	
 	public boolean isTWEENING() {
@@ -258,7 +255,6 @@ public class Config {
 	
 	public void setTWEENING(boolean TWEENING) {
 		this.TWEENING = TWEENING;
-		save();
 	}
 	
 	public boolean isRETAIN_MODEL_PRECISION() {
@@ -267,7 +263,6 @@ public class Config {
 	
 	public void setRETAIN_MODEL_PRECISION(boolean RETAIN_MODEL_PRECISION) {
 		this.RETAIN_MODEL_PRECISION = RETAIN_MODEL_PRECISION;
-		save();
 	}
 	
 	public boolean isHD_MINIMAP() {
@@ -276,7 +271,6 @@ public class Config {
 	
 	public void setHD_MINIMAP(boolean HD_MINIMAP) {
 		this.HD_MINIMAP = HD_MINIMAP;
-		save();
 	}
 	
 	public boolean isDRAW_ORBS() {
@@ -285,7 +279,6 @@ public class Config {
 	
 	public void setDRAW_ORBS(boolean DRAW_ORBS) {
 		this.DRAW_ORBS = DRAW_ORBS;
-		save();
 	}
 	
 	public boolean isDRAW_SKILL_ORBS() {
@@ -294,7 +287,6 @@ public class Config {
 	
 	public void setDRAW_SKILL_ORBS(boolean DRAW_SKILL_ORBS) {
 		this.DRAW_SKILL_ORBS = DRAW_SKILL_ORBS;
-		save();
 	}
 	
 	public boolean isDISPLAY_NAMES() {
@@ -303,7 +295,6 @@ public class Config {
 	
 	public void setDISPLAY_NAMES(boolean DISPLAY_NAMES) {
 		this.DISPLAY_NAMES = DISPLAY_NAMES;
-		save();
 	}
 	
 	public int getSPLIT_PRIVATE_CHAT_COLOR() {
@@ -328,7 +319,6 @@ public class Config {
 	
 	public void setROOF_OFF(boolean ROOF_OFF) {
 		this.ROOF_OFF = ROOF_OFF;
-		save();
 	}
 	
 }

@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.edge.Client;
 import net.edge.Config;
 import net.edge.cache.unit.*;
-import net.edge.media.Rasterizer3D;
 import net.edge.util.io.Buffer;
 import net.edge.util.string.StringUtils;
 
@@ -14,7 +13,6 @@ public final class Player extends Mobile {
 	public int privelege;
 	private long aLong1697;
 	public NPCType desc;
-	public boolean iron;
 	public boolean noTransform;
 	public final int[] characterParts;
 	public int team;
@@ -40,6 +38,7 @@ public final class Player extends Mobile {
 	public int anInt1721;
 	public int anInt1722;
 	public int skill;
+	public boolean iron;
 
 	public Player() {
 		aLong1697 = -1L;
@@ -393,10 +392,9 @@ public final class Player extends Mobile {
 		if(super.anInt1505 == 65535) {
 			super.anInt1505 = -1;
 		}
-
 		name = StringUtils.formatName(StringUtils.decryptName(buffer.getLong()));
 		combatLevel = buffer.getUByte();
-		skill = buffer.getUShort();
+		iron = buffer.getBoolean();
 		visible = true;
 		aLong1718 = 0L;
 		for(int k1 = 0; k1 < 12; k1++) {

@@ -3,10 +3,7 @@ package net.edge.activity.ui;
 import net.edge.Client;
 import net.edge.Config;
 import net.edge.Constants;
-import net.edge.activity.ui.fixed.FixedUI;
-import net.edge.activity.ui.fixed.impl.*;
-import net.edge.activity.ui.resize.ResizableUI;
-import net.edge.activity.ui.resize.impl.*;
+import net.edge.activity.ui.impl.*;
 
 public class UIRenderer {
 

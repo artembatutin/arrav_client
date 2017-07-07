@@ -499,23 +499,23 @@ public class BankPanel extends Panel {
 				Rasterizer2D.fillRectangle(beginX - 70 + x, beginY + 298, 30, 30, 0xF3B13F, 20);
 			}
 			if(i == 6)
-				ImageCache.get(client.anIntArray1045[116] == 0 ? 729 : 726).drawAlphaImage(beginX - 66 + x, beginY + 303);
+				ImageCache.get(client.anIntArray1045[116] == 0 ? 729 : 726).drawImage(beginX - 66 + x, beginY + 303);
 			if(i == 7) {
 				if(client.anIntArray1045[115] != 0)
 					Rasterizer2D.fillRectangle(beginX - 70 + x, beginY + 298, 30, 30, 0xF3B13F, 60);
-				ImageCache.get(732).drawAlphaImage(beginX - 65 + x, beginY + 304);
+				ImageCache.get(732).drawImage(beginX - 65 + x, beginY + 304);
 			}
 			if(i == 8) {
 				if(client.bankSearching)
 					Rasterizer2D.fillRectangle(beginX - 70 + x, beginY + 298, 30, 30, 0xF3B13F, 60);
-				ImageCache.get(733).drawAlphaImage(beginX - 65 + x, beginY + 304);
+				ImageCache.get(733).drawImage(beginX - 65 + x, beginY + 304);
 			}
 			if(i == 9)
-				ImageCache.get(731).drawAlphaImage(beginX - 68 + x, beginY + 304);
+				ImageCache.get(731).drawImage(beginX - 68 + x, beginY + 304);
 			if(i == 10)
-				ImageCache.get(730).drawAlphaImage(beginX - 68 + x, beginY + 304);
+				ImageCache.get(730).drawImage(beginX - 68 + x, beginY + 304);
 			if(i == 11)
-				ImageCache.get(734).drawAlphaImage(beginX - 68 + x, beginY + 304);
+				ImageCache.get(734).drawImage(beginX - 68 + x, beginY + 304);
 		}
 	}
 

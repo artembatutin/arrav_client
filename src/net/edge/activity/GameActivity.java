@@ -618,15 +618,15 @@ public class GameActivity extends Activity {
 			}
 			j = hash;
 			if(config == 2 && client.scene.getWallsForMinimap(client.cameraPlane, x, y, hash) >= 0) {
-				LocationType class46 = LocationType.getPrecise(id);
-				if(class46.childIds != null) {
-					class46 = class46.getChild();
+				LocationType obj = LocationType.getPrecise(id);
+				if(obj.childIds != null) {
+					obj = obj.getChild();
 				}
-				if(class46 == null || class46.name == null) {
+				if(obj == null || obj.name == null) {
 					continue;
 				}
 				if(client.itemSelected == 1) {
-					client.menuItemName[client.menuPos] = "Use " + client.selectedItemName + " with @cya@" + class46.name;
+					client.menuItemName[client.menuPos] = "Use " + client.selectedItemName + " with @cya@" + obj.name;
 					client.menuItemCode[client.menuPos] = 62;
 					client.menuItemArg2[client.menuPos] = x;
 					client.menuItemArg3[client.menuPos] = y;
@@ -634,7 +634,7 @@ public class GameActivity extends Activity {
 					client.menuPos++;
 				} else if(client.spellSelected == 1) {
 					if((client.spellUsableOn & 4) == 4) {
-						client.menuItemName[client.menuPos] = client.spellTooltip + " @cya@" + class46.name;
+						client.menuItemName[client.menuPos] = client.spellTooltip + " @cya@" + obj.name;
 						client.menuItemCode[client.menuPos] = 956;
 						client.menuItemArg2[client.menuPos] = x;
 						client.menuItemArg3[client.menuPos] = y;
@@ -642,10 +642,10 @@ public class GameActivity extends Activity {
 						client.menuPos++;
 					}
 				} else {
-					if(class46.actions != null) {
+					if(obj.actions != null) {
 						for(int i2 = 4; i2 >= 0; i2--) {
-							if(class46.actions[i2] != null) {
-								client.menuItemName[client.menuPos] = class46.actions[i2] + " @cya@" + class46.name;
+							if(obj.actions[i2] != null) {
+								client.menuItemName[client.menuPos] = obj.actions[i2] + " @cya@" + obj.name;
 								if(i2 == 0) {
 									client.menuItemCode[client.menuPos] = 502;
 								}
@@ -668,12 +668,12 @@ public class GameActivity extends Activity {
 							}
 						}
 					}
-					client.menuItemName[client.menuPos] = "Examine @cya@" + class46.name;
+					client.menuItemName[client.menuPos] = "Examine @cya@" + obj.name;
 					if(Config.def.isDEBUG_INDEXES()) {
-						client.menuItemName[client.menuPos] += " @mag@" + class46.id + " " + Arrays.toString(class46.modelIds);
+						client.menuItemName[client.menuPos] += " @mag@" + obj.id + " " + Arrays.toString(obj.modelIds);
 					}
 					client.menuItemCode[client.menuPos] = 1226;
-					client.menuItemArg1[client.menuPos] = class46.id;
+					client.menuItemArg1[client.menuPos] = obj.id;
 					client.menuItemArg2[client.menuPos] = x;
 					client.menuItemArg3[client.menuPos] = y;
 					client.menuPos++;

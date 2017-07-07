@@ -230,15 +230,15 @@ public class SettingPanel extends Panel {
 	
 		/* Screen Mode */
 		drawSection(x + 215, y + 20, 100, 285, "Screen Mode");
-		ImageCache.get(client.uiRenderer.isFixed() ? 9 : 10).drawAlphaImage(x + 230, y + 60);
-		ImageCache.get(client.uiRenderer.isResizable() ? 11 : 12).drawAlphaImage(x + 330, y + 60);
-		ImageCache.get(client.uiRenderer.isFullscreen() ? 13 : 14).drawAlphaImage(x + 430, y + 60);
+		ImageCache.get(client.uiRenderer.isFixed() ? 9 : 10).drawImage(x + 230, y + 60);
+		ImageCache.get(client.uiRenderer.isResizable() ? 11 : 12).drawImage(x + 330, y + 60);
+		ImageCache.get(client.uiRenderer.isFullscreen() ? 13 : 14).drawImage(x + 430, y + 60);
 		if(client.mouseInRegion(x + 230, y + 60, x + 284, y + 102))
-			ImageCache.get(9).drawAlphaImage(x + 230, y + 60);
+			ImageCache.get(9).drawImage(x + 230, y + 60);
 		if(client.mouseInRegion(x + 330, y + 60, x + 383, y + 102))
-			ImageCache.get(11).drawAlphaImage(x + 330, y + 60);
+			ImageCache.get(11).drawImage(x + 330, y + 60);
 		if(client.mouseInRegion(x + 429, y + 60, x + 484, y + 102))
-			ImageCache.get(13).drawAlphaImage(x + 430, y + 60);
+			ImageCache.get(13).drawImage(x + 430, y + 60);
 			
 		/* Game-frames */
 		drawSection(x + 215, y + 130, 80, 285, "Game-Frame");
@@ -263,13 +263,13 @@ public class SettingPanel extends Panel {
 
 		int hitmark = Config.def.getHITSPLATS();
 		if(hitmark == 0) {
-			ImageCache.get(1653).drawAlphaImage(x + 460, y + 245);
+			ImageCache.get(1653).drawImage(x + 460, y + 245);
 		} else if(hitmark == 1) {
-			ImageCache.get(1654).drawAlphaImage(x + 458, y + 245);
+			ImageCache.get(1654).drawImage(x + 458, y + 245);
 		} else if(hitmark == 2) {
-			ImageCache.get(1652).drawAlphaImage(x + 450, y + 245);
+			ImageCache.get(1652).drawImage(x + 450, y + 245);
 		} else {
-			ImageCache.get(1664).drawAlphaImage(x + 450, y + 245);
+			ImageCache.get(1664).drawImage(x + 450, y + 245);
 		}
 		Rasterizer2D.drawVerticalLine(x + 470, y + 265, 10, 0xDBB047, 90);
 		drawTitleButton("Switch", x + 450, y + 275, 0xDBB047);

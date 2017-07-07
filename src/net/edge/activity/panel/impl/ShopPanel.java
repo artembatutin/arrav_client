@@ -15,7 +15,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
-import java.util.Optional;
 
 public class ShopPanel extends Panel {
 	
@@ -276,7 +275,7 @@ public class ShopPanel extends Panel {
 				img.drawImage(beginX + 28 + x, beginY + offset + 2);
 			}
 			if(currency != null) {
-				ImageCache.get(currency.getImage()).drawAlphaImage(beginX + 10 + x, beginY + offset + 32);
+				ImageCache.get(currency.getImage()).drawImage(beginX + 10 + x, beginY + offset + 32);
 			}
 			int am = Interface.cache[3900].invAmt[i];
 			smallFont.drawLeftAlignedEffectString(am == 999999999 ? "inf" : am + "", beginX + 12 + x, beginY + offset + 14, 0xF3B13F, true);
@@ -316,32 +315,12 @@ public class ShopPanel extends Panel {
 
 	@Override
 	public void initialize() {
-		if(CounterPanel.shops.isEmpty()) {
-			URL url;
-			try {
-				url = new URL("http://edgeville.net/game/shops.txt");
-				URLConnection conn = url.openConnection();
-				BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-				br.lines().forEachOrdered(line -> {
-					String[] shop = line.split("-");
-					String name = shop[0];
-					int id = Integer.parseInt(shop[1]);
-					int icons[] = new int[3];
-					icons[0] = Integer.parseInt(shop[2]);
-					icons[1] = Integer.parseInt(shop[3]);
-					icons[2] = Integer.parseInt(shop[4]);
-					CounterPanel.shops.add(new CounterPanel.Shop(name, id, icons));
-				});
-				br.close();
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
-		}
+	
 	}
 
 	@Override
 	public void reset() {
-
+	
 	}
 
 	@Override

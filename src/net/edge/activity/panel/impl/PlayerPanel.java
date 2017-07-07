@@ -1,24 +1,13 @@
 package net.edge.activity.panel.impl;
 
-import com.sun.tools.internal.jxc.ap.Const;
-import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.edge.Constants;
 import net.edge.activity.panel.Panel;
-import net.edge.activity.ui.resize.impl.ResizableUI_CUS;
+import net.edge.activity.ui.impl.ResizableUI_CUS;
 import net.edge.cache.unit.ImageCache;
 import net.edge.cache.unit.Interface;
 import net.edge.cache.unit.NPCType;
-import net.edge.cache.unit.ObjectType;
 import net.edge.game.Scene;
 import net.edge.media.Rasterizer2D;
-import net.edge.media.img.BitmapImage;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Objects;
 
 public class PlayerPanel extends Panel {
 	

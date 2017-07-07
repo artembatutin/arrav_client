@@ -1,8 +1,10 @@
 package net.edge.cache.impl;
 
 import net.edge.Client;
+import net.edge.Config;
 import net.edge.cache.CacheLoader;
 import net.edge.cache.unit.AnimationFrame;
+import net.edge.cache.unit.Interface;
 import net.edge.cache.unit.LocationType;
 import net.edge.cache.unit.NPCType;
 import net.edge.game.CollisionMap;
@@ -20,6 +22,8 @@ public class SceneLoader implements CacheLoader {
 	}
 	
 	public void run(Client client) {
+		client.variousSettings[166] = Config.def.brightness;
+		client.handleSettings(166);
 		Texture.reset();
 		client.tiles = new byte[4][104][104];
 		client.sceneGroundZ = new int[4][105][105];

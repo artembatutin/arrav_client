@@ -51,6 +51,7 @@ public class MediaLoader implements CacheLoader {
 		client.mapDotItem = new BitmapImage(archive, "mapdots", 0);
 		client.mapDotNPC = new BitmapImage(archive, "mapdots", 1);
 		client.mapDotPlayer = new BitmapImage(archive, "mapdots", 2);
+		client.mapDotIronman = new BitmapImage(archive, "mapdots", 5);
 		client.mapDotFriend = new BitmapImage(archive, "mapdots", 3);
 		client.mapDotTeam = new BitmapImage(archive, "mapdots", 4);
 		client.scrollBarTop = new BitmapImage(archive, "scrollbar", 0);

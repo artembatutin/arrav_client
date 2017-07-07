@@ -20,6 +20,7 @@ import java.io.IOException;
 
 public final class BitmapImage extends Rasterizer2D {
 
+	public boolean alpha;
 	public int imageRaster[];
 	public int imageWidth;
 	public int imageHeight;
@@ -64,10 +65,10 @@ public final class BitmapImage extends Rasterizer2D {
 			xOffset = buf.getUShort();
 			yOffset = buf.getUShort();
 			imageRaster = new int[imageWidth * imageHeight];
-			boolean alphaSupport = buf.getUByte() == 1;
+			alpha = buf.getUByte() == 1;
 			int pixelByteCount = buf.getInt();
 			int pixelCount = 0;
-			if(alphaSupport) {
+			if(alpha) {
 				for(int pixel = 13; pixel < pixelByteCount + 13; pixel += 4) {
 					int argb = 0;
 					argb += ((buf.getUByte() & 0xff) << 24); // alpha
@@ -203,11 +204,11 @@ public final class BitmapImage extends Rasterizer2D {
 		}
 	}
 
-	public void drawAlphaImage(int x, int y) {
-		drawAlphaImage(x, y, 256);
+	private void drawAlphaImage(int x, int y) {
+		drawImage(x, y, 256);
 	}
-
-	public void drawAlphaImage(int x, int y, int alpha) {
+	
+	private void drawAlphaImage(int x, int y, int alpha) {
 		x += xOffset;
 		y += yOffset;
 		int destOffset = x + y * Rasterizer2D.canvasWidth;
@@ -247,6 +248,10 @@ public final class BitmapImage extends Rasterizer2D {
 	}
 
 	public void drawImage(int x, int y) {
+		if(alpha) {
+			drawAlphaImage(x, y);
+			return;
+		}
 		x += xOffset;
 		y += yOffset;
 		int l = x + y * Rasterizer2D.canvasWidth;
@@ -354,6 +359,10 @@ public final class BitmapImage extends Rasterizer2D {
 	}
 
 	public void drawImage(int x, int y, int alpha) {
+		if(this.alpha) {
+			drawAlphaImage(x, y, alpha);
+			return;
+		}
 		x += xOffset;
 		y += yOffset;
 		int i1 = x + y * Rasterizer2D.canvasWidth;
