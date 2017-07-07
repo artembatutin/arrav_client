@@ -426,9 +426,4 @@ public final class Player extends Mobile {
 		}
 	}
 	
-	@Override
-	public double getType() {
-		return Rasterizer3D.TYPES[1];
-	}
-
 }

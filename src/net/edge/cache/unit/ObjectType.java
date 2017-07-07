@@ -10,15 +10,15 @@ import net.edge.media.img.BitmapImage;
 import net.edge.util.io.Buffer;
 
 public final class ObjectType {
-
+	
 	public static ObjectType[] cache;
 	public static int pos;
 	public static Buffer data;
 	public static int[] index;
-
+	
 	public static Int2ObjectOpenHashMap<BitmapImage> iconcache = new Int2ObjectOpenHashMap<>();
 	public static Int2ObjectOpenHashMap<Model> modelcache = new Int2ObjectOpenHashMap<>();
-
+	
 	public int id;
 	public int value;
 	private byte femaleEquipOffset;
@@ -71,7 +71,8 @@ public final class ObjectType {
 	private int maleEquipOffsetY;
 	private int maleEquipOffsetX;
 	private int[] campaigns;
-
+	private boolean fixPriority;
+	
 	public ObjectType() {
 		id = -1;
 	}
@@ -88,9 +89,9 @@ public final class ObjectType {
 		obj.id = id;
 		obj.renew();
 		obj.read(data);
-
+		
 		obj.transform();
-
+		
 		if(obj.noteTemplateId != -1) {
 			obj.toNote();
 		}
@@ -98,10 +99,9 @@ public final class ObjectType {
 			obj.toLend();
 		}
 		
-		
 		if(obj.id == 692) {
 			obj.name = "Donator certificate";
-			obj.actions = new String[] { "Claim", null, null, null, null };
+			obj.actions = new String[]{"Claim", null, null, null, null};
 		}
 		if(obj.id == 18741) {
 			obj.name = "Ironmen cape";
@@ -112,20 +112,20 @@ public final class ObjectType {
 		}
 		if(obj.id == 693) {
 			obj.name = "Super donator certificate";
-			obj.actions = new String[] { "Claim", null, null, null, null };
+			obj.actions = new String[]{"Claim", null, null, null, null};
 		}
 		if(obj.id == 691) {
 			obj.name = "Extreme donator certificate";
-			obj.actions = new String[] { "Claim", null, null, null, null };
+			obj.actions = new String[]{"Claim", null, null, null, null};
 		}
 		if(obj.id == 6829) {
 			obj.name = "Vote box";
-			obj.actions = new String[] { "Open", null, null, null, null };
+			obj.actions = new String[]{"Open", null, null, null, null};
 		}
-
+		
 		if(obj.id == 21432) {
 			obj.name = "Book of diplomacy";
-			obj.actions = new String[] { "Open", null, null, null, "Drop"};
+			obj.actions = new String[]{"Open", null, null, null, "Drop"};
 		}
 		
 		if(id == 3904)
@@ -145,7 +145,7 @@ public final class ObjectType {
 			obj.pet("Trapped Tsutsy");//zamorak
 		if(id == 3918)
 			obj.pet("Trapped Zilzy");//saradomin
-
+		
 		return obj;
 	}
 	
@@ -161,7 +161,7 @@ public final class ObjectType {
 		this.noteId = -1;
 		this.name = name;
 	}
-
+	
 	public static BitmapImage getIcon(int id, int itemAmount, int border) {
 		int hash = (border << 16) + id;
 		if(iconcache.containsKey(hash)) {
@@ -205,8 +205,9 @@ public final class ObjectType {
 				sprite = getIcon(obj.lendID, 50, 0);
 			} catch(Exception ignored) {
 			}
-			if(sprite == null)
+			if(sprite == null) {
 				return null;
+			}
 		}
 		final BitmapImage sprite2 = new BitmapImage(32, 32);
 		Viewport viewport = Rasterizer3D.viewport;
@@ -217,8 +218,6 @@ public final class ObjectType {
 		final int endX = Rasterizer2D.clipEndX;
 		final int startY = Rasterizer2D.clipStartY;
 		final int endY = Rasterizer2D.clipEndY;
-		
-		Rasterizer3D.textured = false;
 		Rasterizer2D.setCanvas(sprite2.imageRaster, 32, 32);
 		Rasterizer2D.fillRectangle(0, 0, 32, 32, 0);
 		Rasterizer3D.viewport = new Viewport(0, 0, 32, 32, 32);
@@ -296,7 +295,6 @@ public final class ObjectType {
 		Rasterizer2D.setCanvas(pixels, height, width);
 		Rasterizer2D.setClip(startX, startY, endX, endY);
 		Rasterizer3D.viewport = viewport;
-		Rasterizer3D.textured = true;
 		if(obj.stackable) {
 			sprite2.imageOriginalWidth = 33;
 		} else {
@@ -305,7 +303,7 @@ public final class ObjectType {
 		sprite2.imageOriginalHeight = itemAmount;
 		return sprite2;
 	}
-
+	
 	public static void reset() {
 		modelcache = null;
 		iconcache = null;
@@ -313,7 +311,7 @@ public final class ObjectType {
 		cache = null;
 		data = null;
 	}
-
+	
 	public static void unpack(CacheArchive archive) {
 		data = new Buffer(archive.getFile("obj.dat"));
 		final Buffer bufferidx = new Buffer(archive.getFile("obj.idx"));
@@ -330,7 +328,7 @@ public final class ObjectType {
 			cache[i] = new ObjectType();
 		}
 	}
-
+	
 	public boolean isDialogueModelCached(int gender) {
 		int dialoguemodelId = maleDialoguemodelId;
 		int dialogueHatmodelId = maleDialogueHatmodelId;
@@ -350,7 +348,7 @@ public final class ObjectType {
 		}
 		return cached;
 	}
-
+	
 	public Model method194(int j) {
 		int k = maleDialoguemodelId;
 		int l = maleDialogueHatmodelId;
@@ -379,7 +377,7 @@ public final class ObjectType {
 		}
 		return model;
 	}
-
+	
 	public boolean method195(int j) {
 		int k = maleEquip;
 		int l = maleEquipAlt;
@@ -404,7 +402,7 @@ public final class ObjectType {
 		}
 		return flag;
 	}
-
+	
 	public Model method196(int i) {
 		int j = maleEquip;
 		int k = maleEquipAlt;
@@ -430,10 +428,10 @@ public final class ObjectType {
 				model = new Model(2, aclass30_sub2_sub4_sub6s);
 			}
 		}
-
+		
 		if(i == 0 && (maleEquipOffsetX != 0 || maleEquipOffsetY != 0 || maleEquipOffsetZ != 0))
 			model.translate(maleEquipOffsetX, maleEquipOffsetY, maleEquipOffsetZ);
-
+		
 		if(i == 1 && (womanEquipOffsetX != 0 || womanEquipOffsetY != 0 || womanEquipOffsetZ != 0))
 			model.translate(womanEquipOffsetX, womanEquipOffsetY, womanEquipOffsetZ);
 		if(originalModelColors != null) {
@@ -446,9 +444,15 @@ public final class ObjectType {
 				model.setTexture(retextureSrc[i1], retextureDst[i1]);
 			}
 		}
+		if(fixPriority) {
+			if(model.triPri != null) {
+				for(int p = 0; p < model.triPri.length; p++)
+					model.triPri[p] = 10;
+			}
+		}
 		return model;
 	}
-
+	
 	public Model getAmountModel(int amt) {
 		if(stackableIds != null && amt > 1) {
 			int j = -1;
@@ -485,9 +489,15 @@ public final class ObjectType {
 		model.calculateLighting(64 + anInt196, 768 + anInt184, -50, -10, -50, true);
 		model.hoverable = true;
 		modelcache.put(id, model);
+		if(fixPriority) {
+			if(model.triPri != null) {
+				for(int p = 0; p < model.triPri.length; p++)
+					model.triPri[p] = 10;
+			}
+		}
 		return model;
 	}
-
+	
 	Model method202(int i) {
 		if(stackableIds != null && i > 1) {
 			int j = -1;
@@ -516,7 +526,7 @@ public final class ObjectType {
 		}
 		return model;
 	}
-
+	
 	public void modelData(int mZ, int mR1, int mR2, int mO1, int mO2) {
 		iconZoom = mZ;
 		iconYaw = mR1;
@@ -524,7 +534,7 @@ public final class ObjectType {
 		iconHorizontalOffset = mO1;
 		iconVerticalOffset = mO2;
 	}
-
+	
 	public void models(int mID, int mE, int fE, int mE2, int fE2) {
 		modelId = mID;
 		maleEquip = mE;
@@ -532,7 +542,7 @@ public final class ObjectType {
 		maleEquipAlt = mE2;
 		femaleEquipAlt = fE2;
 	}
-
+	
 	private void read(Buffer buffer) {
 		do {
 			int opcode = buffer.getUByte();
@@ -696,14 +706,14 @@ public final class ObjectType {
 					else
 						buffer.getInt();
 				}
-
+				
 			} else {
 				System.out.println("[ObjectType] Unknown opcode: " + opcode);
 				break;
 			}
 		} while(true);
 	}
-
+	
 	private void renew() {
 		modelId = 0;
 		name = null;
@@ -753,7 +763,7 @@ public final class ObjectType {
 		womanEquipOffsetZ = 0;
 		// TODO: Are all of the fields cleared?
 	}
-
+	
 	private void toLend() {
 		final ObjectType itemDef = get(lentItemID);
 		actions = new String[5];
@@ -787,7 +797,7 @@ public final class ObjectType {
 		}
 		actions[4] = "Discard";
 	}
-
+	
 	private void toNote() {
 		final ObjectType itemDef = get(noteTemplateId);
 		modelId = itemDef.modelId;
@@ -811,31 +821,37 @@ public final class ObjectType {
 		description = ("Swap this note at any bank for " + s + " " + obj.name + ".");
 		stackable = true;
 	}
-
+	
 	public void totalColors(int total) {
 		originalModelColors = new int[total];
 		modifiedModelColors = new int[total];
 	}
-
+	
 	private void flask(String itemname, int color, int dose) {
-		name = itemname+" flask" + ((dose > 0) ? " ("+dose+")" : "");
-		description = "It seems to be an enlarged vial of " + ((dose > 0) ? ""+itemname+" potion." : "nothing.");
+		name = itemname + " flask" + ((dose > 0) ? " (" + dose + ")" : "");
+		description = "It seems to be an enlarged vial of " + ((dose > 0) ? "" + itemname + " potion." : "nothing.");
 		iconZoom = 804;
 		iconYaw = 131;
 		iconRoll = 198;
 		iconVerticalOffset = 1;
 		iconHorizontalOffset = -1;
-		modifiedModelColors = new int[] { color };
-		originalModelColors  = new int[] { 33715 };
-		groundActions = new String[] { null, null, "Take", null, null };
-		actions = new String[] { itemname.equalsIgnoreCase("empty") ? null : "Drink", null, null, null, "Drop" };
+		modifiedModelColors = new int[]{color};
+		originalModelColors = new int[]{33715};
+		groundActions = new String[]{null, null, "Take", null, null};
+		actions = new String[]{itemname.equalsIgnoreCase("empty") ? null : "Drink", null, null, null, "Drop"};
 		int model = 61741;
-		if (dose == 6) model = 61732;
-		if (dose == 5) model = 61729;
-		if (dose == 4) model = 61764;
-		if (dose == 3) model = 61727;
-		if (dose == 2) model = 61731;
-		if (dose == 1) model = 61812;
+		if(dose == 6)
+			model = 61732;
+		if(dose == 5)
+			model = 61729;
+		if(dose == 4)
+			model = 61764;
+		if(dose == 3)
+			model = 61727;
+		if(dose == 2)
+			model = 61731;
+		if(dose == 1)
+			model = 61812;
 		modelId = model;
 		anInt196 = 40;
 		anInt184 = 200;
@@ -878,9 +894,9 @@ public final class ObjectType {
 		this.stackAmounts[7] = 1000;
 		this.stackableIds[8] = 19009;
 		this.stackAmounts[8] = 10000;
-		actions = new String[] {null, null, null, null, null};
+		actions = new String[]{null, null, null, null, null};
 	}
-
+	
 	private void transform() {
 		switch(id) {
 			case 19000:
@@ -913,524 +929,530 @@ public final class ObjectType {
 			case 19009:
 				bloodMoney(1004);
 				break;
-		case 15100:
-		case 15086:
-		case 15088:
-		case 15090:
-		case 15092:
-		case 15094:
-		case 15096:
-		case 15098:
-			actions = new String[] {"Private-roll", "Clanchat-roll", null, "Put-away", null};
-			break;
-		case 7478:
-			this.name = "Edge Tokens";
-			this.description = "It's an edge token.";
-			this.stackable = true;
-			actions = new String[] {null, null, null, null, null};
-			break;
-		case 19010:
-			originalModelColors = new int[1];
-			modifiedModelColors = new int[1];
-			originalModelColors[0] = 933;
-			modifiedModelColors[0] = 6020;
-			ObjectType hat = ObjectType.get(1050);
-			actions = hat.actions;
-			modelId = hat.modelId;
-			iconZoom = hat.iconZoom;
-			iconHorizontalOffset = hat.iconHorizontalOffset;
-			iconVerticalOffset = hat.iconVerticalOffset;
-			iconRoll = hat.iconRoll;
-			iconYaw = hat.iconYaw;
-			femaleEquip = hat.femaleEquip;
-			femaleEquipAlt = hat.femaleEquipAlt;
-			femaleEquipOffset = hat.femaleEquipOffset;
-			womanEquipOffsetX = hat.womanEquipOffsetX;
-			womanEquipOffsetY = hat.womanEquipOffsetY;
-			womanEquipOffsetZ = hat.womanEquipOffsetZ;
-			maleEquip = hat.maleEquip;
-			maleEquipAlt = hat.maleEquipAlt;
-			maleEquipOffset = hat.maleEquipOffset;
-			maleEquipOffsetX = hat.maleEquipOffsetX;
-			maleEquipOffsetY = hat.maleEquipOffsetY;
-			maleEquipOffsetZ = hat.maleEquipOffsetZ;
-			name = "Black santa hat";
-			description = "It's a Black Santa hat.";
-			break;
-		case 19011:
-			actions = null;
-			noteTemplateId = 799;
-			noteId = 19010;
-			break;
-		case 19012:
-			originalModelColors = new int[1];
-			modifiedModelColors = new int[1];
-			originalModelColors[0] = 926;
-			modifiedModelColors[0] = 6020;
-			ObjectType party = ObjectType.get(1048);
-			actions = party.actions;
-			modelId = party.modelId;
-			iconZoom = party.iconZoom;
-			iconHorizontalOffset = party.iconHorizontalOffset;
-			iconVerticalOffset = party.iconVerticalOffset;
-			iconRoll = party.iconRoll;
-			iconYaw = party.iconYaw;
-			femaleEquip = party.femaleEquip;
-			femaleEquipAlt = party.femaleEquipAlt;
-			femaleEquipOffset = party.femaleEquipOffset;
-			womanEquipOffsetX = party.womanEquipOffsetX;
-			womanEquipOffsetY = party.womanEquipOffsetY;
-			womanEquipOffsetZ = party.womanEquipOffsetZ;
-			maleEquip = party.maleEquip;
-			maleEquipAlt = party.maleEquipAlt;
-			maleEquipOffset = party.maleEquipOffset;
-			maleEquipOffsetX = party.maleEquipOffsetX;
-			maleEquipOffsetY = party.maleEquipOffsetY;
-			maleEquipOffsetZ = party.maleEquipOffsetZ;
-			name = "Black Partyhat";
-			description = "It's a Black Partyhat.";
-			break;
-		case 19013:
-			actions = null;
-			this.noteTemplateId = 799;
-			this.noteId = 19012;
-			break;
-		case 19014:
-			originalModelColors = new int[1];
-			modifiedModelColors = new int[1];
-			originalModelColors[0] = 926;
-			modifiedModelColors[0] = 6020;
-			ObjectType hween = ObjectType.get(1053);
-			actions = hween.actions;
-			modelId = hween.modelId;
-			iconZoom = hween.iconZoom;
-			iconHorizontalOffset = hween.iconHorizontalOffset;
-			iconVerticalOffset = hween.iconVerticalOffset;
-			iconRoll = hween.iconRoll;
-			iconYaw = hween.iconYaw;
-			femaleEquip = hween.femaleEquip;
-			femaleEquipAlt = hween.femaleEquipAlt;
-			femaleEquipOffset = hween.femaleEquipOffset;
-			womanEquipOffsetX = hween.womanEquipOffsetX;
-			womanEquipOffsetY = hween.womanEquipOffsetY;
-			womanEquipOffsetZ = hween.womanEquipOffsetZ;
-			maleEquip = hween.maleEquip;
-			maleEquipAlt = hween.maleEquipAlt;
-			maleEquipOffset = hween.maleEquipOffset;
-			maleEquipOffsetX = hween.maleEquipOffsetX;
-			maleEquipOffsetY = hween.maleEquipOffsetY;
-			maleEquipOffsetZ = hween.maleEquipOffsetZ;
-			name = "Black h'ween mask";
-			description = "It's a Black h'ween mask.";
-			break;
-		case 19015:
-			actions = null;
-			noteTemplateId = 799;
-			noteId = 19014;
-			break;
-		/*case 20763:
-		case 21371:
-		case 21372:
-		case 21373:
-		case 21374:
-		case 21375: can u go to your "getSprite" method
-		case 20769:
-			fixPriority = true;*/
-			//break;
-		case 21462:
-		case 21463:
-		case 21464:
-		case 21465:
-		case 21466:
-		case 21467:
-		case 21468:
-		case 21469:
-		case 21470:
-		case 21471:
-		case 21472:
-		case 21473:
-		case 21474:
-		case 21475:
-		case 21476:
-			actions = new String[5];
-			actions[1] = "Wear";
-			actions[4] = "Drop";
-			break;
-		case 7454:
-			name = "Bronze gloves";
-			break;
-		case 7455:
-			name = "Iron gloves";
-			break;
-		case 7456:
-			name = "Steel gloves";
-			break;
-		case 7457:
-			name = "Black gloves";
-			break;
-		case 7458:
-			name = "Mithril gloves";
-			break;
-		case 7459:
-			name = "Adamant gloves";
-			break;
-		case 7460:
-			name = "Rune gloves";
-			break;
-		case 7461:
-			name = "Dragon gloves";
-			break;
-		case 7462:
-			name = "Barrows gloves";
-			break;
-		case 19111:
-			name ="TokHaar-Kal";
-			value = 60000;
-			maleEquip = 62575;
-			femaleEquip = 62582;
-			groundActions = new String[5];
-			groundActions[2] = "Take";
-			iconHorizontalOffset = -4;
-			modelId = 62592;
-			stackable = false;
-			description = "A cape made of ancient, enchanted rocks.";
-			iconZoom = 2086;
-			actions = new String[5];
-			actions[1] = "Wear";
-			actions[4] = "Drop";
-			iconVerticalOffset = 0;
-			iconYaw = 533;
-			iconRoll = 333;
-			//fixPriority = true;
-			break;
-		case 14207:
-			flask("Empty", -1, 0);
-			break;
-		case 14200:
-			flask("Prayer", 28488, 6);
-			break;
-		case 14198:
-			flask("Prayer", 28488, 5);
-			break;
-		case 14196:
-			flask("Prayer", 28488, 4);
-			break;
-		case 14194:
-			flask("Prayer", 28488, 3);
-			break;
-		case 14192:
-			flask("Prayer", 28488, 2);
-			break;
-		case 14190:
-			flask("Prayer", 28488, 1);
-			break;
-		case 14188:
-			flask("Super attack", 43848, 6);
-			break;
-		case 14186:
-			flask("Super attack", 43848, 5);
-			break;
-		case 14184:
-			flask("Super attack", 43848, 4);
-			break;
-		case 14182:
-			flask("Super attack", 43848, 3);
-			break;
-		case 14180:
-			flask("Super attack", 43848, 2);
-			break;
-		case 14178:
-			flask("Super attack", 43848, 1);
-			break;
-		case 14176:
-			flask("Super strength", 119, 6);
-			break;
-		case 14174:
-			flask("Super strength", 119, 5);
-			break;
-		case 14172:
-			flask("Super strength", 119, 4);
-			break;
-		case 14170:
-			flask("Super strength", 119, 3);
-			break;
-		case 14168:
-			flask("Super strength", 119, 2);
-			break;
-		case 14166:
-			flask("Super strength", 119, 1);
-			break;
-		case 14164:
-			flask("Super defence", 8008, 6);
-			break;
-		case 14162:
-			flask("Super defence", 8008, 5);
-			break;
-		case 14160:
-			flask("Super defence", 8008, 4);
-			break;
-		case 14158:
-			flask("Super defence", 8008, 3);
-			break;
-		case 14156:
-			flask("Super defence", 8008, 2);
-			break;
-		case 14154:
-			flask("Super defence", 8008, 1);
-			break;
-		case 14152:
-			flask("Ranging", 36680, 6);
-			break;
-		case 14150:
-			flask("Ranging", 36680, 5);
-			break;
-		case 14148:
-			flask("Ranging", 36680, 4);
-			break;
-		case 14146:
-			flask("Ranging", 36680, 3);
-			break;
-		case 14144:
-			flask("Ranging", 36680, 2);
-			break;
-		case 14142:
-			flask("Ranging", 36680, 1);
-			break;
-		case 14140:
-			flask("Super antipoison", 62404, 6);
-			break;
-		case 14138:
-			flask("Super antipoison", 62404, 5);
-			break;
-		case 14136:
-			flask("Super antipoison", 62404, 4);
-			break;
-		case 14134:
-			flask("Super antipoison", 62404, 3);
-			break;
-		case 14132:
-			flask("Super antipoison", 62404, 2);
-			break;
-		case 14130:
-			flask("Super antipoison", 62404, 1);
-			break;
-		case 14128:
-			flask("Saradomin brew", 10939, 6);
-			break;
-		case 14126:
-			flask("Saradomin brew", 10939, 5);
-			break;
-		case 14124:
-			flask("Saradomin brew", 10939, 4);
-			break;
-		case 14122:
-			flask("Saradomin brew", 10939, 3);
-			break;
-		case 14419:
-			flask("Saradomin brew", 10939, 2);
-			break;
-		case 14417:
-			flask("Saradomin brew", 10939, 1);
-			break;
-		case 14415:
-			flask("Super restore", 62135, 6);
-			break;
-		case 14413:
-			flask("Super restore", 62135, 5);
-			break;
-		case 14411:
-			flask("Super restore", 62135, 4);
-			break;
-		case 14409:
-			flask("Super restore", 62135, 3);
-			break;
-		case 14407:
-			flask("Super restore", 62135, 2);
-			break;
-		case 14405:
-			flask("Super restore", 62135, 1);
-			break;
-		case 14403:
-			flask("Magic", 37440, 6);
-			break;
-		case 14401:
-			flask("Magic", 37440, 5);
-			break;
-		case 14399:
-			flask("Magic", 37440, 4);
-			break;
-		case 14397:
-			flask("Magic", 37440, 3);
-			break;
-		case 14395:
-			flask("Magic", 37440, 2);
-			break;
-		case 14393:
-			flask("Magic", 37440, 1);
-			break;
-		case 14385:
-			flask("Recover special", 38222, 6);
-			break;
-		case 14383:
-			flask("Recover special", 38222, 5);
-			break;
-		case 14381:
-			flask("Recover special", 38222, 4);
-			break;
-		case 14379:
-			flask("Recover special", 38222, 3);
-			break;
-		case 14377:
-			flask("Recover special", 38222, 2);
-			break;
-		case 14375:
-			flask("Recover special", 38222, 1);
-			break;
-		case 14373:
-			flask("Extreme attack", 33112, 6);
-			break;
-		case 14371:
-			flask("Extreme attack", 33112, 5);
-			break;
-		case 14369:
-			flask("Extreme attack", 33112, 4);
-			break;
-		case 14367:
-			flask("Extreme attack", 33112, 3);
-			break;
-		case 14365:
-			flask("Extreme attack", 33112, 2);
-			break;
-		case 14363:
-			flask("Extreme attack", 33112, 1);
-			break;
-		case 14361:
-			flask("Extreme strength", 127, 6);
-			break;
-		case 14359:
-			flask("Extreme strength", 127, 5);
-			break;
-		case 14357:
-			flask("Extreme strength", 127, 4);
-			break;
-		case 14355:
-			flask("Extreme strength", 127, 3);
-			break;
-		case 14353:
-			flask("Extreme strength", 127, 2);
-			break;
-		case 14351:
-			flask("Extreme strength", 127, 1);
-			break;
-		case 14349:
-			flask("Extreme defence", 10198, 6);
-			break;
-		case 14347:
-			flask("Extreme defence", 10198, 5);
-			break;
-		case 14345:
-			flask("Extreme defence", 10198, 4);
-			break;
-		case 14343:
-			flask("Extreme defence", 10198, 3);
-			break;
-		case 14341:
-			flask("Extreme defence", 10198, 2);
-			break;
-		case 14339:
-			flask("Extreme defence", 10198, 1);
-			break;
-		case 14337:
-			flask("Extreme magic", 33490, 6);
-			break;
-		case 14335:
-			flask("Extreme magic", 33490, 5);
-			break;
-		case 14333:
-			flask("Extreme magic", 33490, 4);
-			break;
-		case 14331:
-			flask("Extreme magic", 33490, 3);
-			break;
-		case 14329:
-			flask("Extreme magic", 33490, 2);
-			break;
-		case 14327:
-			flask("Extreme magic", 33490, 1);
-			break;
-		case 14325:
-			flask("Extreme ranging", 13111, 6);
-			break;
-		case 14323:
-			flask("Extreme ranging", 13111, 5);
-			break;
-		case 14321:
-			flask("Extreme ranging", 13111, 4);
-			break;
-		case 14319:
-			flask("Extreme ranging", 13111, 3);
-			break;
-		case 14317:
-			flask("Extreme ranging", 13111, 2);
-			break;
-		case 14315:
-			flask("Extreme ranging", 13111, 1);
-			break;
-		case 14313:
-			flask("Super prayer", 3016, 6);
-			break;
-		case 14311:
-			flask("Super prayer", 3016, 5);
-			break;
-		case 14309:
-			flask("Super prayer", 3016, 4);
-			break;
-		case 14307:
-			flask("Super prayer", 3016, 3);
-			break;
-		case 14305:
-			flask("Super prayer", 3016, 2);
-			break;
-		case 14303:
-			flask("Super prayer", 3016, 1);
-			break;
-		case 14301:
-			flask("Overload", 0, 6);
-			break;
-		case 14299:
-			flask("Overload", 0, 5);
-			break;
-		case 14297:
-			flask("Overload", 0, 4);
-			break;
-		case 14295:
-			flask("Overload", 0, 3);
-			break;
-		case 14293:
-			flask("Overload", 0, 2);
-			break;
-		case 14291:
-			flask("Overload", 0, 1);
-			break;
-		case 14289:
-			flask("Prayer renewal", 926, 6);
-			break;
-		case 14287:
-			flask("Prayer renewal", 926, 5);
-			break;
-		case 15123:
-			flask("Prayer renewal", 926, 4);
-			break;
-		case 15121:
-			flask("Prayer renewal", 926, 3);
-			break;
-		case 15119:
-			flask("Prayer renewal", 926, 2);
-			break;
-		case 15115:
-			flask("Prayer renewal", 926, 1);
-			break;
+			case 15100:
+			case 15086:
+			case 15088:
+			case 15090:
+			case 15092:
+			case 15094:
+			case 15096:
+			case 15098:
+				actions = new String[]{"Private-roll", "Clanchat-roll", null, "Put-away", null};
+				break;
+			case 7478:
+				this.name = "Edge Tokens";
+				this.description = "It's an edge token.";
+				this.stackable = true;
+				actions = new String[]{null, null, null, null, null};
+				break;
+			case 19010:
+				originalModelColors = new int[1];
+				modifiedModelColors = new int[1];
+				originalModelColors[0] = 933;
+				modifiedModelColors[0] = 6020;
+				ObjectType hat = ObjectType.get(1050);
+				actions = hat.actions;
+				modelId = hat.modelId;
+				iconZoom = hat.iconZoom;
+				iconHorizontalOffset = hat.iconHorizontalOffset;
+				iconVerticalOffset = hat.iconVerticalOffset;
+				iconRoll = hat.iconRoll;
+				iconYaw = hat.iconYaw;
+				femaleEquip = hat.femaleEquip;
+				femaleEquipAlt = hat.femaleEquipAlt;
+				femaleEquipOffset = hat.femaleEquipOffset;
+				womanEquipOffsetX = hat.womanEquipOffsetX;
+				womanEquipOffsetY = hat.womanEquipOffsetY;
+				womanEquipOffsetZ = hat.womanEquipOffsetZ;
+				maleEquip = hat.maleEquip;
+				maleEquipAlt = hat.maleEquipAlt;
+				maleEquipOffset = hat.maleEquipOffset;
+				maleEquipOffsetX = hat.maleEquipOffsetX;
+				maleEquipOffsetY = hat.maleEquipOffsetY;
+				maleEquipOffsetZ = hat.maleEquipOffsetZ;
+				name = "Black santa hat";
+				description = "It's a Black Santa hat.";
+				break;
+			case 19011:
+				actions = null;
+				noteTemplateId = 799;
+				noteId = 19010;
+				break;
+			case 19012:
+				originalModelColors = new int[1];
+				modifiedModelColors = new int[1];
+				originalModelColors[0] = 926;
+				modifiedModelColors[0] = 6020;
+				ObjectType party = ObjectType.get(1048);
+				actions = party.actions;
+				modelId = party.modelId;
+				iconZoom = party.iconZoom;
+				iconHorizontalOffset = party.iconHorizontalOffset;
+				iconVerticalOffset = party.iconVerticalOffset;
+				iconRoll = party.iconRoll;
+				iconYaw = party.iconYaw;
+				femaleEquip = party.femaleEquip;
+				femaleEquipAlt = party.femaleEquipAlt;
+				femaleEquipOffset = party.femaleEquipOffset;
+				womanEquipOffsetX = party.womanEquipOffsetX;
+				womanEquipOffsetY = party.womanEquipOffsetY;
+				womanEquipOffsetZ = party.womanEquipOffsetZ;
+				maleEquip = party.maleEquip;
+				maleEquipAlt = party.maleEquipAlt;
+				maleEquipOffset = party.maleEquipOffset;
+				maleEquipOffsetX = party.maleEquipOffsetX;
+				maleEquipOffsetY = party.maleEquipOffsetY;
+				maleEquipOffsetZ = party.maleEquipOffsetZ;
+				name = "Black Partyhat";
+				description = "It's a Black Partyhat.";
+				break;
+			case 19013:
+				actions = null;
+				this.noteTemplateId = 799;
+				this.noteId = 19012;
+				break;
+			case 19014:
+				originalModelColors = new int[1];
+				modifiedModelColors = new int[1];
+				originalModelColors[0] = 926;
+				modifiedModelColors[0] = 6020;
+				ObjectType hween = ObjectType.get(1053);
+				actions = hween.actions;
+				modelId = hween.modelId;
+				iconZoom = hween.iconZoom;
+				iconHorizontalOffset = hween.iconHorizontalOffset;
+				iconVerticalOffset = hween.iconVerticalOffset;
+				iconRoll = hween.iconRoll;
+				iconYaw = hween.iconYaw;
+				femaleEquip = hween.femaleEquip;
+				femaleEquipAlt = hween.femaleEquipAlt;
+				femaleEquipOffset = hween.femaleEquipOffset;
+				womanEquipOffsetX = hween.womanEquipOffsetX;
+				womanEquipOffsetY = hween.womanEquipOffsetY;
+				womanEquipOffsetZ = hween.womanEquipOffsetZ;
+				maleEquip = hween.maleEquip;
+				maleEquipAlt = hween.maleEquipAlt;
+				maleEquipOffset = hween.maleEquipOffset;
+				maleEquipOffsetX = hween.maleEquipOffsetX;
+				maleEquipOffsetY = hween.maleEquipOffsetY;
+				maleEquipOffsetZ = hween.maleEquipOffsetZ;
+				name = "Black h'ween mask";
+				description = "It's a Black h'ween mask.";
+				break;
+			case 19015:
+				actions = null;
+				noteTemplateId = 799;
+				noteId = 19014;
+				break;
+			case 20763:
+			case 21371:
+			case 21372:
+			case 21373:
+			case 21374:
+			case 21375:
+			case 20769:
+			case 10548:
+			case 6918:
+			case 4109:
+			case 4099:
+			case 7400:
+				
+				fixPriority = true;
+				//break;
+			case 21462:
+			case 21463:
+			case 21464:
+			case 21465:
+			case 21466:
+			case 21467:
+			case 21468:
+			case 21469:
+			case 21470:
+			case 21471:
+			case 21472:
+			case 21473:
+			case 21474:
+			case 21475:
+			case 21476:
+				actions = new String[5];
+				actions[1] = "Wear";
+				actions[4] = "Drop";
+				break;
+			case 7454:
+				name = "Bronze gloves";
+				break;
+			case 7455:
+				name = "Iron gloves";
+				break;
+			case 7456:
+				name = "Steel gloves";
+				break;
+			case 7457:
+				name = "Black gloves";
+				break;
+			case 7458:
+				name = "Mithril gloves";
+				break;
+			case 7459:
+				name = "Adamant gloves";
+				break;
+			case 7460:
+				name = "Rune gloves";
+				break;
+			case 7461:
+				name = "Dragon gloves";
+				break;
+			case 7462:
+				name = "Barrows gloves";
+				break;
+			case 19111:
+				name = "TokHaar-Kal";
+				value = 60000;
+				maleEquip = 62575;
+				femaleEquip = 62582;
+				groundActions = new String[5];
+				groundActions[2] = "Take";
+				iconHorizontalOffset = -4;
+				modelId = 62592;
+				stackable = false;
+				description = "A cape made of ancient, enchanted rocks.";
+				iconZoom = 2086;
+				actions = new String[5];
+				actions[1] = "Wear";
+				actions[4] = "Drop";
+				iconVerticalOffset = 0;
+				iconYaw = 533;
+				iconRoll = 333;
+				fixPriority = true;
+				break;
+			case 14207:
+				flask("Empty", -1, 0);
+				break;
+			case 14200:
+				flask("Prayer", 28488, 6);
+				break;
+			case 14198:
+				flask("Prayer", 28488, 5);
+				break;
+			case 14196:
+				flask("Prayer", 28488, 4);
+				break;
+			case 14194:
+				flask("Prayer", 28488, 3);
+				break;
+			case 14192:
+				flask("Prayer", 28488, 2);
+				break;
+			case 14190:
+				flask("Prayer", 28488, 1);
+				break;
+			case 14188:
+				flask("Super attack", 43848, 6);
+				break;
+			case 14186:
+				flask("Super attack", 43848, 5);
+				break;
+			case 14184:
+				flask("Super attack", 43848, 4);
+				break;
+			case 14182:
+				flask("Super attack", 43848, 3);
+				break;
+			case 14180:
+				flask("Super attack", 43848, 2);
+				break;
+			case 14178:
+				flask("Super attack", 43848, 1);
+				break;
+			case 14176:
+				flask("Super strength", 119, 6);
+				break;
+			case 14174:
+				flask("Super strength", 119, 5);
+				break;
+			case 14172:
+				flask("Super strength", 119, 4);
+				break;
+			case 14170:
+				flask("Super strength", 119, 3);
+				break;
+			case 14168:
+				flask("Super strength", 119, 2);
+				break;
+			case 14166:
+				flask("Super strength", 119, 1);
+				break;
+			case 14164:
+				flask("Super defence", 8008, 6);
+				break;
+			case 14162:
+				flask("Super defence", 8008, 5);
+				break;
+			case 14160:
+				flask("Super defence", 8008, 4);
+				break;
+			case 14158:
+				flask("Super defence", 8008, 3);
+				break;
+			case 14156:
+				flask("Super defence", 8008, 2);
+				break;
+			case 14154:
+				flask("Super defence", 8008, 1);
+				break;
+			case 14152:
+				flask("Ranging", 36680, 6);
+				break;
+			case 14150:
+				flask("Ranging", 36680, 5);
+				break;
+			case 14148:
+				flask("Ranging", 36680, 4);
+				break;
+			case 14146:
+				flask("Ranging", 36680, 3);
+				break;
+			case 14144:
+				flask("Ranging", 36680, 2);
+				break;
+			case 14142:
+				flask("Ranging", 36680, 1);
+				break;
+			case 14140:
+				flask("Super antipoison", 62404, 6);
+				break;
+			case 14138:
+				flask("Super antipoison", 62404, 5);
+				break;
+			case 14136:
+				flask("Super antipoison", 62404, 4);
+				break;
+			case 14134:
+				flask("Super antipoison", 62404, 3);
+				break;
+			case 14132:
+				flask("Super antipoison", 62404, 2);
+				break;
+			case 14130:
+				flask("Super antipoison", 62404, 1);
+				break;
+			case 14128:
+				flask("Saradomin brew", 10939, 6);
+				break;
+			case 14126:
+				flask("Saradomin brew", 10939, 5);
+				break;
+			case 14124:
+				flask("Saradomin brew", 10939, 4);
+				break;
+			case 14122:
+				flask("Saradomin brew", 10939, 3);
+				break;
+			case 14419:
+				flask("Saradomin brew", 10939, 2);
+				break;
+			case 14417:
+				flask("Saradomin brew", 10939, 1);
+				break;
+			case 14415:
+				flask("Super restore", 62135, 6);
+				break;
+			case 14413:
+				flask("Super restore", 62135, 5);
+				break;
+			case 14411:
+				flask("Super restore", 62135, 4);
+				break;
+			case 14409:
+				flask("Super restore", 62135, 3);
+				break;
+			case 14407:
+				flask("Super restore", 62135, 2);
+				break;
+			case 14405:
+				flask("Super restore", 62135, 1);
+				break;
+			case 14403:
+				flask("Magic", 37440, 6);
+				break;
+			case 14401:
+				flask("Magic", 37440, 5);
+				break;
+			case 14399:
+				flask("Magic", 37440, 4);
+				break;
+			case 14397:
+				flask("Magic", 37440, 3);
+				break;
+			case 14395:
+				flask("Magic", 37440, 2);
+				break;
+			case 14393:
+				flask("Magic", 37440, 1);
+				break;
+			case 14385:
+				flask("Recover special", 38222, 6);
+				break;
+			case 14383:
+				flask("Recover special", 38222, 5);
+				break;
+			case 14381:
+				flask("Recover special", 38222, 4);
+				break;
+			case 14379:
+				flask("Recover special", 38222, 3);
+				break;
+			case 14377:
+				flask("Recover special", 38222, 2);
+				break;
+			case 14375:
+				flask("Recover special", 38222, 1);
+				break;
+			case 14373:
+				flask("Extreme attack", 33112, 6);
+				break;
+			case 14371:
+				flask("Extreme attack", 33112, 5);
+				break;
+			case 14369:
+				flask("Extreme attack", 33112, 4);
+				break;
+			case 14367:
+				flask("Extreme attack", 33112, 3);
+				break;
+			case 14365:
+				flask("Extreme attack", 33112, 2);
+				break;
+			case 14363:
+				flask("Extreme attack", 33112, 1);
+				break;
+			case 14361:
+				flask("Extreme strength", 127, 6);
+				break;
+			case 14359:
+				flask("Extreme strength", 127, 5);
+				break;
+			case 14357:
+				flask("Extreme strength", 127, 4);
+				break;
+			case 14355:
+				flask("Extreme strength", 127, 3);
+				break;
+			case 14353:
+				flask("Extreme strength", 127, 2);
+				break;
+			case 14351:
+				flask("Extreme strength", 127, 1);
+				break;
+			case 14349:
+				flask("Extreme defence", 10198, 6);
+				break;
+			case 14347:
+				flask("Extreme defence", 10198, 5);
+				break;
+			case 14345:
+				flask("Extreme defence", 10198, 4);
+				break;
+			case 14343:
+				flask("Extreme defence", 10198, 3);
+				break;
+			case 14341:
+				flask("Extreme defence", 10198, 2);
+				break;
+			case 14339:
+				flask("Extreme defence", 10198, 1);
+				break;
+			case 14337:
+				flask("Extreme magic", 33490, 6);
+				break;
+			case 14335:
+				flask("Extreme magic", 33490, 5);
+				break;
+			case 14333:
+				flask("Extreme magic", 33490, 4);
+				break;
+			case 14331:
+				flask("Extreme magic", 33490, 3);
+				break;
+			case 14329:
+				flask("Extreme magic", 33490, 2);
+				break;
+			case 14327:
+				flask("Extreme magic", 33490, 1);
+				break;
+			case 14325:
+				flask("Extreme ranging", 13111, 6);
+				break;
+			case 14323:
+				flask("Extreme ranging", 13111, 5);
+				break;
+			case 14321:
+				flask("Extreme ranging", 13111, 4);
+				break;
+			case 14319:
+				flask("Extreme ranging", 13111, 3);
+				break;
+			case 14317:
+				flask("Extreme ranging", 13111, 2);
+				break;
+			case 14315:
+				flask("Extreme ranging", 13111, 1);
+				break;
+			case 14313:
+				flask("Super prayer", 3016, 6);
+				break;
+			case 14311:
+				flask("Super prayer", 3016, 5);
+				break;
+			case 14309:
+				flask("Super prayer", 3016, 4);
+				break;
+			case 14307:
+				flask("Super prayer", 3016, 3);
+				break;
+			case 14305:
+				flask("Super prayer", 3016, 2);
+				break;
+			case 14303:
+				flask("Super prayer", 3016, 1);
+				break;
+			case 14301:
+				flask("Overload", 0, 6);
+				break;
+			case 14299:
+				flask("Overload", 0, 5);
+				break;
+			case 14297:
+				flask("Overload", 0, 4);
+				break;
+			case 14295:
+				flask("Overload", 0, 3);
+				break;
+			case 14293:
+				flask("Overload", 0, 2);
+				break;
+			case 14291:
+				flask("Overload", 0, 1);
+				break;
+			case 14289:
+				flask("Prayer renewal", 926, 6);
+				break;
+			case 14287:
+				flask("Prayer renewal", 926, 5);
+				break;
+			case 15123:
+				flask("Prayer renewal", 926, 4);
+				break;
+			case 15121:
+				flask("Prayer renewal", 926, 3);
+				break;
+			case 15119:
+				flask("Prayer renewal", 926, 2);
+				break;
+			case 15115:
+				flask("Prayer renewal", 926, 1);
+				break;
 		}
 	}
-
+	
 }

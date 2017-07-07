@@ -87,8 +87,4 @@ public final class NPC extends Mobile {
 		return type.getModel(-1, currAnim, nextAnim, currCycle, nextCycle, null);
 	}
 	
-	@Override
-	public double getType() {
-		return Rasterizer3D.TYPES[2];
-	}
 }

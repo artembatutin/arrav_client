@@ -1,6 +1,5 @@
 package net.edge.media;
 
-import net.edge.Config;
 import net.edge.Constants;
 import net.edge.game.Scene;
 import net.edge.cache.unit.MaterialType;
@@ -8,19 +7,8 @@ import net.edge.media.tex.Texture;
 
 public final class Rasterizer3D extends Rasterizer2D {
 	
-	public static float[] EMPTY_DEPTH_BUFFER;
-	public static double[] TYPES = {
-			3.8, //DEFAULT
-			0.5, //PLAYER
-			0, //NPC
-			15, //OBJECT
-			0, //FLOOR,
-			120, //WALL DECOR
-			1, //WALL
-	};
-	
-	public static double renderType = TYPES[0];
-	public static float[] depthBuffer;
+	public static int[] depthBuffer;
+	public static boolean saveDepth = false;
 	private static int textureMipmap;
 	public static final int[] lightDecay;
 	public static Viewport viewport;
@@ -34,7 +22,6 @@ public final class Rasterizer3D extends Rasterizer2D {
 	private static int[][] texelArrayPool;
 	private static int[][] texelCache;
 	public static boolean textureMissing;
-	public static boolean textured = true;
 	
 	static {
 		shadowDecay = new int[512];
@@ -53,58 +40,47 @@ public final class Rasterizer3D extends Rasterizer2D {
 		}
 	}
 	
-	private static boolean depthRender(float z1, int offset) {
-		return(z1 - renderType < depthBuffer[offset]);
-	}
-
 	public static void clearDepthBuffer() {
-		if(depthBuffer == null || depthBuffer.length != Rasterizer2D.canvasRaster.length) {
-			depthBuffer = new float[Rasterizer2D.canvasRaster.length];
-			EMPTY_DEPTH_BUFFER = new float[Rasterizer2D.canvasRaster.length];
-			for(int i = 0; i < depthBuffer.length; i++) {
-				EMPTY_DEPTH_BUFFER[i] = Constants.CAM_FAR;
+		if(saveDepth) {
+			if(depthBuffer == null || depthBuffer.length != Rasterizer2D.canvasRaster.length) {
+				depthBuffer = new int[Rasterizer2D.canvasRaster.length];
 			}
+			int far = Constants.CAM_FAR << 16;
+			for(int i = depthBuffer.length - 1; i >= 0; i--) {
+				depthBuffer[i] = far;
+			}
+		} else if(depthBuffer != null) {
+			depthBuffer = null;
 		}
-		System.arraycopy(EMPTY_DEPTH_BUFFER, 0, depthBuffer, 0, EMPTY_DEPTH_BUFFER.length);
 	}
 	
 	public static void drawFog(int begin, int end, int rgb) {
-		if(!Config.def.isSMOOTH_FOG())
+		if(!saveDepth) {
 			return;
-		float length = end - begin;
-		for (int index = 0; index < canvasRaster.length; index++) {
-			float factor = (depthBuffer[index] - begin) / length;
-			canvasRaster[index] = blend(canvasRaster[index], rgb, factor);
+		}
+		int pos = Rasterizer3D.viewport.scanOffsets[0];
+		int src, dst, a;
+		int fogBegin = begin << 16;
+		int fogEnd = end << 16;
+		int fogIntensity = fogEnd - fogBegin >> 8;
+		for(int y = 0; y < Rasterizer3D.viewport.height; y++) {
+			for(int x = 0; x < Rasterizer3D.viewport.width; x++) {
+				if(Rasterizer3D.depthBuffer[pos] >= fogEnd) {
+					Rasterizer2D.canvasRaster[pos] = rgb;
+				} else if(Rasterizer3D.depthBuffer[pos] >= fogBegin) {
+					a = (Rasterizer3D.depthBuffer[pos] - fogBegin) / fogIntensity;
+					src = ((rgb & 0xff00ff) * a >> 8 & 0xff00ff) + ((rgb & 0xff00) * a >> 8 & 0xff00);
+					a = 256 - a;
+					dst = Rasterizer2D.canvasRaster[pos];
+					dst = ((dst & 0xff00ff) * a >> 8 & 0xff00ff) + ((dst & 0xff00) * a >> 8 & 0xff00);
+					Rasterizer2D.canvasRaster[pos] = src + dst;
+				}
+				pos++;
+			}
+			pos += Rasterizer2D.canvasWidth - Rasterizer3D.viewport.width;
 		}
 	}
 	
-	private static int blend(int c1, int c2, float factor) {
-		if (factor >= 1f) {
-			return c2;
-		}
-		if (factor <= 0f) {
-			return c1;
-		}
-		
-		int r1 = (c1 >> 16) & 0xff;
-		int g1 = (c1 >> 8) & 0xff;
-		int b1 = (c1) & 0xff;
-		
-		int r2 = (c2 >> 16) & 0xff;
-		int g2 = (c2 >> 8) & 0xff;
-		int b2 = (c2) & 0xff;
-		
-		int r3 = r2 - r1;
-		int g3 = g2 - g1;
-		int b3 = b2 - b1;
-		
-		int r = (int) (r1 + (r3 * factor));
-		int g = (int) (g1 + (g3 * factor));
-		int b = (int) (b1 + (b3 * factor));
-		
-		return (r << 16) + (g << 8) + b;
-	}
-
 	private static void drawGouraudTriangle317(int y1, int y2, int y3, int x1, int x2, int x3, int hsl1, int hsl2, int hsl3) {
 		int dx1 = 0;
 		int dhsl1 = 0;
@@ -288,7 +264,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 						hsl1 += dhsl1;
 						hsl2 += dhsl2;
 					}
-
+					
 					while(--y1 >= 0) {
 						drawGouraudScanline317(Rasterizer2D.canvasRaster, y2, x1 >> 16, x3 >> 16, hsl1 >> 7, hsl3 >> 7);
 						x1 += dx1;
@@ -308,7 +284,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 					hsl1 += dhsl1;
 					hsl2 += dhsl2;
 				}
-
+				
 				while(--y1 >= 0) {
 					drawGouraudScanline317(Rasterizer2D.canvasRaster, y2, x3 >> 16, x1 >> 16, hsl3 >> 7, hsl1 >> 7);
 					x1 += dx1;
@@ -366,7 +342,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				hsl3 += dhsl1;
 				hsl2 += dhsl2;
 			}
-
+			
 			while(--y3 >= 0) {
 				drawGouraudScanline317(Rasterizer2D.canvasRaster, y2, x2 >> 16, x1 >> 16, hsl2 >> 7, hsl1 >> 7);
 				x1 += dx3;
@@ -434,7 +410,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				hsl2 += dhsl2;
 				hsl3 += dhsl3;
 			}
-
+			
 			while(--y2 >= 0) {
 				drawGouraudScanline317(Rasterizer2D.canvasRaster, y3, x1 >> 16, x2 >> 16, hsl1 >> 7, hsl2 >> 7);
 				x2 += dx2;
@@ -473,7 +449,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				hsl1 += dhsl2;
 				hsl3 += dhsl3;
 			}
-
+			
 			while(--y1 >= 0) {
 				drawGouraudScanline317(Rasterizer2D.canvasRaster, y3, x2 >> 16, x3 >> 16, hsl2 >> 7, hsl3 >> 7);
 				x2 += dx1;
@@ -493,7 +469,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			hsl1 += dhsl2;
 			hsl3 += dhsl3;
 		}
-
+		
 		while(--y1 >= 0) {
 			drawGouraudScanline317(Rasterizer2D.canvasRaster, y3, x3 >> 16, x2 >> 16, hsl3 >> 7, hsl2 >> 7);
 			x2 += dx1;
@@ -503,7 +479,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			y3 += Rasterizer2D.canvasWidth;
 		}
 	}
-
+	
 	public static void drawGouraudScanline317(int[] dest, int offset, int x1, int x2, int hsl1, int hsl2) {
 		int rgb;
 		int n;
@@ -523,59 +499,59 @@ public final class Rasterizer3D extends Rasterizer2D {
 			offset += x1;
 			hsl1 += dhsl * x1;
 			//if(textured) {
-				n = x2 - x1 >> 2;
+			n = x2 - x1 >> 2;
+			if(n > 0) {
+				dhsl = (hsl2 - hsl1) * shadowDecay[n] >> 15;
+			} else {
+				dhsl = 0;
+			}
+			if(alphaFilter == 0) {
 				if(n > 0) {
-					dhsl = (hsl2 - hsl1) * shadowDecay[n] >> 15;
-				} else {
-					dhsl = 0;
+					do {
+						rgb = hslToRgbMap[hsl1 >> 8];
+						hsl1 += dhsl;
+						dest[offset++] = rgb;
+						dest[offset++] = rgb;
+						dest[offset++] = rgb;
+						dest[offset++] = rgb;
+					} while(--n > 0);
 				}
-				if(alphaFilter == 0) {
-					if(n > 0) {
-						do {
-							rgb = hslToRgbMap[hsl1 >> 8];
-							hsl1 += dhsl;
-							dest[offset++] = rgb;
-							dest[offset++] = rgb;
-							dest[offset++] = rgb;
-							dest[offset++] = rgb;
-						} while(--n > 0);
-					}
-					n = x2 - x1 & 3;
-					if(n > 0) {
+				n = x2 - x1 & 3;
+				if(n > 0) {
+					rgb = hslToRgbMap[hsl1 >> 8];
+					do {
+						dest[offset++] = rgb;
+					} while(--n > 0);
+				}
+			} else {
+				final int a1 = alphaFilter;
+				final int a2 = 256 - alphaFilter;
+				int dst;
+				if(n > 0) {
+					do {
 						rgb = hslToRgbMap[hsl1 >> 8];
-						do {
-							dest[offset++] = rgb;
-						} while(--n > 0);
-					}
-				} else {
-					final int a1 = alphaFilter;
-					final int a2 = 256 - alphaFilter;
-					int dst;
-					if(n > 0) {
-						do {
-							rgb = hslToRgbMap[hsl1 >> 8];
-							hsl1 += dhsl;
-							rgb = ((rgb & 0xff00ff) * a2 >> 8 & 0xff00ff) + ((rgb & 0xff00) * a2 >> 8 & 0xff00);
-							dst = dest[offset];
-							dest[offset++] = rgb + ((dst & 0xff00ff) * a1 >> 8 & 0xff00ff) + ((dst & 0xff00) * a1 >> 8 & 0xff00);
-							dst = dest[offset];
-							dest[offset++] = rgb + ((dst & 0xff00ff) * a1 >> 8 & 0xff00ff) + ((dst & 0xff00) * a1 >> 8 & 0xff00);
-							dst = dest[offset];
-							dest[offset++] = rgb + ((dst & 0xff00ff) * a1 >> 8 & 0xff00ff) + ((dst & 0xff00) * a1 >> 8 & 0xff00);
-							dst = dest[offset];
-							dest[offset++] = rgb + ((dst & 0xff00ff) * a1 >> 8 & 0xff00ff) + ((dst & 0xff00) * a1 >> 8 & 0xff00);
-						} while(--n > 0);
-					}
-					n = x2 - x1 & 3;
-					if(n > 0) {
-						rgb = hslToRgbMap[hsl1 >> 8];
+						hsl1 += dhsl;
 						rgb = ((rgb & 0xff00ff) * a2 >> 8 & 0xff00ff) + ((rgb & 0xff00) * a2 >> 8 & 0xff00);
-						do {
-							dst = dest[offset];
-							dest[offset++] = rgb + ((dst & 0xff00ff) * a1 >> 8 & 0xff00ff) + ((dst & 0xff00) * a1 >> 8 & 0xff00);
-						} while(--n > 0);
-					}
+						dst = dest[offset];
+						dest[offset++] = rgb + ((dst & 0xff00ff) * a1 >> 8 & 0xff00ff) + ((dst & 0xff00) * a1 >> 8 & 0xff00);
+						dst = dest[offset];
+						dest[offset++] = rgb + ((dst & 0xff00ff) * a1 >> 8 & 0xff00ff) + ((dst & 0xff00) * a1 >> 8 & 0xff00);
+						dst = dest[offset];
+						dest[offset++] = rgb + ((dst & 0xff00ff) * a1 >> 8 & 0xff00ff) + ((dst & 0xff00) * a1 >> 8 & 0xff00);
+						dst = dest[offset];
+						dest[offset++] = rgb + ((dst & 0xff00ff) * a1 >> 8 & 0xff00ff) + ((dst & 0xff00) * a1 >> 8 & 0xff00);
+					} while(--n > 0);
 				}
+				n = x2 - x1 & 3;
+				if(n > 0) {
+					rgb = hslToRgbMap[hsl1 >> 8];
+					rgb = ((rgb & 0xff00ff) * a2 >> 8 & 0xff00ff) + ((rgb & 0xff00) * a2 >> 8 & 0xff00);
+					do {
+						dst = dest[offset];
+						dest[offset++] = rgb + ((dst & 0xff00ff) * a1 >> 8 & 0xff00ff) + ((dst & 0xff00) * a1 >> 8 & 0xff00);
+					} while(--n > 0);
+				}
+			}
 			/*} else {
 				final int dhsl2 = (hsl2 - hsl1) / (x2 - x1);
 				n = x2 - x1;
@@ -599,28 +575,31 @@ public final class Rasterizer3D extends Rasterizer2D {
 			}*/
 		}
 	}
-
-	public static void drawFlatTriangle(int y1, int y2, int y3, int x1, int x2, int x3, float z1, float z2, float z3, int rgb) {
+	
+	public static void drawFlatTriangle(int y1, int y2, int y3, int x1, int x2, int x3, int z1, int z2, int z3, int rgb) {
+		if(!saveDepth) {
+			z1 = z2 = z3 = 0;
+		}
 		int dx1 = 0;
-		float dz1 = 0;
+		int dz1 = 0;
 		if(y2 != y1) {
 			final int d = (y2 - y1);
 			dx1 = (x2 - x1 << 16) / d;
-			dz1 = (z2 - z1) / d;
+			dz1 = (z2 - z1 << 16) / d;
 		}
 		int dx2 = 0;
-		float dz2 = 0;
+		int dz2 = 0;
 		if(y3 != y2) {
 			final int d = (y3 - y2);
 			dx2 = (x3 - x2 << 16) / d;
-			dz2 = (z3 - z2) / d;
+			dz2 = (z3 - z2 << 16) / d;
 		}
 		int dx3 = 0;
-		float dz3 = 0;
+		int dz3 = 0;
 		if(y3 != y1) {
 			final int d = (y1 - y3);
 			dx3 = (x1 - x3 << 16) / d;
-			dz3 = (z1 - z3) / d;
+			dz3 = (z1 - z3 << 16) / d;
 		}
 		if(y1 <= y2 && y1 <= y3) {
 			if(y1 >= viewport.height) {
@@ -634,7 +613,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			}
 			if(y2 < y3) {
 				x3 = x1 <<= 16;
-				z3 = z1;
+				z3 = z1 <<= 16;
 				if(y1 < 0) {
 					x3 -= dx3 * y1;
 					x1 -= dx1 * y1;
@@ -643,6 +622,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 					y1 = 0;
 				}
 				x2 <<= 16;
+				z2 <<= 16;
 				if(y2 < 0) {
 					x2 -= dx2 * y2;
 					z2 -= dz2 * y2;
@@ -688,7 +668,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				return;
 			}
 			x2 = x1 <<= 16;
-			z2 = z1;
+			z2 = z1 <<= 16;
 			if(y1 < 0) {
 				x2 -= dx3 * y1;
 				x1 -= dx1 * y1;
@@ -697,6 +677,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				y1 = 0;
 			}
 			x3 <<= 16;
+			z3 <<= 16;
 			if(y3 < 0) {
 				x3 -= dx2 * y3;
 				z3 -= dz2 * y3;
@@ -753,7 +734,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			}
 			if(y3 < y1) {
 				x1 = x2 <<= 16;
-				z1 = z2;
+				z1 = z2 <<= 16;
 				if(y2 < 0) {
 					x1 -= dx1 * y2;
 					x2 -= dx2 * y2;
@@ -762,6 +743,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 					y2 = 0;
 				}
 				x3 <<= 16;
+				z3 <<= 16;
 				if(y3 < 0) {
 					x3 -= dx3 * y3;
 					z3 -= dz3 * y3;
@@ -807,7 +789,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				return;
 			}
 			x3 = x2 <<= 16;
-			z3 = z2;
+			z3 = z2 <<= 16;
 			if(y2 < 0) {
 				x3 -= dx1 * y2;
 				x2 -= dx2 * y2;
@@ -816,6 +798,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				y2 = 0;
 			}
 			x1 <<= 16;
+			z1 <<= 16;
 			if(y1 < 0) {
 				x1 -= dx3 * y1;
 				z1 -= dz3 * y1;
@@ -871,7 +854,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 		}
 		if(y1 < y2) {
 			x2 = x3 <<= 16;
-			z2 = z3;
+			z2 = z3 <<= 16;
 			if(y3 < 0) {
 				x2 -= dx2 * y3;
 				x3 -= dx3 * y3;
@@ -880,6 +863,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				y3 = 0;
 			}
 			x1 <<= 16;
+			z1 <<= 16;
 			if(y1 < 0) {
 				x1 -= dx1 * y1;
 				z1 -= dz1 * y1;
@@ -925,7 +909,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			return;
 		}
 		x1 = x3 <<= 16;
-		z1 = z3;
+		z1 = z3 <<= 16;
 		if(y3 < 0) {
 			x1 -= dx2 * y3;
 			x3 -= dx3 * y3;
@@ -934,6 +918,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			y3 = 0;
 		}
 		x2 <<= 16;
+		z2 <<= 16;
 		if(y2 < 0) {
 			x2 -= dx1 * y2;
 			z2 -= dz1 * y2;
@@ -977,18 +962,18 @@ public final class Rasterizer3D extends Rasterizer2D {
 			y3 += Rasterizer2D.canvasWidth;
 		}
 	}
-
-	private static void drawFlatScanline(int[] dest, int offset, int rgb, int x1, int x2, float z1, float z2) {
-		float dz = (z2 - z1) / (x2 - x1);
+	
+	private static void drawFlatScanline(int[] dest, int offset, int rgb, int x1, int x2, int z1, int z2) {
 		if(x1 >= x2) {
 			return;
 		}
+		z2 = (z2 - z1) / (x2 - x1);
 		if(clippedScan) {
 			if(x2 > viewport.width) {
 				x2 = viewport.width;
 			}
 			if(x1 < 0) {
-				z1 -= x1 * dz;
+				z1 -= x1 * z2;
 				x1 = 0;
 			}
 		}
@@ -999,31 +984,34 @@ public final class Rasterizer3D extends Rasterizer2D {
 		int n = x2 - x1;
 		if(alphaFilter == 0) {
 			while(--n >= 0) {
-				if (z1 < depthBuffer[offset] || depthRender(z1, offset)) {
-					dest[offset] = rgb;
+				//if (z1 < depthBuffer[offset]) {
+				dest[offset] = rgb;
+				if(saveDepth) {
 					depthBuffer[offset] = z1;
 				}
-				z1 += dz;
+				//}
+				z1 += z2;
 				offset++;
 			}
 		} else {
 			final int a1 = alphaFilter;
 			final int a2 = 256 - alphaFilter;
-			double alphaPercentage = (a1 / 256D);
 			rgb = ((rgb & 0xff00ff) * a2 >> 8 & 0xff00ff) + ((rgb & 0xff00) * a2 >> 8 & 0xff00);
 			while(--n >= 0) {
-				if (z1 < depthBuffer[offset] || depthRender(z1, offset)) {
-					dest[offset] = rgb + ((dest[offset] & 0xff00ff) * a1 >> 8 & 0xff00ff) + ((dest[offset] & 0xff00) * a1 >> 8 & 0xff00);
-					depthBuffer[offset] = (int) (z1 + ((depthBuffer[offset] - z1) * alphaPercentage));
+				//if (z1 < depthBuffer[offset]) {
+				dest[offset] = rgb + ((dest[offset] & 0xff00ff) * a1 >> 8 & 0xff00ff) + ((dest[offset] & 0xff00) * a1 >> 8 & 0xff00);
+				if(saveDepth) {
+					depthBuffer[offset] = (z1 >> 8) * a2 + (depthBuffer[offset] >> 8) * a1;
 				}
-				z1 += dz;
+				//}
+				z1 += z2;
 				offset++;
 			}
 		}
 	}
-
-
-	public static void drawMaterializedTriangle(int y1, int y2, int y3, int x1, int x2, int x3, float z1, float z2, float z3, int hsl1, int hsl2, int hsl3, int tx1, int tx2, int tx3, int ty1, int ty2, int ty3, int tz1, int tz2, int tz3, int[] ai) {
+	
+	
+	public static void drawMaterializedTriangle(int y1, int y2, int y3, int x1, int x2, int x3, int z1, int z2, int z3, int hsl1, int hsl2, int hsl3, int tx1, int tx2, int tx3, int ty1, int ty2, int ty3, int tz1, int tz2, int tz3, int[] ai) {
 		tx2 = tx1 - tx2;
 		ty2 = ty1 - ty2;
 		tz2 = tz1 - tz2;
@@ -1039,29 +1027,38 @@ public final class Rasterizer3D extends Rasterizer2D {
 		int j6 = ((ty2 * tx3) - (tx2 * ty3)) * Scene.focalLength << 5;
 		int k6 = ((tz2 * ty3) - (ty2 * tz3)) << 8;
 		int l6 = ((tx2 * tz3) - (tz2 * tx3)) << 5;
+		if(!saveDepth) {
+			z1 = z2 = z3 = 0;
+		}
 		int i7 = 0;
 		int j7 = 0;
-		float dz1 = 0;
+		int dz1 = 0;
 		if(y2 != y1) {
 			i7 = (x2 - x1 << 16) / (y2 - y1);
 			j7 = (hsl2 - hsl1 << 15) / (y2 - y1);
-			dz1 = (z2 - z1) / (y2 - y1);
+			if(saveDepth) {
+				dz1 = (z2 - z1 << 16) / (y2 - y1);
+			}
 		}
 		int k7 = 0;
 		int l7 = 0;
-		float dz2 = 0;
+		int dz2 = 0;
 		if(y3 != y2) {
 			k7 = (x3 - x2 << 16) / (y3 - y2);
 			l7 = (hsl3 - hsl2 << 15) / (y3 - y2);
-			dz2 = (z3 - z2) / (y3 - y2);
+			if(saveDepth) {
+				dz2 = (z3 - z2 << 16) / (y3 - y2);
+			}
 		}
 		int i8 = 0;
 		int j8 = 0;
-		float dz3 = 0;
+		int dz3 = 0;
 		if(y3 != y1) {
 			i8 = (x1 - x3 << 16) / (y1 - y3);
 			j8 = (hsl1 - hsl3 << 15) / (y1 - y3);
-			dz3 = (z1 - z3) / (y1 - y3);
+			if(saveDepth) {
+				dz3 = (z1 - z3 << 16) / (y1 - y3);
+			}
 		}
 		if(y1 <= y2 && y1 <= y3) {
 			if(y1 >= Rasterizer2D.clipEndY) {
@@ -1075,7 +1072,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			}
 			if(y2 < y3) {
 				x3 = x1 <<= 16;
-				z3 = z1;
+				z3 = z1 <<= 16;
 				hsl3 = hsl1 <<= 15;
 				if(y1 < 0) {
 					x3 -= i8 * y1;
@@ -1087,6 +1084,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 					y1 = 0;
 				}
 				x2 <<= 16;
+				z2 <<= 16;
 				hsl2 <<= 15;
 				if(y2 < 0) {
 					x2 -= k7 * y2;
@@ -1164,7 +1162,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				return;
 			}
 			x2 = x1 <<= 16;
-			z2 = z1;
+			z2 = z1 <<= 16;
 			hsl2 = hsl1 <<= 15;
 			if(y1 < 0) {
 				x2 -= i8 * y1;
@@ -1176,6 +1174,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				y1 = 0;
 			}
 			x3 <<= 16;
+			z3 <<= 16;
 			hsl3 <<= 15;
 			if(y3 < 0) {
 				x3 -= k7 * y3;
@@ -1262,7 +1261,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			}
 			if(y3 < y1) {
 				x1 = x2 <<= 16;
-				z1 = z2;
+				z1 = z2 <<= 16;
 				hsl1 = hsl2 <<= 15;
 				if(y2 < 0) {
 					x1 -= i7 * y2;
@@ -1274,6 +1273,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 					y2 = 0;
 				}
 				x3 <<= 16;
+				z3 <<= 16;
 				hsl3 <<= 15;
 				if(y3 < 0) {
 					x3 -= i8 * y3;
@@ -1349,7 +1349,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				return;
 			}
 			x3 = x2 <<= 16;
-			z3 = z2;
+			z3 = z2 <<= 16;
 			hsl3 = hsl2 <<= 15;
 			if(y2 < 0) {
 				x3 -= i7 * y2;
@@ -1361,7 +1361,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 				y2 = 0;
 			}
 			x1 <<= 16;
-
+			z1 <<= 16;
+			
 			hsl1 <<= 15;
 			if(y1 < 0) {
 				x1 -= i8 * y1;
@@ -1447,7 +1448,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 		}
 		if(y1 < y2) {
 			x2 = x3 <<= 16;
-			z2 = z3;
+			z2 = z3 <<= 16;
 			hsl2 = hsl3 <<= 15;
 			if(y3 < 0) {
 				x2 -= k7 * y3;
@@ -1459,6 +1460,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				y3 = 0;
 			}
 			x1 <<= 16;
+			z1 <<= 16;
 			hsl1 <<= 15;
 			if(y1 < 0) {
 				x1 -= i7 * y1;
@@ -1534,7 +1536,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			return;
 		}
 		x1 = x3 <<= 16;
-		z1 = z3;
+		z1 = z3 <<= 16;
 		hsl1 = hsl3 <<= 15;
 		if(y3 < 0) {
 			x1 -= k7 * y3;
@@ -1546,6 +1548,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			y3 = 0;
 		}
 		x2 <<= 16;
+		z2 <<= 16;
 		hsl2 <<= 15;
 		if(y2 < 0) {
 			x2 -= i7 * y2;
@@ -1619,17 +1622,17 @@ public final class Rasterizer3D extends Rasterizer2D {
 			j6 += l6;
 		}
 	}
-
-	private static void drawMaterializedScanline(int dst[], int src[], int off, int x1, int x2, float z1, float z2, int hsl1, int hsl2, int l1, int i2, int j2, int k2, int l2, int i3) {
+	
+	private static void drawMaterializedScanline(int dst[], int src[], int off, int x1, int x2, int z1, int z2, int hsl1, int hsl2, int l1, int i2, int j2, int k2, int l2, int i3) {
 		int i = 0;// was parameter
 		int j = 0;// was parameter
 		if(x1 >= x2) {
 			return;
 		}
-
+		
 		int k3;
 		z2 = (z2 - z1) / (x2 - x1);
-
+		
 		hsl2 = (hsl2 - hsl1) / (x2 - x1);
 		if(clippedScan) {
 			if(x2 > Rasterizer2D.clipEndX) {
@@ -1692,8 +1695,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			if(texelPos((j & 0x3f80) + (i >> 7)) >= src.length)
 				return;
 			rgb2 = src[texelPos((j & 0x3f80) + (i >> 7))];
-			if (z1 < depthBuffer[off] || depthRender(z1, off)) {
-				dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			if(saveDepth) {
 				depthBuffer[off] = z1;
 			}
 			off++;
@@ -1705,11 +1708,10 @@ public final class Rasterizer3D extends Rasterizer2D {
 			if(texelPos((j & 0x3f80) + (i >> 7)) >= src.length)
 				return;
 			rgb2 = src[texelPos((j & 0x3f80) + (i >> 7))];
-			if (z1 < depthBuffer[off] || depthRender(z1, off)) {
-				dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			if(saveDepth) {
 				depthBuffer[off] = z1;
 			}
-			
 			off++;
 			z1 += z2;
 			i += j7;
@@ -1719,11 +1721,10 @@ public final class Rasterizer3D extends Rasterizer2D {
 			if(texelPos((j & 0x3f80) + (i >> 7)) >= src.length)
 				return;
 			rgb2 = src[texelPos((j & 0x3f80) + (i >> 7))];
-			if (z1 < depthBuffer[off] || depthRender(z1, off)) {
-				dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			if(saveDepth) {
 				depthBuffer[off] = z1;
 			}
-			
 			off++;
 			z1 += z2;
 			i += j7;
@@ -1733,11 +1734,10 @@ public final class Rasterizer3D extends Rasterizer2D {
 			if(texelPos((j & 0x3f80) + (i >> 7)) >= src.length)
 				return;
 			rgb2 = src[texelPos((j & 0x3f80) + (i >> 7))];
-			if (z1 < depthBuffer[off] || depthRender(z1, off)) {
-				dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			if(saveDepth) {
 				depthBuffer[off] = z1;
 			}
-			
 			off++;
 			z1 += z2;
 			i += j7;
@@ -1747,11 +1747,10 @@ public final class Rasterizer3D extends Rasterizer2D {
 			if(texelPos((j & 0x3f80) + (i >> 7)) >= src.length)
 				return;
 			rgb2 = src[texelPos((j & 0x3f80) + (i >> 7))];
-			if (z1 < depthBuffer[off] || depthRender(z1, off)) {
-				dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			if(saveDepth) {
 				depthBuffer[off] = z1;
 			}
-			
 			off++;
 			z1 += z2;
 			i += j7;
@@ -1761,11 +1760,10 @@ public final class Rasterizer3D extends Rasterizer2D {
 			if(texelPos((j & 0x3f80) + (i >> 7)) >= src.length)
 				return;
 			rgb2 = src[texelPos((j & 0x3f80) + (i >> 7))];
-			if (z1 < depthBuffer[off] || depthRender(z1, off)) {
-				dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			if(saveDepth) {
 				depthBuffer[off] = z1;
 			}
-			
 			off++;
 			z1 += z2;
 			i += j7;
@@ -1775,11 +1773,10 @@ public final class Rasterizer3D extends Rasterizer2D {
 			if(texelPos((j & 0x3f80) + (i >> 7)) >= src.length)
 				return;
 			rgb2 = src[texelPos((j & 0x3f80) + (i >> 7))];
-			if (z1 < depthBuffer[off] || depthRender(z1, off)) {
-				dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			if(saveDepth) {
 				depthBuffer[off] = z1;
 			}
-			
 			off++;
 			z1 += z2;
 			i += j7;
@@ -1789,11 +1786,10 @@ public final class Rasterizer3D extends Rasterizer2D {
 			if(texelPos((j & 0x3f80) + (i >> 7)) >= src.length)
 				return;
 			rgb2 = src[texelPos((j & 0x3f80) + (i >> 7))];
-			if (z1 < depthBuffer[off] || depthRender(z1, off)) {
-				dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			if(saveDepth) {
 				depthBuffer[off] = z1;
 			}
-			
 			off++;
 			z1 += z2;
 			i = j4;
@@ -1821,11 +1817,10 @@ public final class Rasterizer3D extends Rasterizer2D {
 			if(pos >= src.length)
 				return;
 			rgb2 = src[pos];
-			if (z1 < depthBuffer[off] || depthRender(z1, off)) {
-				dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			dst[off] = (((rgb1 >> 16 & 0xff) * (rgb2 >> 17 & 0x7f) << 11) / 3 & 0xff0000) + (((rgb1 >> 8 & 0xff) * (rgb2 >> 9 & 0x7f) << 3) / 3 & 0xff00) + (((rgb1 & 0xff) * (rgb2 >> 1 & 0x7f) >> 5) / 3 & 0xff);
+			if(saveDepth) {
 				depthBuffer[off] = z1;
 			}
-			
 			off++;
 			z1 += z2;
 			i += j7;
@@ -1833,10 +1828,10 @@ public final class Rasterizer3D extends Rasterizer2D {
 			hsl1 += hsl2;
 		}
 	}
-
-
-	public static void drawHDTexturedTriangle(int y1, int y2, int y3, int x1, int x2, int x3, float z1, float z2, float z3, int l1, int l2, int l3, int tx1, int tx2, int tx3, int ty1, int ty2, int ty3, int tz1, int tz2, int tz3, int[] ai) {
-
+	
+	
+	public static void drawHDTexturedTriangle(int y1, int y2, int y3, int x1, int x2, int x3, int z1, int z2, int z3, int l1, int l2, int l3, int tx1, int tx2, int tx3, int ty1, int ty2, int ty3, int tz1, int tz2, int tz3, int[] ai) {
+		
 		l1 &= 0x7f;
 		l2 &= 0x7f;
 		l3 &= 0x7f;
@@ -1870,28 +1865,34 @@ public final class Rasterizer3D extends Rasterizer2D {
 		int l6 = ((tx2 * tz3) - (tz2 * tx3)) << 5;
 		int i7 = 0;
 		int j7 = 0;
-		float dz1 = 0;
+		int dz1 = 0;
 		if(y2 != y1) {
 			i7 = (x2 - x1 << 16) / (y2 - y1);
 			j7 = (l2 - l1 << 16) / (y2 - y1);
-			dz1 = (z2 - z1) / (y2 - y1);
+			if(saveDepth) {
+				dz1 = (z2 - z1 << 16) / (y2 - y1);
+			}
 		}
 		int k7 = 0;
 		int l7 = 0;
-		float dz2 = 0;
+		int dz2 = 0;
 		if(y3 != y2) {
 			k7 = (x3 - x2 << 16) / (y3 - y2);
 			l7 = (l3 - l2 << 16) / (y3 - y2);
-			dz2 = (z3 - z2) / (y3 - y2);
+			if(saveDepth) {
+				dz2 = (z3 - z2 << 16) / (y3 - y2);
+			}
 		}
-
+		
 		int i8 = 0;
 		int j8 = 0;
-		float dz3 = 0;
+		int dz3 = 0;
 		if(y3 != y1) {
 			i8 = (x1 - x3 << 16) / (y1 - y3);
 			j8 = (l1 - l3 << 16) / (y1 - y3);
-			dz3 = (z1 - z3) / (y1 - y3);
+			if(saveDepth) {
+				dz3 = (z1 - z3 << 16) / (y1 - y3);
+			}
 		}
 		if(y1 <= y2 && y1 <= y3) {
 			if(y1 >= clipEndY) {
@@ -1906,7 +1907,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			if(y2 < y3) {
 				x3 = x1 <<= 16;
 				l3 = l1 <<= 16;
-				z3 = z1;
+				z3 = z1 <<= 16;
 				if(y1 < 0) {
 					x3 -= i8 * y1;
 					x1 -= i7 * y1;
@@ -1918,6 +1919,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				}
 				x2 <<= 16;
 				l2 <<= 16;
+				z2 <<= 16;
 				if(y2 < 0) {
 					x2 -= k7 * y2;
 					l2 -= l7 * y2;
@@ -1993,7 +1995,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			}
 			x2 = x1 <<= 16;
 			l2 = l1 <<= 16;
-			z2 = z1;
+			z2 = z1 <<= 16;
 			if(y1 < 0) {
 				x2 -= i8 * y1;
 				x1 -= i7 * y1;
@@ -2005,6 +2007,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			}
 			x3 <<= 16;
 			l3 <<= 16;
+			z3 <<= 16;
 			if(y3 < 0) {
 				x3 -= k7 * y3;
 				l3 -= l7 * y3;
@@ -2091,8 +2094,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			if(y3 < y1) {
 				x1 = x2 <<= 16;
 				l1 = l2 <<= 16;
-				z1 = z2;
-
+				z1 = z2 <<= 16;
+				
 				if(y2 < 0) {
 					x1 -= i7 * y2;
 					x2 -= k7 * y2;
@@ -2104,12 +2107,13 @@ public final class Rasterizer3D extends Rasterizer2D {
 				}
 				x3 <<= 16;
 				l3 <<= 16;
-
+				z3 <<= 16;
+				
 				if(y3 < 0) {
 					x3 -= i8 * y3;
 					l3 -= j8 * y3;
 					z3 -= dz3 * y3;
-
+					
 					y3 = 0;
 				}
 				int i9 = y2 - viewport.centerY;
@@ -2181,8 +2185,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			}
 			x3 = x2 <<= 16;
 			l3 = l2 <<= 16;
-			z3 = z2;
-
+			z3 = z2 <<= 16;
+			
 			if(y2 < 0) {
 				x3 -= i7 * y2;
 				x2 -= k7 * y2;
@@ -2193,12 +2197,14 @@ public final class Rasterizer3D extends Rasterizer2D {
 				y2 = 0;
 			}
 			x1 <<= 16;
+			z1 <<= 16;
+			
 			l1 <<= 16;
 			if(y1 < 0) {
 				x1 -= i8 * y1;
 				l1 -= j8 * y1;
 				z1 -= dz3 * y1;
-
+				
 				y1 = 0;
 			}
 			int j9 = y2 - viewport.centerY;
@@ -2279,7 +2285,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 		}
 		if(y1 < y2) {
 			x2 = x3 <<= 16;
-			z2 = z3;
+			z2 = z3 <<= 16;
 			l2 = l3 <<= 16;
 			if(y3 < 0) {
 				x2 -= k7 * y3;
@@ -2291,6 +2297,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				y3 = 0;
 			}
 			x1 <<= 16;
+			z1 <<= 16;
 			l1 <<= 16;
 			if(y1 < 0) {
 				x1 -= i7 * y1;
@@ -2367,8 +2374,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 		}
 		x1 = x3 <<= 16;
 		l1 = l3 <<= 16;
-		z1 = z3;
-
+		z1 = z3 <<= 16;
+		
 		if(y3 < 0) {
 			x1 -= k7 * y3;
 			x3 -= i8 * y3;
@@ -2379,7 +2386,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			y3 = 0;
 		}
 		x2 <<= 16;
-
+		z2 <<= 16;
+		
 		l2 <<= 16;
 		if(y2 < 0) {
 			x2 -= i7 * y2;
@@ -2453,8 +2461,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			j6 += l6;
 		}
 	}
-
-	private static void drawHDTexturedScanline(int ai[], int ai1[], int k, int x1, int x2, float z1, float z2, int l1, int l2, int a1, int i2, int j2, int k2, int a2, int i3) {
+	
+	private static void drawHDTexturedScanline(int ai[], int ai1[], int k, int x1, int x2, int z1, int z2, int l1, int l2, int a1, int i2, int j2, int k2, int a2, int i3) {
 		int i = 0;// was parameter
 		int j = 0;// was parameter
 		if(x1 >= x2) {
@@ -2514,8 +2522,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			int l;
 			if((i9 = ai1[(j & 0x3f80) + (i >> 7)]) != 0) {
 				l = l1 >> 16;
-				if (z1 < depthBuffer[k] || depthRender(z1, k)) {
-					ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				if(saveDepth) {
 					depthBuffer[k] = z1;
 				}
 			}
@@ -2526,8 +2534,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			l1 += dl;
 			if((i9 = ai1[(j & 0x3f80) + (i >> 7)]) != 0) {
 				l = l1 >> 16;
-				if (z1 < depthBuffer[k] || depthRender(z1, k)) {
-					ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				if(saveDepth) {
 					depthBuffer[k] = z1;
 				}
 			}
@@ -2538,8 +2546,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			l1 += dl;
 			if((i9 = ai1[(j & 0x3f80) + (i >> 7)]) != 0) {
 				l = l1 >> 16;
-				if (z1 < depthBuffer[k] || depthRender(z1, k)) {
-					ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				if(saveDepth) {
 					depthBuffer[k] = z1;
 				}
 			}
@@ -2550,8 +2558,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			l1 += dl;
 			if((i9 = ai1[(j & 0x3f80) + (i >> 7)]) != 0) {
 				l = l1 >> 16;
-				if (z1 < depthBuffer[k] || depthRender(z1, k)) {
-					ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				if(saveDepth) {
 					depthBuffer[k] = z1;
 				}
 			}
@@ -2562,8 +2570,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			l1 += dl;
 			if((i9 = ai1[(j & 0x3f80) + (i >> 7)]) != 0) {
 				l = l1 >> 16;
-				if (z1 < depthBuffer[k] || depthRender(z1, k)) {
-					ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				if(saveDepth) {
 					depthBuffer[k] = z1;
 				}
 			}
@@ -2574,8 +2582,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			l1 += dl;
 			if((i9 = ai1[(j & 0x3f80) + (i >> 7)]) != 0) {
 				l = l1 >> 16;
-				if (z1 < depthBuffer[k] || depthRender(z1, k)) {
-					ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				if(saveDepth) {
 					depthBuffer[k] = z1;
 				}
 			}
@@ -2586,8 +2594,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			l1 += dl;
 			if((i9 = ai1[(j & 0x3f80) + (i >> 7)]) != 0) {
 				l = l1 >> 16;
-				if (z1 < depthBuffer[k] || depthRender(z1, k)) {
-					ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				if(saveDepth) {
 					depthBuffer[k] = z1;
 				}
 			}
@@ -2598,8 +2606,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			l1 += dl;
 			if((i9 = ai1[(j & 0x3f80) + (i >> 7)]) != 0) {
 				l = l1 >> 16;
-				if (z1 < depthBuffer[k] || depthRender(z1, k)) {
-					ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				ai[k] = ((i9 & 0xff00ff) * l & ~0xff00ff) + ((i9 & 0xff00) * l & 0xff0000) >> 8;
+				if(saveDepth) {
 					depthBuffer[k] = z1;
 				}
 			}
@@ -2630,8 +2638,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			int l;
 			if((j9 = ai1[(j & 0x3f80) + (i >> 7)]) != 0) {
 				l = l1 >> 16;
-				if (z1 < depthBuffer[k] || depthRender(z1, k)) {
-					ai[k] = ((j9 & 0xff00ff) * l & ~0xff00ff) + ((j9 & 0xff00) * l & 0xff0000) >> 8;
+				ai[k] = ((j9 & 0xff00ff) * l & ~0xff00ff) + ((j9 & 0xff00) * l & 0xff0000) >> 8;
+				if(saveDepth) {
 					depthBuffer[k] = z1;
 				}
 			}
@@ -2641,12 +2649,12 @@ public final class Rasterizer3D extends Rasterizer2D {
 			j += l7;
 			l1 += dl;
 		}
-
+		
 	}
 	
-	public static void drawTexturedTriangle(int y1, int y2, int y3, int x1, int x2, int x3, float z1, float z2, float z3, int hsl1, int hsl2, int hsl3, int tx1, int tx2, int tx3, int ty1, int ty2, int ty3, int tz1, int tz2, int tz3, int tex, boolean force, boolean mipmap) {
+	public static void drawTexturedTriangle(int y1, int y2, int y3, int x1, int x2, int x3, int z1, int z2, int z3, int hsl1, int hsl2, int hsl3, int tx1, int tx2, int tx3, int ty1, int ty2, int ty3, int tz1, int tz2, int tz3, int tex, boolean force, boolean mipmap) {
 		if(tex >= 0 && tex < MaterialType.textures.length) {
-
+			
 			MaterialType def = MaterialType.textures[tex];
 			Texture texture = Texture.get(tex);
 			
@@ -2701,7 +2709,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 		textureMissing = true;
 		drawGouraudTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, hsl1, hsl2, hsl3);
 	}
-
+	
 	private static int texelPos(int defaultIndex) {
 		int x = defaultIndex & 127;
 		int y = defaultIndex >> 7;
@@ -2709,12 +2717,12 @@ public final class Rasterizer3D extends Rasterizer2D {
 		y >>= textureMipmap;
 		return x + (y << (7 - textureMipmap));
 	}
-
-	public static void drawGouraudTriangle(int y1, int y2, int y3, int x1, int x2, int x3, float z1, float z2, float z3, int hsl1, int hsl2, int hsl3) {
-		if(!textured) {
+	
+	public static void drawGouraudTriangle(int y1, int y2, int y3, int x1, int x2, int x3, int z1, int z2, int z3, int hsl1, int hsl2, int hsl3) {
+		/*if(!textured) {
 			drawGouraudTriangle317(y1, y2, y3, x1, x2, x3, hsl1, hsl2, hsl3);
 			return;
-		}
+		}*/
 		final int rgb1 = hslToRgbMap[hsl1];
 		final int rgb2 = hslToRgbMap[hsl2];
 		final int rgb3 = hslToRgbMap[hsl3];
@@ -2728,40 +2736,46 @@ public final class Rasterizer3D extends Rasterizer2D {
 		int g3 = rgb3 >> 8 & 0xff;
 		int b3 = rgb3 & 0xff;
 		int dx1 = 0;
-		float dz1 = 0;
+		int dz1 = 0;
 		int dr1 = 0;
 		int dg1 = 0;
 		int db1 = 0;
 		if(y2 != y1) {
 			final int d = (y2 - y1);
 			dx1 = (x2 - x1 << 16) / d;
-			dz1 = (z2 - z1) / d;
+			if(saveDepth) {
+				dz1 = (z2 - z1 << 16) / d;
+			}
 			dr1 = (r2 - r1 << 16) / d;
 			dg1 = (g2 - g1 << 16) / d;
 			db1 = (b2 - b1 << 16) / d;
 		}
 		int dx2 = 0;
-		float dz2 = 0;
+		int dz2 = 0;
 		int dr2 = 0;
 		int dg2 = 0;
 		int db2 = 0;
 		if(y3 != y2) {
 			final int d = (y3 - y2);
 			dx2 = (x3 - x2 << 16) / d;
-			dz2 = (z3 - z2) / d;
+			if(saveDepth) {
+				dz2 = (z3 - z2 << 16) / d;
+			}
 			dr2 = (r3 - r2 << 16) / d;
 			dg2 = (g3 - g2 << 16) / d;
 			db2 = (b3 - b2 << 16) / d;
 		}
 		int dx3 = 0;
-		float dz3 = 0;
+		int dz3 = 0;
 		int dr3 = 0;
 		int dg3 = 0;
 		int db3 = 0;
 		if(y3 != y1) {
 			final int d = (y1 - y3);
 			dx3 = (x1 - x3 << 16) / d;
-			dz3 = (z1 - z3) / d;
+			if(saveDepth) {
+				dz3 = (z1 - z3 << 16) / d;
+			}
 			dr3 = (r1 - r3 << 16) / d;
 			dg3 = (g1 - g3 << 16) / d;
 			db3 = (b1 - b3 << 16) / d;
@@ -2778,7 +2792,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			}
 			if(y2 < y3) {
 				x3 = x1 <<= 16;
-				z3 = z1;
+				z3 = z1 <<= 16;
 				r3 = r1 <<= 16;
 				g3 = g1 <<= 16;
 				b3 = b1 <<= 16;
@@ -2796,6 +2810,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 					y1 = 0;
 				}
 				x2 <<= 16;
+				z2 <<= 16;
 				r2 <<= 16;
 				g2 <<= 16;
 				b2 <<= 16;
@@ -2871,7 +2886,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				return;
 			}
 			x2 = x1 <<= 16;
-			z2 = z1;
+			z2 = z1 <<= 16;
 			r2 = r1 <<= 16;
 			g2 = g1 <<= 16;
 			b2 = b1 <<= 16;
@@ -2889,6 +2904,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				y1 = 0;
 			}
 			x3 <<= 16;
+			z3 <<= 16;
 			r3 <<= 16;
 			g3 <<= 16;
 			b3 <<= 16;
@@ -2975,7 +2991,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			}
 			if(y3 < y1) {
 				x1 = x2 <<= 16;
-				z1 = z2;
+				z1 = z2 <<= 16;
 				r1 = r2 <<= 16;
 				g1 = g2 <<= 16;
 				b1 = b2 <<= 16;
@@ -2993,6 +3009,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 					y2 = 0;
 				}
 				x3 <<= 16;
+				z3 <<= 16;
 				r3 <<= 16;
 				g3 <<= 16;
 				b3 <<= 16;
@@ -3068,7 +3085,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				return;
 			}
 			x3 = x2 <<= 16;
-			z3 = z2;
+			z3 = z2 <<= 16;
 			r3 = r2 <<= 16;
 			g3 = g2 <<= 16;
 			b3 = b2 <<= 16;
@@ -3086,6 +3103,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				y2 = 0;
 			}
 			x1 <<= 16;
+			z1 <<= 16;
 			r1 <<= 16;
 			g1 <<= 16;
 			b1 <<= 16;
@@ -3171,7 +3189,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 		}
 		if(y1 < y2) {
 			x2 = x3 <<= 16;
-			z2 = z3;
+			z2 = z3 <<= 16;
 			r2 = r3 <<= 16;
 			g2 = g3 <<= 16;
 			b2 = b3 <<= 16;
@@ -3189,6 +3207,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				y3 = 0;
 			}
 			x1 <<= 16;
+			z1 <<= 16;
 			r1 <<= 16;
 			g1 <<= 16;
 			b1 <<= 16;
@@ -3264,7 +3283,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			return;
 		}
 		x1 = x3 <<= 16;
-		z1 = z3;
+		z1 = z3 <<= 16;
 		r1 = r3 <<= 16;
 		g1 = g3 <<= 16;
 		b1 = b3 <<= 16;
@@ -3282,6 +3301,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 			y3 = 0;
 		}
 		x2 <<= 16;
+		z2 <<= 16;
 		r2 <<= 16;
 		g2 <<= 16;
 		b2 <<= 16;
@@ -3355,8 +3375,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 			y3 += Rasterizer2D.canvasWidth;
 		}
 	}
-
-	public static void drawGouraudScanline(int[] dest, int offset, int x1, int x2, float z1, float z2, int r1, int g1, int b1, int r2, int g2, int b2) {
+	
+	public static void drawGouraudScanline(int[] dest, int offset, int x1, int x2, int z1, int z2, int r1, int g1, int b1, int r2, int g2, int b2) {
 		int n = x2 - x1;
 		if(n <= 0) {
 			return;
@@ -3383,10 +3403,12 @@ public final class Rasterizer3D extends Rasterizer2D {
 			offset += x1;
 			if(alphaFilter == 0) {
 				while(--n >= 0) {
-					if (z1 < depthBuffer[offset] || depthRender(z1, offset)) {
-						dest[offset] = (r1 & 0xff0000) | (g1 >> 8 & 0xff00) | (b1 >> 16 & 0xff);
+					//if (z1 < depthBuffer[offset]) {
+					dest[offset] = (r1 & 0xff0000) | (g1 >> 8 & 0xff00) | (b1 >> 16 & 0xff);
+					if(saveDepth) {
 						depthBuffer[offset] = z1;
 					}
+					//}
 					z1 += z2;
 					r1 += r2;
 					g1 += g2;
@@ -3396,27 +3418,28 @@ public final class Rasterizer3D extends Rasterizer2D {
 			} else {
 				final int a1 = alphaFilter;
 				final int a2 = 256 - alphaFilter;
-				double alphaPercentage = (a1 / 256D);
 				int rgb;
 				int dst;
 				while(--n >= 0) {
+					//if (z1 < depthBuffer[offset]) {
 					rgb = (r1 & 0xff0000) | (g1 >> 8 & 0xff00) | (b1 >> 16 & 0xff);
 					rgb = ((rgb & 0xff00ff) * a2 >> 8 & 0xff00ff) + ((rgb & 0xff00) * a2 >> 8 & 0xff00);
-					if (z1 < depthBuffer[offset] || depthRender(z1, offset)) {
-						dst = dest[offset];
-						dest[offset] = rgb + ((dst & 0xff00ff) * a1 >> 8 & 0xff00ff) + ((dst & 0xff00) * a1 >> 8 & 0xff00);
-						depthBuffer[offset] = (int) (z1 + ((depthBuffer[offset] - z1) * alphaPercentage));
+					dst = dest[offset];
+					dest[offset] = rgb + ((dst & 0xff00ff) * a1 >> 8 & 0xff00ff) + ((dst & 0xff00) * a1 >> 8 & 0xff00);
+					if(saveDepth) {
+						depthBuffer[offset] = (z1 >> 8) * a2 + (depthBuffer[offset] >> 8) * a1;//XXX
 					}
+					//}
 					z1 += z2;
 					r1 += r2;
 					g1 += g2;
 					b1 += b2;
 					offset++;
 				}
-			}//wanna login real quick
+			}
 		}
 	}
-
+	
 	private static int adjustBrightness(int color, double amt) {
 		double red = (color >> 16) / 256D;
 		double green = (color >> 8 & 0xff) / 256D;
@@ -3429,7 +3452,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 		final int blue2 = (int) (blue * 256D);
 		return (red2 << 16) + (green2 << 8) + blue2;
 	}
-
+	
 	public static void reset() {
 		shadowDecay = null;
 		shadowDecay = null;
@@ -3441,8 +3464,8 @@ public final class Rasterizer3D extends Rasterizer2D {
 		hslToRgbMap = null;
 		brightness = 1.0F;
 	}
-
-
+	
+	
 	public static void setBrightness(float brightness) {
 		if(Constants.ANTI_BOT_ENABLED) {
 			brightness += Math.random() * 0.029999999999999999D - 0.014999999999999999D;
@@ -3517,15 +3540,15 @@ public final class Rasterizer3D extends Rasterizer2D {
 		}
 		Texture.reset();
 	}
-
+	
 	public static void resetTextures() {
 		if(texelArrayPool == null) {
 			int textureTexelPoolPointer = 50;
 			texelArrayPool = new int[textureTexelPoolPointer][0x10000];
 			for(int k = 0; k < texelCache.length; k++)
 				texelCache[k] = null;
-
+			
 		}
 	}
-
+	
 }

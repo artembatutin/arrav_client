@@ -1956,8 +1956,7 @@ public final class Model extends Entity {
 	
 	
 	@Override
-	public void drawModel(int modelYaw, int rollSin, int rollCos, int yawSin, int yawCos, int camX, int camY, int camZ, long hash, double type) {
-		Rasterizer3D.renderType = type;
+	public void drawModel(int modelYaw, int rollSin, int rollCos, int yawSin, int yawCos, int camX, int camY, int camZ, long hash) {
 		renderAtPointX = camX + Client.instance.cameraLocationX;
 		renderAtPointY = camZ + Client.instance.cameraLocationY;
 		renderAtPointZ = camY + Client.instance.cameraLocationZ;
@@ -2753,10 +2752,12 @@ public final class Model extends Entity {
 			vertexZ[i] = vertexY[i] * sin + vertexZ[i] * cos >> 16;
 			vertexY[i] = x;
 		}
-		for(int i = 0; i < particleDirectionX.length; i++) {
-			final int x = particleDirectionX[i] * cos - particleDirectionZ[i] * sin >> 16;
-			particleDirectionZ[i] = particleDirectionY[i] * sin + particleDirectionZ[i] * cos >> 16;
-			particleDirectionY[i] = x;
+		if(particleDirectionX != null) {
+			for(int i = 0; i < particleDirectionX.length; i++) {
+				final int x = particleDirectionX[i] * cos - particleDirectionZ[i] * sin >> 16;
+				particleDirectionZ[i] = particleDirectionY[i] * sin + particleDirectionZ[i] * cos >> 16;
+				particleDirectionY[i] = x;
+			}
 		}
 	}
 	
@@ -2771,10 +2772,12 @@ public final class Model extends Entity {
 			vertexY[i] += y;
 			vertexZ[i] += z;
 		}
-		for(int i = 0; i < particleDirectionX.length; i++) {
-			particleDirectionX[i] += x;
-			particleDirectionY[i] += y;
-			particleDirectionZ[i] += z;
+		if(particleDirectionX != null) {
+			for(int i = 0; i < particleDirectionX.length; i++) {
+				particleDirectionX[i] += x;
+				particleDirectionY[i] += y;
+				particleDirectionZ[i] += z;
+			}
 		}
 	}
 	
@@ -2812,10 +2815,12 @@ public final class Model extends Entity {
 			vertexY[i] = vertexY[i] * y >> 7;
 			vertexZ[i] = vertexZ[i] * z >> 7;
 		}
-		for(int i = 0; i < particleDirectionX.length; i++) {
-			particleDirectionX[i] = particleDirectionX[i] * x >> 7;
-			particleDirectionY[i] = particleDirectionY[i] * y >> 7;
-			particleDirectionZ[i] = particleDirectionZ[i] * z >> 7;
+		if(particleDirectionX != null) {
+			for(int i = 0; i < particleDirectionX.length; i++) {
+				particleDirectionX[i] = particleDirectionX[i] * x >> 7;
+				particleDirectionY[i] = particleDirectionY[i] * y >> 7;
+				particleDirectionZ[i] = particleDirectionZ[i] * z >> 7;
+			}
 		}
 	}
 	

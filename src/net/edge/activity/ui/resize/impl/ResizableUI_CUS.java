@@ -739,7 +739,7 @@ public class ResizableUI_CUS extends ResizableUI {
 
 	}
 
-	private void drawFace(int xPos, int yPos) {
+	public static void drawFace(int xPos, int yPos) {
 		ImageCache.get(1646).drawAlphaImage(xPos - 31, yPos - 31);
 		Interface childWidget = Interface.cache[250];
 		if(client.forcedChatWidgetId == -1) {

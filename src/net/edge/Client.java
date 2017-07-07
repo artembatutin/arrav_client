@@ -1600,7 +1600,6 @@ public class Client extends ClientEngine {
 							ImageCache.get(1832).drawImage(xPos-3, yPos-3);
 					}
 				} else if(childWidget.type == Constants.WIDGET_MODEL) {
-					Rasterizer3D.textured = false;
 					final int centerX = Rasterizer3D.viewport.centerX;
 					final int centerY = Rasterizer3D.viewport.centerY;
 					Rasterizer3D.viewport.centerX = xPos + childWidget.width / 2;
@@ -1619,12 +1618,10 @@ public class Client extends ClientEngine {
 						model = childWidget.getModel(-1, -1, isSelected);
 					} else {
 						if(animationID > DeformSequence.cache.length) {
-							Rasterizer3D.textured = true;
 							return;
 						}
 						final DeformSequence animation = DeformSequence.cache[animationID];
 						if(animation == null) {
-							Rasterizer3D.textured = true;
 							return;
 						}
 						model = childWidget.getModel(animation.anIntArray354[childWidget.modelAnimLength], animation.frameList[childWidget.modelAnimLength], isSelected);
@@ -1643,7 +1640,6 @@ public class Client extends ClientEngine {
 					if(model != null) {
 						model.drawModel(childWidget.modelRoll, 0, childWidget.modelYaw, 0, i5, l5);
 					}
-					Rasterizer3D.textured = true;
 					Rasterizer2D.removeClip();
 					Rasterizer3D.viewport.centerX = centerX;
 					Rasterizer3D.viewport.centerY = centerY;
@@ -3525,6 +3521,9 @@ public class Client extends ClientEngine {
 		int code = menuItemCode[item];
 		if(code >= 2000) {
 			code -= 2000;
+		}
+		if(code == 315 && arg3 == 19577) {
+			panelHandler.open(new PlayerPanel());
 		}
 		if(code == 1050) {
 			outBuffer.putOpcode(185);

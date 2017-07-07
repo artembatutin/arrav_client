@@ -46,7 +46,8 @@ public final class Constants {
 	 * Skill constants
 	 */
 	static final byte SKILL_AMOUNT = 25;
-	static final String[] SKILL_NAMES_ORDERED = {"Attack", "Hitpoints", "Mining", "Strength", "Agility", "Smithing", "Defence", "Herblore", "Fishing", "Range", "Thieving", "Cooking", "Prayer", "Crafting", "Firemaking", "Magic", "Fletching", "Woodcutting", "Rune", "Slayer", "Farming", "Construction", "Hunter", "Summoning", "Dungeoneering"};
+	public static final String[] SKILL_NAMES_UNORDERED = {"Attack", "Defence", "Strength", "Hitpoints", "Ranged", "Prayer", "Magic", "Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining", "Herblore", "Agility", "Thieving", "Slayer", "Farming", "Runecrafting", "Hunter", "Construction", "Summoning", "Dungeoneering"};
+	public static final String[] SKILL_NAMES_ORDERED = {"Attack", "Hitpoints", "Mining", "Strength", "Agility", "Smithing", "Defence", "Herblore", "Fishing", "Range", "Thieving", "Cooking", "Prayer", "Crafting", "Firemaking", "Magic", "Fletching", "Woodcutting", "Rune", "Slayer", "Farming", "Construction", "Hunter", "Summoning", "Dungeoneering"};
 	static final int[] MORE_DETAILS_PANEL_ID = new int[]{4040, 4076, 4112, 4046, 4082, 4118, 4052, 4088, 4124, 4058, 4094, 4130, 4064, 4100, 4136, 4070, 4106, 4142, 4160, 2832, 13917, 19005, 19006, 19007, 19008};
 
 	/*

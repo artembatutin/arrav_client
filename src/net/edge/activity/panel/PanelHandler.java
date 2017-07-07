@@ -66,13 +66,6 @@ public class PanelHandler {
 	}
 
 	/**
-	 * Determines if the clan panel is open.
-	 */
-	public boolean isClanOpen() {
-		return currentPanel != null && currentPanel.getId() == 1;
-	}
-
-	/**
 	 * Determines if the setting panel is open.
 	 */
 	public boolean isSettingOpen() {
@@ -87,80 +80,10 @@ public class PanelHandler {
 	}
 
 	/**
-	 * Determines if the train panel is open.
-	 */
-	public boolean isTrainOpen() {
-		return currentPanel != null && currentPanel.getId() == 4;
-	}
-
-	/**
-	 * Determines if the dungeon panel is open.
-	 */
-	public boolean isMonsterOpen() {
-		return currentPanel != null && currentPanel.getId() == 5;
-	}
-
-	/**
 	 * Determines if the bank panel is open.
 	 */
 	public boolean isBankpen() {
 		return currentPanel != null && currentPanel.getId() == 6;
-	}
-
-	/**
-	 * Determines if the minigame panel is open.
-	 */
-	public boolean isMinigameOpen() {
-		return currentPanel != null && currentPanel.getId() == 7;
-	}
-
-	/**
-	 * Determines if the boss panel is open.
-	 */
-	public boolean isBossOpen() {
-		return currentPanel != null && currentPanel.getId() == 8;
-	}
-	
-	/**
-	 * Determines if the market panel is open.
-	 */
-	public boolean isMarketOpen() {
-		return currentPanel != null && currentPanel.getId() == 9;
-	}
-	
-	/**
-	 * Determines if the drop panel is open.
-	 */
-	public boolean isDropOpen() {
-		return currentPanel != null && currentPanel.getId() == 10;
-	}
-	
-	/**
-	 * Determines if the slayer panel is open.
-	 */
-	public boolean isSlayerOpen() {
-		return currentPanel != null && currentPanel.getId() == 11;
-	}
-	
-	/**
-	 * Determines if the pvp panel is open.
-	 */
-	public boolean isPvpOpen() {
-		return currentPanel != null && currentPanel.getId() == 12;
-	}
-	
-	/**
-	 * Determines if the summoning panel is open.
-	 */
-	public boolean isSumOpen() {
-		return currentPanel != null && currentPanel.getId() == 13;
-	}
-	
-	/**
-	 * Determines if the iron man selection panel is open.
-	 */
-	public boolean isIronSelect() {
-		return currentPanel != null && currentPanel.getId() == 14;
 	}
 
 }

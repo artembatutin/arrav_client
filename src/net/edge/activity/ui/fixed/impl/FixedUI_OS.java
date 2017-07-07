@@ -100,7 +100,7 @@ public class FixedUI_OS extends FixedUI {
 	public void updateChat() {
 		client.chatGraphics.setCanvas();
 		Rasterizer3D.viewport = client.chatAreaViewport;
-		ImageCache.get(66).drawImage(0, 0);
+		ImageCache.get(17).drawImage(0, 0);
 		displayChannelButtons();
 		if(client.messagePromptRaised) {
 			client.boldFont.drawCenteredString(client.promptInputTitle, 259, 60, 0);
