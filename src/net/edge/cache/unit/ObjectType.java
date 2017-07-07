@@ -122,6 +122,11 @@ public final class ObjectType {
 			obj.name = "Vote box";
 			obj.actions = new String[] { "Open", null, null, null, null };
 		}
+
+		if(obj.id == 21432) {
+			obj.name = "Book of diplomacy";
+			obj.actions = new String[] { "Open", null, null, null, "Drop"};
+		}
 		
 		if(id == 3904)
 			obj.pet("Trapped abyssal orphan");
