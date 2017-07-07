@@ -1,9 +1,8 @@
-package net.edge.activity.ui.fixed.impl;
+package net.edge.activity.ui.impl;
 
 import net.edge.Constants;
 import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.activity.ui.UIComponent;
-import net.edge.activity.ui.fixed.FixedUI;
 import net.edge.activity.ui.util.OrbHandler;
 import net.edge.activity.ui.util.CounterHandler;
 import net.edge.game.model.Model;
@@ -283,6 +282,10 @@ public class FixedUI_562 extends FixedUI {
 				displayOrb(185, 86, Constants.ORB_RUN, true);
 				displayOrb(170, 125, Constants.ORB_SUMMONING, true);
 			}
+			ImageCache.get(1950).drawImage(-2, 47);
+			if(client.mouseInRegion(521, 54, 550, 81)) {
+				ImageCache.get(1951).drawImage(-2, 47);
+			}
 			displayLogout();
 			client.mapGraphics.drawGraphics(519, 0, client.graphics);
 			client.gameGraphics.setCanvas();
@@ -324,8 +327,8 @@ public class FixedUI_562 extends FixedUI {
 		for(int j6 = 0; j6 < client.playerCount; j6++) {
 			final Player player = client.playerList[client.playerEntryList[j6]];
 			if(player != null && player.isVisible()) {
-				final int j1 = player.x / 32 - client.localPlayer.x / 32;
-				final int l3 = player.y / 32 - client.localPlayer.y / 32;
+				final int x = player.x / 32 - client.localPlayer.x / 32;
+				final int y = player.y / 32 - client.localPlayer.y / 32;
 				boolean flag1 = false;
 				final long l6 = StringUtils.encryptName(player.name);
 				for(int k6 = 0; k6 < client.friendsCount; k6++) {
@@ -340,11 +343,13 @@ public class FixedUI_562 extends FixedUI {
 					flag2 = true;
 				}
 				if(flag1) {
-					markMinimap(client.mapDotFriend, j1, l3);
+					markMinimap(client.mapDotFriend, x, y);
 				} else if(flag2) {
-					markMinimap(client.mapDotTeam, j1, l3);
+					markMinimap(client.mapDotTeam, x, y);
+				} else if(player.iron) {
+					markMinimap(client.mapDotIronman, x, y);
 				} else {
-					markMinimap(client.mapDotPlayer, j1, l3);
+					markMinimap(client.mapDotPlayer, x, y);
 				}
 			}
 		}
@@ -380,9 +385,9 @@ public class FixedUI_562 extends FixedUI {
 		Rasterizer2D.fillRectangle(106, 79, 3, 3, 0xffffff);
 		ImageCache.get(18).drawImage(0, 0);
 		ImageCache.get(1700).drawAffineTransformedImage(8, 8, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
-		ImageCache.get(1950).drawAlphaImage(-2, 47);
+		ImageCache.get(1950).drawImage(-2, 47);
 		if(client.mouseInRegion(521, 54, 550, 81)) {
-			ImageCache.get(1951).drawAlphaImage(-2, 47);
+			ImageCache.get(1951).drawImage(-2, 47);
 		}
 		if(Config.def.isDRAW_ORBS()) {
 			displayOrb(164, 9, Constants.ORB_HEALTH, false);
@@ -391,7 +396,7 @@ public class FixedUI_562 extends FixedUI {
 			displayOrb(170, 125, Constants.ORB_SUMMONING, true);
 		}
 		if(client.mouseInRegion(526, 127, 562, 159)) {
-			ImageCache.get(239).drawAlphaImage(8, 123);
+			ImageCache.get(239).drawImage(8, 123);
 		}
 		if(client.menuOpened) {
 			client.gameActivity.drawer.drawMenu(-519, 0, false);
@@ -602,7 +607,7 @@ public class FixedUI_562 extends FixedUI {
 			return;
 		}
 		final short[][] data = {{-2, 1}, {28, 1}, {58, 1}, {88, 1}, {118, 1}, {149, 1}, {178, 1}, {208, 1}, {-2, 299}, {28, 299}, {58, 299}, {88, 299}, {118, 299}, {149, 299}, {178, 299}, {208, 299}};
-		ImageCache.get(21).drawAlphaImage(data[client.invTab][0], data[client.invTab][1]);
+		ImageCache.get(21).drawImage(data[client.invTab][0], data[client.invTab][1]);
 	}
 
 	/**

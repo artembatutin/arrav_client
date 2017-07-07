@@ -1,4 +1,4 @@
-package net.edge.activity.ui.resize.impl;
+package net.edge.activity.ui.impl;
 
 import net.edge.Constants;
 import net.edge.activity.ui.util.CounterHandler;
@@ -8,7 +8,6 @@ import net.edge.game.model.Player;
 import net.edge.Config;
 import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.activity.ui.UIComponent;
-import net.edge.activity.ui.resize.ResizableUI;
 import net.edge.cache.unit.ImageCache;
 import net.edge.cache.unit.Interface;
 import net.edge.cache.unit.NPCType;
@@ -126,19 +125,19 @@ public class ResizableUI_CUS extends ResizableUI {
 		//Drawing
 		if(client.messagePromptRaised || client.bankSearching || client.inputDialogState > 0 || client.chatBoxStatement != null || client.forcedChatWidgetId != -1 || client.chatWidgetId != -1) {
 			alpha += (alpha > 250 ? 0 : 10);
-			ImageCache.get(1665).drawAlphaImage(13, client.windowHeight - 195, alpha);
+			ImageCache.get(1665).drawImage(13, client.windowHeight - 195, alpha);
 		} else {
 			alpha -= (alpha > 1 ? 10 : 0);
 			if(client.showChat) {
 				displayChannelButtons();
-				ImageCache.get(215).drawAlphaImage(2, client.windowHeight - chatboxHeight - 60);
-				ImageCache.get(5).drawAlphaImage(0, client.windowHeight - chatboxHeight - 85);
+				ImageCache.get(215).drawImage(2, client.windowHeight - chatboxHeight - 60);
+				ImageCache.get(5).drawImage(0, client.windowHeight - chatboxHeight - 85);
 				Rasterizer2D.setClip(0, client.windowHeight - chatboxHeight - 25, 406, client.windowHeight - 64);
 				for(int i = client.windowHeight - chatboxHeight - 25; i < client.windowHeight - 64; i += 7) {
-					ImageCache.get(228).drawAlphaImage(0, i);
+					ImageCache.get(228).drawImage(0, i);
 				}
 				Rasterizer2D.removeClip();
-				ImageCache.get(229).drawAlphaImage(0, client.windowHeight - 64);
+				ImageCache.get(229).drawImage(0, client.windowHeight - 64);
 				Rasterizer2D.fillRectangle(27, client.windowHeight - chatboxHeight - 55, 334, 193, 0xccbb9a, alpha);
 			}
 		}
@@ -311,7 +310,7 @@ public class ResizableUI_CUS extends ResizableUI {
 				client.smallFont.drawLeftAlignedEffectString(myName + ": " + message[0], 36, y + 136, 0xffffff, true);
 			}
 		}
-		ImageCache.get((client.mouseInRegion(0, client.windowHeight - 45, 52, client.windowHeight)) ? 3 : 4).drawAlphaImage(0, client.windowHeight - 50);
+		ImageCache.get((client.mouseInRegion(0, client.windowHeight - 45, 52, client.windowHeight)) ? 3 : 4).drawImage(0, client.windowHeight - 50);
 		client.gameGraphics.setCanvas();
 	}
 
@@ -366,7 +365,7 @@ public class ResizableUI_CUS extends ResizableUI {
 		if(client.minimapOverlay == 2) {
 			return;
 		}
-		ImageCache.get(1666).drawAlphaImage(client.windowWidth - 29, 0);
+		ImageCache.get(1666).drawImage(client.windowWidth - 29, 0);
 		int rotation = client.cameraAngleX + client.minimapAngle & 0x7ff;
 		int middleX = 48 + client.localPlayer.x / 32;
 		int middleY = 464 - client.localPlayer.y / 32;
@@ -422,6 +421,8 @@ public class ResizableUI_CUS extends ResizableUI {
 					markMinimap(client.mapDotFriend, x, y);
 				} else if(team) {
 					markMinimap(client.mapDotTeam, x, y);
+				} else if(player.iron) {
+					markMinimap(client.mapDotIronman, x, y);
 				} else {
 					markMinimap(client.mapDotPlayer, x, y);
 				}
@@ -456,9 +457,9 @@ public class ResizableUI_CUS extends ResizableUI {
 			markMinimap(client.mapFlag, x, y);
 		}
 		Rasterizer2D.removeClip();
-		ImageCache.get(1643).drawAlphaImage(xOffset + 10, -2);
-		ImageCache.get(1644).drawAlphaImage(xOffset + 7, -5);
-		ImageCache.get(1651).drawAlphaImage(xOffset + 7, 110);
+		ImageCache.get(1643).drawImage(xOffset + 10, -2);
+		ImageCache.get(1644).drawImage(xOffset + 7, -5);
+		ImageCache.get(1651).drawImage(xOffset + 7, 110);
 		ImageCache.get(1700).drawAffineTransformedImage(xOffset + 18, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
 		Rasterizer2D.fillRectangle(xOffset + 97, 78, 3, 3, 0xffffff);
 		if(Config.def.isDRAW_ORBS()) {
@@ -556,9 +557,9 @@ public class ResizableUI_CUS extends ResizableUI {
 		int xOffset = client.windowWidth - 197;
 		int yOffset = client.windowHeight - 303;
 		if(client.windowWidth < 1000) {
-			ImageCache.get(82).drawAlphaImage(xOffset - 39, yOffset + 218);
+			ImageCache.get(82).drawImage(xOffset - 39, yOffset + 218);
 		} else {
-			ImageCache.get(81).drawAlphaImage(xOffset - 267, yOffset + 255);
+			ImageCache.get(81).drawImage(xOffset - 267, yOffset + 255);
 		}
 		if(client.invOverlayInterfaceID == -1) {
 			displaySideIcons();
@@ -599,10 +600,10 @@ public class ResizableUI_CUS extends ResizableUI {
 		String text[] = {"On", "Friends", "Off", "Hide"};
 		int textColor[] = {65280, 0xffff00, 0xff0000, 65535};
 		for(int i = 0; i <= 5; i++) {
-			ImageCache.get(1642).drawAlphaImage(57 + 57 * i, y + 132);
+			ImageCache.get(1642).drawImage(57 + 57 * i, y + 132);
 			if(client.selectedChannelButton == i && (client.showChat)) {
 				Rasterizer2D.fillRectangle(66 + 57 * i, y + 140, 48, 20, 0xffffff, 50);
-				//ImageCache.get(1642).drawAlphaImage(5 + 57 * i, y + 142);
+				//ImageCache.get(1642).drawImage(5 + 57 * i, y + 142);
 			}
 			if(i == client.hoveredChannelButton) {
 				Rasterizer2D.fillRectangle(66 + 57 * i, y + 140, 48, 20, 0xffffff, 50);
@@ -694,9 +695,9 @@ public class ResizableUI_CUS extends ResizableUI {
 					int xOffset = 16 - ImageCache.get(i + 22).imageWidth / 2;
 					int yOffset = 18 - ImageCache.get(i + 22).imageHeight / 2;
 					if(i <= 5) {
-						ImageCache.get(216 + i).drawAlphaImage((i == 5 ? -3 : 0) + xOffset + client.windowWidth - 235 + 38 * i, yOffset + client.windowHeight - 85);
+						ImageCache.get(216 + i).drawImage((i == 5 ? -3 : 0) + xOffset + client.windowWidth - 235 + 38 * i, yOffset + client.windowHeight - 85);
 					} else {
-						ImageCache.get(216 + i).drawAlphaImage(xOffset + client.windowWidth - 235 + 38 * (i - 6), yOffset + client.windowHeight - 48);
+						ImageCache.get(216 + i).drawImage(xOffset + client.windowWidth - 235 + 38 * (i - 6), yOffset + client.windowHeight - 48);
 					}
 				}
 			}
@@ -705,7 +706,7 @@ public class ResizableUI_CUS extends ResizableUI {
 				int xOffset = 16 - ImageCache.get(i + 22).imageWidth / 2;
 				int yOffset = 18 - ImageCache.get(i + 22).imageHeight / 2;
 				if(client.olderTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1) {
-					ImageCache.get(216 + i).drawAlphaImage(xOffset + client.windowWidth - 463 + 38 * i, yOffset + client.windowHeight - 48);
+					ImageCache.get(216 + i).drawImage(xOffset + client.windowWidth - 463 + 38 * i, yOffset + client.windowHeight - 48);
 				}
 			}
 		}
@@ -716,31 +717,31 @@ public class ResizableUI_CUS extends ResizableUI {
 	 */
 	private void displayOrb(int x, int y, int orb, boolean hover) {
 		if(orb == Constants.ORB_HEALTH) {
-			ImageCache.get(1647).drawAlphaImage(50, 17);
-			ImageCache.get(1650).drawAlphaImage(50, 47);
+			ImageCache.get(1647).drawImage(50, 17);
+			ImageCache.get(1650).drawImage(50, 47);
 			if(OrbHandler.getPercent(orb) > 20 || OrbHandler.getPercent(orb) < 1 || client.loopCycle % 20 > 10) {
 				Rasterizer2D.setClip(60, 27, 60 - OrbHandler.getFill(orb, 192) + 192, 39);
 				ImageCache.get(OrbHandler.poisoned ? 1875 : 1648).drawImage(60, 27);
 				Rasterizer2D.removeClip();
-				ImageCache.get(OrbHandler.poisoned ? 1874 : 1649).drawAlphaImage(208 - OrbHandler.getFill(orb, 192), 23);
+				ImageCache.get(OrbHandler.poisoned ? 1874 : 1649).drawImage(208 - OrbHandler.getFill(orb, 192), 23);
 			}
 			client.smallFont.drawLeftAlignedEffectString(client.currentStats[3] + " / " + client.maxStats[3] * 10, 90, 38, 0xffffff, true);
 			return;
 		}
 		int move = orb == Constants.ORB_RUN ? orb * 68 : orb == Constants.ORB_SUMMONING ? orb * 68 : orb * 70;
-		ImageCache.get(1645).drawAlphaImage(move, 42);
+		ImageCache.get(1645).drawImage(move, 42);
 		ImageCache.get(OrbHandler.getOrb(orb)).drawImage(12 + move, 54);
 		Rasterizer2D.setClip(12 + move, 54, 43 + move, 54 + OrbHandler.getFill(orb, 27));
 		ImageCache.get(60).drawImage(12 + move, 54);
 		Rasterizer2D.removeClip();
 		ImageCache.get(61 + orb).drawImage(25 + move - ImageCache.get(61 + orb).imageWidth / 2, 67 - ImageCache.get(61 + orb).imageHeight / 2);
-		//ImageCache.get(hover && client.mouseInRegion(x, y, x + 57, y + 33) ? 51 : 1645).drawAlphaImage(x - 6, y - 5);
+		//ImageCache.get(hover && client.mouseInRegion(x, y, x + 57, y + 33) ? 51 : 1645).drawImage(x - 6, y - 5);
 		client.smallFont.drawLeftAlignedEffectString(OrbHandler.getValue(orb), 50 + move, 69, OrbHandler.getColor(orb), true);
 
 	}
 
 	public static void drawFace(int xPos, int yPos) {
-		ImageCache.get(1646).drawAlphaImage(xPos - 31, yPos - 31);
+		ImageCache.get(1646).drawImage(xPos - 31, yPos - 31);
 		Interface childWidget = Interface.cache[250];
 		if(client.forcedChatWidgetId == -1) {
 			if(childWidget.modelAnim != 9805) {

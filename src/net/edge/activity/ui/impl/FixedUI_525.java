@@ -1,14 +1,13 @@
-package net.edge.activity.ui.fixed.impl;
+package net.edge.activity.ui.impl;
 
 import net.edge.Constants;
 import net.edge.activity.panel.impl.SettingPanel;
-import net.edge.activity.ui.fixed.FixedUI;
+import net.edge.activity.ui.UIComponent;
 import net.edge.activity.ui.util.CounterHandler;
 import net.edge.activity.ui.util.OrbHandler;
 import net.edge.game.model.Model;
 import net.edge.game.model.Player;
 import net.edge.Config;
-import net.edge.activity.ui.UIComponent;
 import net.edge.cache.unit.ImageCache;
 import net.edge.cache.unit.Interface;
 import net.edge.cache.unit.NPCType;
@@ -280,6 +279,10 @@ public class FixedUI_525 extends FixedUI {
 				displayOrb(185, 86, Constants.ORB_RUN, true);
 				displayOrb(170, 125, Constants.ORB_SUMMONING, true);
 			}
+			ImageCache.get(1950).drawImage(-2, 47);
+			if(client.mouseInRegion(521, 54, 550, 81)) {
+				ImageCache.get(1951).drawImage(-2, 47);
+			}
 			client.mapGraphics.drawGraphics(519, 0, client.graphics);
 			client.gameGraphics.setCanvas();
 			return;
@@ -320,8 +323,8 @@ public class FixedUI_525 extends FixedUI {
 		for(int j6 = 0; j6 < client.playerCount; j6++) {
 			final Player player = client.playerList[client.playerEntryList[j6]];
 			if(player != null && player.isVisible()) {
-				final int j1 = player.x / 32 - client.localPlayer.x / 32;
-				final int l3 = player.y / 32 - client.localPlayer.y / 32;
+				final int x = player.x / 32 - client.localPlayer.x / 32;
+				final int y = player.y / 32 - client.localPlayer.y / 32;
 				boolean flag1 = false;
 				final long l6 = StringUtils.encryptName(player.name);
 				for(int k6 = 0; k6 < client.friendsCount; k6++) {
@@ -336,11 +339,13 @@ public class FixedUI_525 extends FixedUI {
 					flag2 = true;
 				}
 				if(flag1) {
-					markMinimap(client.mapDotFriend, j1, l3);
+					markMinimap(client.mapDotFriend, x, y);
 				} else if(flag2) {
-					markMinimap(client.mapDotTeam, j1, l3);
+					markMinimap(client.mapDotTeam, x, y);
+				} else if(player.iron) {
+					markMinimap(client.mapDotIronman, x, y);
 				} else {
-					markMinimap(client.mapDotPlayer, j1, l3);
+					markMinimap(client.mapDotPlayer, x, y);
 				}
 			}
 		}
@@ -382,12 +387,12 @@ public class FixedUI_525 extends FixedUI {
 			displayOrb(185, 86, Constants.ORB_RUN, true);
 			displayOrb(170, 125, Constants.ORB_SUMMONING, true);
 		}
-		ImageCache.get(1950).drawAlphaImage(-2, 47);
+		ImageCache.get(1950).drawImage(-2, 47);
 		if(client.mouseInRegion(521, 54, 550, 81)) {
-			ImageCache.get(1951).drawAlphaImage(-2, 47);
+			ImageCache.get(1951).drawImage(-2, 47);
 		}
 		if(client.mouseInRegion(526, 127, 562, 159)) {
-			ImageCache.get(239).drawAlphaImage(8, 123);
+			ImageCache.get(239).drawImage(8, 123);
 		}
 		if(client.menuOpened) {
 			client.gameActivity.drawer.drawMenu(-519, 0, false);

@@ -1,27 +1,26 @@
-package net.edge.activity.ui.resize.impl;
+package net.edge.activity.ui.impl;
 
 import net.edge.Config;
 import net.edge.Constants;
 import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.activity.ui.UIComponent;
-import net.edge.activity.ui.resize.ResizableUI;
 import net.edge.activity.ui.util.CounterHandler;
 import net.edge.activity.ui.util.OrbHandler;
+import net.edge.game.model.Model;
+import net.edge.game.model.Player;
+import net.edge.media.Rasterizer2D;
 import net.edge.cache.unit.ImageCache;
 import net.edge.cache.unit.Interface;
 import net.edge.cache.unit.NPCType;
-import net.edge.game.model.Model;
 import net.edge.game.model.NPC;
-import net.edge.game.model.Player;
-import net.edge.media.Rasterizer2D;
 import net.edge.media.img.BitmapImage;
 import net.edge.util.collect.LinkedDeque;
 import net.edge.util.string.StringUtils;
 
 import java.awt.*;
 
-public class ResizableUI_OS extends ResizableUI {
-	
+public class ResizableUI_459 extends ResizableUI {
+
 	@Override
 	public void buildChat() {
 		final String[] modes = {"View", "On", "Friends", "Off", "Hide"};
@@ -96,7 +95,7 @@ public class ResizableUI_OS extends ResizableUI {
 			}
 		}
 	}
-	
+
 	@Override
 	public void updateChat() {
 		int yoff = client.windowHeight - 165;
@@ -253,7 +252,7 @@ public class ResizableUI_OS extends ResizableUI {
 		}
 		client.gameGraphics.setCanvas();
 	}
-	
+
 	@Override
 	public void buildMap() {
 		if(client.mouseInRegion(client.windowWidth - 180, 3, client.windowWidth - 145, 38)) {
@@ -272,7 +271,7 @@ public class ResizableUI_OS extends ResizableUI {
 			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
 			client.menuItemCode[client.menuPos] = 1053;
 			client.menuPos++;
-		} else if(client.mouseInRegion(client.windowWidth - 217, 5, client.windowWidth - 188, 32)) {
+		} else if(client.mouseInRegion(client.windowWidth - 217, 10, client.windowWidth - 188, 37)) {
 			client.menuPos = 0;
 			client.menuItemName[client.menuPos] = "Reset counter";
 			client.menuItemCode[client.menuPos] = 1056;
@@ -282,7 +281,7 @@ public class ResizableUI_OS extends ResizableUI {
 			client.menuPos++;
 		}
 	}
-	
+
 	@Override
 	public void updateMap() {
 		for(int i = 0; i < 76; i++) {
@@ -295,7 +294,7 @@ public class ResizableUI_OS extends ResizableUI {
 		int xOffset = client.windowWidth - 182;
 		if(client.minimapOverlay == 2) {
 			ImageCache.get(1925).drawImage(xOffset, -2);
-			ImageCache.get(1700).drawAffineTransformedImage(xOffset + 4, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
+			ImageCache.get(1700).drawAffineTransformedImage(xOffset + 5, 3, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
 			if(Config.def.isDRAW_ORBS()) {
 				displayOrb(client.windowWidth - 209, 38, Constants.ORB_HEALTH, false);
 				displayOrb(client.windowWidth - 212, 72, Constants.ORB_PRAYER, true);
@@ -340,8 +339,8 @@ public class ResizableUI_OS extends ResizableUI {
 		for(int j6 = 0; j6 < client.playerCount; j6++) {
 			Player player = client.playerList[client.playerEntryList[j6]];
 			if(player != null && player.isVisible()) {
-				int j1 = player.x / 32 - client.localPlayer.x / 32;
-				int l3 = player.y / 32 - client.localPlayer.y / 32;
+				int x = player.x / 32 - client.localPlayer.x / 32;
+				int y = player.y / 32 - client.localPlayer.y / 32;
 				boolean flag1 = false;
 				long l6 = StringUtils.encryptName(player.name);
 				for(int k6 = 0; k6 < client.friendsCount; k6++) {
@@ -356,11 +355,13 @@ public class ResizableUI_OS extends ResizableUI {
 					flag2 = true;
 				}
 				if(flag1) {
-					markMinimap(client.mapDotFriend, j1, l3);
+					markMinimap(client.mapDotFriend, x, y);
 				} else if(flag2) {
-					markMinimap(client.mapDotTeam, j1, l3);
+					markMinimap(client.mapDotTeam, x, y);
+				} else if(player.iron) {
+					markMinimap(client.mapDotIronman, x, y);
 				} else {
-					markMinimap(client.mapDotPlayer, j1, l3);
+					markMinimap(client.mapDotPlayer, x, y);
 				}
 			}
 		}
@@ -401,14 +402,14 @@ public class ResizableUI_OS extends ResizableUI {
 			displayOrb(client.windowWidth - 200, 106, Constants.ORB_RUN, true);
 			displayOrb(client.windowWidth - 177, 140, Constants.ORB_SUMMONING, true);
 		}
-		ImageCache.get(1955).drawAlphaImage(client.windowWidth - 217, 5);
-		if(client.mouseInRegion(client.windowWidth - 217, 5, client.windowWidth - 188, 32)) {
-			ImageCache.get(1956).drawAlphaImage(client.windowWidth - 217, 5);
+		ImageCache.get(1955).drawImage(client.windowWidth - 217, 10);
+		if(client.mouseInRegion(client.windowWidth - 217, 10, client.windowWidth - 188, 37)) {
+			ImageCache.get(1956).drawImage(client.windowWidth - 217, 10);
 		}
 		Rasterizer2D.fillRectangle(xOffset + 97, 78, 3, 3, 0xffffff);
 		client.gameGraphics.setCanvas();
 	}
-	
+
 	@Override
 	public void buildInventory() {
 		if(client.mouseWheelAmt != 0 && client.olderTabInterfaces[client.invTab] != -1) {
@@ -475,7 +476,7 @@ public class ResizableUI_OS extends ResizableUI {
 			}
 		}
 	}
-	
+
 	@Override
 	public void updateInventory() {
 		int xOffset = client.windowWidth - 197;
@@ -487,7 +488,7 @@ public class ResizableUI_OS extends ResizableUI {
 			ImageCache.get(46).drawImage(xOffset - 34, yOffset + 267);
 			ImageCache.get(46).drawImage(xOffset - 265, yOffset + 267);
 		}
-		if(client.invOverlayInterfaceID == -1 || SettingPanel.selectedBinding != -1) {
+		if(client.invOverlayInterfaceID == -1) {
 			displaySelectedTabHighlight();
 			displaySideIcons();
 		}
@@ -506,7 +507,7 @@ public class ResizableUI_OS extends ResizableUI {
 			}
 		}
 	}
-	
+
 	@Override
 	public Point getOnScreenWidgetOffsets() {
 		return super.getOnScreenWidgetOffsets();
@@ -514,7 +515,7 @@ public class ResizableUI_OS extends ResizableUI {
 	
 	@Override
 	public BitmapImage getSide(int index) {
-		return null;
+		return index < 0 || index >= client.sideIcons.length ? null : client.sideIcons[index];
 	}
 	
 	@Override
@@ -536,11 +537,11 @@ public class ResizableUI_OS extends ResizableUI {
 		}
 		return client.mouseX >= 0 && client.mouseY >= 0;
 	}
-	
+
 	@Override
 	public void buildSceneOverlay() {
 	}
-	
+
 	public void method81(BitmapImage icon, int x, int y) {
 		final int l = x * x + y * y;
 		if(l > 4225 && l < 0x15f90) {
@@ -560,7 +561,7 @@ public class ResizableUI_OS extends ResizableUI {
 			markMinimap(icon, xOffset + x, y);
 		}
 	}
-	
+
 	public void markMinimap(BitmapImage icon, int x, int y) {
 		if(icon == null)
 			return;
@@ -579,7 +580,7 @@ public class ResizableUI_OS extends ResizableUI {
 		int yOffset = -4;
 		icon.drawImage(94 + fx - icon.imageOriginalWidth / 2 + xOffset + 4, 83 - fy - icon.imageOriginalHeight / 2 - 8 + 8 + yOffset);
 	}
-	
+
 	/**
 	 * Displays the channel buttons.
 	 */
@@ -633,7 +634,7 @@ public class ResizableUI_OS extends ResizableUI {
 			ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).drawImage(x + 41 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageWidth / 2, y + 17 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageHeight / 2);
 		}
 	}
-	
+
 	/**
 	 * Displays the selected tab.
 	 */
@@ -655,7 +656,7 @@ public class ResizableUI_OS extends ResizableUI {
 			}
 		}
 	}
-	
+
 	/**
 	 * Displays the side icons.
 	 */

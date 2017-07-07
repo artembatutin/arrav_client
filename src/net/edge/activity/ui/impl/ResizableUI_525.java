@@ -1,4 +1,4 @@
-package net.edge.activity.ui.resize.impl;
+package net.edge.activity.ui.impl;
 
 import net.edge.Constants;
 import net.edge.activity.panel.impl.SettingPanel;
@@ -6,7 +6,6 @@ import net.edge.activity.ui.util.CounterHandler;
 import net.edge.activity.ui.util.OrbHandler;
 import net.edge.Config;
 import net.edge.activity.ui.UIComponent;
-import net.edge.activity.ui.resize.ResizableUI;
 import net.edge.cache.unit.ImageCache;
 import net.edge.cache.unit.Interface;
 import net.edge.cache.unit.NPCType;
@@ -372,6 +371,8 @@ public class ResizableUI_525 extends ResizableUI {
 					markMinimap(client.mapDotFriend, x, y);
 				} else if(team) {
 					markMinimap(client.mapDotTeam, x, y);
+				} else if(player.iron) {
+					markMinimap(client.mapDotIronman, x, y);
 				} else {
 					markMinimap(client.mapDotPlayer, x, y);
 				}
@@ -421,9 +422,9 @@ public class ResizableUI_525 extends ResizableUI {
 		if(client.mouseInRegion(client.windowWidth - 44, 132, client.windowWidth - 9, 167)) {
 			ImageCache.get(239).drawImage(xOffset + 140, 130);
 		}
-		ImageCache.get(1950).drawAlphaImage(client.windowWidth - 212, 5);
+		ImageCache.get(1950).drawImage(client.windowWidth - 212, 5);
 		if(client.mouseInRegion(client.windowWidth - 212, 5, client.windowWidth - 183, 32)) {
-			ImageCache.get(1951).drawAlphaImage(client.windowWidth - 212, 5);
+			ImageCache.get(1951).drawImage(client.windowWidth - 212, 5);
 		}
 		client.gameGraphics.setCanvas();
 	}

@@ -1,13 +1,12 @@
-package net.edge.activity.ui.fixed.impl;
+package net.edge.activity.ui.impl;
 
 import net.edge.Config;
 import net.edge.Constants;
 import net.edge.activity.panel.impl.SettingPanel;
-import net.edge.activity.ui.fixed.FixedUI;
+import net.edge.activity.ui.UIComponent;
 import net.edge.activity.ui.util.CounterHandler;
 import net.edge.activity.ui.util.OrbHandler;
 import net.edge.game.model.Player;
-import net.edge.activity.ui.UIComponent;
 import net.edge.cache.unit.ImageCache;
 import net.edge.cache.unit.Interface;
 import net.edge.cache.unit.NPCType;
@@ -235,7 +234,7 @@ public class FixedUI_459 extends FixedUI {
 			client.menuItemName[client.menuPos] = "Turn quick prayers " + (OrbHandler.prayersEnabled ? "off" : "on");
 			client.menuItemCode[client.menuPos] = 1053;
 			client.menuPos++;
-		} else if(client.mouseInRegion(718, 25, 748, 52)) {
+		} else if(client.mouseInRegion(519, 26, 544, 52)) {
 			client.menuItemName[client.menuPos] = "Reset counter";
 			client.menuItemCode[client.menuPos] = 1056;
 			client.menuPos++;
@@ -259,6 +258,10 @@ public class FixedUI_459 extends FixedUI {
 				displayOrb(-2, 87, Constants.ORB_PRAYER, true);
 				displayOrb(24, 122, Constants.ORB_RUN, true);
 				displaySpecialOrb(178, 117, Constants.ORB_SUMMONING, true);
+			}
+			ImageCache.get(1955).drawImage(-2, 22);
+			if(client.mouseInRegion(519, 26, 544, 52)) {
+				ImageCache.get(1956).drawImage(-2, 22);
 			}
 			client.mapGraphics.drawGraphics(519, 0, client.graphics);
 			client.gameGraphics.setCanvas();
@@ -320,6 +323,8 @@ public class FixedUI_459 extends FixedUI {
 					markMinimap(client.mapDotFriend, x, y);
 				} else if(team) {
 					markMinimap(client.mapDotTeam, x, y);
+				} else if(player.iron) {
+					markMinimap(client.mapDotIronman, x, y);
 				} else {
 					markMinimap(client.mapDotPlayer, x, y);
 				}
@@ -364,9 +369,9 @@ public class FixedUI_459 extends FixedUI {
 			displayOrb(24, 122, Constants.ORB_RUN, true);
 			displaySpecialOrb(178, 117, Constants.ORB_SUMMONING, true);
 		}
-		ImageCache.get(1955).drawAlphaImage(195, 17);
-		if(client.mouseInRegion(718, 25, 748, 52)) {
-			ImageCache.get(1956).drawAlphaImage(195, 17);
+		ImageCache.get(1955).drawImage(-2, 22);
+		if(client.mouseInRegion(519, 26, 544, 52)) {
+			ImageCache.get(1956).drawImage(-2, 22);
 		}
 		if(client.menuOpened) {
 			client.gameActivity.drawer.drawMenu(-519, 0, false);

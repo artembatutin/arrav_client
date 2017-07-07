@@ -1,10 +1,9 @@
-package net.edge.activity.ui.resize.impl;
+package net.edge.activity.ui.impl;
 
 import net.edge.Config;
 import net.edge.Constants;
 import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.activity.ui.UIComponent;
-import net.edge.activity.ui.resize.ResizableUI;
 import net.edge.activity.ui.util.CounterHandler;
 import net.edge.activity.ui.util.OrbHandler;
 import net.edge.cache.unit.ImageCache;
@@ -381,6 +380,8 @@ public class ResizableUI_562 extends ResizableUI {
 					markMinimap(client.mapDotFriend, x, y);
 				} else if(team) {
 					markMinimap(client.mapDotTeam, x, y);
+				} else if(player.iron) {
+					markMinimap(client.mapDotIronman, x, y);
 				} else {
 					markMinimap(client.mapDotPlayer, x, y);
 				}
@@ -425,9 +426,9 @@ public class ResizableUI_562 extends ResizableUI {
 			displayOrb(client.windowWidth - 200, 106, Constants.ORB_RUN, true);
 			displayOrb(client.windowWidth - 177, 140, Constants.ORB_SUMMONING, true);
 		}
-		ImageCache.get(1950).drawAlphaImage(client.windowWidth - 212, 5);
+		ImageCache.get(1950).drawImage(client.windowWidth - 212, 5);
 		if(client.mouseInRegion(client.windowWidth - 212, 5, client.windowWidth - 183, 32)) {
-			ImageCache.get(1951).drawAlphaImage(client.windowWidth - 212, 5);
+			ImageCache.get(1951).drawImage(client.windowWidth - 212, 5);
 		}
 		ImageCache.get(83).drawImage(xOffset + 135, 125);
 		ImageCache.get(238).drawImage(xOffset + 140, 130);
@@ -687,12 +688,12 @@ public class ResizableUI_562 extends ResizableUI {
 			if(client.invTab == i && client.showTab) {
 				if(client.windowWidth < 1000) {
 					if(i < 8) {
-						ImageCache.get(21).drawAlphaImage((client.windowWidth - 245) + 30 * i, client.windowHeight - 71);
+						ImageCache.get(21).drawImage((client.windowWidth - 245) + 30 * i, client.windowHeight - 71);
 					} else {
-						ImageCache.get(21).drawAlphaImage((client.windowWidth - 245) + 30 * (i - 8), client.windowHeight - 35);
+						ImageCache.get(21).drawImage((client.windowWidth - 245) + 30 * (i - 8), client.windowHeight - 35);
 					}
 				} else {
-					ImageCache.get(21).drawAlphaImage((client.windowWidth - 485) + 30 * i, client.windowHeight - 35);
+					ImageCache.get(21).drawImage((client.windowWidth - 485) + 30 * i, client.windowHeight - 35);
 				}
 			}
 		}

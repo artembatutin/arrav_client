@@ -1,4 +1,4 @@
-package net.edge.activity.ui.fixed;
+package net.edge.activity.ui.impl;
 
 import net.edge.activity.ui.UI;
 

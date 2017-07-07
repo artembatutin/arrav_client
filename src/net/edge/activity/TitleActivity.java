@@ -208,10 +208,10 @@ public class TitleActivity extends Activity {
 				started = true;
 				ImageCache.setHeight(6, 20);
 			}
-			ImageCache.get(6).drawAlphaImage(centerX - 152, centerY - 120 + scrollValue);
+			ImageCache.get(6).drawImage(centerX - 152, centerY - 120 + scrollValue);
 		}
-		ImageCache.get(8).drawAlphaImage(centerX - 166, centerY - 133 + scrollValue);
-		ImageCache.get(8).drawAlphaImage(centerX - 166, centerY + 107 - scrollValue);
+		ImageCache.get(8).drawImage(centerX - 166, centerY - 133 + scrollValue);
+		ImageCache.get(8).drawImage(centerX - 166, centerY + 107 - scrollValue);
 		if(ImageCache.get(6).imageWidth > 0 && scrollOpened && started) {
 			if(scrollValue != 0) {
 				scrollValue -= 5;
@@ -246,7 +246,7 @@ public class TitleActivity extends Activity {
 
 			Rasterizer2D.fillRectangle(centerX - 127, centerY - 5, 254, 28, 0x000000, fadeValue + alphaOpacity[0]);
 			Rasterizer2D.fillRectangle(centerX - 127, centerY - 47, 254, 28, 0x000000, fadeValue + alphaOpacity[1]);
-			ImageCache.get(0).drawAlphaImage(centerX - 59, centerY + 45, fadeValue * 2 + alphaOpacity[2]);
+			ImageCache.get(0).drawImage(centerX - 59, centerY + 45, fadeValue * 2 + alphaOpacity[2]);
 		}
 
 		/* Text */

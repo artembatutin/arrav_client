@@ -1,4 +1,4 @@
-package net.edge.activity.ui.resize;
+package net.edge.activity.ui.impl;
 
 import net.edge.activity.ui.UI;
 import net.edge.media.img.BitmapImage;
