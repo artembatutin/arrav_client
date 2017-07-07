@@ -1,6 +1,7 @@
 package net.edge;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.edge.activity.GameActivity;
 import net.edge.activity.TitleActivity;
 import net.edge.activity.panel.PanelHandler;
@@ -15,6 +16,7 @@ import net.edge.game.CollisionMap;
 import net.edge.game.MapDecoder;
 import net.edge.game.Scene;
 import net.edge.game.WorldObjectSpawn;
+import net.edge.game.emitter.Particle;
 import net.edge.game.tile.EntityUnit;
 import net.edge.game.tile.GroundDecoration;
 import net.edge.media.Rasterizer2D;
@@ -58,6 +60,16 @@ import java.util.zip.CRC32;
  * TODO: Main interface scrolling with mouse scroll.
  */
 public class Client extends ClientEngine {
+	
+	/*
+	 * Particles
+	 */
+	public ObjectList<Particle> displayedParticles;
+	public ObjectList<Particle> removeDeadParticles;
+	
+	public final void addParticle(Particle particle) {
+		displayedParticles.add(particle);
+	}
 	
 	/*
 	 * Npc information values.
@@ -469,6 +481,8 @@ public class Client extends ClientEngine {
 	private int fadeOutEndCycle;
 
 	public Client() {
+		displayedParticles = new ObjectArrayList<>(10000);
+		removeDeadParticles = new ObjectArrayList<>();
 		UI.client = this;
 		crc = new CRC32();
 		cacheHandler = new CacheUnpacker(this);
@@ -633,6 +647,8 @@ public class Client extends ClientEngine {
 			System.out.println("Failed to launch the applet.");
 		}
 	}
+	
+	public static Client instance;
 
 	/**
 	 * This method is ran on the start up of the desktop application.
@@ -647,9 +663,9 @@ public class Client extends ClientEngine {
 			}
 			SignLink.storeId = 32;
 			SignLink.startPriv(InetAddress.getLocalHost());
-			final Client client = new Client();
-			client.nodeID = 10;
-			client.startApplication();
+			instance = new Client();
+			instance.nodeID = 10;
+			instance.startApplication();
 		} catch(final Exception exception) {
 			exception.printStackTrace();
 			System.out.println("Failed to launch the application.");
@@ -1323,7 +1339,7 @@ public class Client extends ClientEngine {
 								x += childWidget.invIconX[item];
 								y += childWidget.invIconY[item];
 							}
-							if(childWidget.invId[item] > 0) {
+							if(item < childWidget.invId.length && childWidget.invId[item] > 0) {
 								int mouseDragOffsetX = 0;
 								int mouseDragOffsetY = 0;
 								final int itemID = childWidget.invId[item] - 1;
@@ -1584,6 +1600,7 @@ public class Client extends ClientEngine {
 							ImageCache.get(1832).drawImage(xPos-3, yPos-3);
 					}
 				} else if(childWidget.type == Constants.WIDGET_MODEL) {
+					Rasterizer3D.textured = false;
 					final int centerX = Rasterizer3D.viewport.centerX;
 					final int centerY = Rasterizer3D.viewport.centerY;
 					Rasterizer3D.viewport.centerX = xPos + childWidget.width / 2;
@@ -1601,11 +1618,15 @@ public class Client extends ClientEngine {
 					if(animationID == -1) {
 						model = childWidget.getModel(-1, -1, isSelected);
 					} else {
-						if(animationID > DeformSequence.cache.length)
+						if(animationID > DeformSequence.cache.length) {
+							Rasterizer3D.textured = true;
 							return;
+						}
 						final DeformSequence animation = DeformSequence.cache[animationID];
-						if(animation == null)
+						if(animation == null) {
+							Rasterizer3D.textured = true;
 							return;
+						}
 						model = childWidget.getModel(animation.anIntArray354[childWidget.modelAnimLength], animation.frameList[childWidget.modelAnimLength], isSelected);
 					}
 					if(widget.id == forcedChatWidgetId) {
@@ -1622,6 +1643,7 @@ public class Client extends ClientEngine {
 					if(model != null) {
 						model.drawModel(childWidget.modelRoll, 0, childWidget.modelYaw, 0, i5, l5);
 					}
+					Rasterizer3D.textured = true;
 					Rasterizer2D.removeClip();
 					Rasterizer3D.viewport.centerX = centerX;
 					Rasterizer3D.viewport.centerY = centerY;
@@ -6108,7 +6130,7 @@ public class Client extends ClientEngine {
 					final int int2 = inBuffer.getUShort();
 					final Interface class9_2 = Interface.cache[int2];
 					while(inBuffer.pos < pktSize) {
-						final int slot = inBuffer.getUByte();
+						final int slot = inBuffer.getUSmart();
 						int item = inBuffer.getUShort();
 						int l25 = inBuffer.getUByte();
 						if(l25 == 255) {

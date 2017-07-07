@@ -35,6 +35,14 @@ public final class GraphicalComponent {
 		return height;
 	}
 	
+	public void set(int index, int val) {
+		raster[index] = val;
+	}
+	
+	public int[] getRaster() {
+		return raster;
+	}
+	
 	public BufferedImage getImage() {
 		return image;
 	}

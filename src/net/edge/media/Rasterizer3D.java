@@ -20,7 +20,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 	};
 	
 	public static double renderType = TYPES[0];
-	private static float[] depthBuffer;
+	public static float[] depthBuffer;
 	private static int textureMipmap;
 	public static final int[] lightDecay;
 	public static Viewport viewport;
@@ -34,7 +34,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 	private static int[][] texelArrayPool;
 	private static int[][] texelCache;
 	public static boolean textureMissing;
-	public static boolean textured;
+	public static boolean textured = true;
 	
 	static {
 		shadowDecay = new int[512];

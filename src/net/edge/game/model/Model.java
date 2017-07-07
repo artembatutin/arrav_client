@@ -1,6 +1,11 @@
 package net.edge.game.model;
 
+import net.edge.Client;
 import net.edge.Constants;
+import net.edge.game.emitter.Particle;
+import net.edge.game.emitter.ParticleAttachment;
+import net.edge.game.emitter.ParticleDefinition;
+import net.edge.game.emitter.ParticleVector;
 import net.edge.od.OnDemandFetcher;
 import net.edge.Config;
 import net.edge.cache.unit.AnimationFrame;
@@ -11,10 +16,10 @@ import net.edge.media.Rasterizer3D;
 import net.edge.util.io.Buffer;
 
 public final class Model extends Entity {
-
+	
 	private boolean force_texture;
 	private boolean display_model_specific_texture;
-
+	
 	public static final Model model = new Model();
 	private static int[] anIntArray1622 = new int[2000];
 	private static int[] anIntArray1623 = new int[2000];
@@ -33,7 +38,7 @@ public final class Model extends Entity {
 	private int[] textureSecondaryColor;
 	private static byte[][] newModelHeader;
 	private static byte[][] oldModelHeader;
-
+	
 	public int vertexAmt;
 	public int[] vertexX;
 	public int[] vertexY;
@@ -117,22 +122,22 @@ public final class Model extends Entity {
 	public boolean upscaled;
 	//private EmitterTriangle[] emitters;
 	//private MagnetVertex[] magnets;
-
+	
 	static {
 		angleSine = Rasterizer3D.angleSine;
 		angleCosine = Rasterizer3D.angleCosine;
 		hslToRgbMap = Rasterizer3D.hslToRgbMap;
 		shadeAmt = Rasterizer3D.lightDecay;
 	}
-
-
+	
+	
 	public static void method459(int length, OnDemandFetcher odf) {
 		oldModelHeader = new byte[length][];
 		newModelHeader = new byte[length][];
 		odFetcher = odf;
 	}
-
-	public Model(byte[] data) {
+	
+	public Model(int modelId, byte[] data) {
 		try {
 			if(data != null && data.length > 1)
 				if(usesNewHeader(data)) {
@@ -144,24 +149,57 @@ public final class Model extends Entity {
 				scale(32, 32, 32);
 				upscaled = false;
 			}
+			int[][] attachments = ParticleAttachment.getAttachments(modelId);
+			if (attachments != null) {
+				for (int n = 0; n < attachments.length; n++) {
+					int[] attach = attachments[n];
+					if (attach[0] == -1) {
+						for (int z = 0; z < vertexIndex3d1.length; ++z) {
+							verticesParticle[vertexIndex3d1[z]] = attach[1] + 1;
+						}
+					} else if (attach[0] == -2) {
+						for (int z = 0; z < vertexIndex3d2.length; ++z) {
+							verticesParticle[vertexIndex3d2[z]] = attach[1] + 1;
+						}
+					} else if (attach[0] == -3) {
+						for (int z = 0; z < vertexIndex3d3.length; ++z) {
+							verticesParticle[vertexIndex3d3[z]] = attach[1] + 1;
+						}
+					} else if (attach[0] == -4) {
+						for (int z = 0; z < vertexIndex3d1.length; ++z) {
+							verticesParticle[vertexIndex3d1[z]] = attach[1] + 1;
+						}
+						
+						for (int z = 0; z < vertexIndex3d2.length; ++z) {
+							verticesParticle[vertexIndex3d2[z]] = attach[1] + 1;
+						}
+						
+						for (int z = 0; z < vertexIndex3d3.length; ++z) {
+							verticesParticle[vertexIndex3d3[z]] = attach[1] + 1;
+						}
+					} else {
+						verticesParticle[attach[0]] = attach[1] + 1;
+					}
+				}
+			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
-
+	
 	private boolean usesNewHeader(byte[] data) {
 		return data[data.length - 2] == -1 && data[data.length - 1] == -1;
 	}
-
+	
 	private void decode800(byte[] is) {
 		triAmt = 0;
 		triPriGlobal = (byte) 0;
 		texAmt = 0;
-
+		
 		Buffer[] buffers = new Buffer[7];
 		for(int i = 0; i < buffers.length; i++)
 			buffers[i] = new Buffer(is);
-
+		
 		int identifier = buffers[0].getUByte();
 		if(identifier != 1)
 			System.out.println("Invalid model identifier: " + identifier);
@@ -489,21 +527,21 @@ public final class Model extends Entity {
 			}
 		}
 	}
-
+	
 	private void decodeOld(byte[] is) {
 		boolean has_face_type = false;
 		boolean has_texture_type = false;
-
+		
 		Buffer[] buffers = new Buffer[5];
 		for(int i = 0; i < buffers.length; i++)
 			buffers[i] = new Buffer(is);
-
+		
 		buffers[0].pos = is.length - 18;
-
+		
 		vertexAmt = buffers[0].getUShort();
 		triAmt = buffers[0].getUShort();
 		texAmt = buffers[0].getUByte();
-
+		
 		int i_157_ = buffers[0].getUByte();
 		int modelPriority = buffers[0].getUByte();
 		int modelAlpha = buffers[0].getUByte();
@@ -515,7 +553,7 @@ public final class Model extends Entity {
 		int i_165_ = buffers[0].getUShort();
 		int pos = 0;
 		int i_167_ = pos;
-
+		
 		pos += vertexAmt;
 		int i_168_ = pos;
 		pos += triAmt;
@@ -545,6 +583,7 @@ public final class Model extends Entity {
 		int i_178_ = pos;
 		pos += i_163_;
 		int i_179_ = pos;
+		verticesParticle = new int[vertexAmt];
 		vertexX = new int[vertexAmt];
 		vertexY = new int[vertexAmt];
 		vertexZ = new int[vertexAmt];
@@ -552,36 +591,36 @@ public final class Model extends Entity {
 		vertexIndex3d2 = new short[triAmt];
 		vertexIndex3d3 = new short[triAmt];
 		triFill = new int[triAmt];
-
+		
 		if(modelVertexSkins == 1)
 			vertexSkin = new int[vertexAmt];
-
+		
 		if(modelTriSkins == 1)
 			triSkin = new int[triAmt];
-
+		
 		if(modelAlpha == 1)
 			triAlpha = new byte[triAmt];
-
+		
 		if(modelPriority != 255)
 			triPriGlobal = (byte) modelPriority;
 		else
 			triPri = new byte[triAmt];
-
+		
 		if(texAmt > 0) {
 			texVertex1 = new short[texAmt];
 			texVertex2 = new short[texAmt];
 			texVertex3 = new short[texAmt];
 			texType = new byte[texAmt];
 		}
-
+		
 		pos += i_164_;
-
+		
 		if(i_157_ == 1) {
 			triTex = new int[triAmt];
 			triType = new byte[triAmt];
 			triTexCoord = new short[triAmt];
 		}
-
+		
 		buffers[0].pos = i_167_;
 		buffers[1].pos = i_177_;
 		buffers[2].pos = i_178_;
@@ -729,13 +768,13 @@ public final class Model extends Entity {
 			triType = null;
 		int s = 4 << 7;
 	}
-
+	
 	private void decodeNew(byte[] data) {
 		try {
 			Buffer[] buffers = new Buffer[7];
 			for(int i = 0; i < buffers.length; i++)
 				buffers[i] = new Buffer(data);
-
+			
 			buffers[0].pos = data.length - 23;
 			vertexAmt = buffers[0].getUShort();
 			triAmt = buffers[0].getUShort();
@@ -762,19 +801,19 @@ public final class Model extends Entity {
 			int i_62_ = buffers[0].getUShort();
 			int i_63_ = buffers[0].getUShort();
 			int numTexTriangles = 0;
-			int i_65_ = 0;
-			int i_66_ = 0;
+			int particle_amt = 0;
+			int particle_clr = 0;
 			if(texAmt > 0) {
 				texType = new byte[texAmt];
 				buffers[0].pos = 0;
 				for(int i_67_ = 0; texAmt > i_67_; i_67_++) {
 					byte i_68_ = texType[i_67_] = buffers[0].getSByte();
 					if(i_68_ >= 1 && i_68_ <= 3)
-						i_65_++;
+						particle_amt++;
 					if(i_68_ == 0)
 						numTexTriangles++;
 					if(i_68_ == 2)
-						i_66_++;
+						particle_clr++;
 				}
 			}
 			int data_pos = texAmt;
@@ -815,7 +854,7 @@ public final class Model extends Entity {
 			int i_84_ = data_pos;
 			data_pos += numTexTriangles * 6;
 			int i_85_ = data_pos;
-			data_pos += 6 * i_65_;
+			data_pos += 6 * particle_amt;
 			int i_86_ = 6;
 			if(version != 14) {
 				if(version >= 15)
@@ -823,13 +862,14 @@ public final class Model extends Entity {
 			} else
 				i_86_ = 7;
 			int i_87_ = data_pos;
-			data_pos += i_86_ * i_65_;
+			data_pos += i_86_ * particle_amt;
 			int i_88_ = data_pos;
-			data_pos += i_65_;
+			data_pos += particle_amt;
 			int i_89_ = data_pos;
-			data_pos += i_65_;
+			data_pos += particle_amt;
 			int i_90_ = data_pos;
-			data_pos += i_66_ * 2 + i_65_;
+			data_pos += particle_clr * 2 + particle_amt;
+			verticesParticle = new int[vertexAmt];
 			vertexX = new int[vertexAmt];
 			vertexY = new int[vertexAmt];
 			vertexZ = new int[vertexAmt];
@@ -853,20 +893,20 @@ public final class Model extends Entity {
 			else
 				triPriGlobal = (byte) i_54_;
 			if(texAmt > 0) {
-				texVertex3 = new short[texAmt];
-				if(i_66_ > 0) {
-					texturePrimaryColor = new int[i_66_];
-					textureSecondaryColor = new int[i_66_];
-				}
 				texVertex1 = new short[texAmt];
 				texVertex2 = new short[texAmt];
-				if(i_65_ > 0) {
-					particleLifespanZ = new int[i_65_];
-					particleDirectionZ = new int[i_65_];
-					particleDirectionX = new int[i_65_];
-					particleLifespanX = new byte[i_65_];
-					particleLifespanY = new byte[i_65_];
-					particleDirectionY = new int[i_65_];
+				texVertex3 = new short[texAmt];
+				if(particle_clr > 0) {
+					texturePrimaryColor = new int[particle_clr];
+					textureSecondaryColor = new int[particle_clr];
+				}
+				if(particle_amt > 0) {
+					particleLifespanZ = new int[particle_amt];
+					particleDirectionZ = new int[particle_amt];
+					particleDirectionX = new int[particle_amt];
+					particleLifespanX = new byte[particle_amt];
+					particleLifespanY = new byte[particle_amt];
+					particleDirectionY = new int[particle_amt];
 				}
 			}
 			if(have_tex == 1 && texAmt > 0)
@@ -1074,6 +1114,7 @@ public final class Model extends Entity {
 							i_114_ = triPri[i_113_];
 						else
 							i_114_ = (byte) i_54_;
+						System.out.println("emit: " + i_112_ + " - " + i_113_ + " - " + i_114_);
 						//emitters[i_111_] = new EmitterTriangle(i_112_, vertexIndex3d1[i_113_], vertexIndex3d2[i_113_], vertexIndex3d3[i_113_], i_114_);
 					}
 				}
@@ -1083,6 +1124,7 @@ public final class Model extends Entity {
 					for(int i_116_ = 0; i_115_ > i_116_; i_116_++) {
 						int i_117_ = buffers[0].getUShort();
 						int i_118_ = buffers[0].getUShort();
+						System.out.println("mag: " + i_115_ + " - " + i_117_ + " - " + i_118_);
 						//magnets[i_116_] = new MagnetVertex(i_117_, i_118_);
 					}
 				}
@@ -1112,26 +1154,26 @@ public final class Model extends Entity {
 			e.printStackTrace();
 		}
 	}
-
+	
 	public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
-
+	
 	public static void method460(byte[] data, int id, int type) {
 		if(type == 0)
 			newModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
 		else
 			oldModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
 	}
-
-
+	
+	
 	public static void remove(int index) {
 		newModelHeader[index] = null;
 		oldModelHeader[index] = null;
 	}
-
+	
 	public static Model get(int index) {
 		return get(index, 0);
 	}
-
+	
 	public static Model get(int index, int type) {
 		byte[] data;
 		if(type == 0)
@@ -1142,28 +1184,28 @@ public final class Model extends Entity {
 			odFetcher.addRequest(type, index);
 			return null;
 		} else {
-			return new Model(data);
+			return new Model(index, data);
 		}
-
-
+		
+		
 	}
-
+	
 	public static boolean isCached(int id) {
 		return isCached(id, 0);
-
+		
 	}
-
+	
 	public static boolean isCached(int id, int type) {
 		if(type == 0 && newModelHeader[id] != null)
 			return true;
 		if(type == 6 && oldModelHeader[id] != null)
 			return true;
-
+		
 		odFetcher.addRequest(type, id);
 		return false;
-
+		
 	}
-
+	
 	private static int adjustLightness(int hsl, int lightness, int type) {
 		if((type & 2) == 2) {
 			if(lightness < 0) {
@@ -1182,7 +1224,7 @@ public final class Model extends Entity {
 		}
 		return (hsl & 0xff80) + lightness;
 	}
-
+	
 	public static void reset() {
 		projTriClipX = null;
 		projTriClipZ = null;
@@ -1204,34 +1246,37 @@ public final class Model extends Entity {
 		hslToRgbMap = null;
 		shadeAmt = null;
 	}
-
+	
 	private Model() {
 		hoverable = false;
 	}
-
+	
 	public Model(boolean flag, boolean flag1, boolean flag2, Model model) {
 		this(flag, flag1, flag2, false, model);
 	}
-
+	
 	public Model(boolean flag, boolean flag1, boolean flag2, boolean texture, Model model) {//objects (trees/bushes/walls/roofs/etc) //Graphcis //NPCs
 		hoverable = false;
 		vertexAmt = model.vertexAmt;
 		triAmt = model.triAmt;
 		texAmt = model.texAmt;
 		if(flag2) {
+			verticesParticle = model.verticesParticle;
 			vertexX = model.vertexX;
 			vertexY = model.vertexY;
 			vertexZ = model.vertexZ;
 		} else {
+			verticesParticle = new int[vertexAmt];
 			vertexX = new int[vertexAmt];
 			vertexY = new int[vertexAmt];
 			vertexZ = new int[vertexAmt];
 			for(int j = 0; j < vertexAmt; j++) {
+				verticesParticle[j] = model.verticesParticle[j];
 				vertexX[j] = model.vertexX[j];
 				vertexY[j] = model.vertexY[j];
 				vertexZ[j] = model.vertexZ[j];
 			}
-
+			
 		}
 		if(flag) {
 			triFill = model.triFill;
@@ -1241,7 +1286,7 @@ public final class Model extends Entity {
 				for(int k = 0; k != triAmt; k++)
 					triFill[k] = model.triFill[k];
 		}
-
+		
 		if(flag1) {
 			triAlpha = model.triAlpha;
 		} else {
@@ -1270,7 +1315,7 @@ public final class Model extends Entity {
 		triType = model.triType;
 		upscaled = model.upscaled;
 	}
-
+	
 	public Model(boolean flag, boolean flag1, Model model) {
 		hoverable = false;
 		vertexAmt = model.vertexAmt;
@@ -1279,11 +1324,11 @@ public final class Model extends Entity {
 		if(flag) {
 			vertexY = new int[vertexAmt];
 			System.arraycopy(model.vertexY, 0, vertexY, 0, vertexAmt);
-
+			
 		} else {
 			vertexY = model.vertexY;
 		}
-
+		
 		if(texAmt > 0) {
 			texVertex1 = model.texVertex1;
 			texVertex2 = model.texVertex2;
@@ -1292,7 +1337,7 @@ public final class Model extends Entity {
 			triTexCoord = model.triTexCoord;
 			texType = model.texType;
 		}
-
+		
 		if(flag1) {
 			triCol1 = new int[triAmt];
 			triCol2 = new int[triAmt];
@@ -1302,12 +1347,12 @@ public final class Model extends Entity {
 				triCol2[k] = model.triCol2[k];
 				triCol3[k] = model.triCol3[k];
 			}
-
+			
 			triType = new byte[triAmt];
 			if(model.triType == null) {
 				for(int l = 0; l < triAmt; l++)
 					triType[l] = 0;
-
+				
 			} else {
 				System.arraycopy(model.triType, 0, triType, 0, triAmt);
 			}
@@ -1333,6 +1378,7 @@ public final class Model extends Entity {
 			triCol3 = model.triCol3;
 			triType = model.triType;
 		}
+		verticesParticle = model.verticesParticle;
 		vertexX = model.vertexX;
 		vertexZ = model.vertexZ;
 		triFill = model.triFill;
@@ -1356,7 +1402,7 @@ public final class Model extends Entity {
 		maxVertexX = model.maxVertexX;
 		upscaled = model.upscaled;
 	}
-
+	
 	//start
 	public Model(Model attatch[]) {
 		int number_of_models = 2;
@@ -1393,7 +1439,7 @@ public final class Model extends Entity {
 				upscaled |= connect.upscaled;
 			}
 		}
-
+		verticesParticle = new int[vertexAmt];
 		vertexX = new int[vertexAmt];
 		vertexY = new int[vertexAmt];
 		vertexZ = new int[vertexAmt];
@@ -1443,7 +1489,7 @@ public final class Model extends Entity {
 					vertexZ[vertexAmt] = z;
 					vertexAmt++;
 				}
-
+				
 				for(int i2 = 0; i2 < connect.triAmt; i2++) {
 					vertexIndex3d1[triAmt] = (short) (connect.vertexIndex3d1[i2] + k1);
 					vertexIndex3d2[triAmt] = (short) (connect.vertexIndex3d2[i2] + k1);
@@ -1477,7 +1523,7 @@ public final class Model extends Entity {
 							triTex[triAmt] = connect.triTex[i2];
 						} else {
 							triTex[triAmt] = -1;
-
+							
 						}
 					}
 					if(has_coordinates) {
@@ -1492,13 +1538,13 @@ public final class Model extends Entity {
 					texVertex3[texAmt] = (short) (connect.texVertex3[textured_faces] + k1);
 					texAmt++;
 				}
-
+				
 				priority += connect.texAmt;
 			}
 		}
 		computeBoundsDist();
 	}
-
+	
 	public Model(int number_of_models, Model attatch[]) {
 		try {
 			boolean old_format = false;
@@ -1529,7 +1575,7 @@ public final class Model extends Entity {
 					} else {
 						if(triPriGlobal == -1)// -1
 							triPriGlobal = connect.triPriGlobal;
-
+						
 						if(triPriGlobal != connect.triPriGlobal)
 							has_priorities = true;
 					}
@@ -1542,6 +1588,7 @@ public final class Model extends Entity {
 			}
 			if(color)
 				triFill = new int[triAmt];
+			verticesParticle = new int[vertexAmt];
 			vertexX = new int[vertexAmt];
 			vertexY = new int[vertexAmt];
 			vertexZ = new int[vertexAmt];
@@ -1549,32 +1596,32 @@ public final class Model extends Entity {
 			vertexIndex3d1 = new short[triAmt];
 			vertexIndex3d2 = new short[triAmt];
 			vertexIndex3d3 = new short[triAmt];
-
+			
 			if(has_render_type)
 				triType = new byte[triAmt];
-
+			
 			if(has_skin)
 				triSkin = new int[triAmt];
-
+			
 			if(texAmt > 0) {
 				texVertex1 = new short[texAmt];
 				texVertex2 = new short[texAmt];
 				texVertex3 = new short[texAmt];
 				texType = new byte[texAmt];
 			}
-
+			
 			if(has_coordinates)
 				triTexCoord = new short[triAmt];
-
+			
 			if(has_texture)
 				triTex = new int[triAmt];
-
+			
 			if(has_alpha)
 				triAlpha = new byte[triAmt];
-
+			
 			if(has_priorities)
 				triPri = new byte[triAmt];
-
+			
 			vertexAmt = 0;
 			triAmt = 0;
 			texAmt = 0;
@@ -1620,7 +1667,7 @@ public final class Model extends Entity {
 									old_format = true;
 								}
 							}
-
+							
 						}
 						if(has_priorities && connect.triPri != null)
 							triPri[triAmt] = connect.triPri[j1];
@@ -1629,23 +1676,23 @@ public final class Model extends Entity {
 							// torva
 							triPri[triAmt] = (byte) connect.triPriGlobal;
 						}
-
+						
 						if(has_alpha && connect.triAlpha != null)
 							triAlpha[triAmt] = connect.triAlpha[j1];
-
+						
 						if(has_texture) {
 							if(connect.triTex != null && connect.triTex[j1] != -1) {
 								triTex[triAmt] = connect.triTex[j1];
 								display_model_specific_texture = true;
 							} else {
 								triTex[triAmt] = -1;
-
+								
 							}
 						}
-
+						
 						if(has_alpha && connect.triSkin != null)
 							triSkin[triAmt] = connect.triSkin[j1];
-
+						
 						if(vertex_coord != -1) {
 							vertexIndex3d1[triAmt] = (short) ((connect.vertexIndex3d1[j1]) + vertex_coord);
 							vertexIndex3d2[triAmt] = (short) ((connect.vertexIndex3d2[j1]) + vertex_coord);
@@ -1673,8 +1720,8 @@ public final class Model extends Entity {
 					if(has_coordinates) {
 						for(int mapped_pointers = 0; mapped_pointers < connect.triAmt; mapped_pointers++)
 							triTexCoord[/* triAmt */face++] = (short) (connect.triTexCoord == null || connect.triTexCoord[mapped_pointers] == -1 ? -1 : (connect.triTexCoord[mapped_pointers] & 0xffff) + texAmt);
-
-
+						
+						
 					}
 					int vertex_coord = offsets != null ? offsets[model_index] : -1;// short vertex_coord = (short) (1 << l1);
 					for(int texture_index = 0; texture_index < connect.texAmt; texture_index++) {
@@ -1702,7 +1749,7 @@ public final class Model extends Entity {
 							}
 						}
 						if(opcode == 2) {
-
+						
 						}
 						texAmt++;
 					}
@@ -1714,14 +1761,14 @@ public final class Model extends Entity {
 			e.printStackTrace();
 		}
 	}
-
+	
 	private void drawTriangle(int face) {
 		try {
 			if(projTriClipZ[face]) {
 				drawTriangleOrQuad(face);
 				return;
 			}
-
+			
 			int a = vertexIndex3d1[face] & 0xffff;
 			int b = vertexIndex3d2[face] & 0xffff;
 			int c = vertexIndex3d3[face] & 0xffff;
@@ -1736,7 +1783,7 @@ public final class Model extends Entity {
 			{
 				face_type = triType[face] & 0xff;
 			}
-
+			
 			boolean noTextureValues = (triTex == null || (face < triTex.length && triTex[face] == -1));
 			boolean noCoordinates = (triTexCoord == null || (face < triTexCoord.length && triTexCoord[face] == -1));
 			
@@ -1764,7 +1811,7 @@ public final class Model extends Entity {
 						return;
 					}
 				}
-
+				
 				if(face_type == 1) {
 					int texture_type = triTexCoord[face] & 0xffff;
 					if(texture_type == 0xffff)
@@ -1778,7 +1825,7 @@ public final class Model extends Entity {
 					}
 				}
 			}
-
+			
 			if(face_type == 0) {//TODO: do this.
 				if(triTex[face] != -1) {
 					int x, y, z;
@@ -1891,6 +1938,7 @@ public final class Model extends Entity {
 			z = y * rollSin + z * rollCos >> 16;
 			y = j6;
 			projVertexLocalZ[i] = (z >> 2) - rollZ;
+			vertex2dZ[i] = z;
 			projVertexX[i] = midX + x * Scene.focalLength / z;
 			projVertexY[i] = midY + y * Scene.focalLength / z;
 			if(texAmt > 0) {
@@ -1905,11 +1953,15 @@ public final class Model extends Entity {
 			//e.printStackTrace();
 		}
 	}
-
-
+	
+	
 	@Override
 	public void drawModel(int modelYaw, int rollSin, int rollCos, int yawSin, int yawCos, int camX, int camY, int camZ, long hash, double type) {
 		Rasterizer3D.renderType = type;
+		renderAtPointX = camX + Client.instance.cameraLocationX;
+		renderAtPointY = camZ + Client.instance.cameraLocationY;
+		renderAtPointZ = camY + Client.instance.cameraLocationZ;
+		lastRenderedRotation = modelYaw;
 		final int j2 = camZ * yawCos - camX * yawSin >> 16;
 		final int k2 = camY * rollSin + j2 * rollCos >> 16;
 		final int l2 = maxHorizontalDist * rollCos >> 16;
@@ -2021,15 +2073,15 @@ public final class Model extends Entity {
 			//e.printStackTrace();
 		}
 	}
-
+	
 	public void method464(Model model, boolean flag) {
 		method464(model, flag, true, false);
 	}
-
+	
 	public void method464(Model model, boolean flag, boolean texture) {
 		method464(model, flag, texture, false);
 	}
-
+	
 	public void method464(Model model, boolean flag, boolean texture, boolean npc) {
 		vertexAmt = model.vertexAmt;
 		triAmt = model.triAmt;
@@ -2039,6 +2091,7 @@ public final class Model extends Entity {
 			anIntArray1623 = new int[vertexAmt + 100];
 			anIntArray1624 = new int[vertexAmt + 100];
 		}
+		verticesParticle = new int[vertexAmt];
 		vertexX = anIntArray1622;
 		vertexY = anIntArray1623;
 		vertexZ = anIntArray1624;
@@ -2046,12 +2099,13 @@ public final class Model extends Entity {
 			vertexX[k] = model.vertexX[k];
 			vertexY[k] = model.vertexY[k];
 			vertexZ[k] = model.vertexZ[k];
+			verticesParticle[k] = model.verticesParticle[k];
 		}
 		if(texAmt > 0) {
 			texVertex1 = model.texVertex1;
 			texVertex2 = model.texVertex2;
 			texVertex3 = model.texVertex3;
-
+			
 			if(texture) {
 				triTex = model.triTex;
 			} else {
@@ -2065,7 +2119,7 @@ public final class Model extends Entity {
 			display_model_specific_texture = texture;
 			triTexCoord = model.triTexCoord;
 			texType = model.texType;
-
+			
 		}
 		if(flag) {
 			triAlpha = model.triAlpha;
@@ -2099,9 +2153,10 @@ public final class Model extends Entity {
 		texVertex3 = model.texVertex3;
 		upscaled = model.upscaled;
 	}
-
+	
 	private int method465(Model model, int i) {
 		int j = -1;
+		int p = model.verticesParticle[i];
 		int k = model.vertexX[i];
 		int l = model.vertexY[i];
 		int i1 = model.vertexZ[i];
@@ -2118,6 +2173,7 @@ public final class Model extends Entity {
 			break;
 		}
 		if(j == -1) {
+			verticesParticle[vertexAmt] = p;
 			vertexX[vertexAmt] = k;
 			vertexY[vertexAmt] = l;
 			vertexZ[vertexAmt] = i1;
@@ -2128,7 +2184,7 @@ public final class Model extends Entity {
 		}
 		return j;
 	}
-
+	
 	public void computeBoundsDist() {
 		super.maxVerticalDistUp = 0;
 		maxHorizontalDist = 0;
@@ -2158,7 +2214,7 @@ public final class Model extends Entity {
 		maxDiagonalDistUp = (int) (Math.sqrt(maxHorizontalDist * maxHorizontalDist + super.maxVerticalDistUp * super.maxVerticalDistUp) + 0.98999999999999999D);
 		maxDiagonalDistUpAndDown = maxDiagonalDistUp + (int) (Math.sqrt(maxHorizontalDist * maxHorizontalDist + maxVerticalDistDown * maxVerticalDistDown) + 0.98999999999999999D);
 	}
-
+	
 	public void computeBoundsVertical() {
 		super.maxVerticalDistUp = 0;
 		maxVerticalDistDown = 0;
@@ -2174,7 +2230,7 @@ public final class Model extends Entity {
 		maxDiagonalDistUp = (int) (Math.sqrt(maxHorizontalDist * maxHorizontalDist + super.maxVerticalDistUp * super.maxVerticalDistUp) + 0.98999999999999999D);
 		maxDiagonalDistUpAndDown = maxDiagonalDistUp + (int) (Math.sqrt(maxHorizontalDist * maxHorizontalDist + maxVerticalDistDown * maxVerticalDistDown) + 0.98999999999999999D);
 	}
-
+	
 	private void computeBoundsAll() {
 		super.maxVerticalDistUp = 0;
 		maxHorizontalDist = 0;
@@ -2219,7 +2275,7 @@ public final class Model extends Entity {
 		maxDiagonalDistUp = (int) Math.sqrt(maxHorizontalDist * maxHorizontalDist + super.maxVerticalDistUp * super.maxVerticalDistUp);
 		maxDiagonalDistUpAndDown = maxDiagonalDistUp + (int) Math.sqrt(maxHorizontalDist * maxHorizontalDist + maxVerticalDistDown * maxVerticalDistDown);
 	}
-
+	
 	public void applyEffects() {
 		if(vertexSkin != null) {
 			final int ai[] = new int[256];
@@ -2264,7 +2320,7 @@ public final class Model extends Entity {
 			triSkin = null;
 		}
 	}
-
+	
 	public void applyAnimation(int current) {
 		if(anIntArrayArray1657 == null) {
 			return;
@@ -2285,7 +2341,7 @@ public final class Model extends Entity {
 			method472(skinList.anIntArray342[l], skinList.anIntArrayArray343[l], animation.skin3dDX[i], animation.skin3dDY[i], animation.skin3dDZ[i]);
 		}
 	}
-
+	
 	public void applyAnimation1(int frame, int nextFrame, int end, int cycle) {
 		if(anIntArrayArray1657 != null && frame != -1) {
 			AnimationFrame currentAnimation = AnimationFrame.get(frame);
@@ -2381,7 +2437,7 @@ public final class Model extends Entity {
 			}
 		}
 	}
-
+	
 	public void applyAnimation(int currentId, int nextId, int cycle, int length) {
 		if(anIntArrayArray1657 == null) {
 			return;
@@ -2505,7 +2561,7 @@ public final class Model extends Entity {
 			}
 		}
 	}
-
+	
 	public void method471(int[] ai, int j, int animframe) {
 		if(animframe == -1) {
 			return;
@@ -2551,7 +2607,7 @@ public final class Model extends Entity {
 			}
 		}
 	}
-
+	
 	private void method472(int code, int[] ai, int dx, int dy, int dz) {
 		final int i1 = ai.length;
 		if(code == 0) {
@@ -2664,7 +2720,7 @@ public final class Model extends Entity {
 					if(t_skin < triangleSkin.length) {
 						int[] triangle_list = triangleSkin[t_skin];
 						for(int tri_idx : triangle_list) {
-
+							
 							int i_233_ = (triAlpha[tri_idx] & 0xff) + 8 * dx;
 							if(i_233_ >= 0) {
 								if(i_233_ > 255) {
@@ -2680,7 +2736,7 @@ public final class Model extends Entity {
 			}
 		}
 	}
-
+	
 	public void rotate90() {
 		for(int i = 0; i < vertexAmt; i++) {
 			final int x = vertexX[i];
@@ -2688,7 +2744,7 @@ public final class Model extends Entity {
 			vertexZ[i] = -x;
 		}
 	}
-
+	
 	public void rotate(int angle) {
 		final int sin = angleSine[angle];
 		final int cos = angleCosine[angle];
@@ -2697,8 +2753,13 @@ public final class Model extends Entity {
 			vertexZ[i] = vertexY[i] * sin + vertexZ[i] * cos >> 16;
 			vertexY[i] = x;
 		}
+		for(int i = 0; i < particleDirectionX.length; i++) {
+			final int x = particleDirectionX[i] * cos - particleDirectionZ[i] * sin >> 16;
+			particleDirectionZ[i] = particleDirectionY[i] * sin + particleDirectionZ[i] * cos >> 16;
+			particleDirectionY[i] = x;
+		}
 	}
-
+	
 	public void translate(int x, int y, int z) {
 		if(upscaled) {
 			x <<= 2;
@@ -2710,8 +2771,13 @@ public final class Model extends Entity {
 			vertexY[i] += y;
 			vertexZ[i] += z;
 		}
+		for(int i = 0; i < particleDirectionX.length; i++) {
+			particleDirectionX[i] += x;
+			particleDirectionY[i] += y;
+			particleDirectionZ[i] += z;
+		}
 	}
-
+	
 	public void replaceHsl(int from, int to) {
 		for(int i = 0; i < triAmt; i++) {
 			if(triFill[i] == from) {
@@ -2719,7 +2785,7 @@ public final class Model extends Entity {
 			}
 		}
 	}
-
+	
 	public final void setTexture(final short oldTextureId, final short newTextureId) {
 		for(int id = 0; id < triAmt; id++) {
 			if(triTex != null)
@@ -2728,7 +2794,7 @@ public final class Model extends Entity {
 				}
 		}
 	}
-
+	
 	public void insideOut() {
 		for(int i = 0; i < vertexAmt; i++) {
 			vertexZ[i] = -vertexZ[i];
@@ -2739,15 +2805,20 @@ public final class Model extends Entity {
 			vertexIndex3d3[i] = x;
 		}
 	}
-
+	
 	public void scale(int x, int y, int z) {
 		for(int i = 0; i < vertexAmt; i++) {
 			vertexX[i] = vertexX[i] * x >> 7;
 			vertexY[i] = vertexY[i] * y >> 7;
 			vertexZ[i] = vertexZ[i] * z >> 7;
 		}
+		for(int i = 0; i < particleDirectionX.length; i++) {
+			particleDirectionX[i] = particleDirectionX[i] * x >> 7;
+			particleDirectionY[i] = particleDirectionY[i] * y >> 7;
+			particleDirectionZ[i] = particleDirectionZ[i] * z >> 7;
+		}
 	}
-
+	
 	public void calculateLighting(int lightness, int contrast, int lightx, int lighty, int lightz, boolean flag) {
 		final int distance = (int) Math.sqrt(lightx * lightx + lighty * lighty + lightz * lightz);
 		final int intensity = contrast * distance >> 8;
@@ -2831,7 +2902,7 @@ public final class Model extends Entity {
 			computeBoundsAll();
 		}
 	}
-
+	
 	public void doShading(int lightness, int contrast, int lightx, int lighty, int lightz) {
 		for(int i = 0; i < triAmt; i++) {
 			final int x3d = vertexIndex3d1[i];
@@ -2889,7 +2960,7 @@ public final class Model extends Entity {
 		}
 		triFill = null;
 	}
-
+	
 	private void method483(boolean flag, boolean flag1, long hash) {
 		for(int j = 0; j < maxDiagonalDistUpAndDown; j++) {
 			anIntArray1671[j] = 0;
@@ -2958,7 +3029,7 @@ public final class Model extends Entity {
 				}
 			}
 		}
-
+		
 		int l2 = 0;
 		if(anIntArray1673[1] > 0 || anIntArray1673[2] > 0) {
 			l2 = (anIntArray1677[1] + anIntArray1677[2]) / (anIntArray1673[1] + anIntArray1673[2]);
@@ -3050,8 +3121,39 @@ public final class Model extends Entity {
 				i5 = -1000;
 			}
 		}
+		
+		for (int vertex = 0; vertex < vertexAmt; ++vertex) {
+			int pid = verticesParticle[vertex] - 1;
+			if (pid >= 0) {
+				ParticleDefinition def = ParticleDefinition.cache[pid];
+				int x = vertexX[vertex];
+				int y = vertexY[vertex];
+				int z = vertexZ[vertex];
+				int depth = vertex2dZ[vertex];
+				if (lastRenderedRotation != 0) {
+					int sine = angleSine[lastRenderedRotation];
+					int cosine = angleCosine[lastRenderedRotation];
+					int rotatedX = z * sine + x * cosine >> 16;
+					z = z * cosine - x * sine >> 16;
+					x = rotatedX;
+				}
+				x += renderAtPointX;
+				z += renderAtPointY;
+				ParticleVector pos = new ParticleVector(x, -y, z);
+				for (int p = 0; p < def.getSpawnRate(); p++) {
+					Particle particle = new Particle(def, pos, depth, pid);
+					Client.instance.addParticle(particle);
+				}
+			}
+		}
 	}
-
+	
+	private int lastRenderedRotation = 0;
+	private int renderAtPointX = 0;
+	public int renderAtPointZ = 0;
+	public int renderAtPointY = 0;
+	public int[] verticesParticle;
+	
 	private void drawTriangleOrQuad(int idx) {
 		if(triFill != null && triAlpha != null)
 			if(triFill[idx] == 65535)
@@ -3205,7 +3307,7 @@ public final class Model extends Entity {
 			}
 		}
 	}
-
+	
 	void calculateMaxDepth(Buffer class475_sub17, Buffer class475_sub17_288_, Buffer class475_sub17_289_) {
 		short i = 0;
 		short i_290_ = 0;
@@ -3268,7 +3370,7 @@ public final class Model extends Entity {
 		}
 		maxDepth++;
 	}
-
+	
 	void decodeTexturedTriangles(Buffer class475_sub17, Buffer class475_sub17_142_, Buffer class475_sub17_143_, Buffer class475_sub17_144_, Buffer class475_sub17_145_, Buffer class475_sub17_146_) {
 		for(int i = 0; i < texAmt; i++) {
 			int i_147_ = triType[i] & 0xff;
@@ -3341,7 +3443,7 @@ public final class Model extends Entity {
 			}
 		}
 	}
-
+	
 	private boolean method486(int i, int j, int k, int l, int i1, int j1, int k1, int l1) {
 		if(j < k && j < l && j < i1) {
 			return false;

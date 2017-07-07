@@ -151,22 +151,12 @@ public class PvPPanel extends Panel {
 			client.scoreKills = new int[20];
 		}
 		int offset = 67;
-		client.scoreNames[0] = "Avro";
-		client.scoreNames[1] = "Valkyrian";
-		client.scoreNames[2] = "Bigshot";
-		client.scoreNames[3] = "Mk2";
-		client.scoreNames[4] = "Pkerpro";
-		client.scoreNames[5] = "Ouf yo fam";
-		client.scoreNames[6] = "Staniv";
-		client.scoreNames[7] = "Dhruv";
-		client.scoreNames[8] = "Compass";
-		client.scoreNames[9] = "Miris";
 		for(int i = 0; i < client.killstreak.length - 10; i++) {
 			offset += 15;
 			smallFont.drawLeftAlignedEffectString("" + (i + 1), beginX + 22, beginY + offset + 19, 0xF3B13F, true);
-			if(client.scoreNames[i] == null)
-				continue;
-			smallFont.drawLeftAlignedEffectString(client.scoreNames[i], beginX + 50, beginY + offset + 19, 0xF3B13F, true);
+			if(client.scoreNames[i] != null) {
+				smallFont.drawLeftAlignedEffectString(client.scoreNames[i], beginX + 50, beginY + offset + 19, 0xF3B13F, true);
+			}
 		}
 	}
 

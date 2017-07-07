@@ -4,6 +4,8 @@ import net.edge.Config;
 import net.edge.Constants;
 import net.edge.activity.ui.UIComponent;
 import net.edge.game.Scene;
+import net.edge.game.emitter.Particle;
+import net.edge.game.emitter.ParticleDefinition;
 import net.edge.media.Rasterizer2D;
 import net.edge.media.Rasterizer3D;
 import net.edge.sign.SignLink;
@@ -15,9 +17,11 @@ import net.edge.cache.unit.*;
 import net.edge.game.model.*;
 import net.edge.media.GraphicalComponent;
 import net.edge.media.font.BitmapFont;
+import sun.dc.pr.Rasterizer;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Iterator;
 
 public class GameActivity extends Activity {
 
@@ -1341,6 +1345,7 @@ public class GameActivity extends Activity {
 			int fogRgb = (x >= 270 && x <= 465 && y >= 335 && y <= 495) ? 0xc8c0a8 : 0;
 			client.scene.drawScene(client.cameraLocationX, client.cameraLocationY, client.cameraLocationZ, client.cameraYaw, client.cameraRoll, camPlane, fogRgb);
 			client.scene.removeEntityUnit1s();
+			drawParticles();
 		}
 		updateEntities();
 		drawHeadIcon();
@@ -2283,5 +2288,122 @@ public class GameActivity extends Activity {
 		client.inventoryGraphics = null;
 		client.gameGraphics = null;
 		client.updateGraphics = null;
+	}
+	
+	public void drawParticles() {
+		Iterator<Particle> iterator;
+		Particle particle;
+		if (true) {
+			iterator = client.displayedParticles.iterator();
+			while (iterator.hasNext()) {
+				particle = iterator.next();
+				if (particle != null) {
+					particle.tick();
+					if (particle.isDead()) {
+						client.removeDeadParticles.add(particle);
+					} else {
+						int displayX = particle.getPosition().getX();
+						int displayY = particle.getPosition().getY();
+						int displayZ = particle.getPosition().getZ();
+						int[] projection = calcParticlePos(displayX, displayY, displayZ, (int) particle.getSize());
+						float size = particle.getSize();
+						int alpha = (int) (particle.getAlpha() * 255.0F);
+						int radius = (int) (((client.uiRenderer.isFixed() ? 4.0F : 4.5F)) * particle.getSize());
+						int srcAlpha = 256 - alpha;
+						int srcR = (particle.getColor() >> 16 & 255) * alpha;
+						int srcG = (particle.getColor() >> 8 & 255) * alpha;
+						int srcB = (particle.getColor() & 255) * alpha;
+						int y1 = projection[1] - radius;
+						if (y1 < 0) {
+							y1 = 0;
+						}
+						int y2 = projection[1] + radius;
+						if (y2 >= Rasterizer2D.canvasHeight) {
+							y2 = Rasterizer2D.canvasHeight - 1;
+						}
+						for (int iy = y1; iy <= y2; ++iy) {
+							int dy = iy - projection[1];
+							int dist = (int) Math.sqrt(radius * radius - dy * dy);
+							int x1 = projection[0] - dist;
+							if (x1 < 0) {
+								x1 = 0;
+							}
+							int x2 = projection[0] + dist;
+							if (x2 >= Rasterizer2D.canvasWidth) {
+								x2 = Rasterizer2D.canvasWidth - 1;
+							}
+							int pixel = x1 + iy * Rasterizer2D.canvasWidth;
+							try {
+								if (Rasterizer3D.depthBuffer != null) {
+									if (Rasterizer3D.depthBuffer[pixel] >= projection[2] - size - 15 || Rasterizer3D.depthBuffer[pixel++] >= projection[2] + size + 15) {
+										for (int ix = x1; ix <= x2; ++ix) {
+											int dstR = (client.gameGraphics.getRaster()[pixel] >> 16 & 255) * srcAlpha;
+											int dstG = (client.gameGraphics.getRaster()[pixel] >> 8 & 255) * srcAlpha;
+											int dstB = (client.gameGraphics.getRaster()[pixel] & 255) * srcAlpha;
+											int rgb = (srcR + dstR >> 8 << 16) + (srcG + dstG >> 8 << 8) + (srcB + dstB >> 8);
+											client.gameGraphics.set(pixel++, rgb);
+										}
+									} else {
+										particle.setAlpha(0f);
+									}
+								}
+							} catch (Exception exception) {
+								exception.printStackTrace();
+							}
+						}
+					}
+				}
+			}
+			if(!client.removeDeadParticles.isEmpty()) {
+				client.displayedParticles.removeAll(client.removeDeadParticles);
+				client.removeDeadParticles.clear();
+			}
+		} else {
+			if(!client.displayedParticles.isEmpty()) {
+				iterator = client.displayedParticles.iterator();
+				while(iterator.hasNext()) {
+					particle = iterator.next();
+					if(particle != null) {
+						particle.tick();
+						if(particle.isDead()) {
+							client.removeDeadParticles.add(particle);
+						}
+					}
+				}
+			}
+			if(!client.removeDeadParticles.isEmpty()) {
+				client.displayedParticles.removeAll(client.removeDeadParticles);
+				client.removeDeadParticles.clear();
+			}
+		}
+	}
+	
+	public final int[] calcParticlePos(int x, int y, int z, int size) {
+		if (x < 128 || z < 128 || x > 13056 || z > 13056) {
+			return new int[] { 0, 0, 0, 0, 0, 0, 0 };
+		}
+		int i1 = client.method42(client.cameraPlane, z, x) - y;
+		x -= client.cameraLocationX;
+		i1 -= client.cameraLocationZ;
+		z -= client.cameraLocationY;
+		int j1 = Model.angleSine[client.cameraRoll];
+		int k1 = Model.angleCosine[client.cameraRoll];
+		int l1 = Model.angleSine[client.cameraYaw];
+		int i2 = Model.angleCosine[client.cameraYaw];
+		int j2 = z * l1 + x * i2 >> 16;
+		z = z * i2 - x * l1 >> 16;
+		x = j2;
+		j2 = i1 * k1 - z * j1 >> 16;
+		z = i1 * j1 + z * k1 >> 16;
+		if(z >= 50) {//can you replace those? textureInt2 = centerY yee mmk, try that out.
+			return new int[] { Rasterizer3D.viewport.centerX + (x * Scene.focalLength) / z,
+					Rasterizer3D.viewport.centerY + (j2 * Scene.focalLength) / z, z,
+					Rasterizer3D.viewport.centerX + (x - size / 2 * Scene.focalLength) / z,
+					Rasterizer3D.viewport.centerY + (j2 - size / 2 * Scene.focalLength) / z,
+					Rasterizer3D.viewport.centerX + (x + size / 2 * Scene.focalLength) / z,
+					Rasterizer3D.viewport.centerY + (j2 + size / 2 * Scene.focalLength) / z };
+		} else {
+			return new int[] { 0, 0, 0, 0, 0, 0, 0 };
+		}
 	}
 }
