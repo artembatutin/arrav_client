@@ -121,7 +121,7 @@ public class IronManSelectionPanel extends Panel {
 		}
 		
 		boldFont.drawLeftAlignedString("XP rates:", beginX + 390, beginY + 225, 0xF3B13F);
-		plainFont.drawLeftAlignedString("Combat: x500", beginX + 370, beginY + 245, 0xF3B13F);
+		plainFont.drawLeftAlignedString("Combat: x1000", beginX + 370, beginY + 245, 0xF3B13F);
 		plainFont.drawLeftAlignedString("Prayer: x100", beginX + 379, beginY + 265, 0xF3B13F);
 		plainFont.drawLeftAlignedString("Skills: x25", beginX + 385, beginY + 285, 0xF3B13F);
 		plainFont.drawLeftAlignedString("Combat rate becomes slower", beginX + 336, beginY + 305, 0xeec557);
