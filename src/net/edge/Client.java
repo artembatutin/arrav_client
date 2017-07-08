@@ -8727,7 +8727,7 @@ public class Client extends ClientEngine {
 					if(l2 == 2) {
 						entity.anInt1530 = 0;
 					}
-				} else if(i1 == -1 || entity.anim == -1 || DeformSequence.cache[i1].priority >= DeformSequence.cache[entity.anim].priority) {
+				} else if(i1 == -1 || entity.anim == -1 || i1 >= DeformSequence.cache.length || DeformSequence.cache[i1].priority >= DeformSequence.cache[entity.anim].priority) {
 					entity.anim = i1;
 					entity.animFrame = 0;
 					entity.animCycle = 0;

@@ -394,7 +394,7 @@ public final class Player extends Mobile {
 		}
 		name = StringUtils.formatName(StringUtils.decryptName(buffer.getLong()));
 		combatLevel = buffer.getUByte();
-		iron = buffer.getBoolean();
+		iron = buffer.getUByte() == 1;
 		visible = true;
 		aLong1718 = 0L;
 		for(int k1 = 0; k1 < 12; k1++) {
