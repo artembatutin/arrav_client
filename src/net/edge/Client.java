@@ -4144,7 +4144,6 @@ public class Client extends ClientEngine {
 			final Interface class9_2 = Interface.cache[arg3];
 			if(class9_2.valueIndexArray != null && class9_2.valueIndexArray[0][0] == 5) {
 				final int i2 = class9_2.valueIndexArray[0][1];
-				System.out.println(class9_2.requiredValues[0]);
 				if(variousSettings[i2] != class9_2.requiredValues[0]) {
 					variousSettings[i2] = class9_2.requiredValues[0];
 					handleSettings(i2);
@@ -4855,6 +4854,7 @@ public class Client extends ClientEngine {
 			anInt843 = anInt842;
 			anInt842 = anInt841;
 			anInt841 = pktType;
+			
 			switch(pktType) {
 
 				case 82:
@@ -5472,6 +5472,17 @@ public class Client extends ClientEngine {
 							}
 						}
 					}
+					pktType = -1;
+					return true;
+				
+				case 41:
+					int cindex = inBuffer.getUShort();
+					String cname = inBuffer.getLine();
+					boolean cmuted = inBuffer.getBoolean();
+					int crank = inBuffer.getUByte();
+					String cranked = crank == 0 ? "" : "@ra" + crank + "@";
+					Interface.cache[50144 + cindex].text = cranked + cname;
+					clanMatesList.add(cindex, new ClanSettingPanel.ClanMember(cname, crank, cmuted));
 					pktType = -1;
 					return true;
 
@@ -7023,7 +7034,6 @@ public class Client extends ClientEngine {
 						Config.def.setFPS_ON(!Config.def.isFPS_ON());
 						pushMessage("--> fps " + (Config.def.isFPS_ON() ? "on" : "off"), 0, "");
 					}
-					System.out.println(localPrivilege);
 					if(localPrivilege == 11) {
 						if(chatInput.startsWith("//setspecto")) {
 							final int amt = Integer.parseInt(chatInput.substring(12));
