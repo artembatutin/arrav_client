@@ -19,7 +19,7 @@ public class BossPanel extends Panel {
 		CHOAS_ELE(false, 305, 1716),
 		KALPHITE_QUEEN(true, 333, 1717),
 		WILDYWYRM(true, 382, 1718),
-		NOMAD(false, 699, 1719),
+		NOMAD(true, 699, 1719),
 		JAD(true, 702, 1720),
 		CORP_BEAST(true, 785, 1721),
 		NEX(false, 1001, 1722),
