@@ -527,11 +527,9 @@ public final class Buffer extends DoublyLinkableEntry {
 	public void doKeys() {
 		final int length = pos;
 		pos = 0;
-		final byte[] temp = new byte[length];
-		getBytes(temp, 0, length);
-		final BigInteger biginteger2 = new BigInteger(temp);
-		final BigInteger biginteger3 = biginteger2.modPow(RSA_EXPONENT, RSA_MODULUS);
-		final byte[] bytes = biginteger3.toByteArray();
+		byte[] buffer = new byte[length];
+		getBytes(buffer, 0, length);
+		byte[] bytes = buffer;
 		pos = 0;
 		putByte(bytes.length);
 		putBytes(bytes, 0, bytes.length);
