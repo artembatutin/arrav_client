@@ -67,7 +67,7 @@ public class ClanSettingPanel extends Panel {
 
 		}
 		beginX += 135;
-		scrollMax1 = Math.max(35 * ((int) client.clanMatesList.stream().filter(m -> m.getRank() > 1).count()) - 285, 0);
+		scrollMax1 = Math.max(35 * countMuted() - 285, 0);
 
         /* Scrolling */
 		if(client.mouseInRegion(beginX + 2, 42 + beginY, beginX + 182, beginY + 330)) {
@@ -106,7 +106,7 @@ public class ClanSettingPanel extends Panel {
 				scrollPos1 = scrollMax1;
 			}
 		}
-		int muted = (int) client.clanMatesList.stream().filter(ClanMember::isMuted).count();
+		int muted = countMuted();
 		scrollMax2 = Math.max(35 * (muted + client.clanBansList.length) - 285, 0);
 		if(client.mouseInRegion(beginX + 185, 42 + beginY, beginX + 355, 330 + beginY)) {
 			scrollPos2 += client.mouseWheelAmt * 24;
@@ -145,8 +145,8 @@ public class ClanSettingPanel extends Panel {
 			}
 		}
 		offset = -scrollPos1 + 45;
-		for(int i = 0; i < client.clanMatesList.size(); i++) {
-			ClanMember name = client.clanMatesList.get(i);
+		for(int i = 0; i < client.clanMatesList.length; i++) {
+			ClanMember name = client.clanMatesList[i];
 			if(name == null)
 				break;
 			if(name.getRank() <= 1)
@@ -173,8 +173,8 @@ public class ClanSettingPanel extends Panel {
 		}
 
 		offset = -scrollPos2 + 45;
-		for(int i = 0; i < client.clanMatesList.size(); i++) {
-			ClanMember name = client.clanMatesList.get(i);
+		for(int i = 0; i < client.clanMatesList.length; i++) {
+			ClanMember name = client.clanMatesList[i];
 			if(name == null)
 				break;
 			if(!name.isMuted())
@@ -270,8 +270,8 @@ public class ClanSettingPanel extends Panel {
 		Rasterizer2D.fillRectangle(beginX + 2, 42 + beginY, 180, 288, 0x222222, 80);
 		Rasterizer2D.drawRectangle(beginX + 2, 42 + beginY, 180, 288, 0x222222);
 		Rasterizer2D.setClip(beginX + 3, 43 + beginY, beginX + 180, beginY + 328);
-		for(int i = 0; i < client.clanMatesList.size(); i++) {
-			ClanMember name = client.clanMatesList.get(i);
+		for(int i = 0; i < client.clanMatesList.length; i++) {
+			ClanMember name = client.clanMatesList[i];
 			if(name == null)
 				break;
 			if(name.getRank() <= 1)
@@ -297,8 +297,8 @@ public class ClanSettingPanel extends Panel {
 		Rasterizer2D.drawRectangle(beginX + 185, 42 + beginY, 170, 288, 0x222222);
 		Rasterizer2D.setClip(beginX + 185, 42 + beginY, beginX + 355, 330 + beginY);
 
-		for(int i = 0; i < client.clanMatesList.size(); i++) {
-			ClanMember name = client.clanMatesList.get(i);
+		for(int i = 0; i < client.clanMatesList.length; i++) {
+			ClanMember name = client.clanMatesList[i];
 			if(name == null)
 				break;
 			if(!name.isMuted())
@@ -347,12 +347,29 @@ public class ClanSettingPanel extends Panel {
 
 		Rasterizer2D.removeClip();
 	}
+	
+	public int countMuted() {
+		int i = 0;
+		for(ClanMember m : client.clanMatesList) {
+			if(m == null)
+				continue;
+			if(m.isMuted())
+				i++;
+		}
+		return i;
+	}
 
 	@Override
 	public void initialize() {
-		Optional<ClanMember> owner = client.clanMatesList.stream().filter(m -> m.getRank() == 8).findAny();
-		if(owner.isPresent()) {
-			advanced = Objects.equals(client.localPlayer.name.toLowerCase(), owner.get().getName().toLowerCase());
+		advanced = false;
+		for(ClanMember m : client.clanMatesList) {
+			if(m == null)
+				continue;
+			if(m.getRank() == 8) {
+				if(m.getName().equals(client.localUsername)) {
+					advanced = true;
+				}
+			}
 		}
 	}
 

@@ -382,7 +382,7 @@ public class Client extends ClientEngine {
 	private LinkedDeque aClass19_1179;
 	private String reportAbuseInput;
 	private String[] friendsList;
-	public ObjectArrayList<ClanSettingPanel.ClanMember> clanMatesList;
+	public ClanSettingPanel.ClanMember[] clanMatesList;
 	public String[] clanBansList;
 	private byte[][] terrainData;
 	private byte[][] objectData;
@@ -571,7 +571,7 @@ public class Client extends ClientEngine {
 		mapFunctionY = new int[1000];
 		regionLoaded = false;
 		friendsList = new String[200];
-		clanMatesList = new ObjectArrayList<>();
+		clanMatesList = new ClanSettingPanel.ClanMember[100];
 		clanBansList = new String[0];
 		inBuffer = Buffer.newPooledBuffer();
 		menuItemArg1 = new int[500];
@@ -3269,6 +3269,7 @@ public class Client extends ClientEngine {
 				} else {
 					invTab = 4;
 				}
+				fancyFont.drawCenteredString("Connecting... This might take a while.", windowWidth / 2, windowHeight / 2, 0xffffff);
 				return;
 			}
 			/*if(returnCode == 15) {
@@ -5474,36 +5475,6 @@ public class Client extends ClientEngine {
 					}
 					pktType = -1;
 					return true;
-				
-				case 41:
-					int cindex = inBuffer.getUShort();
-					String cname = inBuffer.getLine();
-					boolean cmuted = inBuffer.getBoolean();
-					int crank = inBuffer.getUByte();
-					String cranked = crank == 0 ? "" : "@ra" + crank + "@";
-					Interface.cache[50144 + cindex].text = cranked + cname;
-					clanMatesList.add(cindex, new ClanSettingPanel.ClanMember(cname, crank, cmuted));
-					pktType = -1;
-					return true;
-
-				case 51:
-					for(int fresh = 0; fresh < 100; fresh++) {
-						if(Interface.cache[50144 + fresh] != null)
-							Interface.cache[50144 + fresh].text = "";
-					}
-					int size = inBuffer.getUShort();
-					clanMatesList = new ObjectArrayList<>(size);
-					for(int c = 0; c < size; c++) {
-						String name = inBuffer.getLine();
-						boolean muted = inBuffer.getBoolean();
-						int rank = inBuffer.getUByte();
-						name = StringUtils.formatName(name.toLowerCase().replace("_", " "));
-						String ranked = rank == 0 ? "" : "@ra" + rank + "@";
-						Interface.cache[50144 + c].text = ranked + name;
-						clanMatesList.add(c, new ClanSettingPanel.ClanMember(name, rank, muted));
-					}
-					pktType = -1;
-					return true;
 
 				case 52:
 					int size2 = inBuffer.getUShort();
@@ -5739,8 +5710,21 @@ public class Client extends ClientEngine {
 					return true;
 
 				case 126:
-					final String text = inBuffer.getLine();
+					String text = inBuffer.getLine();
 					final int frame = inBuffer.getUShortMinus128();
+					//clan chat text update.
+					if(frame >= 50144 && frame <= 50244) {
+						boolean muted = text.charAt(0) == 'y';
+						int rank = Integer.parseInt(text.charAt(1)+"");
+						text = text.substring(2, text.length());
+						clanMatesList[frame - 50144] = new ClanSettingPanel.ClanMember(text, rank, muted);
+						if(rank > 0) {
+							text = "@ra" + rank + "@" + text;
+						}
+						if(muted) {
+							text = "@red@" + text;
+						}
+					}
 					updateStrings(text, frame);
 					if(Interface.cache[frame] != null)
 						Interface.cache[frame].text = text;
@@ -5857,7 +5841,7 @@ public class Client extends ClientEngine {
 					}
 					int found = 0;
 					int index = 0;
-					while(found < countable) {
+					while(found < countable && index < group.invId.length) {
 						boolean provided = false;
 						if(itemGroupID == 3900) {
 							provided = inBuffer.getBoolean();
@@ -8626,16 +8610,20 @@ public class Client extends ClientEngine {
 
 	private void method60(int i) {
 		final Interface class9 = Interface.cache[i];
-		for(final int element : class9.subId) {
-			if(element == -1) {
-				break;
+		if(class9.subId != null) {
+			for(final int element : class9.subId) {
+				if(element == -1) {
+					break;
+				}
+				final Interface class9_1 = Interface.cache[element];
+				if(class9_1 == null)
+					continue;
+				if(class9_1.type == 1) {
+					method60(class9_1.id);
+				}
+				class9_1.modelAnimLength = 0;
+				class9_1.modelAnimDelay = 0;
 			}
-			final Interface class9_1 = Interface.cache[element];
-			if(class9_1.type == 1) {
-				method60(class9_1.id);
-			}
-			class9_1.modelAnimLength = 0;
-			class9_1.modelAnimDelay = 0;
 		}
 	}
 
