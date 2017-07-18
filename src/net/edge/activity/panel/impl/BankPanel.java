@@ -1,5 +1,6 @@
 package net.edge.activity.panel.impl;
 
+import net.edge.Config;
 import net.edge.activity.panel.Panel;
 import net.edge.cache.unit.ImageCache;
 import net.edge.cache.unit.Interface;
@@ -49,7 +50,7 @@ public class BankPanel extends Panel {
 			beginY = client.windowHeight / 2 - 250;
 		}
 
-		scrollMax = Math.max(50 * ((Interface.cache[270 + tab].invId.length + 6) / 7) - 275, 0);
+		scrollMax = Math.max(50 * ((Interface.cache[270 + tab].invId.length + 6) / 7) - 235, 0);
 
         /* Scrolling */
 		if(client.mouseInRegion(beginX + 5, beginY + 50, beginX + 493, beginY + 365)) {
@@ -62,13 +63,13 @@ public class BankPanel extends Panel {
 			}
 		}
 		if(!scrollDrag && srcSlot == -1) {
-			int height = 268;
+			int height = 228;
 			if(scrollMax > 0) {
-				height = 275 * 268 / (scrollMax + 275);
+				height = 235 * 228 / (scrollMax + 235);
 			}
 			int pos = 0;
 			if(scrollPos != 0) {
-				pos = scrollPos * 268 / (scrollMax + 275) + 1;
+				pos = scrollPos * 228 / (scrollMax + 235) + 1;
 			}
 			int x = 485;
 			int y = 46 + pos;
@@ -79,7 +80,7 @@ public class BankPanel extends Panel {
 		} else if(client.mouseDragButton != 1 && srcSlot == -1) {
 			scrollDrag = false;
 		} else if(srcSlot == -1) {
-			int d = (client.mouseY - client.clickY) * (scrollMax + 275) / 268;
+			int d = (client.mouseY - client.clickY) * (scrollMax + 235) / 228;
 			scrollPos = scrollDragPos + d;
 			if(scrollPos < 0) {
 				scrollPos = 0;
@@ -88,47 +89,11 @@ public class BankPanel extends Panel {
 				scrollPos = scrollMax;
 			}
 		}
-		
-		//Settings
-		if(!client.menuOpened) {
-			for(int i = 6; i < 12; i++) {
-				int x = i * 35;
-				if(client.leftClickInRegion(beginX - 70 + x, beginY + 294, beginX - 40 + x, beginY + 324)) {
-					if(i == 6) {
-						client.outBuffer.putOpcode(185);
-						client.outBuffer.putShort(59173);
-					}
-					if(i == 7) {
-						client.outBuffer.putOpcode(185);
-						client.outBuffer.putShort(59177);
-					}
-					if(i == 8) {
-						client.bankSearching = !client.bankSearching;
-						client.bankSearch = "";
-					}
-					if(i == 9) {
-						client.outBuffer.putOpcode(185);
-						client.outBuffer.putShort(21010);
-					}
-					if(i == 10) {
-						client.outBuffer.putOpcode(185);
-						client.outBuffer.putShort(59183);
-					}
-					if(i == 11) {
-						client.outBuffer.putOpcode(185);
-						client.outBuffer.putShort(59179);
-					}
-					return true;
-				}
-			}
-		}
 
-        /* Exit */
-		if(client.leftClickInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
-			client.panelHandler.close();
-			client.outBuffer.putOpcode(185);
-			client.outBuffer.putShort(123);
-			Scene.hoverX = -1;
+		if(processClose(beginX, beginY)) {
+			return true;
+		}
+		if(processSettings(beginX, beginY)) {
 			return true;
 		}
 
@@ -136,8 +101,8 @@ public class BankPanel extends Panel {
 		for(int i = 1; i < 10; i++) {
 			if(Interface.cache[270 + i - 1].invId == null)
 				continue;
-			int x = (i - 1) * 45;
-			if(client.leftClickInRegion(beginX + 14 + x, beginY + 11, beginX + 50 + x, beginY + 47)) {
+			int x = (i - 1) * 47;
+			if(client.leftClickInRegion(beginX + 14 + x, beginY + 15, beginX + 62 + x, beginY + 53)) {
 				tab = (i - 1);
 				client.outBuffer.putOpcode(185);
 				client.outBuffer.putShort((i - 1) + 100);
@@ -151,13 +116,13 @@ public class BankPanel extends Panel {
 		}
 
 		/* Bank content */
-		int offset = -scrollPos + 52;
+		int offset = -scrollPos + 55;
 		if(client.bankSearching) {
 			int shift = 0;
 			for(int t = 0; t < 9; t++) {
 				for(int i = 0; i < Interface.cache[270 + t].invId.length; i++) {
 					int icon = Interface.cache[270 + t].invId[i];
-					int x = shift % 7 * 65;
+					int x = shift % 8 * 57;
 					if(icon != 0) {
 						String name = ObjectType.get(icon).name;
 						if(client.bankSearch.length() > 1 && name != null && name.toLowerCase().contains(client.bankSearch)) {
@@ -199,7 +164,7 @@ public class BankPanel extends Panel {
 								itemPressY = client.mouseY;
 								return true;
 							}
-							offset += shift % 7 == 6 ? 50 : 0;
+							offset += shift % 8 == 7 ? 50 : 0;
 							shift++;
 						}
 					}
@@ -208,12 +173,12 @@ public class BankPanel extends Panel {
 		} else if(this.on()) {
 			for(int i = 0; i < Interface.cache[270 + tab].invId.length; i++) {
 				int icon = Interface.cache[270 + tab].invId[i];
-				int x = i % 7 * 65;
+				int x = i % 8 * 57;
 				if(client.mouseInRegion(beginX + 14 + x, beginY + offset, beginX + 74 + x, beginY + offset + 44)) {
 					destSlot = i;
 				}
 				if(icon == 0) {
-					offset += i % 7 == 6 ? 50 : 0;
+					offset += i % 8 == 7 ? 50 : 0;
 					continue;
 				}
 				if(client.mouseDragButton == 0 && srcSlot != -1) {
@@ -283,7 +248,7 @@ public class BankPanel extends Panel {
 					itemPressY = client.mouseY;
 					return true;
 				}
-				offset += i % 7 == 6 ? 50 : 0;
+				offset += i % 8 == 7 ? 50 : 0;
 			}
 		}
 		return false;
@@ -300,15 +265,8 @@ public class BankPanel extends Panel {
 		}
 
 		/* Main background */
-		Rasterizer2D.fillRectangle(beginX, beginY + 8, 500, 328, 0x000000, 200);
-		Rasterizer2D.drawRectangle(beginX, beginY + 8, 500, 328, 0x63625e);
-
-		fancyFont.drawCenteredString("Exit", beginX + 467, beginY + 27, 0xF3B13F);
-		Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
-		if(client.mouseInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
-		}
-
+		drawMain(beginX, beginY + 8, 500, 328, 0x000000, 0x63625e, 200);
+		drawClose(beginX, beginY);
 
 		/* Slots */
 		if(client.bankSearching) {
@@ -319,43 +277,54 @@ public class BankPanel extends Panel {
 					continue;
 				int first = getFirst(Interface.cache[270 + i - 1]);
 				int icon = Interface.cache[270 + i - 1].invId[first];
-				int x = (i - 1) * 45;
-				Rasterizer2D.fillRoundedRectangle(beginX + 14 + x, beginY + 11, 36, 36, 3, 0xF3B13F, icon == 0 ? 25 : 50 + ((i - 1) == tab ? 100 : 0));
-				if(client.mouseInRegion(beginX + 14 + x, beginY + 11, beginX + 50 + x, beginY + 47)) {
-					destSlot = -i;
-					Rasterizer2D.fillRoundedRectangle(beginX + 14 + x, beginY + 11, 36, 36, 2, 0xF3B13F, 20);
+				int x = (i - 1) * 47;
+				if(Config.def.panelStyle == 2) {
+					Rasterizer2D.fillRoundedRectangle(beginX + 15 + x, beginY + 16, 44, 36, 3, 0xF3B13F, icon > 0 ? 50 + ((i - 1) == tab ? 100 : 0) : 25);
+					if(client.mouseInRegion(beginX + 15 + x, beginY + 16, beginX + 59 + x, beginY + 52)) {
+						destSlot = -i;
+						Rasterizer2D.fillRoundedRectangle(beginX + 15 + x, beginY + 16, 44, 36, 3, 0xF3B13F, 20);
+					}
+				} else {
+					ImageCache.get(Config.def.panelStyle == 0 ? (icon > 0 ? 2001 : 2000) : icon > 0 ? 2018 : 2019).drawImage(beginX + 14 + x, beginY + 15);
+					if(client.mouseInRegion(beginX + 15 + x, beginY + 15, beginX + 60 + x, beginY + 53)) {
+						destSlot = -i;
+						Rasterizer2D.fillRoundedRectangle(beginX + 15 + x, beginY + 16, 44, 36, 3, Config.def.panelStyle == 1 ? 0x000000 : 0xF3B13F, 20);
+					}
 				}
 				if(icon > 0) {
 					final BitmapImage img = ObjectType.getIcon(icon, Interface.cache[270 + i - 1].invAmt[first], 0);
 					if(img != null) {
-						img.drawImage(beginX + 16 + x, beginY + 13);
+						img.drawImage(beginX + 21 + x, beginY + 17);
 					}
 				}
 			}
 		}
-
-
-		/* Bank content */
-		Rasterizer2D.drawRectangle(beginX + 4, beginY + 49, 490, 282, 0xffffff, 80);
-		Rasterizer2D.fillRectangle(beginX + 5, beginY + 50, 488, 280, 0xffffff, 60);
-		Rasterizer2D.setClip(beginX + 5, beginY + 50, beginX + 493, beginY + 330);
-		int offset = -scrollPos + 52;
+		if(Config.def.panelStyle == 2) {
+			Rasterizer2D.drawRectangle(beginX + 4, beginY + 53, 490, 280, Config.def.panelStyle == 2 ? 0xffffff : 0x000000, 80);
+			Rasterizer2D.fillRectangle(beginX + 5, beginY + 54, 488, 278, Config.def.panelStyle == 2 ? 0xffffff : 0x000000, 60);
+		} else {
+			Rasterizer2D.drawHorizontalLine(beginX + 5, beginY + (client.bankSearching ? 42 : 53), 490, 0x000000);
+		}
+		if(Config.def.panelStyle == 1) {
+			Rasterizer2D.fillRectangle(beginX + 5, beginY + 54, 488, 278, 0x000000, 30);
+		}
+		
+		Rasterizer2D.setClip(beginX + 5, beginY + 55, beginX + 493, beginY + (Config.def.panelStyle == 2 ? 298 : 288));
+		int offset = -scrollPos + 55;
 		int xSelected = 0;
 		int ySelected = 0;
 		String tooltip = "";
-
+		int itemsCount = 0;
 		if(client.bankSearching) {
 			int shift = 0;
 			for(int t = 0; t < 9; t++) {
 				for(int i = 0; i < Interface.cache[270 + t].invId.length; i++) {
 					int icon = Interface.cache[270 + t].invId[i];
-					int x = shift % 7 * 65;
+					int x = shift % 8 * 57;
 					if(icon != 0) {
 						String name = ObjectType.get(icon).name;
 						if(client.bankSearch.length() > 1 && name != null && name.toLowerCase().contains(client.bankSearch)) {
-							Rasterizer2D.fillRoundedRectangle(beginX + 14 + x, beginY + offset, 60, 44, 3, 0x000000, 60);
 							if(client.mouseInRegion(beginX + 14 + x, beginY + offset, beginX + 74 + x, beginY + offset + 44)) {
-								Rasterizer2D.fillRectangle(beginX + 14 + x, beginY + offset, 60, 44, 0, 40);
 								tooltip = ObjectType.get(icon).name;
 							}
 							final BitmapImage img = ObjectType.getIcon(icon, Interface.cache[270 + t].invAmt[i], 0);
@@ -370,7 +339,7 @@ public class BankPanel extends Panel {
 									} else if(amt.endsWith("K")) {
 										color = 0xffffff;
 									}
-									smallFont.drawLeftAlignedEffectString(amt, beginX + 18 + x, beginY + offset + 14, color, true);
+									smallFont.drawLeftAlignedEffectString(amt, beginX + 26 + x, beginY + offset + 14, color, true);
 								}
 								offset += shift % 7 == 6 ? 50 : 0;
 								shift++;
@@ -381,16 +350,14 @@ public class BankPanel extends Panel {
 			}
 		} else {
 			for(int i = 0; i < Interface.cache[270 + tab].invId.length; i++) {
-				int x = i % 7 * 65;
+				int x = i % 8 * 57;
 				int icon = Interface.cache[270 + tab].invId[i];
-				Rasterizer2D.fillRoundedRectangle(beginX + 14 + x, beginY + offset, 60, 44, 3, 0x000000, 80);
 				if(icon <= 0) {
-					offset += i % 7 == 6 ? 50 : 0;
+					offset += i % 8 == 7 ? 50 : 0;
 					continue;
 				}
-				Rasterizer2D.fillRoundedRectangle(beginX + 14 + x, beginY + offset, 60, 44, 3, 0x000000, 60);
+				itemsCount++;
 				if(client.mouseInRegion(beginX + 14 + x, beginY + offset, beginX + 74 + x, beginY + offset + 44)) {
-					Rasterizer2D.fillRectangle(beginX + 14 + x, beginY + offset, 60, 44, 0, 40);
 					tooltip = ObjectType.get(icon).name;
 				}
 				/* Icons */
@@ -440,11 +407,11 @@ public class BankPanel extends Panel {
 							} else if(amt.endsWith("K")) {
 								color = 0xffffff;
 							}
-							smallFont.drawLeftAlignedEffectString(amt, beginX + 18 + x, beginY + offset + 14, color, true);
+							smallFont.drawLeftAlignedEffectString(amt, beginX + 26 + x, beginY + offset + 14, color, true);
 						}
 					}
 				}
-				offset += i % 7 == 6 ? 50 : 0;
+				offset += i % 8 == 7 ? 50 : 0;
 			}
 		}
 
@@ -454,19 +421,19 @@ public class BankPanel extends Panel {
 			Rasterizer2D.fillRoundedRectangle(client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 14) : 8), client.mouseY - 3, smallFont.getStringWidth(tooltip) + 7, 15, 3, 0x000000, 200);
 			smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 10) : 12), client.mouseY + 9, 0xF3B13F, true);
 		}
+		Rasterizer2D.removeClip();
 
 		/* Scroll bar */
-		Rasterizer2D.drawRectangle(476 + beginX, 55 + beginY, 12, 270, 0xffffff, 60);
-		int height = 268;
+		Rasterizer2D.drawRectangle(476 + beginX, 55 + beginY, 12, 230, 0xffffff, 60);
+		int height = 228;
 		if(scrollMax > 0) {
-			height = 275 * 268 / (scrollMax + 275);
+			height = 235 * 228 / (scrollMax + 225);
 		}
 		int pos = 0;
 		if(scrollPos != 0) {
-			pos = scrollPos * 268 / (scrollMax + 275) + 1;
+			pos = scrollPos * 228 / (scrollMax + 225);
 		}
 		Rasterizer2D.fillRectangle(477 + beginX, 56 + pos + beginY, 10, height, 0x222222, 120);
-		Rasterizer2D.removeClip();
 
 		/* Dragging */
 		if(xSelected != 0 || ySelected != 0 && srcSlot != -1) {
@@ -485,38 +452,11 @@ public class BankPanel extends Panel {
 					} else if(amt.endsWith("K")) {
 						color = 0xffffff;
 					}
-					smallFont.drawLeftAlignedEffectString(amt, xSelected - 10, ySelected + 9, color, true);
+					smallFont.drawLeftAlignedEffectString(amt, xSelected - 2, ySelected + 9, color, true);
 				}
 			}
 		}
-
-		/* Settings */
-		Rasterizer2D.fillRectangle(beginX + 135, beginY + 295, 215, 36, 0x000000, 120);
-		for(int i = 6; i < 12; i++) {
-			int x = i * 35;
-			Rasterizer2D.fillRectangle(beginX - 70 + x, beginY + 298, 30, 30, 0xb35f52, 100);
-			if(client.mouseInRegion(beginX - 70 + x, beginY + 298, beginX - 40 + x, beginY + 328)) {
-				Rasterizer2D.fillRectangle(beginX - 70 + x, beginY + 298, 30, 30, 0xF3B13F, 20);
-			}
-			if(i == 6)
-				ImageCache.get(client.anIntArray1045[116] == 0 ? 729 : 726).drawImage(beginX - 66 + x, beginY + 303);
-			if(i == 7) {
-				if(client.anIntArray1045[115] != 0)
-					Rasterizer2D.fillRectangle(beginX - 70 + x, beginY + 298, 30, 30, 0xF3B13F, 60);
-				ImageCache.get(732).drawImage(beginX - 65 + x, beginY + 304);
-			}
-			if(i == 8) {
-				if(client.bankSearching)
-					Rasterizer2D.fillRectangle(beginX - 70 + x, beginY + 298, 30, 30, 0xF3B13F, 60);
-				ImageCache.get(733).drawImage(beginX - 65 + x, beginY + 304);
-			}
-			if(i == 9)
-				ImageCache.get(731).drawImage(beginX - 68 + x, beginY + 304);
-			if(i == 10)
-				ImageCache.get(730).drawImage(beginX - 68 + x, beginY + 304);
-			if(i == 11)
-				ImageCache.get(734).drawImage(beginX - 68 + x, beginY + 304);
-		}
+		drawSettings(beginX, beginY, itemsCount, Interface.cache[270 + tab].invId.length);
 	}
 
 	private int getFirst(Interface inter) {
@@ -548,6 +488,175 @@ public class BankPanel extends Panel {
 	
 	@Override
 	public boolean blockedMove() {
+		return false;
+	}
+	
+	private void drawSettings(int beginX, int beginY, int itemCount, int max) {
+		/* Settings */
+		if(Config.def.panelStyle == 2) {
+			Rasterizer2D.fillRectangle(beginX + 5, beginY + 296, 488, 36, 0x000000, 120);
+			for(int i = 6; i < 12; i++) {
+				int x = i * 35;
+				Rasterizer2D.fillRectangle(beginX - 70 + x, beginY + 298, 30, 30, 0xb35f52, 100);
+				if(client.mouseInRegion(beginX - 70 + x, beginY + 298, beginX - 40 + x, beginY + 328)) {
+					Rasterizer2D.fillRectangle(beginX - 70 + x, beginY + 298, 30, 30, 0xF3B13F, 20);
+				}
+				if(i == 6)
+					ImageCache.get(client.anIntArray1045[116] == 0 ? 729 : 726).drawImage(beginX - 66 + x, beginY + 303);
+				if(i == 7) {
+					if(client.anIntArray1045[115] != 0)
+						Rasterizer2D.fillRectangle(beginX - 70 + x, beginY + 298, 30, 30, 0xF3B13F, 60);
+					ImageCache.get(732).drawImage(beginX - 65 + x, beginY + 304);
+				}
+				if(i == 8) {
+					if(client.bankSearching)
+						Rasterizer2D.fillRectangle(beginX - 70 + x, beginY + 298, 30, 30, 0xF3B13F, 60);
+					ImageCache.get(733).drawImage(beginX - 65 + x, beginY + 304);
+				}
+				if(i == 9)
+					ImageCache.get(731).drawImage(beginX - 68 + x, beginY + 304);
+				if(i == 10)
+					ImageCache.get(730).drawImage(beginX - 68 + x, beginY + 304);
+				if(i == 11)
+					ImageCache.get(734).drawImage(beginX - 68 + x, beginY + 304);
+			}
+		} else {
+			if(Config.def.panelStyle == 1)
+				Rasterizer2D.fillRectangle(beginX + 6, beginY + 290, 488, 36, 0x000000, 120);
+			ImageCache.get(Config.def.panelStyle == 0 ? 2010 : 2025).drawImage(beginX + 442, beginY + 293);
+			ImageCache.get(Config.def.panelStyle == 0 ? 2008 : 2023).drawImage(beginX + 409, beginY + 293);
+			ImageCache.get(Config.def.panelStyle == 0 ? 2014 : 2027).drawImage(beginX + 376, beginY + 293);
+			ImageCache.get(Config.def.panelStyle == 0 ? 2006 : 2021).drawImage(beginX + 343, beginY + 293);
+			if(client.bankSearching) {
+				ImageCache.get(Config.def.panelStyle == 0 ? 2007 : 2022).drawImage(beginX + 343, beginY + 293);
+			}
+			if(Config.def.panelStyle == 0) {
+				plainFont.drawCenteredString("Rearrange mode:", beginX + 93, beginY + 300, 0xF3B13F);
+				ImageCache.get(2016).drawImage(beginX + 4, beginY + 304);
+				if(client.anIntArray1045[116] == 0) {
+					ImageCache.get(2017).drawImage(beginX + 4, beginY + 304);
+				}
+				plainFont.drawCenteredString("Swap", beginX + 45, beginY + 319, 0xF3B13F);
+				ImageCache.get(2016).drawImage(beginX + 86, beginY + 304);
+				if(client.anIntArray1045[116] != 0) {
+					ImageCache.get(2017).drawImage(beginX + 86, beginY + 304);
+				}
+				plainFont.drawCenteredString("Insert", beginX + 127, beginY + 319, 0xF3B13F);
+				plainFont.drawCenteredString("Withdraw as:", beginX + 263, beginY + 300, 0xF3B13F);
+				ImageCache.get(2016).drawImage(beginX + 173, beginY + 304);
+				if(client.anIntArray1045[115] == 0) {
+					ImageCache.get(2017).drawImage(beginX + 173, beginY + 304);
+				}
+				plainFont.drawCenteredString("Item", beginX + 214, beginY + 319, 0xF3B13F);
+				ImageCache.get(2016).drawImage(beginX + 258, beginY + 304);
+				if(client.anIntArray1045[115] != 0) {
+					ImageCache.get(2017).drawImage(beginX + 258, beginY + 304);
+				}
+				plainFont.drawCenteredString("Noted", beginX + 299, beginY + 319, 0xF3B13F);
+			} else {
+				ImageCache.get(client.anIntArray1045[115] == 0 ? 2004 : 2005).drawImage(beginX + 104, beginY + 296);
+				if(client.mouseInRegion(beginX + 104, beginY + 296, beginX + 139, beginY + 321)) {
+					Rasterizer2D.fillRectangle(beginX + 104, beginY + 296, 35, 25, 0x000000, 30);
+				}
+				ImageCache.get(client.anIntArray1045[116] != 0 ? 2012 : 2013).drawImage(beginX + 64, beginY + 296);
+				if(client.mouseInRegion(beginX + 64, beginY + 296, beginX + 99, beginY + 321)) {
+					Rasterizer2D.fillRectangle(beginX + 64, beginY + 296, 35, 25, 0x000000, 30);
+				}
+				ImageCache.get(2020).drawImage(beginX + 9, beginY + 293);
+				smallFont.drawCenteredString("" + itemCount, beginX + 29, beginY + 305, 0xF3B13F);
+				smallFont.drawCenteredString("" + max, beginX + 29, beginY + 320, 0xF3B13F);
+			}
+		}
+	}
+	
+	private boolean processSettings(int beginX, int beginY) {
+		if(!client.menuOpened) {
+			if(Config.def.panelStyle == 2) {
+				for(int i = 6; i < 12; i++) {
+					int x = i * 35;
+					if(client.leftClickInRegion(beginX - 70 + x, beginY + 294, beginX - 40 + x, beginY + 324)) {
+						if(i == 6) {
+							client.outBuffer.putOpcode(185);
+							client.outBuffer.putShort(59173);
+						}
+						if(i == 7) {
+							client.outBuffer.putOpcode(185);
+							client.outBuffer.putShort(59177);
+						}
+						if(i == 8) {
+							client.bankSearching = !client.bankSearching;
+							client.bankSearch = "";
+							System.out.println(client.bankSearching);
+						}
+						if(i == 9) {
+							client.outBuffer.putOpcode(185);
+							client.outBuffer.putShort(21010);
+						}
+						if(i == 10) {
+							client.outBuffer.putOpcode(185);
+							client.outBuffer.putShort(59183);
+						}
+						if(i == 11) {
+							client.outBuffer.putOpcode(185);
+							client.outBuffer.putShort(59179);
+						}
+						return true;
+					}
+				}
+			} else {
+				if(client.leftClickInRegion(beginX + 442, beginY + 293, beginX + 474, beginY + 326)) {
+					client.outBuffer.putOpcode(185);
+					client.outBuffer.putShort(59183);
+				}
+				if(client.leftClickInRegion(beginX + 409, beginY + 293, beginX + 442, beginY + 326)) {
+					client.outBuffer.putOpcode(185);
+					client.outBuffer.putShort(21010);
+				}
+				if(client.leftClickInRegion(beginX + 376, beginY + 293, beginX + 408, beginY + 326)) {
+					client.outBuffer.putOpcode(185);
+					client.outBuffer.putShort(59179);
+				}
+				if(client.leftClickInRegion(beginX + 343, beginY + 293, beginX + 376, beginY + 326)) {
+					client.bankSearching = !client.bankSearching;
+					client.bankSearch = "";
+				}
+				if(Config.def.panelStyle == 0) {
+					if(client.leftClickInRegion(beginX + 4, beginY + 304, beginX + 89, beginY + 326)) {
+						if(client.anIntArray1045[116] != 0) {
+							client.outBuffer.putOpcode(185);
+							client.outBuffer.putShort(59173);
+						}
+					}
+					if(client.leftClickInRegion(beginX + 86, beginY + 304, beginX + 171, beginY + 326)) {
+						if(client.anIntArray1045[116] == 0) {
+							client.outBuffer.putOpcode(185);
+							client.outBuffer.putShort(59173);
+						}
+					}
+					if(client.leftClickInRegion(beginX + 173, beginY + 304, beginX + 258, beginY + 326)) {
+						if(client.anIntArray1045[115] != 0) {
+							client.outBuffer.putOpcode(185);
+							client.outBuffer.putShort(59177);
+						}
+					}
+					if(client.leftClickInRegion(beginX + 258, beginY + 304, beginX + 343, beginY + 326)) {
+						if(client.anIntArray1045[115] == 0) {
+							client.outBuffer.putOpcode(185);
+							client.outBuffer.putShort(59177);
+						}
+					}
+				} else {
+					if(client.leftClickInRegion(beginX + 104, beginY + 296, beginX + 139, beginY + 321)) {
+						client.outBuffer.putOpcode(185);
+						client.outBuffer.putShort(59177);
+					}
+					if(client.leftClickInRegion(beginX + 64, beginY + 296, beginX + 99, beginY + 321)) {
+						client.outBuffer.putOpcode(185);
+						client.outBuffer.putShort(59173);
+					}
+				}
+			}
+		}
 		return false;
 	}
 	

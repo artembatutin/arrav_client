@@ -43,11 +43,7 @@ public class ObjectCreationPanel extends Panel {
 		}
 
         /* Exit */
-		if(client.leftClickInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
-			client.panelHandler.close();
-			client.outBuffer.putOpcode(185);
-			client.outBuffer.putShort(123);
-			Scene.hoverX = -1;
+		if(processClose(beginX, beginY)) {
 			return true;
 		}
 		
@@ -78,20 +74,12 @@ public class ObjectCreationPanel extends Panel {
 		}
 
 		/* Main background */
-		Rasterizer2D.fillRectangle(beginX, beginY + 8, 500, 328, 0x000000, 200);
-		Rasterizer2D.drawRectangle(beginX, beginY + 8, 500, 328, 0x63625e);
+		drawMain(beginX, beginY + 8, 500, 328, 0x000000, 0x63625e, 200);
+		drawOver(beginX, beginY);
+		drawClose(beginX, beginY);
 		
 		fancyFont.drawLeftAlignedEffectString("Select a piece to build - Level: " + consLevel, beginX + 20, beginY + 33, 0xF3B13F, true);
 		
-		fancyFont.drawCenteredString("Exit", beginX + 467, beginY + 30, 0xF3B13F);
-		Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 25, 2, 0xF3B13F, 60);
-		if(client.mouseInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 47)) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 25, 2, 0xF3B13F, 20);
-		}
-		
-		/* content */
-		Rasterizer2D.drawRectangle(beginX + 4, beginY + 49, 490, 282, 0xffffff, 80);
-		Rasterizer2D.fillRectangle(beginX + 5, beginY + 50, 488, 280, 0xffffff, 60);
 		int offset = 50;
 		int i = 0;
 		String tooltip = null;

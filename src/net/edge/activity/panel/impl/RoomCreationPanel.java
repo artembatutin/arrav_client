@@ -9,7 +9,31 @@ import net.edge.util.string.StringUtils;
 
 public class RoomCreationPanel extends Panel {
 	
-	public static final int BUILDABLE = 1, GARDEN = 2, PARLOUR = 3, KITCHEN = 4, DINING_ROOM = 5, WORKSHOP = 6, BEDROOM = 7, SKILL_ROOM = 8, QUEST_HALL_DOWN = 9, GAMES_ROOM = 10, COMBAT_ROOM = 11, QUEST_ROOM = 12, MENAGERY = 13, STUDY = 14, COSTUME_ROOM = 15, CHAPEL = 16, PORTAL_ROOM = 17, FORMAL_GARDEN = 18, THRONE_ROOM = 19, OUBLIETTE = 20, PIT = 21, DUNGEON_STAIR_ROOM = 22, TREASURE_ROOM = 23, CORRIDOR = 24, JUNCTION = 25, SKILL_HALL_DOWN = 26, ROOF = 27;
+	public static final int GARDEN = 2;
+	public static final int PARLOUR = 3;
+	public static final int KITCHEN = 4;
+	public static final int DINING_ROOM = 5;
+	public static final int WORKSHOP = 6;
+	public static final int BEDROOM = 7;
+	public static final int SKILL_ROOM = 8;
+	public static final int QUEST_HALL_DOWN = 9;
+	public static final int GAMES_ROOM = 10;
+	public static final int COMBAT_ROOM = 11;
+	public static final int QUEST_ROOM = 12;
+	public static final int MENAGERY = 13;
+	public static final int STUDY = 14;
+	public static final int COSTUME_ROOM = 15;
+	public static final int CHAPEL = 16;
+	public static final int PORTAL_ROOM = 17;
+	public static final int FORMAL_GARDEN = 18;
+	public static final int THRONE_ROOM = 19;
+	public static final int OUBLIETTE = 20;
+	public static final int PIT = 21;
+	public static final int DUNGEON_STAIR_ROOM = 22;
+	public static final int TREASURE_ROOM = 23;
+	public static final int CORRIDOR = 24;
+	public static final int JUNCTION = 25;
+	public static final int SKILL_HALL_DOWN = 26;
 	
 	public enum Room {
 		GARDEN(RoomCreationPanel.GARDEN, 1, "1k"),

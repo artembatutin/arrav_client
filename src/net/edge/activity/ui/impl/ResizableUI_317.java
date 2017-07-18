@@ -19,7 +19,7 @@ import net.edge.util.string.StringUtils;
 
 import java.awt.*;
 
-public class ResizableUI_459 extends ResizableUI {
+public class ResizableUI_317 extends ResizableUI {
 
 	@Override
 	public void buildChat() {

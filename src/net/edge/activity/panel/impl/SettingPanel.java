@@ -26,7 +26,7 @@ public class SettingPanel extends Panel {
 			13,
 			3
 	};
-	public final static int[] DEFAULTS = {
+	private final static int[] DEFAULTS = {
 			4,
 			5,
 			6,
@@ -41,7 +41,7 @@ public class SettingPanel extends Panel {
 			3
 	};
 	
-	public boolean bindings;
+	private boolean bindings;
  
 	@Override
 	public boolean process() {
@@ -87,15 +87,15 @@ public class SettingPanel extends Panel {
 		}
 		
 		
-		if(client.leftClickInRegion(x + 230, y + 60, x + 284, y + 102)) {
+		if(client.leftClickInRegion(x + 230, y + 50, x + 284, y + 92)) {
 			if(client.uiRenderer.getId() == 1) {
 				client.pushMessage("This gameframe is only available in resizable or fullscreen mode.", 0, "System");
 				return true;
 			}
 			client.setMode(0);
-		} else if(client.leftClickInRegion(x + 330, y + 60, x + 383, y + 102))
+		} else if(client.leftClickInRegion(x + 330, y + 50, x + 383, y + 92))
 			client.setMode(1);
-		else if(client.leftClickInRegion(x + 429, y + 60, x + 484, y + 102))
+		else if(client.leftClickInRegion(x + 429, y + 50, x + 484, y + 92))
 			client.setMode(2);
 		else if(client.leftClickInRegion(x + 150, y + 48, x + 192, y + 63))
 			Config.def.setLOW_MEM(!Config.def.isLOW_MEM());
@@ -123,19 +123,24 @@ public class SettingPanel extends Panel {
 			Config.def.setDRAW_SKILL_ORBS(!Config.def.isDRAW_SKILL_ORBS());
 		else if(client.leftClickInRegion(x + 150, y + 312, x + 192, y + 327))
 			Config.def.setTEN_X_HITS(!Config.def.isTEN_X_HITS());
-		else if(client.leftClickInRegion(x + 246, y + 188, x + 273, y + 203))
+		else if(client.leftClickInRegion(x + 246, y + 163, x + 273, y + 178))
 			client.uiRenderer.switchRevision(459);
-		else if(client.leftClickInRegion(x + 286, y + 188, x + 314, y + 203))
+		else if(client.leftClickInRegion(x + 286, y + 163, x + 314, y + 178))
 			client.uiRenderer.switchRevision(525);
-		else if(client.leftClickInRegion(x + 326, y + 188, x + 355, y + 203))
+		else if(client.leftClickInRegion(x + 326, y + 163, x + 355, y + 178))
 			client.uiRenderer.switchRevision(562);
-		else if(client.leftClickInRegion(x + 366, y + 188, x + 403, y + 203))
+		else if(client.leftClickInRegion(x + 366, y + 163, x + 403, y + 178))
 			client.uiRenderer.switchRevision(2);
-		else if(client.leftClickInRegion(x + 414, y + 188, x + 459, y + 203)) {
+		else if(client.leftClickInRegion(x + 414, y + 163, x + 459, y + 178)) {
 			if(client.uiRenderer.isResizableOrFull()) {
 				client.uiRenderer.switchRevision(1);
 			} else {
 				client.pushMessage("This gameframe is only available in resizable or fullscreen mode.", 0, "System");
+			}
+		} else if(client.leftClickInRegion(x + 280, y + 185, x + 430, y + 208)) {
+			Config.def.panelStyle = Config.def.panelStyle + 1;
+			if(Config.def.panelStyle > 2) {
+				Config.def.panelStyle = 0;
 			}
 		} else if(client.leftClickInRegion(x + 391, y + 279, x + 432, y + 293)) {
 			if(Config.def.getSELECTED_MENU() == 6)
@@ -167,8 +172,7 @@ public class SettingPanel extends Panel {
 		}
 
 		/* Main background */
-		Rasterizer2D.fillRectangle(x + 10, y + 8, 500, 328, 0x000000, bindings ? 150 : 200);
-		Rasterizer2D.drawRectangle(x + 10, y + 8, 500, 328, 0x63625e);
+		drawMain(x + 10, y + 8, 500, 323, 0x000000, 0x63625e, bindings ? 150 : 200);
 		
 		if(bindings) {
 			drawSection(x + 20, y + 20, 310, 480, "Hot keys and bindings");
@@ -207,7 +211,7 @@ public class SettingPanel extends Panel {
 		}
 		
 		/* Details */
-		drawSection(x + 20, y + 20, 310, 180, "Details");
+		drawSection(x + 20, y + 20, 307, 180, "Details");
 		for(int button = 0; button < 12; button++) {
 			Rasterizer2D.drawHorizontalLine(x + 20, y + 59 + (button * 24), 130, 0xDBB047, 90);
 			drawTitleButton("Switch", x + 150, y + 45 + (button * 24), 0xDBB047);
@@ -229,33 +233,39 @@ public class SettingPanel extends Panel {
 		plainFont.drawLeftAlignedEffectString((Config.def.isTEN_X_HITS() ? "@gre@" : "@red@") + "10x hits", x + 20, y + 315, 0, true);
 	
 		/* Screen Mode */
-		drawSection(x + 215, y + 20, 100, 285, "Screen Mode");
-		ImageCache.get(client.uiRenderer.isFixed() ? 9 : 10).drawImage(x + 230, y + 60);
-		ImageCache.get(client.uiRenderer.isResizable() ? 11 : 12).drawImage(x + 330, y + 60);
-		ImageCache.get(client.uiRenderer.isFullscreen() ? 13 : 14).drawImage(x + 430, y + 60);
-		if(client.mouseInRegion(x + 230, y + 60, x + 284, y + 102))
-			ImageCache.get(9).drawImage(x + 230, y + 60);
-		if(client.mouseInRegion(x + 330, y + 60, x + 383, y + 102))
-			ImageCache.get(11).drawImage(x + 330, y + 60);
-		if(client.mouseInRegion(x + 429, y + 60, x + 484, y + 102))
-			ImageCache.get(13).drawImage(x + 430, y + 60);
+		drawSection(x + 215, y + 20, 82, 285, "Screen Mode");
+		ImageCache.get(client.uiRenderer.isFixed() ? 9 : 10).drawImage(x + 230, y + 50);
+		ImageCache.get(client.uiRenderer.isResizable() ? 11 : 12).drawImage(x + 330, y + 50);
+		ImageCache.get(client.uiRenderer.isFullscreen() ? 13 : 14).drawImage(x + 430, y + 50);
+		if(client.mouseInRegion(x + 230, y + 50, x + 284, y + 92))
+			ImageCache.get(9).drawImage(x + 230, y + 50);
+		if(client.mouseInRegion(x + 330, y + 50, x + 383, y + 92))
+			ImageCache.get(11).drawImage(x + 330, y + 50);
+		if(client.mouseInRegion(x + 429, y + 50, x + 484, y + 92))
+			ImageCache.get(13).drawImage(x + 430, y + 50);
 			
 		/* Game-frames */
-		drawSection(x + 215, y + 130, 80, 285, "Game-Frame");
-		fancyFont.drawCenteredEffectString("Selected: " + (client.uiRenderer.id == 1 ? "Custom" : (client.uiRenderer.id == 2 ? "OSRS" : client.uiRenderer.id)), x + 355, y + 175, 0xFFFFFF, true);
+		drawSection(x + 215, y + 112, 98, 285, "User Interface");
+		fancyFont.drawCenteredEffectString("Selected: " + (client.uiRenderer.id == 1 ? "Custom" : (client.uiRenderer.id == 2 ? "OSRS" : client.uiRenderer.id)), x + 355, y + 155, 0xFFFFFF, true);
 		for(int id = 0; id < Constants.SELECTABLE_GAMEFRAMES.length; id++) {
 			int frame = Constants.SELECTABLE_GAMEFRAMES[id];
 			if(frame == 1) {
-				drawTitleButton("Custom", x + 245 + (id * 42), y + 185, 0xDB6147);
+				drawTitleButton("Custom", x + 245 + (id * 42), y + 160, 0xDB6147);
 			} else if (frame == 2) {
-				drawTitleButton("OSRS", x + 245 + (id * 40), y + 185, 0x9a7155);
+				drawTitleButton("OSRS", x + 245 + (id * 40), y + 160, 0x9a7155);
 			} else {
-				drawTitleButton(Constants.SELECTABLE_GAMEFRAMES[id] + "", x + 245 + (id * 40), y + 185, 0xDBB047);
+				drawTitleButton(Constants.SELECTABLE_GAMEFRAMES[id] + "", x + 245 + (id * 40), y + 160, 0xDBB047);
 			}
 		}
+		Rasterizer2D.fillRoundedRectangle(x + 280, y + 185, 150, 20, 4, 0xffffff, 50);
+		if(client.mouseInRegion(x + 280, y + 185, x + 430, y + 208)) {
+			Rasterizer2D.fillRoundedRectangle(x + 280, y + 185, 150, 20, 4, 0xffffff, 25);
+		}
+		boldFont.drawCenteredEffectString("Panel style: " + (Config.def.panelStyle == 0 ? "OSRS" : (Config.def.panelStyle == 1 ? "EOC" : "Custom")), x + 355, y + 200, 0xFFFFFF, true);
+		
 		
 		/* Menus */
-		drawSection(x + 215, y + 220, 110, 285, "Preferences");
+		drawSection(x + 215, y + 220, 107, 285, "Preferences");
 		drawTitleButton("Hot keys / bindings", x + 388, y + 303, 0xdb8145);
 		client.gameActivity.drawer.drawMenu(x + 217, y + 267, true);
 		Rasterizer2D.drawHorizontalLine(x + 376, y + 282, 14, 0xDBB047, 90);
@@ -313,21 +323,6 @@ public class SettingPanel extends Panel {
 	@Override
 	public int getId() {
 		return 2;
-	}
-
-	private void drawSection(int x, int y, int height, int width, String name) {
-		Rasterizer2D.fillRectangle(x - 5, y - 5, width + 10, height + 5, 0xFFFFFF, 30);
-		Rasterizer2D.fillRectangle(x - 2, y - 2, width + 4, height, 0x000000, 90);
-		Rasterizer2D.fillRectangle(x, y, width, 23, 0xDBB047, 90);
-		fancyFont.drawCenteredEffectString(name, x + width / 2, y + 17, 0xFFFFFF, true);
-	}
-
-	private void drawTitleButton(String text, int x, int y, int color) {
-		Rasterizer2D.fillRectangle(x, y, smallFont.getStringWidth(text) + 10, 15, color, 100);
-		if(client.mouseInRegion(x + 1, y + 3, x + smallFont.getStringWidth(text) + 10, y + 18)) {
-			Rasterizer2D.fillRectangle(x, y, smallFont.getStringWidth(text) + 10, 15, color, 100);
-		}
-		smallFont.drawLeftAlignedEffectString(text, x + 5, y + 13, 0xFFFFFF, true);
 	}
 	
 	@Override

@@ -18,7 +18,7 @@ import net.edge.media.img.BitmapImage;
 import net.edge.util.collect.LinkedDeque;
 import net.edge.util.string.StringUtils;
 
-public class FixedUI_459 extends FixedUI {
+public class FixedUI_317 extends FixedUI {
 
 	@Override
 	public void buildChat() {

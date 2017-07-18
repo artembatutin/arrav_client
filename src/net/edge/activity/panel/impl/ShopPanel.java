@@ -1,5 +1,6 @@
 package net.edge.activity.panel.impl;
 
+import net.edge.Config;
 import net.edge.activity.panel.Panel;
 import net.edge.cache.unit.ImageCache;
 import net.edge.cache.unit.Interface;
@@ -149,13 +150,8 @@ public class ShopPanel extends Panel {
 		}
 
 		/* Exit */
-		if(client.leftClickInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
-			client.panelHandler.close();
-			client.outBuffer.putOpcode(185);
-			client.outBuffer.putShort(123);
-			Scene.hoverX = -1;
+		if(processClose(beginX, beginY))
 			return true;
-		}
 		if(client.localPrivilege == 11) {
 			if(client.leftClickInRegion(beginX + 325, beginY + 12, beginX + 381, beginY + 42)) {
 				client.outBuffer.putOpcode(185);
@@ -230,14 +226,9 @@ public class ShopPanel extends Panel {
 		}
 
 		/* Main background */
-		Rasterizer2D.fillRectangle(beginX, beginY + 8, 500, 328, 0x000000, 200);
-		Rasterizer2D.drawRectangle(beginX, beginY + 8, 500, 328, 0x63625e);
-
-		fancyFont.drawCenteredString("Exit", beginX + 467, beginY + 27, 0xF3B13F);
-		Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
-		if(client.mouseInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
-		}
+		drawMain(beginX, beginY + 8, 500, 328, 0x000000, 0x63625e, 200);
+		drawOver(beginX, beginY);
+		drawClose(beginX, beginY);
 		if(client.localPrivilege == 11) {
 			fancyFont.drawCenteredString("Edit", beginX + 350, beginY + 27, 0xF3B13F);
 			Rasterizer2D.fillRoundedRectangle(beginX + 323, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
@@ -252,11 +243,8 @@ public class ShopPanel extends Panel {
 				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
 			}
 		}
-		fancyFont.drawLeftAlignedEffectString(Interface.cache[3901].text, beginX + 20, beginY + 28, 0xF3B13F, true);
-
-		/* Shop content */
-		Rasterizer2D.drawRectangle(beginX + 4, beginY + 39, 490, 292, 0xffffff, 80);
-		Rasterizer2D.fillRectangle(beginX + 5, beginY + 40, 488, 290, 0xffffff, 60);
+		fancyFont.drawLeftAlignedEffectString(Interface.cache[3901].text, beginX + 20, beginY + 31, 0xF3B13F, true);
+		
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
 		int offset = -scrollPos + 45;
 		String tooltip = null;

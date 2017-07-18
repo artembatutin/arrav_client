@@ -51,9 +51,7 @@ public class BossPanel extends Panel {
 		}
 
         /* Exit */
-		if(client.leftClickInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
-			client.panelHandler.close();
-			Scene.hoverX = -1;
+		if(processClose(beginX, beginY)) {
 			return true;
 		}
 
@@ -84,20 +82,12 @@ public class BossPanel extends Panel {
 		}
 
 		/* Main background */
-		Rasterizer2D.fillRectangle(beginX, beginY + 8, 500, 328, 0x000000, 200);
-		Rasterizer2D.drawRectangle(beginX, beginY + 8, 500, 328, 0x63625e);
+		drawMain(beginX, beginY + 8, 500, 328, 0x000000, 0x63625e, 200);
+		drawOver(beginX, beginY);
+		drawClose(beginX, beginY);
 
-		fancyFont.drawCenteredString("Exit", beginX + 467, beginY + 27, 0xF3B13F);
-		Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
-		if(client.mouseInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
-		}
+		fancyFont.drawLeftAlignedEffectString("Bosses teleport", beginX + 20, beginY + 31, 0xF3B13F, true);
 
-		fancyFont.drawLeftAlignedEffectString("Bosses teleport", beginX + 20, beginY + 28, 0xF3B13F, true);
-
-		/* Bosses */
-		Rasterizer2D.drawRectangle(beginX + 4, beginY + 39, 490, 292, 0xffffff, 80);
-		Rasterizer2D.fillRectangle(beginX + 5, beginY + 40, 488, 290, 0xffffff, 60);
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
 		int offset = 45;
 		for(int i = 0; i < bosses.length; i++) {

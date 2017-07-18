@@ -1,5 +1,6 @@
 package net.edge.activity.panel.impl;
 
+import net.edge.Config;
 import net.edge.activity.panel.Panel;
 import net.edge.cache.unit.ImageCache;
 import net.edge.cache.unit.Interface;
@@ -50,14 +51,14 @@ public class IronManSelectionPanel extends Panel {
 		}
 
 		/* Main background */
-		Rasterizer2D.fillRectangle(beginX, beginY + 8, 500, 328, 0x000000, 200);
-		Rasterizer2D.drawRectangle(beginX, beginY + 8, 500, 328, 0x63625e);
+		drawMain(beginX, beginY + 8, 500, 328, 0x000000, 0x63625e, 200);
+		//drawOver(beginX, beginY);
 		
-		fancyFont.drawLeftAlignedEffectString("Edgeville mode selection", beginX + 180, beginY + 28, 0xF3B13F, true);
-		Rasterizer2D.fillRoundedRectangle(beginX + 20, beginY + 40, 470, 160, 5, 0xcf9d47, 30);
+		fancyFont.drawLeftAlignedEffectString("Edgeville mode selection", beginX + 180, beginY + 31, 0xF3B13F, true);
+		Rasterizer2D.fillRoundedRectangle(beginX + 20, beginY + 40, 470, 160, 5, Config.def.panelStyle == 2 ? 0xcf9d47 : 0x000000, Config.def.panelStyle == 2 ? 30 : 100);
 		if(client.mouseInRegion(beginX + 190, beginY + 230, beginX + 285, beginY + 260)) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 190, beginY + 230, 100, 30, 2, 0xcf9d47, 60);
-			Rasterizer2D.fillRectangle(beginX + 20, beginY + 200, 310, 10, 0xcf9d47, 30);
+			Rasterizer2D.fillRoundedRectangle(beginX + 190, beginY + 230, 100, 30, 2, Config.def.panelStyle == 2 ? 0xcf9d47 : 0x000000, Config.def.panelStyle == 2 ? 60 : 100);
+			Rasterizer2D.fillRectangle(beginX + 20, beginY + 200, 310, 10, Config.def.panelStyle == 2 ? 0xcf9d47 : 0x000000, Config.def.panelStyle == 2 ? 30 : 100);
 			Rasterizer2D.fillRectangle(beginX + 330, beginY + 40, 5, 160, 0x000000, 100);
 			int offset = 58;
 			for(int i = 0; i < itemsReg.length; i++) {
@@ -72,7 +73,7 @@ public class IronManSelectionPanel extends Panel {
 				offset += i % 7 == 6 ? 35 : 0;
 			}
 		} else if(client.mouseInRegion(beginX + 370, beginY + 80, beginX + 470, beginY + 110)) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 370, beginY + 80, 100, 30, 2, 0xcf9d47, 60);
+			Rasterizer2D.fillRoundedRectangle(beginX + 370, beginY + 80, 100, 30, 2, Config.def.panelStyle == 2 ? 0xcf9d47 : 0x000000, Config.def.panelStyle == 2 ? 30 : 100);
 			int offset = 48;
 			for(int i = 0; i < itemsIron.length; i++) {
 				int icon = itemsIron[i];
@@ -109,7 +110,7 @@ public class IronManSelectionPanel extends Panel {
 		fancyFont.drawLeftAlignedString("Select", beginX + 402, beginY + 140, 0xF3B13F);
 		
 		//regular
-		Rasterizer2D.fillRoundedRectangle(beginX + 20, beginY + 210, 310, 110, 5, 0xcf9d47, 30);
+		Rasterizer2D.fillRoundedRectangle(beginX + 20, beginY + 210, 310, 110, 5, Config.def.panelStyle == 2 ? 0xcf9d47 : 0x000000, Config.def.panelStyle == 2 ? 30 : 100);
 		fancyFont.drawLeftAlignedString("Regular player:", beginX + 60, beginY + 268, 0xF3B13F);
 		
 		Rasterizer2D.fillRoundedRectangle(beginX + 190, beginY + 230, 100, 30, 2, 0xcf9d47, 60);

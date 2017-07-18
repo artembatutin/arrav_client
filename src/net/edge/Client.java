@@ -1260,7 +1260,7 @@ public class Client extends ClientEngine {
 				if(entry == null) {
 					return;
 				}
-				if(entry.type == 0 || entry.type == 6) {
+				if(entry.type == 0 || entry.type == 6 || entry.type == 7) {
 					Model.method460(entry.data, entry.id, entry.type);
 				}
 				if(entry.type == 1 && entry.data != null) {
@@ -5083,6 +5083,7 @@ public class Client extends ClientEngine {
 						l2 = inBuffer.getUShortMinus128();
 						i11 = inBuffer.getUShort();
 						loadGeneratedMap = false;
+						System.out.println(pktType + " recieved - " + l2 + " : " + i11);
 					}
 					if(pktType == 241) {
 						l2 = inBuffer.getUShortMinus128();

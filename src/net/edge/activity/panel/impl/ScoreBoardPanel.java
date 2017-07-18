@@ -1,5 +1,6 @@
 package net.edge.activity.panel.impl;
 
+import net.edge.Config;
 import net.edge.activity.panel.Panel;
 import net.edge.cache.unit.Interface;
 import net.edge.game.Scene;
@@ -87,16 +88,7 @@ public class ScoreBoardPanel extends Panel {
 			}
 		}
 
-		/* Exit */
-		if(client.leftClickInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
-			client.panelHandler.close();
-			client.outBuffer.putOpcode(185);
-			client.outBuffer.putShort(123);
-			Scene.hoverX = -1;
-			return true;
-		}
-		
-		return false;
+		return processClose(beginX, beginY);
 	}
 	
 	@Override
@@ -110,24 +102,25 @@ public class ScoreBoardPanel extends Panel {
 		}
 
 		/* Main background */
-		Rasterizer2D.fillRectangle(beginX, beginY + 8, 500, 328, 0x050F00, 200);
-		Rasterizer2D.drawRectangle(beginX, beginY + 8, 500, 328, 0x63625e);
+		drawMain(beginX, beginY + 8, 500, 328, 0x050F00, 0x63625e, 200);
+		drawOver(beginX, beginY);
+		drawClose(beginX, beginY);
 		
-		fancyFont.drawCenteredString("Exit", beginX + 467, beginY + 27, 0xF3B13F);
-		Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
-		if(client.mouseInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
-		}
-		
-		fancyFont.drawCenteredString(clan ? "Indiv." : "Clan", beginX + 407, beginY + 27, 0xF3B13F);
-		Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
-		if(client.mouseInRegion(beginX + 382, beginY + 12, beginX + 498, beginY + 42)) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
-		}
+		/*if(Config.def.panelStyle == 2) {
+			Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
+			if(client.mouseInRegion(beginX + 382, beginY + 12, beginX + 498, beginY + 42)) {
+				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
+			}
+			fancyFont.drawCenteredString(clan ? "Indiv." : "Clan", beginX + 407, beginY + 27, 0xF3B13F);
+		} else {
+			Rasterizer2D.fillRoundedRectangle(beginX + 408, beginY + 17, 54, 20, 2, 0x000000, 60);
+			if(client.mouseInRegion(beginX + 408, beginY + 17, beginX + 462, beginY + 37)) {
+				Rasterizer2D.fillRoundedRectangle(beginX + 408, beginY + 17, 54, 20, 2, 0x000000, 20);
+			}
+			fancyFont.drawCenteredString(clan ? "Indiv." : "Clan", beginX + 434, beginY + 33, 0xF3B13F);
+		}*/
 		
 		fancyFont.drawLeftAlignedEffectString((clan ? "Clan " : "Individual ") + "Scoreboard", beginX + 20, beginY + 30, 0xF3B13F, true);
-		
-		
 		smallFont.drawLeftAlignedEffectString("#", beginX + 20, beginY + 53, 0xF3B13F, true);
 		smallFont.drawLeftAlignedEffectString("Player name", beginX + 50, beginY + 53, 0xF3B13F, true);
 		smallFont.drawLeftAlignedEffectString("Killstreak", beginX + 180, beginY + 53, 0xF3B13F, true);
@@ -135,9 +128,6 @@ public class ScoreBoardPanel extends Panel {
 		smallFont.drawLeftAlignedEffectString("Deaths", beginX + 320, beginY + 53, 0xF3B13F, true);
 		smallFont.drawLeftAlignedEffectString("K/D ratio", beginX + 380, beginY + 53, 0xF3B13F, true);
 		
-		/* Shop content */
-		Rasterizer2D.drawRectangle(beginX + 4, beginY + 59, 490, 272, 0xffffff, 80);
-		Rasterizer2D.fillRectangle(beginX + 5, beginY + 60, 488, 270, 0xffffff, 60);
 		Rasterizer2D.setClip(beginX + 5, beginY + 60, beginX + 493, beginY + 330);
 		int offset = -scrollPos + 65;
 		if(client.killstreak == null) {

@@ -145,8 +145,8 @@ public class UIRenderer {
 	 * Get the fixed game frame mode revision.
 	 */
 	public FixedUI getFixed(int id) {
-		if(id == 459)
-			return new FixedUI_459();
+		if(id == 317)
+			return new FixedUI_317();
 		if(id == 525)
 			return new FixedUI_525();
 		if(id == 562)
@@ -162,8 +162,8 @@ public class UIRenderer {
 	 * Get the resizable game frame mode revision.
 	 */
 	public ResizableUI getResizable(int id) {
-		if(id == 459)
-			return new ResizableUI_459();
+		if(id == 317)
+			return new ResizableUI_317();
 		if(id == 525)
 			return new ResizableUI_525();
 		if(id == 562)

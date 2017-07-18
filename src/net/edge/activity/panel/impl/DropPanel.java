@@ -1,12 +1,14 @@
 package net.edge.activity.panel.impl;
 
 import it.unimi.dsi.fastutil.ints.IntArrayList;
+import net.edge.Config;
 import net.edge.activity.panel.Panel;
 import net.edge.cache.unit.ObjectType;
 import net.edge.cache.unit.NPCType;
 import net.edge.game.Scene;
 import net.edge.media.Rasterizer2D;
 import net.edge.media.img.BitmapImage;
+import net.edge.util.string.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -71,7 +73,7 @@ public class DropPanel extends Panel {
 		public String name;
 		
 		Drop() {
-			name = this.name().replaceAll("_", " ").toLowerCase();
+			name = StringUtils.formatName(this.name().replaceAll("_", " ").toLowerCase());
 		}
 	}
 	
@@ -179,16 +181,11 @@ public class DropPanel extends Panel {
 		
 
         /* Exit */
-		if(client.leftClickInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
-			client.panelHandler.close();
-			client.outBuffer.putOpcode(185);
-			client.outBuffer.putShort(123);
-			Scene.hoverX = -1;
+		if(processClose(beginX, beginY)) {
 			return true;
 		}
 		
-		int offset = -scrollPos + 52;
-		
+		int offset = -scrollPos + (Config.def.panelStyle == 2 ? 52 : 42);
 		if(!client.panelSearch) {
 			if(client.leftClickInRegion(beginX + 280, beginY + 12, beginX + 337, beginY + 37)) {
 				client.panelSearch = true;
@@ -256,35 +253,31 @@ public class DropPanel extends Panel {
 		}
 
 		/* Main background */
-		Rasterizer2D.fillRectangle(beginX, beginY + 8, 500, 328, 0x000000, 200);
-		Rasterizer2D.drawRectangle(beginX, beginY + 8, 500, 328, 0x63625e);
+		drawMain(beginX, beginY + 8, 500, 328, 0x000000, 0x63625e, 200);
+		drawOver(beginX, beginY);
+		drawClose(beginX, beginY);
 		
-		fancyFont.drawCenteredString("Exit", beginX + 467, beginY + 30, 0xF3B13F);
-		Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 25, 2, 0xF3B13F, 60);
-		if(client.mouseInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 47)) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 25, 2, 0xF3B13F, 20);
-		}
 		if(client.panelSearch) {
-			fancyFont.drawLeftAlignedEffectString("Searching: " + client.panelSearchInput, beginX + 20, beginY + 35, 0xF3B13F, true);
+			fancyFont.drawLeftAlignedEffectString("Searching: " + client.panelSearchInput, beginX + 20, beginY + 32, 0xF3B13F, true);
 		} else {
-			fancyFont.drawLeftAlignedEffectString(type.name + " - lvl " + type.combatLevel, beginX + 20, beginY + 35, 0xF3B13F, true);
-			fancyFont.drawCenteredString("Suggest drop", beginX + 390, beginY + 30, 0xF3B13F);
-			Rasterizer2D.fillRoundedRectangle(beginX + 340, beginY + 12, 97, 25, 2, 0xF3B13F, 60);
+			fancyFont.drawLeftAlignedEffectString(type.name + " - lvl " + type.combatLevel, beginX + 20, beginY + 32, 0xF3B13F, true);
+			Rasterizer2D.fillRoundedRectangle(beginX + 340, beginY + 12, 97, 25, 2, Config.def.panelStyle == 2 ? 0xF3B13F : 0x000000, 60);
 			if(client.mouseInRegion(beginX + 340, beginY + 12, beginX + 437, beginY + 47)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 340, beginY + 12, 97, 25, 2, 0xF3B13F, 20);
 			}
-			fancyFont.drawCenteredString("Search", beginX + 309, beginY + 30, 0xF3B13F);
-			Rasterizer2D.fillRoundedRectangle(beginX + 280, beginY + 12, 57, 25, 2, 0xF3B13F, 60);
+			fancyFont.drawCenteredString("Suggest drop", beginX + 390, beginY + 30, 0xF3B13F);
+			Rasterizer2D.fillRoundedRectangle(beginX + 280, beginY + 12, 57, 25, 2, Config.def.panelStyle == 2 ? 0xF3B13F : 0x000000, 60);
 			if(client.mouseInRegion(beginX + 280, beginY + 12, beginX + 337, beginY + 37)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 280, beginY + 12, 57, 25, 2, 0xF3B13F, 20);
 			}
+			fancyFont.drawCenteredString("Search", beginX + 309, beginY + 30, 0xF3B13F);
 		}
 		
-		/* content */
-		Rasterizer2D.drawRectangle(beginX + 4, beginY + 49, 490, 282, 0xffffff, 80);
-		Rasterizer2D.fillRectangle(beginX + 5, beginY + 50, 488, 280, 0xffffff, 60);
-		Rasterizer2D.setClip(beginX + 5, beginY + 50, beginX + 493, beginY + 330);
-		int offset = -scrollPos + 52;
+		if(Config.def.panelStyle == 2)
+			Rasterizer2D.setClip(beginX + 5, beginY + 50, beginX + 493, beginY + 330);
+		else
+			Rasterizer2D.setClip(beginX + 5, beginY + 42, beginX + 493, beginY + 330);
+		int offset = -scrollPos + (Config.def.panelStyle == 2 ? 52 : 42);
 		
 		if(client.panelSearch) {
 			if(result != null && result.length > 0) {
@@ -307,7 +300,7 @@ public class DropPanel extends Panel {
 		} else {
 			if(type == null)
 				return;
-			Rasterizer2D.drawVerticalLine(beginX + 126, beginY + 50, 280, 0x000000);
+			Rasterizer2D.drawVerticalLine(beginX + 126, beginY + 39, 290, 0x000000);
 			
 			for(int c = 0; c < client.npcDrops.length; c++) {
 				Drop drop = drops[client.npcDrops[c]];
@@ -336,7 +329,7 @@ public class DropPanel extends Panel {
 				} else if(min != 1) {
 					smallFont.drawLeftAlignedString("From " + min + " up to " + max, beginX + 340, beginY + offset + 20, 0xffffff);
 				}
-				Rasterizer2D.drawHorizontalLine(beginX + 127, beginY + offset + 38, 374, 0x000000);
+				Rasterizer2D.drawHorizontalLine(beginX + 127, beginY + offset + 38, 345, 0x000000);
 				offset += 41;
 			}
 		}

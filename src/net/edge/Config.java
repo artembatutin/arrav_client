@@ -15,6 +15,11 @@ public class Config {
 	 * The brightness to be saved.
 	 */
 	public int brightness = 3;
+	
+	/**
+	 * The panel visual style
+	 */
+	public int panelStyle;
 
 	/**
 	 * Selected Menus
@@ -51,6 +56,11 @@ public class Config {
 	 * The game-frame revision id.
 	 */
 	private int GAME_FRAME = 562;
+	
+	/**
+	 * Condition if older models will be used.
+	 */
+	public boolean oldModels = false;
 
 	/*
 	 * Debug configurations
@@ -89,7 +99,7 @@ public class Config {
 	 * Saves the configurations.
 	 */
 	public void save() {
-		Buffer data = new Buffer(new byte[36]);
+		Buffer data = new Buffer(new byte[37]);
 		data.putInt(CounterHandler.gainedXP);
 		data.putShort(GAME_FRAME);
 		data.putByte(SELECTED_MENU);
@@ -110,6 +120,7 @@ public class Config {
 		data.putByte(CHARACTER_PREVIEW ? 1 : 0);
 		data.putByte(ROOF_OFF ? 1 : 0);
 		data.putByte(brightness);
+		data.putByte(panelStyle);
 		for(int key : SettingPanel.hotkeys) {
 			data.putByte(key);
 		}
@@ -144,6 +155,7 @@ public class Config {
 				CHARACTER_PREVIEW = buf.getBoolean();
 				ROOF_OFF = buf.getBoolean();
 				brightness = buf.getUByte();
+				panelStyle = buf.getUByte();
 				for(int i = 0; i < SettingPanel.hotkeys.length; i++) {
 					SettingPanel.hotkeys[i] = buf.getUByte();
 				}

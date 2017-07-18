@@ -2,6 +2,7 @@ package net.edge.activity.panel.impl;
 
 import net.edge.activity.panel.Panel;
 import net.edge.cache.unit.ImageCache;
+import net.edge.cache.unit.Interface;
 import net.edge.game.Scene;
 import net.edge.media.Rasterizer2D;
 
@@ -44,9 +45,7 @@ public class PvPPanel extends Panel {
 		}
 
         /* Exit */
-		if(client.leftClickInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
-			client.panelHandler.close();
-			Scene.hoverX = -1;
+		if(processClose(beginX, beginY)) {
 			return true;
 		}
 
@@ -76,23 +75,14 @@ public class PvPPanel extends Panel {
 		}
 
 		/* Main background */
-		Rasterizer2D.fillRectangle(beginX, beginY + 8, 500, 328, 0x000000, 200);
-		Rasterizer2D.drawRectangle(beginX, beginY + 8, 500, 328, 0x63625e);
+		drawMain(beginX, beginY + 8, 500, 328, 0x000000, 0x63625e, 200);
+		drawOver(beginX, beginY);
+		drawClose(beginX, beginY);
 
-		fancyFont.drawCenteredString("Exit", beginX + 467, beginY + 27, 0xF3B13F);
-		Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
-		if(client.mouseInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
-		}
-
-		fancyFont.drawLeftAlignedEffectString("Wilderness Activity", beginX + 20, beginY + 28, 0xF3B13F, true);
-
-		/* Skills */
-		Rasterizer2D.drawRectangle(beginX + 4, beginY + 39, 490, 292, 0xffffff, 80);
-		Rasterizer2D.fillRectangle(beginX + 5, beginY + 40, 488, 290, 0xffffff, 60);
+		fancyFont.drawLeftAlignedEffectString("Wilderness Activity", beginX + 20, beginY + 31, 0xF3B13F, true);
 		
 		smallFont.drawLeftAlignedString("Caution: Don't get fooled by certain hot spots.", beginX + 200, beginY + 33, 0xffffff);
-		plainFont.drawLeftAlignedString("Players in wilderness: 131", beginX + 10, beginY + 60, 0xffffff);
+		plainFont.drawLeftAlignedEffectString(Interface.cache[16038].text, beginX + 10, beginY + 60, 0xffffff, true);
 		
 		Rasterizer2D.drawRectangle(beginX + 10, beginY + 70, 170, 170, 0x000000);
 		Rasterizer2D.drawHorizontalLine(beginX + 10, beginY + 90, 170, 0x000000);
@@ -105,8 +95,8 @@ public class PvPPanel extends Panel {
 		
 		Rasterizer2D.fillCircle(beginX + 17, beginY + 301, 7, 0xbea99a);
 		smallFont.drawLeftAlignedString("Teleport to position", beginX + 30, beginY + 307, 0xffffff);
-		Rasterizer2D.fillRectangle(beginX + 10, beginY + 313, 15, 15, 0x871915);
-		smallFont.drawLeftAlignedString("Multi area combat", beginX + 30, beginY + 326, 0xffffff);
+		Rasterizer2D.fillRectangle(beginX + 10, beginY + 312, 15, 13, 0x871915);
+		smallFont.drawLeftAlignedString("Multi area combat", beginX + 30, beginY + 325, 0xffffff);
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
 		
 		ImageCache.get(1949).drawImage(beginX + 200, beginY + 37);

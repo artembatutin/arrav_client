@@ -100,6 +100,7 @@ public class CacheUnpacker {
 			client.repackCacheIndex(5);
 			client.repackCacheIndex(6);
 			client.repackCacheIndex(7);
+			client.repackCacheIndex(8);
 		}
 		load(new ProtocolLoader(getCacheArchive(5, "versionlist", CacheUnpacker.EXPECTED_CRC[5])));
 		load(new MediaLoader(getCacheArchive(4, "media", CacheUnpacker.EXPECTED_CRC[4])));

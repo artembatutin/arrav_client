@@ -44,9 +44,8 @@ public class CounterPanel extends Panel {
 			beginY = client.windowHeight / 2 - 250;
 		}
 		
-		int max1 = 43 * shops.length;
-		int max2 = (32 * shops.length);
-		scrollMax = Math.max((max1 > max2 ? max1 : max2) - 185, 0);
+		int max1 = 43 * (shops.length / 2);
+		scrollMax = Math.max(max1 - 185, 0);
 
         /* Scrolling */
 		if(client.mouseInRegion(beginX + 5, beginY + 150, beginX + 493, beginY + 365)) {
@@ -88,11 +87,7 @@ public class CounterPanel extends Panel {
 		
 
         /* Exit */
-		if(client.leftClickInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
-			client.panelHandler.close();
-			client.outBuffer.putOpcode(185);
-			client.outBuffer.putShort(123);
-			Scene.hoverX = -1;
+		if(processClose(beginX, beginY)) {
 			return true;
 		}
 		
@@ -133,22 +128,16 @@ public class CounterPanel extends Panel {
 		}
 
 		/* Main background */
-		Rasterizer2D.fillRectangle(beginX, beginY + 8, 500, 328, 0x000000, 200);
-		Rasterizer2D.drawRectangle(beginX, beginY + 8, 500, 328, 0x63625e);
+		drawMain(beginX, beginY + 8, 500, 328, 0x000000, 0x63625e, 200);
+		drawOver(beginX, beginY);
+		drawClose(beginX, beginY);
 		
 		fancyFont.drawLeftAlignedEffectString("Shop Counter", beginX + 20, beginY + 33, 0xF3B13F, true);
 		boldFont.drawCenteredEffectString("Quick shops:", beginX + 240, beginY + 100, 0xF3B13F, true);
 		
-		fancyFont.drawCenteredString("Exit", beginX + 467, beginY + 30, 0xF3B13F);
-		Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 25, 2, 0xF3B13F, 60);
-		if(client.mouseInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 47)) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 25, 2, 0xF3B13F, 30);
-		}
-		
 		if(true) {
 			fancyFont.drawCenteredEffectString("Player owned shops coming soon", beginX + 240, beginY + 70, 0xF3B13F, true);
 		} else {
-			
 			fancyFont.drawCenteredEffectString("Search item", beginX + 80, beginY + 70, 0xF3B13F, true);
 			Rasterizer2D.fillRoundedRectangle(beginX + 10, beginY + 50, 130, 30, 2, 0xcf9d47, 60);
 			if(client.mouseInRegion(beginX + 10, beginY + 50, beginX + 140, beginY + 80)) {
@@ -168,9 +157,6 @@ public class CounterPanel extends Panel {
 			}
 		}
 		
-		/* content */
-		Rasterizer2D.drawRectangle(beginX + 4, beginY + 109, 490, 222, 0xffffff, 80);
-		Rasterizer2D.fillRectangle(beginX + 5, beginY + 110, 488, 220, 0xffffff, 60);
 		Rasterizer2D.setClip(beginX + 5, beginY + 110, beginX + 493, beginY + 370);
 		int offset = -scrollPos + 115;
 		
@@ -197,8 +183,6 @@ public class CounterPanel extends Panel {
 					img3.drawImage(beginX + 35 + x, beginY + offset + 8);
 			}
 			fancyFont.drawLeftAlignedString(s.getName(), beginX + 90 + x, beginY + offset + 24, 0xffffff);
-			//plainFont.drawLeftAlignedString("Combat: " + npc.combatLevel, beginX + 320, beginY + offset + 17, 0xffffff);
-			//smallFont.drawLeftAlignedString("Id: " + npc.id, beginX + 410, beginY + offset + 17, 0xffffff);
 			offset += i % 2 == 1 ? 41 : 0;
 			i++;
 		}

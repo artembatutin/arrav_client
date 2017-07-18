@@ -13,7 +13,7 @@ public final class Constants {
 	 */
 	public static final int BUILD = 27;
 	public static final boolean ANTI_BOT_ENABLED = true;
-	public static final int CACHE_INDEX_COUNT = 8;
+	public static final int CACHE_INDEX_COUNT = 9;
 
 	/*
 	 * Scene constants
@@ -30,7 +30,7 @@ public final class Constants {
 	public static final byte UI_FIXED = 0;
 	public static final byte UI_RESIZABLE = 1;
 	public static final byte UI_FULLSCREEN = 2;
-	public static final short[] SELECTABLE_GAMEFRAMES = {459, 525, 562, 2, 1};
+	public static final short[] SELECTABLE_GAMEFRAMES = {317, 525, 562, 2, 1};
 
 	/*
 	 * Message constants

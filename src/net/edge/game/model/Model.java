@@ -36,6 +36,7 @@ public final class Model extends Entity {
 	private int[] particleLifespanZ;
 	private int[] texturePrimaryColor;
 	private int[] textureSecondaryColor;
+	private static byte[][] newestModelHeader;
 	private static byte[][] newModelHeader;
 	private static byte[][] oldModelHeader;
 	
@@ -132,15 +133,18 @@ public final class Model extends Entity {
 	
 	
 	public static void method459(int length, OnDemandFetcher odf) {
-		oldModelHeader = new byte[length][];
 		newModelHeader = new byte[length][];
+		newestModelHeader = new byte[length][];
+		oldModelHeader = new byte[length][];
 		odFetcher = odf;
 	}
 	
-	public Model(int modelId, byte[] data) {
+	public Model(int modelId, byte[] data, boolean osrs) {
 		try {
 			if(data != null && data.length > 1)
-				if(usesNewHeader(data)) {
+				if(osrs) {
+					decodeOSRS(data);
+				} else if(usesNewHeader(data)) {
 					decodeNew(data);
 				} else {
 					decodeOld(data);
@@ -535,13 +539,10 @@ public final class Model extends Entity {
 		Buffer[] buffers = new Buffer[5];
 		for(int i = 0; i < buffers.length; i++)
 			buffers[i] = new Buffer(is);
-		
 		buffers[0].pos = is.length - 18;
-		
 		vertexAmt = buffers[0].getUShort();
 		triAmt = buffers[0].getUShort();
 		texAmt = buffers[0].getUByte();
-		
 		int i_157_ = buffers[0].getUByte();
 		int modelPriority = buffers[0].getUByte();
 		int modelAlpha = buffers[0].getUByte();
@@ -767,6 +768,298 @@ public final class Model extends Entity {
 		if(!has_face_type)
 			triType = null;
 		int s = 4 << 7;
+	}
+	
+	public void decodeOSRS(byte data[]) {
+		Buffer nc1 = new Buffer(data);
+		Buffer nc2 = new Buffer(data);
+		Buffer nc3 = new Buffer(data);
+		Buffer nc4 = new Buffer(data);
+		Buffer nc5 = new Buffer(data);
+		Buffer nc6 = new Buffer(data);
+		Buffer nc7 = new Buffer(data);
+		nc1.pos = data.length - 23;
+		vertexAmt = nc1.getUShort();
+		triAmt = nc1.getUShort();
+		texAmt = nc1.getUByte();
+		int flags = nc1.getUByte();
+		int priority_opcode = nc1.getUByte();
+		int alpha_opcode = nc1.getUByte();
+		int tSkin_opcode = nc1.getUByte();
+		int texture_opcode = nc1.getUByte();
+		int vSkin_opcode = nc1.getUByte();
+		int j3 = nc1.getUShort();
+		int k3 = nc1.getUShort();
+		int l3 = nc1.getUShort();
+		int i4 = nc1.getUShort();
+		int j4 = nc1.getUShort();
+		int texture_id = 0;
+		int texture_ = 0;
+		int texture__ = 0;
+		int face;
+		triFill = new int[triAmt];
+		if (texAmt > 0) {
+			texType = new byte[texAmt];
+			nc1.pos = 0;
+			for (face = 0; face < texAmt; face++) {
+				byte opcode = texType[face] = nc1.getSByte();
+				if (opcode == 0) {
+					texture_id++;
+				}
+				
+				if (opcode >= 1 && opcode <= 3) {
+					texture_++;
+				}
+				if (opcode == 2) {
+					texture__++;
+				}
+			}
+		}
+		int pos;
+		pos = texAmt;
+		int vertexMod_offset = pos;
+		pos += vertexAmt;
+		
+		int drawTypeBasePos = pos;
+		if (flags == 1)
+			pos += triAmt;
+		
+		int faceMeshLink_offset = pos;
+		pos += triAmt;
+		
+		int facePriorityBasePos = pos;
+		if (priority_opcode == 255)
+			pos += triAmt;
+		
+		int tSkinBasePos = pos;
+		if (tSkin_opcode == 1)
+			pos += triAmt;
+		
+		int vSkinBasePos = pos;
+		if (vSkin_opcode == 1)
+			pos += vertexAmt;
+		
+		int alphaBasePos = pos;
+		if (alpha_opcode == 1)
+			pos += triAmt;
+		
+		int faceVPoint_offset = pos;
+		pos += i4;
+		
+		int textureIdBasePos = pos;
+		if (texture_opcode == 1)
+			pos += triAmt * 2;
+		
+		int textureBasePos = pos;
+		pos += j4;
+		
+		int color_offset = pos;
+		pos += triAmt * 2;
+		
+		int vertexX_offset = pos;
+		pos += j3;
+		
+		int vertexY_offset = pos;
+		pos += k3;
+		
+		int vertexZ_offset = pos;
+		pos += l3;
+		
+		int mainBuffer_offset = pos;
+		pos += texture_id * 6;
+		
+		int firstBuffer_offset = pos;
+		pos += texture_ * 6;
+		
+		int secondBuffer_offset = pos;
+		pos += texture_ * 6;
+		
+		int thirdBuffer_offset = pos;
+		pos += texture_ * 2;
+		
+		int fourthBuffer_offset = pos;
+		pos += texture_;
+		
+		int fifthBuffer_offset = pos;
+		pos += texture_ * 2 + texture__ * 2;
+		verticesParticle = new int[vertexAmt];
+		vertexX = new int[vertexAmt];
+		vertexY = new int[vertexAmt];
+		vertexZ = new int[vertexAmt];
+		vertexIndex3d1 = new short[triAmt];
+		vertexIndex3d2 = new short[triAmt];
+		vertexIndex3d3 = new short[triAmt];
+		if (vSkin_opcode == 1)
+			vertexSkin = new int[vertexAmt];
+		if (flags == 1)
+			triType = new byte[triAmt];
+		if (priority_opcode == 255)
+			triPri = new byte[triAmt];
+		else
+			triPriGlobal = (byte) priority_opcode;
+		if (alpha_opcode == 1)
+			triAlpha = new byte[triAmt];
+		if (tSkin_opcode == 1)
+			triSkin = new int[triAmt];
+		if (texture_opcode == 1)
+			triTex = new int[triAmt];
+		if (texture_opcode == 1 && texAmt > 0)
+			triTexCoord = new short[triAmt];
+		
+		if (texAmt > 0) {
+			texVertex1 = new short[texAmt];
+			texVertex2 = new short[texAmt];
+			texVertex3 = new short[texAmt];
+		}
+		nc1.pos = vertexMod_offset;
+		nc2.pos = vertexX_offset;
+		nc3.pos = vertexY_offset;
+		nc4.pos = vertexZ_offset;
+		nc5.pos = vSkinBasePos;
+		int start_x = 0;
+		int start_y = 0;
+		int start_z = 0;
+		for (int point = 0; point < vertexAmt; point++) {
+			int flag = nc1.getUByte();
+			int x = 0;
+			if ((flag & 1) != 0) {
+				x = nc2.getSSmart();
+			}
+			int y = 0;
+			if ((flag & 2) != 0) {
+				y = nc3.getSSmart();
+			}
+			int z = 0;
+			if ((flag & 4) != 0) {
+				z = nc4.getSSmart();
+			}
+			vertexX[point] = start_x + x;
+			vertexY[point] = start_y + y;
+			vertexZ[point] = start_z + z;
+			start_x = vertexX[point];
+			start_y = vertexY[point];
+			start_z = vertexZ[point];
+			if (vertexSkin != null)
+				vertexSkin[point] = nc5.getUByte();
+			
+		}
+		nc1.pos = color_offset;
+		nc2.pos = drawTypeBasePos;
+		nc3.pos = facePriorityBasePos;
+		nc4.pos = alphaBasePos;
+		nc5.pos = tSkinBasePos;
+		nc6.pos = textureIdBasePos;
+		nc7.pos = textureBasePos;
+		for (face = 0; face < triAmt; face++) {
+			triFill[face] = (short) nc1.getUShort();
+			if (flags == 1) {
+				triType[face] = nc2.getSByte();
+			}
+			if (priority_opcode == 255) {
+				triPri[face] = nc3.getSByte();
+			}
+			if (alpha_opcode == 1) {
+				triAlpha[face] = nc4.getSByte();
+				if (triAlpha[face] < 0)
+					triAlpha[face] = (byte) (256 + triAlpha[face]);
+				
+			}
+			if (tSkin_opcode == 1)
+				triSkin[face] = nc5.getUByte();
+			
+			if (texture_opcode == 1) {
+				triTex[face] = (short) (nc6.getUShort() - 1);
+				if(triTex[face] >= 0) {
+					if(triType != null) {
+						if(triType[face] < 2 && triFill[face] != 127 && triFill[face] != -27075) {
+							triTex[face] = -1;
+						}
+					}
+				}
+				if(triTex[face] != -1)
+					triFill[face] = 127;
+			}
+			if (triTexCoord != null && triTex[face] != -1) {
+				triTexCoord[face] = (byte) (nc7.getUByte() - 1);
+			}
+		}
+		nc1.pos = faceVPoint_offset;
+		nc2.pos = faceMeshLink_offset;
+		int coordinate_a = 0;
+		int coordinate_b = 0;
+		int coordinate_c = 0;
+		int last_coordinate = 0;
+		for (face = 0; face < triAmt; face++) {
+			int opcode = nc2.getUByte();
+			if (opcode == 1) {
+				coordinate_a = nc1.getSSmart() + last_coordinate;
+				last_coordinate = coordinate_a;
+				coordinate_b = nc1.getSSmart() + last_coordinate;
+				last_coordinate = coordinate_b;
+				coordinate_c = nc1.getSSmart() + last_coordinate;
+				last_coordinate = coordinate_c;
+				vertexIndex3d1[face] = (short) coordinate_a;
+				vertexIndex3d2[face] = (short) coordinate_b;
+				vertexIndex3d3[face] = (short) coordinate_c;
+			}
+			if (opcode == 2) {
+				coordinate_b = coordinate_c;
+				coordinate_c = nc1.getSSmart() + last_coordinate;
+				last_coordinate = coordinate_c;
+				vertexIndex3d1[face] = (short) coordinate_a;
+				vertexIndex3d2[face] = (short) coordinate_b;
+				vertexIndex3d3[face] = (short) coordinate_c;
+			}
+			if (opcode == 3) {
+				coordinate_a = coordinate_c;
+				coordinate_c = nc1.getSSmart() + last_coordinate;
+				last_coordinate = coordinate_c;
+				vertexIndex3d1[face] = (short) coordinate_a;
+				vertexIndex3d2[face] = (short) coordinate_b;
+				vertexIndex3d3[face] = (short) coordinate_c;
+			}
+			if (opcode == 4) {
+				int l14 = coordinate_a;
+				coordinate_a = coordinate_b;
+				coordinate_b = l14;
+				coordinate_c = nc1.getSSmart() + last_coordinate;
+				last_coordinate = coordinate_c;
+				vertexIndex3d1[face] = (short) coordinate_a;
+				vertexIndex3d2[face] = (short) coordinate_b;
+				vertexIndex3d3[face] = (short) coordinate_c;
+			}
+		}
+		nc1.pos = mainBuffer_offset;
+		nc2.pos = firstBuffer_offset;
+		nc3.pos = secondBuffer_offset;
+		nc4.pos = thirdBuffer_offset;
+		nc5.pos = fourthBuffer_offset;
+		nc6.pos = fifthBuffer_offset;
+		for (face = 0; face < texAmt; face++) {
+			int opcode = texType[face] & 0xff;
+			if (opcode == 0) {
+				texVertex1[face] = (short) nc1.getUShort();
+				texVertex2[face] = (short) nc1.getUShort();
+				texVertex3[face] = (short) nc1.getUShort();
+			}
+			if (opcode == 1) {
+				texVertex1[face] = (short) nc2.getUShort();
+				texVertex2[face] = (short) nc2.getUShort();
+				texVertex3[face] = (short) nc2.getUShort();
+			}
+			if (opcode == 2) {
+				texVertex1[face] = (short) nc2.getUShort();
+				texVertex2[face] = (short) nc2.getUShort();
+				texVertex3[face] = (short) nc2.getUShort();
+			}
+			if (opcode == 3) {
+				texVertex1[face] = (short) nc2.getUShort();
+				texVertex2[face] = (short) nc2.getUShort();
+				texVertex3[face] = (short) nc2.getUShort();
+			}
+		}
+		nc1.pos = pos;
+		face = nc1.getUByte();
 	}
 	
 	private void decodeNew(byte[] data) {
@@ -1159,13 +1452,16 @@ public final class Model extends Entity {
 	
 	public static void method460(byte[] data, int id, int type) {
 		if(type == 0)
-			newModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
-		else
+			newestModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
+		else if(type == 7)
 			oldModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
+		else
+			newModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
 	}
 	
 	
 	public static void remove(int index) {
+		newestModelHeader[index] = null;
 		newModelHeader[index] = null;
 		oldModelHeader[index] = null;
 	}
@@ -1176,15 +1472,20 @@ public final class Model extends Entity {
 	
 	public static Model get(int index, int type) {
 		byte[] data;
+		if((type == 0 || type == 6) && Config.def.oldModels && index < 32807) {
+			type = 7;
+		}
 		if(type == 0)
-			data = newModelHeader[index];
-		else
+			data = newestModelHeader[index];
+		else if(type == 7)
 			data = oldModelHeader[index];
+		else
+			data = newModelHeader[index];
 		if(data == null) {
 			odFetcher.addRequest(type, index);
 			return null;
 		} else {
-			return new Model(index, data);
+			return new Model(index, data, type == 7);
 		}
 		
 		
@@ -1196,11 +1497,15 @@ public final class Model extends Entity {
 	}
 	
 	public static boolean isCached(int id, int type) {
-		if(type == 0 && newModelHeader[id] != null)
+		if((type == 0 || type == 6) && Config.def.oldModels && id < 32807) {
+			type = 7;
+		}
+		if(type == 0 && newestModelHeader[id] != null)
 			return true;
-		if(type == 6 && oldModelHeader[id] != null)
+		if(type == 6 && newModelHeader[id] != null)
 			return true;
-		
+		if(type == 7 && oldModelHeader[id] != null)
+			return true;
 		odFetcher.addRequest(type, id);
 		return false;
 		
@@ -1671,10 +1976,8 @@ public final class Model extends Entity {
 						}
 						if(has_priorities && connect.triPri != null)
 							triPri[triAmt] = connect.triPri[j1];
-						else if(triPri != null) {// threw null
-							// here for
-							// torva
-							triPri[triAmt] = (byte) connect.triPriGlobal;
+						else if(triPri != null) {
+							triPri[triAmt] = connect.triPriGlobal;
 						}
 						
 						if(has_alpha && connect.triAlpha != null)
