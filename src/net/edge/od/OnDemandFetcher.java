@@ -156,7 +156,7 @@ public final class OnDemandFetcher implements Runnable {
 
 	public void start(CacheArchive archive, Client client) {
 
-		String as1[] = {"model_crc", "anim_crc", "midi_crc", "map_crc", "textures_crc", "images_crc", "object_crc", "osrsm_crc"};
+		String as1[] = {"model_crc", "anim_crc", "midi_crc", "map_crc", "textures_crc", "images_crc", "object_crc"};
 		for(int index = 0; index < as1.length; index++) {
 			byte abyte1[] = archive.getFile(as1[index]);
 			System.out.println(as1[index] + " - " + abyte1.length);
