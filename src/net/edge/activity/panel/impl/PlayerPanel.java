@@ -102,7 +102,7 @@ public class PlayerPanel extends Panel {
 		fancyFont.drawLeftAlignedEffectString(client.localPlayer.name, beginX + 20, beginY + 31, 0xF3B13F, true);
 		
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 340);
-		ResizableUI_CUS.drawFace(45, 75);
+		ResizableUI_CUS.drawFace(beginX + 38, beginY + 75);
 		
 		int offset = 140;
 		int[] texts = {

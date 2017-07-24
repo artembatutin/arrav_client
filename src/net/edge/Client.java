@@ -6749,14 +6749,14 @@ public class Client extends ClientEngine {
 			if(projectile.anInt1597 != cameraPlane || loopCycle > projectile.anInt1572) {
 				projectile.unlinkPrimary();
 			} else if(loopCycle >= projectile.anInt1571) {
-				if(projectile.anInt1590 > 0) {
-					final NPC npc = npcList[projectile.anInt1590 - 1];
+				if(projectile.lockon > 0) {
+					final NPC npc = npcList[projectile.lockon - 1];
 					if(npc != null && npc.x >= 0 && npc.x < 13312 && npc.y >= 0 && npc.y < 13312) {
 						projectile.method455(loopCycle, npc.y, method42(projectile.anInt1597, npc.x, npc.y) - projectile.anInt1583, npc.x);
 					}
 				}
-				if(projectile.anInt1590 < 0) {
-					final int j = -projectile.anInt1590 - 1;
+				if(projectile.lockon < 0) {
+					final int j = -projectile.lockon - 1;
 					Player player;
 					if(j == unknownInt10) {
 						player = localPlayer;
@@ -6764,7 +6764,7 @@ public class Client extends ClientEngine {
 						player = playerList[j];
 					}
 					if(player != null && player.x >= 0 && player.x < 13312 && player.y >= 0 && player.y < 13312) {
-					//	projectile.method455(loopCycle, player.y, method42(projectile.anInt1597, player.x, player.y) - projectile.anInt1583, player.x);
+						projectile.method455(loopCycle, player.y, method42(projectile.anInt1597, player.x, player.y) - projectile.anInt1583, player.x);
 					}
 				}
 				projectile.method456(anInt945);

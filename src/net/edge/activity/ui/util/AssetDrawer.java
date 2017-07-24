@@ -126,8 +126,6 @@ public class AssetDrawer {
 					client.smallFont.drawCenteredString(obj.hitArray[id] + "", client.spriteDrawX - 1, client.spriteDrawY + 3, 0xffffff);
 				}
 				break;
-
-
 			case 2:
 			case 3:
 				if(client.spriteDrawX > -1) {

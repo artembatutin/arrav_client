@@ -339,7 +339,7 @@ public class BankPanel extends Panel {
 									} else if(amt.endsWith("K")) {
 										color = 0xffffff;
 									}
-									smallFont.drawLeftAlignedEffectString(amt, beginX + 26 + x, beginY + offset + 14, color, true);
+									smallFont.drawLeftAlignedEffectString(amt, beginX + 29 + x, beginY + offset + 14, color, true);
 								}
 								offset += shift % 7 == 6 ? 50 : 0;
 								shift++;
@@ -407,7 +407,7 @@ public class BankPanel extends Panel {
 							} else if(amt.endsWith("K")) {
 								color = 0xffffff;
 							}
-							smallFont.drawLeftAlignedEffectString(amt, beginX + 26 + x, beginY + offset + 14, color, true);
+							smallFont.drawLeftAlignedEffectString(amt, beginX + 29 + x, beginY + offset + 14, color, true);
 						}
 					}
 				}
@@ -452,7 +452,7 @@ public class BankPanel extends Panel {
 					} else if(amt.endsWith("K")) {
 						color = 0xffffff;
 					}
-					smallFont.drawLeftAlignedEffectString(amt, xSelected - 2, ySelected + 9, color, true);
+					smallFont.drawLeftAlignedEffectString(amt, xSelected + 1, ySelected + 9, color, true);
 				}
 			}
 		}
