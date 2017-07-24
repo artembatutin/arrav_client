@@ -22,7 +22,7 @@ public final class Projectile extends Entity {
 	public double aDouble1587;
 	private final int anInt1588;
 	private final int anInt1589;
-	public final int anInt1590;
+	public final int lockon;
 	private final SpotAnimation aSpotAnim_1592;
 	private int anInt1593;
 	private int anInt1594;
@@ -41,7 +41,7 @@ public final class Projectile extends Entity {
 		anInt1572 = i1;
 		anInt1588 = i;
 		anInt1589 = j1;
-		anInt1590 = k2;
+		lockon = k2;
 		anInt1583 = j;
 		aBoolean1579 = false;
 	}
