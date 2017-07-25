@@ -23,7 +23,7 @@ import java.util.Iterator;
 
 public class GameActivity extends Activity {
 
-	public AssetDrawer drawer;
+	public AssetDrawer drawer = new AssetDrawer(client);
 
 	@Override
 	public boolean process() {
@@ -2270,7 +2270,6 @@ public class GameActivity extends Activity {
 
 	@Override
 	public void initialize() {
-		drawer = new AssetDrawer(client);
 		client.chatGraphics = new GraphicalComponent(519, 165);
 		client.mapGraphics = new GraphicalComponent(246, 168);
 		client.inventoryGraphics = new GraphicalComponent(246, 335);

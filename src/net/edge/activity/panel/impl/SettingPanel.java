@@ -52,14 +52,27 @@ public class SettingPanel extends Panel {
 			x = client.windowWidth / 2 - 380;
 			y = client.windowHeight / 2 - 250;
 		}
+		if(!client.loggedIn) {
+			x = client.windowWidth / 2 - 260;
+			y = client.windowHeight / 2 - 170;
+		}
 
 		/* Initialization */
 		if(client.leftClickInRegion(x + 452, y + 23, x + 500, y + 44)) {
+			if(!client.loggedIn) {
+				client.titleActivity.settings = null;
+				Config.def.save();
+				return true;
+			}
 			Scene.hoverX = -1;
 			client.panelHandler.close();
 			return true;
 		}
 		if(client.leftClickInRegion(x + 389, y + 306, x + 493, y + 321)) {
+			if(!client.loggedIn) {
+				client.titleMessage = "You can only set bindings in-game.";
+				return true;
+			}
 			bindings = !bindings;
 			return true;
 		}
@@ -89,7 +102,10 @@ public class SettingPanel extends Panel {
 		
 		if(client.leftClickInRegion(x + 230, y + 50, x + 284, y + 92)) {
 			if(client.uiRenderer.getId() == 1) {
-				client.pushMessage("This gameframe is only available in resizable or fullscreen mode.", 0, "System");
+				if(client.loggedIn)
+					client.pushMessage("This gameframe is only available in resizable or fullscreen mode.", 0, "System");
+				else
+					client.titleMessage = "This gameframe is only available in resizable or fullscreen mode.";
 				return true;
 			}
 			client.setMode(0);
@@ -108,7 +124,8 @@ public class SettingPanel extends Panel {
 			Config.def.modelPrecision(!Config.def.modelPrecision());
 		else if(client.leftClickInRegion(x + 150, y + 144, x + 192, y + 159)) {
 			Config.def.groundDec(!Config.def.groundDec());
-			client.loadRegion();
+			if(client.loggedIn)
+				client.loadRegion();
 		} else if(client.leftClickInRegion(x + 150, y + 168, x + 192, y + 183))
 			Config.def.groundMat(!Config.def.groundMat());
 		else if(client.leftClickInRegion(x + 150, y + 192, x + 192, y + 207))
@@ -116,7 +133,7 @@ public class SettingPanel extends Panel {
 		else if(client.leftClickInRegion(x + 150, y + 216, x + 192, y + 231))
 			Config.def.names(!Config.def.names());
 		else if(client.leftClickInRegion(x + 150, y + 240, x + 192, y + 255)) {
-			Config.def.roof(!Config.def.roof());
+			Config.def.roof(Config.def.roof());
 		} else if(client.leftClickInRegion(x + 150, y + 264, x + 192, y + 279))
 			Config.def.orbs(!Config.def.orbs());
 		else if(client.leftClickInRegion(x + 150, y + 288, x + 192, y + 303))
@@ -135,7 +152,10 @@ public class SettingPanel extends Panel {
 			if(client.uiRenderer.isResizableOrFull()) {
 				client.uiRenderer.switchRevision(1);
 			} else {
+				if(client.loggedIn)
 				client.pushMessage("This gameframe is only available in resizable or fullscreen mode.", 0, "System");
+					else
+				client.titleMessage = "This gameframe is only available in resizable or fullscreen mode.";
 			}
 		} else if(client.leftClickInRegion(x + 280, y + 185, x + 430, y + 208)) {
 			Config.def.panelStyle = Config.def.panelStyle + 1;
@@ -169,6 +189,10 @@ public class SettingPanel extends Panel {
 		if(client.uiRenderer.isResizableOrFull()) {
 			x = client.windowWidth / 2 - 380;
 			y = client.windowHeight / 2 - 250;
+		}
+		if(!client.loggedIn) {
+			x = client.windowWidth / 2 - 260;
+			y = client.windowHeight / 2 - 170;
 		}
 
 		/* Main background */

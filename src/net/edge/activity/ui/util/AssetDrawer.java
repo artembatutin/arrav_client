@@ -12,7 +12,7 @@ public class AssetDrawer {
 	/**
 	 * Client instance.
 	 */
-	private Client client;
+	public Client client;
 
 	/**
 	 * AssetDrawer constructor.

@@ -57,7 +57,7 @@ public final class OnDemandFetcher implements Runnable {
 		running = true;
 		waiting = false;
 		aClass19_1358 = new LinkedDeque();
-		unzipBuffer = new byte[999999];
+		unzipBuffer = new byte[9999999];
 		requestList = new LinkedQueue();
 		aClass19_1368 = new LinkedDeque();
 		aClass19_1370 = new LinkedDeque();

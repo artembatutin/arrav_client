@@ -3,10 +3,14 @@ package net.edge.activity;
 import net.edge.Constants;
 import net.edge.Client;
 import net.edge.Config;
+import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.cache.unit.ImageCache;
 import net.edge.media.GraphicalComponent;
 import net.edge.media.Rasterizer2D;
 import net.edge.util.string.StringUtils;
+
+import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class TitleActivity extends Activity {
 	
@@ -80,6 +84,11 @@ public class TitleActivity extends Activity {
 	private boolean[] hovered = new boolean[3];
 	
 	/**
+	 * The background clouds
+	 */
+	private Cloud[] clouds = new Cloud[10];
+	
+	/**
 	 * The formatted username.
 	 */
 	private String formatted = "";
@@ -88,6 +97,11 @@ public class TitleActivity extends Activity {
 	 * Astericks password entry.
 	 */
 	private String astericks = "";
+	
+	/**
+	 * Setting panel instance if enabled.
+	 */
+	public SettingPanel settings = null;
 
 	/**
 	 * Main title activity data process.
@@ -103,82 +117,95 @@ public class TitleActivity extends Activity {
 			if(client.leftClickInRegion(0, 0, client.windowWidth, client.windowHeight)) {
 				client.titleMessage = "";
 			}
-		}
-		/* Clicking */
-		if(client.leftClickInRegion(centerX - 370, centerY - 245, centerX - 320, centerY - 227)) { // ip
+		} else if(client.leftClickInRegion(centerX - 370, centerY - 245, centerX - 320, centerY - 227)) { // ip
 			int con = connection + 1;
 			if(con >= CONNECTIONS.length)
 				con = 0;
 			connection = con;
-		}else if(client.leftClickInRegion(centerX - 127, centerY - 47, centerX + 126, centerY - 20)) { // User
-			selectedInputForm = 1;
-		} else if(client.leftClickInRegion(centerX - 127, centerY - 5, centerX + 126, centerY + 22)) { // Password
-			selectedInputForm = 2;
-		} else if(client.leftClickInRegion(centerX - 58, centerY + 47, centerX + 57, centerY + 80)) { // Login
-			client.loginFailures = 0;
-			if(client.loggedIn) {
-				return true;
-			}
-			client.connect(client.localUsername, client.localPassword);
+		} else if(client.leftClickInRegion(centerX - 315, centerY - 245, centerX - 265, centerY - 227)) { // clouds
+			Config.def.clouds = !Config.def.clouds;
 		}
+		
+		if(settings != null) {
+			settings.process();
+		} else {
+		/* Clicking */
+			if(client.leftClickInRegion(centerX - 127, centerY - 47, centerX + 126, centerY - 20)) { // User
+				selectedInputForm = 1;
+			} else if(client.leftClickInRegion(centerX - 127, centerY - 5, centerX + 126, centerY + 22)) { // Password
+				selectedInputForm = 2;
+			} else if(client.leftClickInRegion(centerX - 58, centerY + 47, centerX + 57, centerY + 80)) { // Login
+				client.loginFailures = 0;
+				if(client.loggedIn) {
+					return true;
+				}
+				client.connect(client.localUsername, client.localPassword);
+			} else if(client.leftClickInRegion(centerX - 25, centerY + 87 - scrollValue, centerX + 25, centerY + 105 - scrollValue)) {
+				settings = new SettingPanel();
+				scrollOpened = true;
+				scrollValue = 110;
+				started = true;
+				ImageCache.setHeight(6, 20);
+			}
 
-		/* Login & keyboard key process */
-		do {
-			final int key = client.getKey();
-			if(key == -1) {
-				break;
-			}
-			boolean valid = false;
-			for(int i2 = 0; i2 < Client.validUsernameOrPasswordChar.length(); i2++) {
-				if(key != Client.validUsernameOrPasswordChar.charAt(i2)) {
-					continue;
+			/* Login & keyboard key process */
+			do {
+				final int key = client.getKey();
+				if(key == -1) {
+					break;
 				}
-				valid = true;
-				break;
-			}
-			if(selectedInputForm == 0) {
-				if(key == 9 || key == 10 || key == 13) {
-					selectedInputForm = 1;
-				}
-			} else if(selectedInputForm == 1) {
-				if(key == 8 && client.localUsername.length() > 0) {
-					client.localUsername = client.localUsername.substring(0, client.localUsername.length() - 1);
-					formatted = StringUtils.formatName(client.localUsername);
-				}
-				if(key == 9 || key == 10 || key == 13) {
-					selectedInputForm = 2;
-				} else if(valid) {
-					client.localUsername += (char) key;
-					if(client.localUsername.length() > 15) {
-						client.localUsername = client.localUsername.substring(0, 15);
+				boolean valid = false;
+				for(int i2 = 0; i2 < Client.validUsernameOrPasswordChar.length(); i2++) {
+					if(key != Client.validUsernameOrPasswordChar.charAt(i2)) {
+						continue;
 					}
-					formatted = StringUtils.formatName(client.localUsername);
+					valid = true;
+					break;
 				}
-			} else if(selectedInputForm == 2) {
-				if(key == 8 && client.localPassword.length() > 0) {
-					client.localPassword = client.localPassword.substring(0, client.localPassword.length() - 1);
-					astericks = StringUtils.toAsterisks(client.localPassword);
-				}
-				if(key == 9 || key == 10 || key == 13) {
-					if(client.titleMessage.length() > 0) {
-						client.titleMessage = "";
-					} else if(client.localUsername.length() == 0 || client.localPassword.length() == 0) {
+				if(selectedInputForm == 0) {
+					if(key == 9 || key == 10 || key == 13) {
 						selectedInputForm = 1;
-					} else {
-						if(client.loggedIn) {
-							return true;
+					}
+				} else if(selectedInputForm == 1) {
+					if(key == 8 && client.localUsername.length() > 0) {
+						client.localUsername = client.localUsername.substring(0, client.localUsername.length() - 1);
+						formatted = StringUtils.formatName(client.localUsername);
+					}
+					if(key == 9 || key == 10 || key == 13) {
+						selectedInputForm = 2;
+					} else if(valid) {
+						client.localUsername += (char) key;
+						if(client.localUsername.length() > 15) {
+							client.localUsername = client.localUsername.substring(0, 15);
 						}
-						client.connect(client.localUsername, client.localPassword);
+						formatted = StringUtils.formatName(client.localUsername);
 					}
-				} else if(valid) {
-					client.localPassword += (char) key;
-					if(client.localPassword.length() > 26) {
-						client.localPassword = client.localPassword.substring(0, 26);
+				} else if(selectedInputForm == 2) {
+					if(key == 8 && client.localPassword.length() > 0) {
+						client.localPassword = client.localPassword.substring(0, client.localPassword.length() - 1);
+						astericks = StringUtils.toAsterisks(client.localPassword);
 					}
-					astericks = StringUtils.toAsterisks(client.localPassword);
+					if(key == 9 || key == 10 || key == 13) {
+						if(client.titleMessage.length() > 0) {
+							client.titleMessage = "";
+						} else if(client.localUsername.length() == 0 || client.localPassword.length() == 0) {
+							selectedInputForm = 1;
+						} else {
+							if(client.loggedIn) {
+								return true;
+							}
+							client.connect(client.localUsername, client.localPassword);
+						}
+					} else if(valid) {
+						client.localPassword += (char) key;
+						if(client.localPassword.length() > 26) {
+							client.localPassword = client.localPassword.substring(0, 26);
+						}
+						astericks = StringUtils.toAsterisks(client.localPassword);
+					}
 				}
-			}
-		} while(true);
+			} while(true);
+		}
 		return false;
 	}
 
@@ -201,58 +228,80 @@ public class TitleActivity extends Activity {
 		ImageCache.get(860).drawImage(centerX, centerY - 305);
 		ImageCache.get(861).drawImage(centerX - 433, centerY);
 		ImageCache.get(862).drawImage(centerX, centerY);
-
-		/* Scroll */
-		if(ImageCache.get(6).imageWidth > 0) {
-			if(!started) {
-				started = true;
-				ImageCache.setHeight(6, 20);
-			}
-			ImageCache.get(6).drawImage(centerX - 152, centerY - 120 + scrollValue);
-		}
-		ImageCache.get(8).drawImage(centerX - 166, centerY - 133 + scrollValue);
-		ImageCache.get(8).drawImage(centerX - 166, centerY + 107 - scrollValue);
-		if(ImageCache.get(6).imageWidth > 0 && scrollOpened && started) {
-			if(scrollValue != 0) {
-				scrollValue -= 5;
-				ImageCache.increaseHeight(6, 10);
-			} else {
-				if(fadeValue != 80)
-					fadeValue += 2;
-			}
-		} else if(ImageCache.get(6).imageWidth > 0 && started) {
-			if(fadeValue != 0) {
-				fadeValue -= 2;
-			} else if(scrollValue != 110) {
-				scrollValue += 5;
-				ImageCache.decreaseHeight(6, 10);
+		
+		//clouds drawing
+		if(Config.def.clouds) {
+			for(int i = 0; i < clouds.length; i++) {
+				if(clouds[i] == null)
+					clouds[i] = new Cloud();
+				clouds[i].draw();
+				if(clouds[i].dead) {
+					clouds[i] = null;
+				}
 			}
 		}
 		
-		/* Hovers */
-		processHover(centerX, centerY);
-		for(int hover = 0; hover < hovered.length; hover++) {
-			if(hovered[hover]) {
-				alphaOpacity[hover] += (alphaOpacity[hover] > 90 ? 0 : 3);
-			} else {
-				alphaOpacity[hover] -= (alphaOpacity[hover] > 0 ? 3 : 0);
+		if(settings != null) {
+			settings.update();
+		} else {
+			/* Scroll */
+			if(ImageCache.get(6).imageWidth > 0) {
+				if(!started) {
+					started = true;
+					ImageCache.setHeight(6, 20);
+				}
+				ImageCache.get(6).drawImage(centerX - 152, centerY - 120 + scrollValue);
 			}
-		}
+			ImageCache.get(8).drawImage(centerX - 166, centerY - 133 + scrollValue);
+			ImageCache.get(8).drawImage(centerX - 166, centerY + 107 - scrollValue);
+			if(ImageCache.get(6).imageWidth > 0 && scrollOpened && started) {
+				if(scrollValue != 0) {
+					scrollValue -= 5;
+					ImageCache.increaseHeight(6, 10);
+				} else {
+					if(fadeValue != 80)
+						fadeValue += 2;
+				}
+			} else if(ImageCache.get(6).imageWidth > 0 && started) {
+				if(fadeValue != 0) {
+					fadeValue -= 2;
+				} else if(scrollValue != 110) {
+					scrollValue += 5;
+					ImageCache.decreaseHeight(6, 10);
+				}
+			}
 		
-		/* Main spots */
-		if(scrollValue < 10) {
-			Rasterizer2D.drawRectangle(centerX - 127, centerY - 5, 254, 28, 0x000000, fadeValue);
-			Rasterizer2D.drawRectangle(centerX - 127, centerY - 47, 254, 28, 0x000000, fadeValue);
+			/* Hovers */
+			processHover(centerX, centerY);
+			for(int hover = 0; hover < hovered.length; hover++) {
+				if(hovered[hover]) {
+					alphaOpacity[hover] += (alphaOpacity[hover] > 90 ? 0 : 3);
+				} else {
+					alphaOpacity[hover] -= (alphaOpacity[hover] > 0 ? 3 : 0);
+				}
+			}
+		
+			/* Main spots */
+			if(scrollValue < 10) {
+				Rasterizer2D.drawRectangle(centerX - 127, centerY - 5, 254, 28, 0x000000, fadeValue);
+				Rasterizer2D.drawRectangle(centerX - 127, centerY - 47, 254, 28, 0x000000, fadeValue);
+				
+				Rasterizer2D.fillRectangle(centerX - 127, centerY - 5, 254, 28, 0x000000, fadeValue + alphaOpacity[0]);
+				Rasterizer2D.fillRectangle(centerX - 127, centerY - 47, 254, 28, 0x000000, fadeValue + alphaOpacity[1]);
+				ImageCache.get(0).drawImage(centerX - 59, centerY + 45, fadeValue * 2 + alphaOpacity[2]);
+			}
 
-			Rasterizer2D.fillRectangle(centerX - 127, centerY - 5, 254, 28, 0x000000, fadeValue + alphaOpacity[0]);
-			Rasterizer2D.fillRectangle(centerX - 127, centerY - 47, 254, 28, 0x000000, fadeValue + alphaOpacity[1]);
-			ImageCache.get(0).drawImage(centerX - 59, centerY + 45, fadeValue * 2 + alphaOpacity[2]);
-		}
-
-		/* Text */
-		if(scrollValue < 10) {
-			fancyFont.drawLeftAlignedEffectString(formatted + (selectedInputForm == 1 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - 125, centerY - 28, 0xFFFFFF, true);
-			fancyFont.drawLeftAlignedEffectString(astericks + (selectedInputForm == 2 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - 125, centerY + 14, 0xFFFFFF, true);
+			/* Text */
+			if(scrollValue < 10) {
+				fancyFont.drawLeftAlignedEffectString(formatted + (selectedInputForm == 1 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - 125, centerY - 28, 0xFFFFFF, true);
+				fancyFont.drawLeftAlignedEffectString(astericks + (selectedInputForm == 2 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - 125, centerY + 14, 0xFFFFFF, true);
+			}
+			
+			Rasterizer2D.fillRoundedRectangle(centerX - 25, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 100);
+			if(client.mouseInRegion(centerX - 25, centerY + 87 - scrollValue, centerX + 25, centerY + 105 - scrollValue)) {
+				Rasterizer2D.fillRoundedRectangle(centerX - 25, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 40);
+			}
+			smallFont.drawCenteredString("Settings", centerX, centerY + 100- scrollValue, 0xffffff);
 		}
 
 		/* Error & offline warning // effect */
@@ -283,6 +332,11 @@ public class TitleActivity extends Activity {
 		Rasterizer2D.fillRectangle(centerX - 370, centerY - 245, 50, 18, 0x000000, 100);
 		Rasterizer2D.drawRectangle(centerX - 370, centerY - 245, 50, 18, 0x000000);
 		smallFont.drawCenteredString(CONNECTIONS[connection].getName(), centerX - 345, centerY - 232, 0xffffff);
+		
+		Rasterizer2D.fillRectangle(centerX - 315, centerY - 245, 50, 18, 0x000000, 100);
+		Rasterizer2D.drawRectangle(centerX - 315, centerY - 245, 50, 18, 0x000000);
+		smallFont.drawCenteredEffectString("Clouds", centerX - 289, centerY - 231, Config.def.clouds ? 0xffffff : 0xffab84, false);
+		
 		smallFont.drawRightAlignedString("Build: " + Constants.BUILD, client.windowWidth - 20, client.windowHeight - 10, 0xffffff);
 		titleGraphics.drawGraphics(0, 0, client.graphics);
 	}
@@ -292,8 +346,13 @@ public class TitleActivity extends Activity {
 	 */
 	@Override
 	public void initialize() {
+		Client.firstRun = true;
 		started = false;
 		titleGraphics = new GraphicalComponent(client.windowWidth, client.windowHeight);
+		if(Client.firstRun) {
+			settings = new SettingPanel();
+			client.titleMessage = "Welcome to Edgeville, choose your preferences.";
+		}
 	}
 
 	/**
@@ -337,6 +396,39 @@ public class TitleActivity extends Activity {
 			hovered[0] = false;
 			hovered[1] = false;
 			hovered[2] = false;
+		}
+	}
+	
+	public class Cloud {
+		
+		int x, y, alpha, life;
+		boolean left;
+		boolean dead;
+		
+		public Cloud() {
+			left = ThreadLocalRandom.current().nextBoolean();
+			x = ThreadLocalRandom.current().nextInt(0, client.windowWidth / 4);
+			if(left)
+				x = client.windowWidth - x;
+			y = ThreadLocalRandom.current().nextInt(0, client.windowHeight) - 300;
+			life = ThreadLocalRandom.current().nextInt(40, 250);
+			dead = false;
+		}
+		
+		public void draw() {
+			if(alpha <= 250)
+				alpha+=1;
+			x += left ? -1 : 1;
+			ImageCache.get(2).drawImage(x, y, alpha);
+			if(x < 0 || x > client.windowWidth - 100 || life <= 0)
+				alpha-=1;
+			if(x < -512 || x > client.windowWidth)
+				dead = true;
+			if(y < -512 || y > client.windowHeight)
+				dead = true;
+			if(alpha <= 0)
+				dead = true;
+			life--;
 		}
 	}
 	

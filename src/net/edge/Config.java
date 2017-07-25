@@ -11,6 +11,11 @@ public class Config {
 	public static Config def = new Config();
 	
 	/**
+	 * The login clouds
+	 */
+	public boolean clouds = false;
+	
+	/**
 	 * The brightness to be saved.
 	 */
 	public int brightness = 3;
@@ -98,7 +103,7 @@ public class Config {
 	 * Saves the configurations.
 	 */
 	public void save() {
-		Buffer data = new Buffer(new byte[37]);
+		Buffer data = new Buffer(new byte[38]);
 		data.putInt(CounterHandler.gainedXP);
 		data.putShort(gameframe);
 		data.putByte(menu);
@@ -120,6 +125,7 @@ public class Config {
 		data.putByte(roofOff ? 1 : 0);
 		data.putByte(brightness);
 		data.putByte(panelStyle);
+		data.putByte(clouds ? 1 : 0);
 		for(int key : SettingPanel.hotkeys) {
 			data.putByte(key);
 		}
@@ -155,6 +161,7 @@ public class Config {
 				roofOff = buf.getBoolean();
 				brightness = buf.getUByte();
 				panelStyle = buf.getUByte();
+				clouds = buf.getBoolean();
 				for(int i = 0; i < SettingPanel.hotkeys.length; i++) {
 					SettingPanel.hotkeys[i] = buf.getUByte();
 				}

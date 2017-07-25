@@ -624,6 +624,7 @@ public class Client extends ClientEngine {
 	@Override
 	void initialize() {
 		Activity.client = this;
+		gameActivity.drawer.client = this;
 		CounterHandler.client = this;
 		OrbHandler.client = this;
 		Interface.client = this;
