@@ -529,7 +529,7 @@ public final class BitmapImage extends Rasterizer2D {
 				int k4 = j3 + i3 * lineStart;
 				int l4 = k3 - l2 * lineStart;
 				for(x = -lineLengths[y]; x < 0; x++) {
-					if(Config.def.isHD_MINIMAP()) {
+					if(Config.def.enchanceMap()) {
 						int x1 = k4 >> 16;
 						int y1 = l4 >> 16;
 						int x2 = x1 + 1;

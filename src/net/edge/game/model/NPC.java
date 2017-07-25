@@ -5,7 +5,6 @@ import net.edge.cache.unit.AnimationFrame;
 import net.edge.cache.unit.DeformSequence;
 import net.edge.cache.unit.NPCType;
 import net.edge.cache.unit.SpotAnimation;
-import net.edge.media.Rasterizer3D;
 
 public final class NPC extends Mobile {
 
@@ -63,7 +62,7 @@ public final class NPC extends Mobile {
 		int nextCycle = -1;
 		if(super.anim >= 0 && super.animDelay == 0 && DeformSequence.cache.length > super.anim) {
 			DeformSequence seq = DeformSequence.cache[super.anim];
-			if(Config.def.isTWEENING() && super.nextAnimFrame != -1) {
+			if(Config.def.tween() && super.nextAnimFrame != -1) {
 				nextAnim = seq.frameList[super.nextAnimFrame];
 				currCycle = seq.cycleList[super.animFrame];
 				nextCycle = super.animCycle;
@@ -78,7 +77,7 @@ public final class NPC extends Mobile {
 		if(super.idleAnim >= 0 && super.idleAnim != 65535) {
 			final DeformSequence seq = DeformSequence.cache[super.idleAnim];
 			currAnim = seq.frameList[super.idleAnimFrame];
-			if(Config.def.isTWEENING() && super.nextIdleAnimFrame != -1) {
+			if(Config.def.tween() && super.nextIdleAnimFrame != -1) {
 				nextAnim = seq.frameList[super.nextIdleAnimFrame];
 				currCycle = seq.cycleList[super.idleAnimFrame];
 				nextCycle = super.idleAnimCycle;

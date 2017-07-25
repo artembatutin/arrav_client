@@ -99,7 +99,7 @@ public class CounterHandler {
 					}
 				}
 				savedExp[i] = client.currentExp[i];
-				updated[i] = Config.def.isDRAW_SKILL_ORBS();
+				updated[i] = Config.def.skillOrbs();
 			}
 			if(orbs[i] != null) {
 				if((int) getProgress(i) > (int) orbs[i].progress) {
@@ -207,7 +207,7 @@ public class CounterHandler {
 
 	public static void drawOrbs() {
 		checkForUpdates();
-		if(!Config.def.isDRAW_SKILL_ORBS()) {
+		if(!Config.def.skillOrbs()) {
 			return;
 		}
 		if(login) {

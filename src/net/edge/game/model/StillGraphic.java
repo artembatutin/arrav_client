@@ -38,7 +38,7 @@ public final class StillGraphic extends Entity {
 		final Model model_1 = new Model(true, AnimationFrame.isNull(currAnim), false, model);
 		if(!noEffects) {
 			model_1.applyEffects();
-			if(Config.def.isTWEENING() && nextAnimFrameId != -1) {
+			if(Config.def.tween() && nextAnimFrameId != -1) {
 				model_1.applyAnimation(currAnim, spotAnim.animFrameSequence.frameList[nextAnimFrameId], animFrameCycle, spotAnim.animFrameSequence.cycleList[animFrameId]);
 			} else {
 				model_1.applyAnimation(currAnim);
@@ -75,7 +75,7 @@ public final class StillGraphic extends Entity {
 				animFrameId = 0;
 				noEffects = true;
 			}
-			if(Config.def.isTWEENING()) {
+			if(Config.def.tween()) {
 				nextAnimFrameId = animFrameId + 1;
 			}
 			if(nextAnimFrameId >= spotAnim.animFrameSequence.length) {

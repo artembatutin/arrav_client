@@ -98,31 +98,31 @@ public class SettingPanel extends Panel {
 		else if(client.leftClickInRegion(x + 429, y + 50, x + 484, y + 92))
 			client.setMode(2);
 		else if(client.leftClickInRegion(x + 150, y + 48, x + 192, y + 63))
-			Config.def.setLOW_MEM(!Config.def.isLOW_MEM());
+			Config.def.setLowMem(!Config.def.lowMem());
 		else if(client.leftClickInRegion(x + 150, y + 72, x + 192, y + 87))
-			Config.def.setTWEENING(!Config.def.isTWEENING());
+			Config.def.tween(!Config.def.tween());
 		else if(client.leftClickInRegion(x + 150, y + 96, x + 192, y + 111)) {
-			Config.def.setHD_MINIMAP(!Config.def.isHD_MINIMAP());
+			Config.def.enchanceMap(!Config.def.enchanceMap());
 			client.renderMinimap(client.cameraPlane);
 		}else if(client.leftClickInRegion(x + 150, y + 120, x + 192, y + 135))
-			Config.def.setRETAIN_MODEL_PRECISION(!Config.def.isRETAIN_MODEL_PRECISION());
+			Config.def.modelPrecision(!Config.def.modelPrecision());
 		else if(client.leftClickInRegion(x + 150, y + 144, x + 192, y + 159)) {
-			Config.def.setGROUND_DECORATION(!Config.def.isGROUND_DECORATION());
+			Config.def.groundDec(!Config.def.groundDec());
 			client.loadRegion();
 		} else if(client.leftClickInRegion(x + 150, y + 168, x + 192, y + 183))
-			Config.def.setGROUND_MATERIALS(!Config.def.isGROUND_MATERIALS());
+			Config.def.groundMat(!Config.def.groundMat());
 		else if(client.leftClickInRegion(x + 150, y + 192, x + 192, y + 207))
-			Config.def.setSMOOTH_FOG(!Config.def.isSMOOTH_FOG());
+			Config.def.fog(!Config.def.fog());
 		else if(client.leftClickInRegion(x + 150, y + 216, x + 192, y + 231))
-			Config.def.setDISPLAY_NAMES(!Config.def.isDISPLAY_NAMES());
+			Config.def.names(!Config.def.names());
 		else if(client.leftClickInRegion(x + 150, y + 240, x + 192, y + 255)) {
-			Config.def.setROOF_OFF(!Config.def.isROOF_OFF());
+			Config.def.roof(!Config.def.roof());
 		} else if(client.leftClickInRegion(x + 150, y + 264, x + 192, y + 279))
-			Config.def.setDRAW_ORBS(!Config.def.isDRAW_ORBS());
+			Config.def.orbs(!Config.def.orbs());
 		else if(client.leftClickInRegion(x + 150, y + 288, x + 192, y + 303))
-			Config.def.setDRAW_SKILL_ORBS(!Config.def.isDRAW_SKILL_ORBS());
+			Config.def.skillOrbs(!Config.def.skillOrbs());
 		else if(client.leftClickInRegion(x + 150, y + 312, x + 192, y + 327))
-			Config.def.setTEN_X_HITS(!Config.def.isTEN_X_HITS());
+			Config.def.hits(!Config.def.hits());
 		else if(client.leftClickInRegion(x + 246, y + 163, x + 273, y + 178))
 			client.uiRenderer.switchRevision(459);
 		else if(client.leftClickInRegion(x + 286, y + 163, x + 314, y + 178))
@@ -143,20 +143,20 @@ public class SettingPanel extends Panel {
 				Config.def.panelStyle = 0;
 			}
 		} else if(client.leftClickInRegion(x + 391, y + 279, x + 432, y + 293)) {
-			if(Config.def.getSELECTED_MENU() == 6)
-				Config.def.setSELECTED_MENU(1);
+			if(Config.def.menu() == 6)
+				Config.def.menu(1);
 			else
-				Config.def.setSELECTED_MENU(Config.def.getSELECTED_MENU() + 1);
+				Config.def.menu(Config.def.menu() + 1);
 		} else if(client.leftClickInRegion(x + 381, y + 253, x + 422, y + 268)) {
-			if(Config.def.getHITBARS() == 3)
-				Config.def.setHITBARS(0);
+			if(Config.def.hitbar() == 3)
+				Config.def.hitbar(0);
 			else
-				Config.def.setHITBARS(Config.def.getHITBARS() + 1);
+				Config.def.hitbar(Config.def.hitbar() + 1);
 		} else if(client.leftClickInRegion(x + 451, y + 273, x + 492, y + 292)) {
-			if(Config.def.getHITSPLATS() == 3)
-				Config.def.setHITSPLATS(0);
+			if(Config.def.hitsplat() == 3)
+				Config.def.hitsplat(0);
 			else
-				Config.def.setHITSPLATS(Config.def.getHITSPLATS() + 1);
+				Config.def.hitsplat(Config.def.hitsplat() + 1);
 		} else {
 			return false;
 		}
@@ -217,20 +217,20 @@ public class SettingPanel extends Panel {
 			drawTitleButton("Switch", x + 150, y + 45 + (button * 24), 0xDBB047);
 		}
 		
-		plainFont.drawLeftAlignedEffectString((Config.def.isLOW_MEM() ? "@gre@" : "@red@") + "Low memory mode", x + 20, y + 55, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.isTWEENING() ? "@gre@" : "@red@") + "Animation tweening", x + 20, y + 77, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.isHD_MINIMAP() ? "@gre@" : "@red@") + "Enhanced Minimap", x + 20, y + 99, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.isRETAIN_MODEL_PRECISION() ? "@gre@" : "@red@") + "Model precision", x + 20, y + 123, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.lowMem() ? "@gre@" : "@red@") + "Low memory mode", x + 20, y + 55, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.tween() ? "@gre@" : "@red@") + "Animation tweening", x + 20, y + 77, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.enchanceMap() ? "@gre@" : "@red@") + "Enhanced Minimap", x + 20, y + 99, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.modelPrecision() ? "@gre@" : "@red@") + "Model precision", x + 20, y + 123, 0, true);
 
-		plainFont.drawLeftAlignedEffectString((Config.def.isGROUND_DECORATION() ? "@gre@" : "@red@") + "Ground decorations", x + 20, y + 147, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.isGROUND_MATERIALS() ? "@gre@" : "@red@") + "Ground materials", x + 20, y + 171, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.isSMOOTH_FOG() ? "@gre@" : "@red@") + "Smooth fog", x + 20, y + 195, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.isDISPLAY_NAMES() ? "@gre@" : "@red@") + "Display names", x + 20, y + 219, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.isROOF_OFF() ? "@red@" : "@gre@") + "Visible roofs", x + 20, y + 243, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.groundDec() ? "@gre@" : "@red@") + "Ground decorations", x + 20, y + 147, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.groundMat() ? "@gre@" : "@red@") + "Ground materials", x + 20, y + 171, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.fog() ? "@gre@" : "@red@") + "Smooth fog", x + 20, y + 195, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.names() ? "@gre@" : "@red@") + "Display names", x + 20, y + 219, 0, true);
+		plainFont.drawLeftAlignedEffectString((!Config.def.roof() ? "@red@" : "@gre@") + "Visible roofs", x + 20, y + 243, 0, true);
 
-		plainFont.drawLeftAlignedEffectString((Config.def.isDRAW_ORBS() ? "@gre@" : "@red@") + "Display orbs", x + 20, y + 267, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.isDRAW_SKILL_ORBS() ? "@gre@" : "@red@") + "Display skill orbs", x + 20, y + 291, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.isTEN_X_HITS() ? "@gre@" : "@red@") + "10x hits", x + 20, y + 315, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.orbs() ? "@gre@" : "@red@") + "Display orbs", x + 20, y + 267, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.skillOrbs() ? "@gre@" : "@red@") + "Display skill orbs", x + 20, y + 291, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.hits() ? "@gre@" : "@red@") + "10x hits", x + 20, y + 315, 0, true);
 	
 		/* Screen Mode */
 		drawSection(x + 215, y + 20, 82, 285, "Screen Mode");
@@ -271,7 +271,7 @@ public class SettingPanel extends Panel {
 		Rasterizer2D.drawHorizontalLine(x + 376, y + 282, 14, 0xDBB047, 90);
 		drawTitleButton("Switch", x + 390, y + 275, 0xDBB047);
 
-		int hitmark = Config.def.getHITSPLATS();
+		int hitmark = Config.def.hitsplat();
 		if(hitmark == 0) {
 			ImageCache.get(1653).drawImage(x + 460, y + 245);
 		} else if(hitmark == 1) {
@@ -284,7 +284,7 @@ public class SettingPanel extends Panel {
 		Rasterizer2D.drawVerticalLine(x + 470, y + 265, 10, 0xDBB047, 90);
 		drawTitleButton("Switch", x + 450, y + 275, 0xDBB047);
 
-		int hitbar = Config.def.getHITBARS();
+		int hitbar = Config.def.hitbar();
 		if(hitbar == 0) {
 			Rasterizer2D.fillRectangle(x + 320 - 15, y + 257 - 3, 20, 5, 65280);
 			Rasterizer2D.fillRectangle(x + 320 + 5, y + 257 - 3, 10, 5, 0xff0000);

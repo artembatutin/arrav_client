@@ -233,7 +233,7 @@ public class FixedUI_562 extends FixedUI {
 			client.menuItemName[1] = "Face North";
 			client.menuItemCode[1] = 1014;
 			client.menuPos = 2;
-		} else if(Config.def.isDRAW_ORBS() && client.mouseX > 705 && client.mouseX < 761 && client.mouseY > 90 && client.mouseY < 123) {
+		} else if(Config.def.orbs() && client.mouseX > 705 && client.mouseX < 761 && client.mouseY > 90 && client.mouseY < 123) {
 			client.menuItemName[1] = "Run";
 			client.menuItemCode[1] = 1051;
 			client.menuPos = 2;
@@ -241,7 +241,7 @@ public class FixedUI_562 extends FixedUI {
 			client.menuItemName[1] = "Logout";
 			client.menuItemCode[1] = 1052;
 			client.menuPos = 2;
-		} else if(Config.def.isDRAW_ORBS() && client.mouseX > 704 && client.mouseX < 761 && client.mouseY > 51 && client.mouseY < 84) {
+		} else if(Config.def.orbs() && client.mouseX > 704 && client.mouseX < 761 && client.mouseY > 51 && client.mouseY < 84) {
 			client.menuItemName[client.menuPos] = "Select quick prayers";
 			client.menuItemCode[client.menuPos] = 1054;
 			client.menuPos++;
@@ -276,7 +276,7 @@ public class FixedUI_562 extends FixedUI {
 			Rasterizer2D.fillRectangle(0, 0, 246, 168, 0);
 			ImageCache.get(18).drawImage(0, 0);
 			ImageCache.get(1700).drawAffineTransformedImage(8, 8, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
-			if(Config.def.isDRAW_ORBS()) {
+			if(Config.def.orbs()) {
 				displayOrb(164, 9, Constants.ORB_HEALTH, false);
 				displayOrb(185, 47, Constants.ORB_PRAYER, true);
 				displayOrb(185, 86, Constants.ORB_RUN, true);
@@ -389,7 +389,7 @@ public class FixedUI_562 extends FixedUI {
 		if(client.mouseInRegion(521, 54, 550, 81)) {
 			ImageCache.get(1951).drawImage(-2, 47);
 		}
-		if(Config.def.isDRAW_ORBS()) {
+		if(Config.def.orbs()) {
 			displayOrb(164, 9, Constants.ORB_HEALTH, false);
 			displayOrb(185, 47, Constants.ORB_PRAYER, true);
 			displayOrb(185, 86, Constants.ORB_RUN, true);

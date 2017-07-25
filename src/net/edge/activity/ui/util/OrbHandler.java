@@ -47,11 +47,11 @@ public class OrbHandler {
 	 * Updates the arguments which are used for drawing the orbs.
 	 */
 	public static void updateOrbs(int skill) {
-		if(Config.def.isDRAW_ORBS()) {
+		if(Config.def.orbs()) {
 			if(skill == 3) {
 				healthValue = client.currentStats[3] + "";
 				healthFill = client.currentStats[3] / (float) client.maxStats[3] / 10;
-				if(!Config.def.isTEN_X_HITS()) {
+				if(!Config.def.hits()) {
 					healthValue = client.currentStats[3] / 10 + "";
 				}
 			} else if(skill == 5) {
@@ -65,7 +65,7 @@ public class OrbHandler {
 	}
 	
 	public static void updateRun() {
-		if(Config.def.isDRAW_ORBS()) {
+		if(Config.def.orbs()) {
 			runValue = client.energy + "";
 			runFill = client.energy / 100F;
 		}

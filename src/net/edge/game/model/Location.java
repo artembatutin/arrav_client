@@ -73,7 +73,7 @@ public final class Location extends Entity {
 			anInt1608 = client.loopCycle - k;
 			if(seq != null) {
 				currAnim = seq.frameList[animFrame];
-				if(Config.def.isTWEENING()) {
+				if(Config.def.tween()) {
 					int nextFrame = animFrame + 1;
 					if(nextFrame < seq.length) {
 						nextAnim = seq.frameList[nextFrame];

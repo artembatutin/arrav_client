@@ -388,7 +388,7 @@ public final class MapDecoder {
 					final int i_262_ = i_258_ + i_250_;
 					if(i_261_ > 0 && i_262_ > 0 && i_261_ < 103 && i_262_ < 103) {
 						final LocationType class46 = LocationType.getSpecific(i_252_, oldMap);
-						if(i_260_ != 22 || Config.def.isGROUND_DECORATION() || class46.hasActions || class46.aBoolean736) {
+						if(i_260_ != 22 || Config.def.groundDec() || class46.hasActions || class46.aBoolean736) {
 							bool &= class46.modelCached();
 							bool_255_ = true;
 						}
@@ -584,7 +584,7 @@ public final class MapDecoder {
 									}
 								}
 								int rgb_bitset_randomized = 0;
-								int shadow = Config.def.isHD_MINIMAP() ? 52 : 96;
+								int shadow = Config.def.enchanceMap() ? 52 : 96;
 								if(hsl != -1) {
 									rgb_bitset_randomized = Rasterizer3D.hslToRgbMap[adjustLightness(adjhs, shadow)];
 								}
@@ -849,7 +849,7 @@ public final class MapDecoder {
 		}
 		final byte byte0 = (byte) ((j1 << 6) + j);
 		if(j == 22) {
-			if(!Config.def.isGROUND_DECORATION() && !loc.hasActions && !loc.aBoolean736) {
+			if(!Config.def.groundDec() && !loc.hasActions && !loc.aBoolean736) {
 				return;
 			}
 			Object obj;

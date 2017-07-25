@@ -114,7 +114,7 @@ public class ResizableUI_CUS extends ResizableUI {
 
 	@Override
 	public void updateChat() {
-		if(Config.def.isDRAW_ORBS())
+		if(Config.def.orbs())
 			drawFace(30, 44);
 		//Initializing
 		int y = client.windowHeight - 185;
@@ -462,7 +462,7 @@ public class ResizableUI_CUS extends ResizableUI {
 		ImageCache.get(1651).drawImage(xOffset + 7, 110);
 		ImageCache.get(1700).drawAffineTransformedImage(xOffset + 18, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
 		Rasterizer2D.fillRectangle(xOffset + 97, 78, 3, 3, 0xffffff);
-		if(Config.def.isDRAW_ORBS()) {
+		if(Config.def.orbs()) {
 			displayOrb(client.windowWidth - 209, 38, Constants.ORB_HEALTH, false);
 			displayOrb(client.windowWidth - 212, 72, Constants.ORB_PRAYER, true);
 			displayOrb(client.windowWidth - 200, 106, Constants.ORB_RUN, true);

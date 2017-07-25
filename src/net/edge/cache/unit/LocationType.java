@@ -666,7 +666,7 @@ public final class LocationType {
 		final Model animatedModel = new Model(modifiedModelColors == null, AnimationFrame.isNull(currAnim), l == 0 && currAnim == -1 && !scale && !translate, model);
 		if(currAnim != -1) {
 			animatedModel.applyEffects();
-			if(Config.def.isTWEENING()) {
+			if(Config.def.tween()) {
 				animatedModel.applyAnimation(currAnim, nextAnim, cycle, end);
 			} else {
 				animatedModel.applyAnimation(currAnim);

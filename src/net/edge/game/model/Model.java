@@ -149,7 +149,7 @@ public final class Model extends Entity {
 				} else {
 					decodeOld(data);
 				}
-			if(!Config.def.isRETAIN_MODEL_PRECISION() && upscaled) {
+			if(!Config.def.modelPrecision() && upscaled) {
 				scale(32, 32, 32);
 				upscaled = false;
 			}
@@ -1407,7 +1407,7 @@ public final class Model extends Entity {
 							i_114_ = triPri[i_113_];
 						else
 							i_114_ = (byte) i_54_;
-						System.out.println("emit: " + i_112_ + " - " + i_113_ + " - " + i_114_);
+						//System.out.println("emit: " + i_112_ + " - " + i_113_ + " - " + i_114_);
 						//emitters[i_111_] = new EmitterTriangle(i_112_, vertexIndex3d1[i_113_], vertexIndex3d2[i_113_], vertexIndex3d3[i_113_], i_114_);
 					}
 				}
@@ -1417,7 +1417,7 @@ public final class Model extends Entity {
 					for(int i_116_ = 0; i_115_ > i_116_; i_116_++) {
 						int i_117_ = buffers[0].getUShort();
 						int i_118_ = buffers[0].getUShort();
-						System.out.println("mag: " + i_115_ + " - " + i_117_ + " - " + i_118_);
+						//System.out.println("mag: " + i_115_ + " - " + i_117_ + " - " + i_118_);
 						//magnets[i_116_] = new MagnetVertex(i_117_, i_118_);
 					}
 				}

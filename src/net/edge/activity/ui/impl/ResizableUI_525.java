@@ -266,11 +266,11 @@ public class ResizableUI_525 extends ResizableUI {
 			client.menuItemName[1] = "Face North";
 			client.menuItemCode[1] = 1014;
 			client.menuPos = 2;
-		} else if(Config.def.isDRAW_ORBS() && client.mouseX > client.windowWidth - 202 && client.mouseX < client.windowWidth - 142 && client.mouseY > 106 && client.mouseY < 139) {
+		} else if(Config.def.orbs() && client.mouseX > client.windowWidth - 202 && client.mouseX < client.windowWidth - 142 && client.mouseY > 106 && client.mouseY < 139) {
 			client.menuItemName[1] = "Run";
 			client.menuItemCode[1] = 1051;
 			client.menuPos = 2;
-		} else if(Config.def.isDRAW_ORBS() && client.mouseInRegion(client.windowWidth - 212, 72, client.windowWidth - 155, 105)) {
+		} else if(Config.def.orbs() && client.mouseInRegion(client.windowWidth - 212, 72, client.windowWidth - 155, 105)) {
 			client.menuPos = 0;
 			client.menuItemName[client.menuPos] = "Select quick prayers";
 			client.menuItemCode[client.menuPos] = 1054;
@@ -307,7 +307,7 @@ public class ResizableUI_525 extends ResizableUI {
 			ImageCache.get(84).drawImage(xOffset + 18, 0);
 			ImageCache.get(85).drawImage(xOffset + 23, 5);
 			ImageCache.get(83).drawImage(xOffset + 13, 0);
-			if(Config.def.isDRAW_ORBS()) {
+			if(Config.def.orbs()) {
 				displayOrb(client.windowWidth - 209, 38, Constants.ORB_HEALTH, false);
 				displayOrb(client.windowWidth - 212, 72, Constants.ORB_PRAYER, true);
 				displayOrb(client.windowWidth - 200, 106, Constants.ORB_RUN, true);
@@ -411,7 +411,7 @@ public class ResizableUI_525 extends ResizableUI {
 		ImageCache.get(83).drawImage(xOffset + 13, 0);
 		ImageCache.get(1700).drawAffineTransformedImage(xOffset + 18, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
 		Rasterizer2D.fillRectangle(xOffset + 97, 78, 3, 3, 0xffffff);
-		if(Config.def.isDRAW_ORBS()) {
+		if(Config.def.orbs()) {
 			displayOrb(client.windowWidth - 209, 38, Constants.ORB_HEALTH, false);
 			displayOrb(client.windowWidth - 212, 72, Constants.ORB_PRAYER, true);
 			displayOrb(client.windowWidth - 200, 106, Constants.ORB_RUN, true);

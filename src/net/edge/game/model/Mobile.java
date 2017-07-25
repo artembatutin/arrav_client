@@ -195,7 +195,7 @@ public class Mobile extends Entity {
 	public int[] hitMarkPos = new int[4];
 
 	public final void updateHitData(int markType, int damage, int l, int icon, int soak) {
-		if(!Config.def.isTEN_X_HITS()) {
+		if(!Config.def.hits()) {
 			damage = damage / 10;
 			soak = soak / 10;
 		}

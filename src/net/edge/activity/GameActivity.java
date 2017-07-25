@@ -5,7 +5,6 @@ import net.edge.Constants;
 import net.edge.activity.ui.UIComponent;
 import net.edge.game.Scene;
 import net.edge.game.emitter.Particle;
-import net.edge.game.emitter.ParticleDefinition;
 import net.edge.media.Rasterizer2D;
 import net.edge.media.Rasterizer3D;
 import net.edge.sign.SignLink;
@@ -17,7 +16,6 @@ import net.edge.cache.unit.*;
 import net.edge.game.model.*;
 import net.edge.media.GraphicalComponent;
 import net.edge.media.font.BitmapFont;
-import sun.dc.pr.Rasterizer;
 
 import java.io.IOException;
 import java.util.Arrays;
@@ -669,7 +667,7 @@ public class GameActivity extends Activity {
 						}
 					}
 					client.menuItemName[client.menuPos] = "Examine @cya@" + obj.name;
-					if(Config.def.isDEBUG_INDEXES()) {
+					if(Config.def.idx()) {
 						client.menuItemName[client.menuPos] += " @mag@" + obj.id + " " + Arrays.toString(obj.modelIds);
 					}
 					client.menuItemCode[client.menuPos] = 1226;
@@ -773,7 +771,7 @@ public class GameActivity extends Activity {
 								}
 							}
 							client.menuItemName[client.menuPos] = "Examine @lre@" + itemDef.name;
-							if(Config.def.isDEBUG_INDEXES()) {
+							if(Config.def.idx()) {
 								client.menuItemName[client.menuPos] += " @mag@" + itemDef.id;
 							}
 							client.menuItemCode[client.menuPos] = 1448;
@@ -924,7 +922,7 @@ public class GameActivity extends Activity {
 				client.menuItemCode[client.menuPos] = 1025;
 				client.menuItemArg1[client.menuPos] = i;
 			}
-			if(Config.def.isDEBUG_INDEXES()) {
+			if(Config.def.idx()) {
 				client.menuItemName[client.menuPos] += " @mag@" + entityDef.id;
 			}
 			client.menuItemArg2[client.menuPos] = k;
@@ -1339,7 +1337,7 @@ public class GameActivity extends Activity {
 		if(client.loggedIn) {
 			int x = (client.baseX + (client.localPlayer.x - 6 >> 7)) >> 3;
 			int y = (client.baseY + (client.localPlayer.y - 6 >> 7)) >> 3;
-			if(!Config.def.isSMOOTH_FOG()) {
+			if(!Config.def.fog()) {
 				Rasterizer2D.fillRectangle(Rasterizer3D.viewport.getX(), Rasterizer3D.viewport.getY(), Rasterizer3D.viewport.width, Rasterizer3D.viewport.height, 0);
 			}
 			int fogRgb = (x >= 270 && x <= 465 && y >= 335 && y <= 495) ? 0xc8c0a8 : 0;
@@ -1518,7 +1516,7 @@ public class GameActivity extends Activity {
 					if(entityDef == null) {
 						continue;
 					}
-					if(Config.def.isDISPLAY_NAMES()) {
+					if(Config.def.names()) {
 						calcMobileRenderLoc(mobile, mobile.height + 15);
 						int offset = ((NPC) obj).special == 101 ? 10 : 20;
 						smallFont.drawCenteredEffectString(entityDef.name, client.spriteDrawX, client.spriteDrawY - offset, 0xffbf00, true);
@@ -1547,7 +1545,7 @@ public class GameActivity extends Activity {
 							ImageCache.get(1701 + player.hintIcon).drawImage(client.spriteDrawX - 12, client.spriteDrawY - l);
 						}
 					}
-					if(Config.def.isDISPLAY_NAMES()) {
+					if(Config.def.names()) {
 						calcMobileRenderLoc(mobile, mobile.height + 15);
 						int col = 0x00ff00;
 						//if (player.clanName == localPlayer.clanName)
@@ -1600,7 +1598,7 @@ public class GameActivity extends Activity {
 						calcMobileRenderLoc(mobile, mobile.height + 15);
 						if(client.spriteDrawX > -1) {
 							drawer.drawBar(mobile);
-							if(Config.def.getHITBARS() == 3) {
+							if(Config.def.hitbar() == 3) {
 								calcMobileRenderLoc(mobile, mobile.height + 15);
 								int level = obj instanceof NPC ? ((NPC) obj).type.combatLevel : ((Player) obj).combatLevel;
 								if(obj instanceof NPC && ((NPC) obj).special != 101) {
@@ -1808,10 +1806,10 @@ public class GameActivity extends Activity {
 		final int modeint = client.uiRenderer.getMode();
 		int line = modeint == 0 ? 5 : 1;
 		int off = modeint == 0 ? 511 : client.windowWidth - 200;
-		if(Config.def.isFPS_ON()) {
+		if(Config.def.fps()) {
 			smallFont.drawRightAlignedString("Fps: " + client.fps, off, (line += 15), 0xffff00);
 		}
-		if(Config.def.isDEBUG_DATA()) {
+		if(Config.def.data()) {
 			final Runtime runtime = Runtime.getRuntime();
 			final int usedMemory = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
 			final int maxMemory = (int) (runtime.totalMemory() / 1024L);
@@ -1857,14 +1855,14 @@ public class GameActivity extends Activity {
 					final int l = 329 - i * 13;
 					int k1 = 4 + x;
 					font.drawLeftAlignedString("From", k1, y + l, 0);
-					font.drawLeftAlignedString("From", k1, y + l - 1, Config.def.getSPLIT_PRIVATE_CHAT_COLOR());
+					font.drawLeftAlignedString("From", k1, y + l - 1, Config.def.privateChat());
 					k1 += font.getStringWidth("From ");
 					if(rights >= 1) {
 						ImageCache.get(1984 + rights - 1).drawImage(k1, y + l - 12);
 						k1 += 12;
 					}
 					font.drawLeftAlignedString(name + ": " + client.chatMessage[j], k1, y + l, 0);
-					font.drawLeftAlignedString(name + ": " + client.chatMessage[j], k1, y + l - 1, Config.def.getSPLIT_PRIVATE_CHAT_COLOR());
+					font.drawLeftAlignedString(name + ": " + client.chatMessage[j], k1, y + l - 1, Config.def.privateChat());
 					if(++i >= 5) {
 						return;
 					}
@@ -1872,7 +1870,7 @@ public class GameActivity extends Activity {
 				if(type == 5 && client.privateChatMode < 2) {
 					final int i1 = 329 - i * 13;
 					font.drawLeftAlignedString(client.chatMessage[j], x + 4, y + i1, 0);
-					font.drawLeftAlignedString(client.chatMessage[j], x + 4, y + i1 - 1, Config.def.getSPLIT_PRIVATE_CHAT_COLOR());
+					font.drawLeftAlignedString(client.chatMessage[j], x + 4, y + i1 - 1, Config.def.privateChat());
 					if(++i >= 5) {
 						return;
 					}
@@ -1880,7 +1878,7 @@ public class GameActivity extends Activity {
 				if(type == 6 && client.privateChatMode < 2) {
 					final int j1 = 329 - i * 13;
 					font.drawLeftAlignedString("To " + name + ": " + client.chatMessage[j], x + 4, y + j1, 0);
-					font.drawLeftAlignedString("To " + name + ": " + client.chatMessage[j], x + 4, y + j1 - 1, Config.def.getSPLIT_PRIVATE_CHAT_COLOR());
+					font.drawLeftAlignedString("To " + name + ": " + client.chatMessage[j], x + 4, y + j1 - 1, Config.def.privateChat());
 					if(++i >= 5) {
 						return;
 					}

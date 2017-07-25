@@ -213,7 +213,7 @@ public final class Scene {
 			if(tvz < Constants.CAM_NEAR) {
 				return;
 			}
-			if(ground.texId != null || Config.def.isGROUND_MATERIALS()) {
+			if(ground.texId != null || Config.def.groundMat()) {
 				ShapedGround.texVertexX[i] = tvx;
 				ShapedGround.texVertexY[i] = tvy;
 				ShapedGround.texVertexZ[i] = tvz;
@@ -244,16 +244,16 @@ public final class Scene {
 					hoverX = x;
 					hoverY = y;
 				}
-				if((ground.texId == null || ground.texId[i] == -1) || !Config.def.isGROUND_MATERIALS()) {
+				if((ground.texId == null || ground.texId[i] == -1) || !Config.def.groundMat()) {
 					if(ground.color1[i] != 12345678) {
 						Rasterizer3D.drawGouraudTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i]);
 					}
 				} else {
 					if(ground.color1[i] != 12345678) {
 						if(ground.messed) {
-							Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i], ShapedGround.texVertexX[0], ShapedGround.texVertexX[1], ShapedGround.texVertexX[3], ShapedGround.texVertexY[0], ShapedGround.texVertexY[1], ShapedGround.texVertexY[3], ShapedGround.texVertexZ[0], ShapedGround.texVertexZ[1], ShapedGround.texVertexZ[3], ground.texId[i], Config.def.isGROUND_MATERIALS(), true);
+							Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i], ShapedGround.texVertexX[0], ShapedGround.texVertexX[1], ShapedGround.texVertexX[3], ShapedGround.texVertexY[0], ShapedGround.texVertexY[1], ShapedGround.texVertexY[3], ShapedGround.texVertexZ[0], ShapedGround.texVertexZ[1], ShapedGround.texVertexZ[3], ground.texId[i], Config.def.groundMat(), true);
 						} else {
-							Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i], ShapedGround.texVertexX[l2], ShapedGround.texVertexX[j3], ShapedGround.texVertexX[l3], ShapedGround.texVertexY[l2], ShapedGround.texVertexY[j3], ShapedGround.texVertexY[l3], ShapedGround.texVertexZ[l2], ShapedGround.texVertexZ[j3], ShapedGround.texVertexZ[l3], ground.texId[i], Config.def.isGROUND_MATERIALS(), true);
+							Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i], ShapedGround.texVertexX[l2], ShapedGround.texVertexX[j3], ShapedGround.texVertexX[l3], ShapedGround.texVertexY[l2], ShapedGround.texVertexY[j3], ShapedGround.texVertexY[l3], ShapedGround.texVertexZ[l2], ShapedGround.texVertexZ[j3], ShapedGround.texVertexZ[l3], ground.texId[i], Config.def.groundMat(), true);
 						}
 					}
 				}
@@ -942,12 +942,12 @@ public final class Scene {
 				hoverX = x;
 				hoverY = y;
 			}
-			if(ground.texture != -1 && Config.def.isGROUND_MATERIALS()) {
+			if(ground.texture != -1 && Config.def.groundMat()) {
 				if(ground.color3 != 12345678) {
 					if(ground.solid) {
-						Rasterizer3D.drawTexturedTriangle(y3, y4, y2, x3, x4, x2, y3d3, y3d4, y3d2, ground.color3, ground.color4, ground.color2, x3d1, x3d3, x3d2, z1, z2, z4, y3d1, y3d2, y3d4, ground.texture, Config.def.isGROUND_MATERIALS(), true);
+						Rasterizer3D.drawTexturedTriangle(y3, y4, y2, x3, x4, x2, y3d3, y3d4, y3d2, ground.color3, ground.color4, ground.color2, x3d1, x3d3, x3d2, z1, z2, z4, y3d1, y3d2, y3d4, ground.texture, Config.def.groundMat(), true);
 					} else {
-						Rasterizer3D.drawTexturedTriangle(y3, y4, y2, x3, x4, x2, y3d3, y3d4, y3d2, ground.color3, ground.color4, ground.color2, x3d4, x3d2, x3d3, z3, z4, z2, y3d3, y3d4, y3d2, ground.texture, Config.def.isGROUND_MATERIALS(), true);
+						Rasterizer3D.drawTexturedTriangle(y3, y4, y2, x3, x4, x2, y3d3, y3d4, y3d2, ground.color3, ground.color4, ground.color2, x3d4, x3d2, x3d3, z3, z4, z2, y3d3, y3d4, y3d2, ground.texture, Config.def.groundMat(), true);
 					}
 				}
 			} else if(ground.color3 != 12345678) {
@@ -960,13 +960,13 @@ public final class Scene {
 				hoverX = x;
 				hoverY = y;
 			}
-			if(!Config.def.isGROUND_MATERIALS() || ground.texture == -1) {
+			if(!Config.def.groundMat() || ground.texture == -1) {
 				if(ground.color1 != 12345678) {
 					Rasterizer3D.drawGouraudTriangle(y1, y2, y4, x1, x2, x4, y3d1, y3d2, y3d4, ground.color1, ground.color2, ground.color4);
 				}
 			} else {
 				if(ground.color1 != 12345678) {
-					Rasterizer3D.drawTexturedTriangle(y1, y2, y4, x1, x2, x4, y3d1, y3d2, y3d4, ground.color1, ground.color2, ground.color4, x3d1, x3d3, x3d2, z1, z2, z4, y3d1, y3d2, y3d4, ground.texture, Config.def.isGROUND_MATERIALS(), true);
+					Rasterizer3D.drawTexturedTriangle(y1, y2, y4, x1, x2, x4, y3d1, y3d2, y3d4, ground.color1, ground.color2, ground.color4, x3d1, x3d3, x3d2, z1, z2, z4, y3d1, y3d2, y3d4, ground.texture, Config.def.groundMat(), true);
 				}
 			}
 		}
@@ -1985,7 +1985,7 @@ public final class Scene {
 	
 	
 	public void setMinimapFloorColor(int raster[], int index, int plane, int x, int y) {
-		if (Config.def.isHD_MINIMAP()) {
+		if (Config.def.enchanceMap()) {
 			final Tile tile = tileMap[plane][x][y];
 			if(tile == null) {
 				return;

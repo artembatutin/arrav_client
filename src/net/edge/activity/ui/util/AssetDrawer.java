@@ -33,7 +33,7 @@ public class AssetDrawer {
 	public void drawBar(Mobile obj) {
 		if(obj.special != 101) {
 			int offset = -5;
-			switch(Config.def.getHITBARS()) {
+			switch(Config.def.hitbar()) {
 				case 0:
 					int size = 20;
 					int fill = hitBarFill(obj.special, 100, size);
@@ -66,7 +66,7 @@ public class AssetDrawer {
 					break;
 			}
 		}
-		switch(Config.def.getHITBARS()) {
+		switch(Config.def.hitbar()) {
 			case 0:
 				int size = obj.maxHealth > 2000 ? 60 : 30;
 				int fill = hitBarFill(obj.currentHealth, obj.maxHealth, size);
@@ -102,7 +102,7 @@ public class AssetDrawer {
 	 * Draws a single hitsplat.
 	 */
 	public void drawHit(Mobile obj, int id) {
-		int hit = Config.def.getHITSPLATS();
+		int hit = Config.def.hitsplat();
 		switch(hit) {
 			case 0:
 			case 1:
@@ -118,7 +118,7 @@ public class AssetDrawer {
 						client.spriteDrawX += 15;
 						client.spriteDrawY -= 10;
 					}
-					if(Config.def.getHITSPLATS() == 0)
+					if(Config.def.hitsplat() == 0)
 						ImageCache.get(988 + obj.oldHitMarkTypes[id]).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 12);
 					else
 						ImageCache.get(997 + obj.oldHitMarkTypes[id]).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 12);
@@ -244,7 +244,7 @@ public class AssetDrawer {
 			mx = client.mouseX + dx;
 			my = client.mouseY + dy;
 		}
-		switch(Config.def.getSELECTED_MENU()) {
+		switch(Config.def.menu()) {
 			case 1:
 				Rasterizer2D.fillRectangle(x, y, w, h, 0x5d5447);
 				Rasterizer2D.fillRectangle(x + 1, y + 1, w - 2, 16, 0);

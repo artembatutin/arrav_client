@@ -138,7 +138,7 @@ public class UIRenderer {
 		this.id = id;
 		fixed = getFixed(id);
 		resizable = getResizable(id);
-		Config.def.setGAME_FRAME(id);
+		Config.def.gameframe(id);
 	}
 	
 	/**

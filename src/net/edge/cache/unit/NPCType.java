@@ -159,6 +159,8 @@ public final class NPCType {
 			npc.pet(6203, "Tsutsy", 48);//zamorak
 		if(id == 3180)
 			npc.pet(6247, "Zilzy", 68);//saradomin
+		if(Config.def.idx())
+			System.out.println(npc.id + " - " + npc.standAnimationId + " - " + npc.walkAnimationId);
 		return npc;
 	}
 	
@@ -655,7 +657,7 @@ public final class NPCType {
 		if(currAnim != -1 && j != -1) {
 			model.method471(ai, j, currAnim);
 		} else if(currAnim != -1) {
-			if(Config.def.isTWEENING()) {
+			if(Config.def.tween()) {
 				model.applyAnimation(currAnim, nextAnim, nextCycle, currCycle);
 			} else {
 				model.applyAnimation(currAnim);

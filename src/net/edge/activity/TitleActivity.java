@@ -272,7 +272,7 @@ public class TitleActivity extends Activity {
 		}
 		
 		/* Debugging information */
-		if(Config.def.isDEBUG_DATA()) {
+		if(Config.def.data()) {
 			final Runtime runtime = Runtime.getRuntime();
 			final int usedMemory = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
 			plainFont.drawLeftAlignedEffectString("mouse: " + client.mouseX + "," + client.mouseY, 5, 15, 0xffff00, false);
