@@ -7245,21 +7245,6 @@ public class Client extends ClientEngine {
 						if(chatInput.equals("::m0") || chatInput.equals("::m1") || chatInput.equals("::m2")) {
 							setMode(Integer.parseInt(chatInput.substring(3)));
 						}
-						if(chatInput.equals("::custom")) {
-							uiRenderer.switchRevision(1);
-						}
-						if(chatInput.equals("::osrs")) {
-							uiRenderer.switchRevision(2);
-						}
-						if(chatInput.equals("::459")) {
-							uiRenderer.switchRevision(459);
-						}
-						if(chatInput.equals("::525")) {
-							uiRenderer.switchRevision(525);
-						}
-						if(chatInput.equals("::562")) {
-							uiRenderer.switchRevision(562);
-						}
 						if(chatInput.equals("::packinterface")) {
 							Interface.pack();
 						}

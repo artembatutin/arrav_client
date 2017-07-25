@@ -141,7 +141,7 @@ public class SettingPanel extends Panel {
 		else if(client.leftClickInRegion(x + 150, y + 312, x + 192, y + 327))
 			Config.def.hits(!Config.def.hits());
 		else if(client.leftClickInRegion(x + 246, y + 163, x + 273, y + 178))
-			client.uiRenderer.switchRevision(459);
+			client.uiRenderer.switchRevision(317);
 		else if(client.leftClickInRegion(x + 286, y + 163, x + 314, y + 178))
 			client.uiRenderer.switchRevision(525);
 		else if(client.leftClickInRegion(x + 326, y + 163, x + 355, y + 178))

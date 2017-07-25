@@ -50,7 +50,7 @@ public class BankPanel extends Panel {
 			beginY = client.windowHeight / 2 - 250;
 		}
 
-		scrollMax = Math.max(50 * ((Interface.cache[270 + tab].invId.length + 6) / 7) - 235, 0);
+		scrollMax = Math.max(45 * ((Interface.cache[270 + tab].invId.length + 7) / 8) - 235, 0);
 
         /* Scrolling */
 		if(client.mouseInRegion(beginX + 5, beginY + 50, beginX + 493, beginY + 365)) {
@@ -67,12 +67,12 @@ public class BankPanel extends Panel {
 			if(scrollMax > 0) {
 				height = 235 * 228 / (scrollMax + 235);
 			}
-			int pos = 0;
+			int pos = beginY;
 			if(scrollPos != 0) {
 				pos = scrollPos * 228 / (scrollMax + 235) + 1;
 			}
-			int x = 485;
-			int y = 46 + pos;
+			int x = 482 + beginX;
+			int y = 60 + pos;
 			if(client.mouseDragButton == 1 && client.mouseInRegion(x, y, x + 20, y + height)) {
 				scrollDrag = true;
 				scrollDragPos = scrollPos;
@@ -164,7 +164,7 @@ public class BankPanel extends Panel {
 								itemPressY = client.mouseY;
 								return true;
 							}
-							offset += shift % 8 == 7 ? 50 : 0;
+							offset += shift % 8 == 7 ? 45 : 0;
 							shift++;
 						}
 					}
@@ -178,8 +178,11 @@ public class BankPanel extends Panel {
 					destSlot = i;
 				}
 				if(icon == 0) {
-					offset += i % 8 == 7 ? 50 : 0;
+					offset += i % 8 == 7 ? 45 : 0;
 					continue;
+				}
+				if(offset > 250) {
+					break;
 				}
 				if(client.mouseDragButton == 0 && srcSlot != -1) {
 					if(itemDrag) {
@@ -248,7 +251,7 @@ public class BankPanel extends Panel {
 					itemPressY = client.mouseY;
 					return true;
 				}
-				offset += i % 8 == 7 ? 50 : 0;
+				offset += i % 8 == 7 ? 45 : 0;
 			}
 		}
 		return false;
@@ -341,7 +344,7 @@ public class BankPanel extends Panel {
 									}
 									smallFont.drawLeftAlignedEffectString(amt, beginX + 29 + x, beginY + offset + 14, color, true);
 								}
-								offset += shift % 7 == 6 ? 50 : 0;
+								offset += shift % 7 == 6 ? 45 : 0;
 								shift++;
 							}
 						}
@@ -353,7 +356,7 @@ public class BankPanel extends Panel {
 				int x = i % 8 * 57;
 				int icon = Interface.cache[270 + tab].invId[i];
 				if(icon <= 0) {
-					offset += i % 8 == 7 ? 50 : 0;
+					offset += i % 8 == 7 ? 45 : 0;
 					continue;
 				}
 				itemsCount++;
@@ -411,7 +414,7 @@ public class BankPanel extends Panel {
 						}
 					}
 				}
-				offset += i % 8 == 7 ? 50 : 0;
+				offset += i % 8 == 7 ? 45 : 0;
 			}
 		}
 
@@ -424,17 +427,20 @@ public class BankPanel extends Panel {
 		Rasterizer2D.removeClip();
 
 		/* Scroll bar */
-		Rasterizer2D.drawRectangle(476 + beginX, 55 + beginY, 12, 230, 0xffffff, 60);
-		int height = 228;
-		if(scrollMax > 0) {
-			height = 235 * 228 / (scrollMax + 225);
-		}
 		int pos = 0;
 		if(scrollPos != 0) {
 			pos = scrollPos * 228 / (scrollMax + 225);
 		}
-		Rasterizer2D.fillRectangle(477 + beginX, 56 + pos + beginY, 10, height, 0x222222, 120);
-
+		int height = 228;
+		if(scrollMax > 0) {
+			height = 235 * 228 / (scrollMax + 225);
+		}
+		if(Config.def.panelStyle == 2) {
+			Rasterizer2D.drawRectangle(476 + beginX, 55 + beginY, 12, 230, 0xffffff, 60);
+			Rasterizer2D.fillRectangle(477 + beginX, 56 + pos + beginY, 10, height - 1, 0x222222, 120);
+		} else {
+			drawScroll(477 + beginX, 56 + beginY, 228, scrollMax + 228, scrollPos);
+		}
 		/* Dragging */
 		if(xSelected != 0 || ySelected != 0 && srcSlot != -1) {
 			int icon = Interface.cache[270 + tab].invId[srcSlot];
@@ -586,7 +592,6 @@ public class BankPanel extends Panel {
 						if(i == 8) {
 							client.bankSearching = !client.bankSearching;
 							client.bankSearch = "";
-							System.out.println(client.bankSearching);
 						}
 						if(i == 9) {
 							client.outBuffer.putOpcode(185);

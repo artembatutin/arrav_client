@@ -289,6 +289,12 @@ public class TitleActivity extends Activity {
 				Rasterizer2D.fillRectangle(centerX - 127, centerY - 5, 254, 28, 0x000000, fadeValue + alphaOpacity[0]);
 				Rasterizer2D.fillRectangle(centerX - 127, centerY - 47, 254, 28, 0x000000, fadeValue + alphaOpacity[1]);
 				ImageCache.get(0).drawImage(centerX - 59, centerY + 45, fadeValue * 2 + alphaOpacity[2]);
+				
+				Rasterizer2D.fillRoundedRectangle(centerX - 25, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 100);
+				if(client.mouseInRegion(centerX - 25, centerY + 87 - scrollValue, centerX + 25, centerY + 105 - scrollValue)) {
+					Rasterizer2D.fillRoundedRectangle(centerX - 25, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 40);
+				}
+				smallFont.drawCenteredString("Settings", centerX, centerY + 100- scrollValue, 0xffffff);
 			}
 
 			/* Text */
@@ -296,12 +302,6 @@ public class TitleActivity extends Activity {
 				fancyFont.drawLeftAlignedEffectString(formatted + (selectedInputForm == 1 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - 125, centerY - 28, 0xFFFFFF, true);
 				fancyFont.drawLeftAlignedEffectString(astericks + (selectedInputForm == 2 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - 125, centerY + 14, 0xFFFFFF, true);
 			}
-			
-			Rasterizer2D.fillRoundedRectangle(centerX - 25, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 100);
-			if(client.mouseInRegion(centerX - 25, centerY + 87 - scrollValue, centerX + 25, centerY + 105 - scrollValue)) {
-				Rasterizer2D.fillRoundedRectangle(centerX - 25, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 40);
-			}
-			smallFont.drawCenteredString("Settings", centerX, centerY + 100- scrollValue, 0xffffff);
 		}
 
 		/* Error & offline warning // effect */
@@ -346,7 +346,6 @@ public class TitleActivity extends Activity {
 	 */
 	@Override
 	public void initialize() {
-		Client.firstRun = true;
 		started = false;
 		titleGraphics = new GraphicalComponent(client.windowWidth, client.windowHeight);
 		if(Client.firstRun) {

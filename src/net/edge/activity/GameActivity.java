@@ -1995,7 +1995,6 @@ public class GameActivity extends Activity {
 
 	public void drawScrollbar(int x, int y, int visibleHeight, int contentHeight, int scrollPos) {
 		client.scrollBarTop.drawImage(x, y);
-		client.scrollBarDown.drawImage(x, y + visibleHeight - 16);
 		Rasterizer2D.fillRectangle(x, y + 16, 16, visibleHeight - 32, 0x000001);
 		Rasterizer2D.fillRectangle(x, y + 16, 15, visibleHeight - 32, 0x3d3426);
 		Rasterizer2D.fillRectangle(x, y + 16, 13, visibleHeight - 32, 0x342d21);
@@ -2114,6 +2113,7 @@ public class GameActivity extends Activity {
 		Rasterizer2D.drawHorizontalLine(x, y + 11 + barPos + barHeight, 3, 0x73654a);
 		Rasterizer2D.drawHorizontalLine(x, y + 11 + barPos + barHeight, 2, 0x7b6a4d);
 		Rasterizer2D.drawHorizontalLine(x, y + 11 + barPos + barHeight, 1, 0x000001);
+		client.scrollBarDown.drawImage(x, y + visibleHeight - 16);
 	}
 
 	public void drawDarkScrollbar(int x, int y, int visibleHeight, int contentHeight, int viewOffY) {
@@ -2126,6 +2126,16 @@ public class GameActivity extends Activity {
 			barPos = (visibleHeight - 32 - barHeight) * viewOffY / (contentHeight - visibleHeight);
 		}
 		Rasterizer2D.fillRectangle(x + 1, y + 16 + barPos, 19, y + 21 + barPos + barHeight - 5 - (y + 16 + barPos), 0xffffff, 16);
+	}
+	
+	public void drawPanelScroll(int x, int y, int visibleHeight, int contentHeight, int scrollPos) {
+		if(Config.def.panelStyle == 2) {
+			drawWhiteScrollbar(x, y, visibleHeight, contentHeight, scrollPos);
+		} else if(client.uiRenderer.getId() == 317) {
+			drawOldScrollbar(x, y, visibleHeight, contentHeight, scrollPos);
+		} else {
+			drawScrollbar(x, y, visibleHeight, contentHeight, scrollPos);
+		}
 	}
 
 	public void drawWhiteScrollbar(int x, int y, int visibleHeight, int contentHeight, int viewOffY) {
