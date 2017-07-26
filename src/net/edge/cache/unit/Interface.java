@@ -782,6 +782,7 @@ public final class Interface {
 				}
 				if(screen.type == 0) {
 					byteV.putShort(screen.scrollMax);
+					System.out.println(screen.id);
 					byteV.putShort(screen.subId.length);
 					for(int i = 0; i < screen.subId.length; i++) {
 						byteV.putShort(screen.subId[i]);
@@ -807,7 +808,7 @@ public final class Interface {
 						}
 					}
 					for(int i = 0; i < 5; i++) {
-						if(screen.menuItem[i] != null) {
+						if(screen.menuItem != null && screen.menuItem[i] != null) {
 							byteV.putLine(screen.menuItem[i]);
 						} else {
 							byteV.putLine("");
@@ -881,8 +882,8 @@ public final class Interface {
 				}
 
 				if(screen.actionType == 2 || screen.type == 2) {
-					byteV.putLine(screen.selectedActionName);
-					byteV.putLine(screen.spellName);
+					byteV.putLine(screen.selectedActionName == null ? "" : screen.selectedActionName);
+					byteV.putLine(screen.spellName == null ? "" : screen.spellName);
 					byteV.putShort(screen.spellUsableOn);
 				}
 
@@ -899,7 +900,7 @@ public final class Interface {
 				if(screen.actions != null) {
 					byteV.putShort(screen.actions.length);
 					for(String action : screen.actions) {
-						byteV.putLine(action);
+						byteV.putLine(action == null ? "" : action);
 					}
 				} else {
 					byteV.putShort(-1);
