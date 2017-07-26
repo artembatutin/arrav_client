@@ -33,7 +33,7 @@ public class TaskHandler {
 		if(cycle < 0) {
 			cycle = client.loopCycle;
 		}
-		if(client.loopCycle - cycle > (s.startsWith("Intro:") ? 600 : 150)) {
+		if(client.loopCycle - cycle > (s.startsWith("Intro:") ? 800 : 600)) {
 			current = null;
 			cycle = -1;
 			return;

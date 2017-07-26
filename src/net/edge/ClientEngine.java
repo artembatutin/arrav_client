@@ -164,7 +164,7 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 	/**
 	 * Close process.
 	 */
-	private void exit() {
+	public void exit() {
 		state = -2;
 		if(frame != null) {
 			frame.dispose();
@@ -312,14 +312,7 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 	@Override
 	public final void destroy() {
 		state = -1;
-		try {
-			Thread.sleep(1000L);
-		} catch(final Exception _ex) {
-			//empty
-		}
-		if(state == -1) {
-			exit();
-		}
+		exit();
 	}
 
 	@Override

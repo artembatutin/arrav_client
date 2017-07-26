@@ -3447,6 +3447,7 @@ public class Client extends ClientEngine {
 		updateWindow();
 		ImageCache.reset();
 		Texture.reset();
+		PlayerPanel.tiers = null;
 		gameActivity.reset();
 		panelHandler.close();
 		titleActivity.initialize();
@@ -5726,9 +5727,19 @@ public class Client extends ClientEngine {
 							text = "@red@" + text;
 						}
 					}
-					updateStrings(text, frame);
-					if(Interface.cache[frame] != null)
-						Interface.cache[frame].text = text;
+					if(frame >= 26000 && frame < 26100) {
+						if(PlayerPanel.tiers == null) {
+							PlayerPanel.tiers = new int[100];
+						}
+						if(text.length() > 0) {
+							PlayerPanel.tiers[frame - 26000] = Integer.parseInt(text.charAt(0)+"");
+							Interface.cache[frame].text = text.substring(1, text.length());
+						}
+					} else {
+						updateStrings(text, frame);
+						if(Interface.cache[frame] != null)
+							Interface.cache[frame].text = text;
+					}
 					pktType = -1;
 					return true;
 
@@ -5961,6 +5972,12 @@ public class Client extends ClientEngine {
 						killstreak[key] = inBuffer.getUShort();
 						scoreNames[key] = inBuffer.getLine();
 					}
+					pktType = -1;
+					return true;
+				
+				case 90:
+					String task2 = inBuffer.getLine();
+					taskHandler.completeTask(task2);
 					pktType = -1;
 					return true;
 				
