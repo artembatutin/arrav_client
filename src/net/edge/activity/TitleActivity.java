@@ -117,13 +117,23 @@ public class TitleActivity extends Activity {
 			if(client.leftClickInRegion(0, 0, client.windowWidth, client.windowHeight)) {
 				client.titleMessage = "";
 			}
-		} else if(client.leftClickInRegion(centerX - 370, centerY - 245, centerX - 320, centerY - 227)) { // ip
+		} else if(client.leftClickInRegion(client.windowWidth - 100, client.windowHeight - 20, client.windowWidth, client.windowHeight)) { // ip
 			int con = connection + 1;
 			if(con >= CONNECTIONS.length)
 				con = 0;
 			connection = con;
-		} else if(client.leftClickInRegion(centerX - 315, centerY - 245, centerX - 265, centerY - 227)) { // clouds
-			Config.def.clouds = !Config.def.clouds;
+		} else if(client.leftClickInRegion(client.windowWidth - 22, 3, client.windowWidth - 3, 20)) {
+			client.exit();
+		} else if(client.leftClickInRegion(client.windowWidth - 40, 3, client.windowWidth - 21, 20)) {
+			if(settings == null) {
+				settings = new SettingPanel();
+				scrollOpened = true;
+				scrollValue = 110;
+				started = true;
+				ImageCache.setHeight(6, 20);
+			} else {
+				settings = null;
+			}
 		}
 		
 		if(settings != null) {
@@ -141,11 +151,7 @@ public class TitleActivity extends Activity {
 				}
 				client.connect(client.localUsername, client.localPassword);
 			} else if(client.leftClickInRegion(centerX - 25, centerY + 87 - scrollValue, centerX + 25, centerY + 105 - scrollValue)) {
-				settings = new SettingPanel();
-				scrollOpened = true;
-				scrollValue = 110;
-				started = true;
-				ImageCache.setHeight(6, 20);
+				Config.def.clouds = !Config.def.clouds;
 			}
 
 			/* Login & keyboard key process */
@@ -294,7 +300,7 @@ public class TitleActivity extends Activity {
 				if(client.mouseInRegion(centerX - 25, centerY + 87 - scrollValue, centerX + 25, centerY + 105 - scrollValue)) {
 					Rasterizer2D.fillRoundedRectangle(centerX - 25, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 40);
 				}
-				smallFont.drawCenteredString("Settings", centerX, centerY + 100- scrollValue, 0xffffff);
+				smallFont.drawCenteredString("Clouds", centerX, centerY + 100- scrollValue, 0xffffff);
 			}
 
 			/* Text */
@@ -320,6 +326,11 @@ public class TitleActivity extends Activity {
 			alphaOpacity[3] -= (alphaOpacity[3] > 5 ? 8 : 0);
 		}
 		
+		Rasterizer2D.drawRectangle(client.windowWidth - 59, 2, 56, 16, 0x000000);
+		ImageCache.get(client.mouseInRegion(client.windowWidth - 20, 3, client.windowWidth - 3, 20) ? 2042 : 2037).drawImage(client.windowWidth - 22, 3);
+		ImageCache.get(client.mouseInRegion(client.windowWidth - 40, 3, client.windowWidth - 21, 20) ? 2041 : 2036).drawImage(client.windowWidth - 40, 3);
+		ImageCache.get(2035).drawImage(client.windowWidth - 58, 3);
+		
 		/* Debugging information */
 		if(Config.def.data()) {
 			final Runtime runtime = Runtime.getRuntime();
@@ -329,15 +340,8 @@ public class TitleActivity extends Activity {
 			plainFont.drawLeftAlignedEffectString("memory: " + usedMemory + "k (" + usedMemory / 1024L + "M)", 5, 45, 0xffff00, false);
 			plainFont.drawLeftAlignedEffectString("fps: " + client.fps, 5, 60, 0xffff00, false);
 		}
-		Rasterizer2D.fillRectangle(centerX - 370, centerY - 245, 50, 18, 0x000000, 100);
-		Rasterizer2D.drawRectangle(centerX - 370, centerY - 245, 50, 18, 0x000000);
-		smallFont.drawCenteredString(CONNECTIONS[connection].getName(), centerX - 345, centerY - 232, 0xffffff);
 		
-		Rasterizer2D.fillRectangle(centerX - 315, centerY - 245, 50, 18, 0x000000, 100);
-		Rasterizer2D.drawRectangle(centerX - 315, centerY - 245, 50, 18, 0x000000);
-		smallFont.drawCenteredEffectString("Clouds", centerX - 289, centerY - 231, Config.def.clouds ? 0xffffff : 0xffab84, false);
-		
-		smallFont.drawRightAlignedString("Build: " + Constants.BUILD, client.windowWidth - 20, client.windowHeight - 10, 0xffffff);
+		smallFont.drawRightAlignedString("Build: " + Constants.BUILD + " - " + CONNECTIONS[connection].getName(), client.windowWidth - 20, client.windowHeight - 10, 0xffffff);
 		titleGraphics.drawGraphics(0, 0, client.graphics);
 	}
 

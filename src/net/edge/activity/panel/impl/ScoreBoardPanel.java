@@ -4,6 +4,7 @@ import net.edge.Config;
 import net.edge.activity.panel.Panel;
 import net.edge.cache.unit.Interface;
 import net.edge.game.Scene;
+import net.edge.game.model.Player;
 import net.edge.media.Rasterizer2D;
 
 public class ScoreBoardPanel extends Panel {
@@ -49,6 +50,18 @@ public class ScoreBoardPanel extends Panel {
 		}
 		
 		scrollMax = Math.max(35 * 20 - 265, 0);
+		
+		if(Config.def.panelStyle == 2) {
+			if(client.leftClickInRegion(beginX + 382, beginY + 22, beginX + 438, beginY + 47)) {
+				client.panelHandler.open(new PlayerPanel(1));
+				return true;
+			}
+		} else {
+			if(client.leftClickInRegion(beginX + 382, beginY + 22, beginX + 438, beginY + 42)) {
+				client.panelHandler.open(new PlayerPanel(1));
+				return true;
+			}
+		}
 
 		/* Scrolling */
 		if(client.mouseInRegion(beginX + 5, beginY + 40, beginX + 493, beginY + 365)) {
@@ -105,6 +118,20 @@ public class ScoreBoardPanel extends Panel {
 		drawMain(beginX, beginY + 8, 500, 328, 0x050F00, 0x63625e, 200);
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
+		
+		if(Config.def.panelStyle == 2) {
+			Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 25, 2, 0xF3B13F, 60);
+			if(client.mouseInRegion(beginX + 382, beginY + 22, beginX + 438, beginY + 47)) {
+				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 25, 2, 0xF3B13F, 20);
+			}
+			fancyFont.drawCenteredString("Presets", beginX + 407, beginY + 30, 0xF3B13F);
+		} else {
+			Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 17, 54, 20, 2, 0x000000, 60);
+			if(client.mouseInRegion(beginX + 382, beginY + 22, beginX + 438, beginY + 47)) {
+				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 17, 54, 20, 2, 0x000000, 60);
+			}
+			fancyFont.drawCenteredString("Presets", beginX + 407, beginY + 32, 0xF3B13F);
+		}
 		
 		/*if(Config.def.panelStyle == 2) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
