@@ -281,7 +281,11 @@ public class ShopPanel extends Panel {
 				ImageCache.get(currency.getImage()).drawImage(beginX + 10 + x, beginY + offset + 32);
 			}
 			int am = Interface.cache[3900].invAmt[i];
-			smallFont.drawLeftAlignedEffectString(am == 999999999 ? "inf" : am + "", beginX + 12 + x, beginY + offset + 14, 0xF3B13F, true);
+			if(am == 999999999) {
+				ImageCache.get(2030).drawImage(beginX + 12 + x, beginY + offset + 6);
+			} else {
+				smallFont.drawLeftAlignedEffectString(am + "", beginX + 12 + x, beginY + offset + 14, 0xF3B13F, true);
+			}
 			smallFont.drawCenteredString(client.currentShopInterfacePrices[i] == 0 ? "free" : formatPrice(client.currentShopInterfacePrices[i]), beginX + 44 + x, beginY + offset + 46, 0xF3B13F);
 			offset += i % 6 == 5 ? 55 : 0;
 		}
