@@ -4862,8 +4862,7 @@ public class Client extends ClientEngine {
 
 				case 82:
 					int inter = inBuffer.getInt();
-					int content = inBuffer.getInt();
-					Interface.cache[inter].modelId = content;
+					Interface.cache[inter].modelId = inBuffer.getInt();
 					pktType = -1;
 					return true;
 
@@ -5479,7 +5478,7 @@ public class Client extends ClientEngine {
 					return true;
 
 				case 52:
-					int size2 = inBuffer.getUShort();
+					final int size2 = inBuffer.getUShort();
 					clanBansList = new String[size2];
 					for(int c = 0; c < size2; c++) {
 						clanBansList[c] = StringUtils.formatName(inBuffer.getLine().toLowerCase().replace("_", " "));
@@ -5710,21 +5709,37 @@ public class Client extends ClientEngine {
 					aBoolean1149 = false;
 					pktType = -1;
 					return true;
+					
+				case 127:
+					final int frameStart = inBuffer.getUShortMinus128();
+					int counter = inBuffer.getUShortMinus128();
+					while(counter != -1) {
+						if(Interface.cache[frameStart + counter] != null) {
+							Interface.cache[frameStart + counter].text = "";
+						}
+						counter--;
+					}
+					pktType = -1;
+					return true;
 
 				case 126:
 					String text = inBuffer.getLine();
 					final int frame = inBuffer.getUShortMinus128();
 					//clan chat text update.
 					if(frame >= 50144 && frame <= 50244) {
-						boolean muted = text.charAt(0) == 'y';
-						int rank = Integer.parseInt(text.charAt(1)+"");
-						text = text.substring(2, text.length());
-						clanMatesList[frame - 50144] = new ClanSettingPanel.ClanMember(text, rank, muted);
-						if(rank > 0) {
-							text = "@ra" + rank + "@" + text;
-						}
-						if(muted) {
-							text = "@red@" + text;
+						if(text.length() > 0) {
+							boolean muted = text.charAt(0) == 'y';
+							int rank = Integer.parseInt(text.charAt(1) + "");
+							text = text.substring(2, text.length());
+							clanMatesList[frame - 50144] = new ClanSettingPanel.ClanMember(text, rank, muted);
+							if(rank > 0) {
+								text = "@ra" + rank + "@" + text;
+							}
+							if(muted) {
+								text = "@red@" + text;
+							}
+						} else {
+							clanMatesList[frame - 50144] = null;
 						}
 					}
 					if(frame >= 26000 && frame < 26100) {

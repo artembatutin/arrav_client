@@ -59,10 +59,14 @@ public class ClanSettingPanel extends Panel {
 			}
 		}
 		if(client.leftClickInRegion(beginX + 8, beginY + 265, beginX + 158, beginY + 295)) {
-
+			client.outBuffer.putOpcode(213);
+			client.outBuffer.putInt(701);
+			client.outBuffer.putInt(0);
 		}
 		if(client.leftClickInRegion(beginX + 8, beginY + 297, beginX + 158, beginY + 327)) {
-
+			client.outBuffer.putOpcode(213);
+			client.outBuffer.putInt(701);
+			client.outBuffer.putInt(1);
 		}
 		beginX += 135;
 		scrollMax1 = Math.max(35 * countMuted() - 285, 0);
@@ -181,7 +185,7 @@ public class ClanSettingPanel extends Panel {
 				client.menuItemName[client.menuPos] = "Unmute " + name.getName();
 				client.menuItemCode[client.menuPos] = 647;
 				client.menuItemArg2[client.menuPos] = 0;
-				client.menuItemArg3[client.menuPos] = 500 + i;
+				client.menuItemArg3[client.menuPos] = 600 + i;
 				client.menuPos++;
 				break;
 			}
@@ -196,7 +200,7 @@ public class ClanSettingPanel extends Panel {
 				client.menuItemName[client.menuPos] = "Unban " + name;
 				client.menuItemCode[client.menuPos] = 647;
 				client.menuItemArg2[client.menuPos] = 1;
-				client.menuItemArg3[client.menuPos] = 500 + i;
+				client.menuItemArg3[client.menuPos] = 600 + i;
 				client.menuPos++;
 				break;
 			}
@@ -230,12 +234,6 @@ public class ClanSettingPanel extends Panel {
 		int offset = 45;
 		if(advanced) {
 			int[] info = {50308, 50311, 50314, 50317, 50320, 50321};
-			Interface.cache[50308].text = "Who can enter?";
-			Interface.cache[50311].text = "Who can talk?";
-			Interface.cache[50314].text = "Who can mute?";
-			Interface.cache[50317].text = "Who can ban?";
-			Interface.cache[50320].text = "Rename clan";
-			Interface.cache[50321].text = "Delete clan";
 			for(int i = 0; i < 6; i++) {
 				int height = i < 4 ? 50 : 27;
 				Rasterizer2D.fillRoundedRectangle(beginX + 8, beginY + offset, 117, height, 3, 0x000000, 100);
