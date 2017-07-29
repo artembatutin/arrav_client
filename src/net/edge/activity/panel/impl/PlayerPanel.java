@@ -208,7 +208,7 @@ public class PlayerPanel extends Panel {
 				Rasterizer2D.fillRoundedRectangle(beginX + 400, beginY + 55, 85, 25, 4, 0x000000, 20);
 			}
 			fancyFont.drawLeftAlignedString("Wilderness", beginX + 405, beginY + 71, 0xffffff);
-			fancyFont.drawLeftAlignedString("Presets", beginX + 370, beginY + 101, 0xffffff);
+			/*fancyFont.drawLeftAlignedString("Presets", beginX + 370, beginY + 101, 0xffffff);
 			Rasterizer2D.fillRoundedRectangle(beginX + 305, beginY + 110, 180, 185, 4, 0x000000, 80);
 			drawTitleButton("Set current", beginX + 310, beginY + 305, 0xdb8145);
 			drawTitleButton("I", beginX + 384, beginY + 305, 0xdb8145);
@@ -217,7 +217,7 @@ public class PlayerPanel extends Panel {
 			drawTitleButton("III", beginX + 443, beginY + 305, 0xdb8145);
 			drawTitleButton("VI", beginX + 467, beginY + 305, 0xdb8145);
 			
-			drawTitleButton("Grab from bank", beginX + 310, beginY + 115, 0xdb8145);
+			drawTitleButton("Grab from bank", beginX + 310, beginY + 115, 0xdb8145);*/
 			int offset = 60;
 			for(int i = 16051; i < 16065; i++) {
 				plainFont.drawLeftAlignedEffectString(Interface.cache[i].text, beginX + 120, beginY + offset + 5, 0xffffff, true);

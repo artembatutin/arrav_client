@@ -6449,6 +6449,10 @@ public class Client extends ClientEngine {
 	public boolean method119(int i, int j) {
 		boolean flag1 = false;
 		final Interface class9 = Interface.cache[j];
+		if(class9 == null)
+			return false;
+		if(class9.subId == null)
+			return false;
 		for(final int element : class9.subId) {
 			if(element == -1) {
 				continue;
@@ -6482,7 +6486,6 @@ public class Client extends ClientEngine {
 				}
 			}
 		}
-
 		return flag1;
 	}
 

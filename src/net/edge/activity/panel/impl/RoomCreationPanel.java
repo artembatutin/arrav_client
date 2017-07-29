@@ -44,7 +44,7 @@ public class RoomCreationPanel extends Panel {
 		BEDROOM(RoomCreationPanel.BEDROOM, 20, "10k"),
 		SKILL_ROOM(RoomCreationPanel.SKILL_ROOM, 25, "15k"),
 		QUEST_HALL(RoomCreationPanel.QUEST_HALL_DOWN, 35, "free"),
-		SKILL_HALL(RoomCreationPanel.SKILL_HALL_DOWN, 25, "free)"),
+		SKILL_HALL(RoomCreationPanel.SKILL_HALL_DOWN, 25, "free"),
 		GAMES_ROOM(RoomCreationPanel.GAMES_ROOM, 30, "25k"),
 		COMBAT_ROOM(RoomCreationPanel.COMBAT_ROOM, 32, "25k"),
 		QUEST_ROOM(RoomCreationPanel.QUEST_ROOM, 35, "25k"),
@@ -55,12 +55,12 @@ public class RoomCreationPanel extends Panel {
 		PORTAL_ROOM(RoomCreationPanel.PORTAL_ROOM, 50, "100k"),
 		FORMAL_GARDEN(RoomCreationPanel.FORMAL_GARDEN, 55, "75k"),
 		THRONE_ROOM(RoomCreationPanel.THRONE_ROOM, 60, "150k"),
-		OUBLIETTE(RoomCreationPanel.OUBLIETTE, 65, "150k"),
+		/*OUBLIETTE(RoomCreationPanel.OUBLIETTE, 65, "150k"),
 		PIT_DUNGEON(RoomCreationPanel.PIT, 70, "10k"),
 		DUNGEON_STAIRS(RoomCreationPanel.DUNGEON_STAIR_ROOM, 70, "7.5k"),
 		CORRIDOR(RoomCreationPanel.CORRIDOR, 70, "7.5k"),
 		JUNCTION(RoomCreationPanel.JUNCTION, 70, "7.5k"),
-		TREASURE_ROOM(RoomCreationPanel.TREASURE_ROOM, 75, "250k");
+		TREASURE(RoomCreationPanel.TREASURE_ROOM, 75, "250k")*/;
 		
 		private int id, level;
 		private final String name, cost;
@@ -91,7 +91,7 @@ public class RoomCreationPanel extends Panel {
 		}
 
         /* Exit */
-		if(client.leftClickInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 42)) {
+		if(processClose(beginX, beginY)) {
 			client.panelHandler.close();
 			client.outBuffer.putOpcode(185);
 			client.outBuffer.putShort(123);
@@ -126,20 +126,13 @@ public class RoomCreationPanel extends Panel {
 		}
 
 		/* Main background */
-		Rasterizer2D.fillRectangle(beginX, beginY + 8, 500, 328, 0x000000, 200);
-		Rasterizer2D.drawRectangle(beginX, beginY + 8, 500, 328, 0x63625e);
+		drawMain(beginX, beginY + 8, 500, 328, 0x000000, 0x63625e, 200);
+		drawOver(beginX, beginY);
+		drawClose(beginX, beginY);
 		
 		fancyFont.drawLeftAlignedEffectString("Build a room - Level: " + consLevel, beginX + 20, beginY + 33, 0xF3B13F, true);
 		
-		fancyFont.drawCenteredString("Exit", beginX + 467, beginY + 30, 0xF3B13F);
-		Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 25, 2, 0xF3B13F, 60);
-		if(client.mouseInRegion(beginX + 442, beginY + 12, beginX + 498, beginY + 47)) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 25, 2, 0xF3B13F, 20);
-		}
-		
 		/* content */
-		Rasterizer2D.drawRectangle(beginX + 4, beginY + 49, 490, 282, 0xffffff, 80);
-		Rasterizer2D.fillRectangle(beginX + 5, beginY + 50, 488, 280, 0xffffff, 60);
 		int offset = 50;
 		int i = 0;
 		for(Room room : rooms) {
