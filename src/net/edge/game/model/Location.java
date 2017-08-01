@@ -9,7 +9,7 @@ import net.edge.cache.unit.VaryingBit;
 public final class Location extends Entity {
 
 	private int animFrame;
-	private final int[] anIntArray1600;
+	private final int[] childs;
 	private final int anInt1601;
 	private final int anInt1602;
 	private final int anInt1603;
@@ -43,7 +43,7 @@ public final class Location extends Entity {
 		final LocationType class46 = LocationType.getPrecise(anInt1610);
 		anInt1601 = class46.varBitId;
 		anInt1602 = class46.anInt749;
-		anIntArray1600 = class46.childIds;
+		childs = class46.childIds;
 	}
 
 	@Override
@@ -84,8 +84,8 @@ public final class Location extends Entity {
 			}
 		}
 		LocationType class46;
-		if(anIntArray1600 != null) {
-			class46 = method457();
+		if(childs != null) {
+			class46 = getChildren();
 		} else {
 			class46 = LocationType.getPrecise(anInt1610);
 		}
@@ -96,7 +96,7 @@ public final class Location extends Entity {
 		}
 	}
 
-	private LocationType method457() {
+	private LocationType getChildren() {
 		int i = -1;
 		if(anInt1601 != -1) {
 			final VaryingBit varBit = VaryingBit.cache[anInt1601];
@@ -108,10 +108,10 @@ public final class Location extends Entity {
 		} else if(anInt1602 != -1) {
 			i = client.variousSettings[anInt1602];
 		}
-		if(i < 0 || i >= anIntArray1600.length || anIntArray1600[i] == -1) {
+		if(i < 0 || i >= childs.length || childs[i] == -1) {
 			return null;
 		} else {
-			return LocationType.getPrecise(anIntArray1600[i]);
+			return LocationType.getPrecise(childs[i]);
 		}
 	}
 }

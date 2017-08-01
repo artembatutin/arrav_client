@@ -174,7 +174,7 @@ public final class LocationType {
 			int offset2 = dat.size();
 			int writeOffset = offset2 - offset1;
 			idx.writeShort(writeOffset);
-			System.out.println("writted old: " + i + " - offset: " + writeOffset);
+			//System.out.println("writted old: " + i + " - offset: " + writeOffset);
 		}
 		dat.close();
 		idx.close();
@@ -236,7 +236,7 @@ public final class LocationType {
 			} else if(opcode == 14)
 				offsetAmplifier = buffer.getUByte();
 			else if(opcode == 15)
-				ambient = buffer.getUByte();//ye its custom haha so, your readvalues arent normal? umm different opcodes
+				ambient = buffer.getUByte();
 			else if(opcode == 16)
 				diffuse = buffer.getUByte();
 			else if(opcode >= 40 && opcode < 50) {
@@ -298,10 +298,15 @@ public final class LocationType {
 				if(anInt749 == 65535) {
 					anInt749 = -1;
 				}
-				final int childCount = buffer.getUByte();
+				final int childCount = buffer.getUShort();
 				this.childIds = new int[childCount];
+				if(id == 8553)
+				System.out.println("count: " + childCount);
 				for(int c = 0; c < childCount; c++) {
 					this.childIds[c] = buffer.getInt();
+					if(id == 8553) {
+						System.out.println(this.childIds[c]);
+					}
 					if(this.childIds[c] == 65535) {
 						this.childIds[c] = -1;
 					}
@@ -480,9 +485,9 @@ public final class LocationType {
 					anInt749 = 0xffff;
 				}
 				out.writeShort(anInt749);
-				out.writeByte(childIds.length);
-				for(int c : childIds) {
-					out.writeShort(c);
+				out.writeShort(childIds.length);
+				for(int i = 0; i < childIds.length; i++) {
+					out.writeInt(childIds[i]);
 				}
 				written.add(33);
 			} else if(actions != null && !actionsd) {
