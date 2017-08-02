@@ -6869,7 +6869,7 @@ public class Client extends ClientEngine {
 					}
 					if(npcSug) {
 						if(panelSearch) {
-							npcSugMin = 0;
+							npcSugMin = -10;
 							npcSugMax = 0;
 							panelSearchInput = null;
 							promptInput = "";
@@ -6909,9 +6909,9 @@ public class Client extends ClientEngine {
 								outBuffer.putByte(ch.ordinal());
 								outBuffer.putShort(item.id);
 								outBuffer.putShort(npcSugMin);
-								outBuffer.putShort(npcSugMin);
+								outBuffer.putShort(npcSugMax);
 							}
-							npcSugMin = 0;
+							npcSugMin = -10;
 							npcSugMax = 0;
 							panelSearchInput = null;
 							promptInput = "";
@@ -6968,7 +6968,7 @@ public class Client extends ClientEngine {
 						outBoundInput += (char) j;
 					return;
 				}
-				if(j >= 48 && j <= 57 && amountOrNameInput.length() < 10) {
+				if(j >= 48 && j <= 57 && amountOrNameInput.length() < 10 || (j == 45 && npcSug)) {
 					amountOrNameInput += (char) j;
 				}
 				if(j == 8 && (amountOrNameInput.length() > 0 || outBoundInput.length() > 0)) {
@@ -6995,7 +6995,7 @@ public class Client extends ClientEngine {
 						}
 						if(npcSug) {
 							//npc suggestion output.
-							if(npcSugMin > 0) {
+							if(npcSugMin != -10) {
 								npcSugMax = i1;
 								inputDialogState = 0;
 								amountOrNameInput = "";

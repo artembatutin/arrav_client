@@ -104,25 +104,6 @@ public final class LocationType {
 		loc.id = id;
 		loc.renew();
 		loc.read(data);
-		if(id == 28139)
-			loc.name = "Edge Portal";
-		if(loc.id == 29947)
-			loc.actions = new String[]{"Renew-points", null, "Infuse-pouches", null, null};
-		if(id >= 2980 && id <= 2987)
-			loc.actions = new String[]{"Pick-up", null, null, null, null};
-		if(id == 24124)
-			loc.actions = new String[]{"Access", null, null, null, null};
-		if(id == 38828 || id == 38827)
-			loc.actions = new String[]{"Add-Logs", null, "Check", null, null};
-		if(id == 38817 || id == 38818 || id == 38819 || id == 38820 || id == 38821)
-			loc.actions = new String[]{"Add-Logs", null, null, null, null};
-		if(loc.id == 6069)
-			loc.actions = new String[] { "Grab", null, null, null, null };
-		if(loc.id == 4709)
-			loc.mapFunction = 89;
-		if(loc.id == 9678)
-			loc.mapFunction = 78;
-
 		if(loc.id == id && loc.originalModelColors == null) {
 			loc.originalModelColors = new int[1];
 			loc.modifiedModelColors = new int[1];

@@ -85,6 +85,8 @@ public final class ObjectType {
 		}
 		pos = (pos + 1) % 10;
 		final ObjectType obj = cache[pos];
+		if(id > index.length)
+			return null;
 		data.pos = index[id];
 		obj.id = id;
 		obj.renew();
