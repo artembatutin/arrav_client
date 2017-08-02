@@ -300,13 +300,8 @@ public final class LocationType {
 				}
 				final int childCount = buffer.getUShort();
 				this.childIds = new int[childCount];
-				if(id == 8553)
-				System.out.println("count: " + childCount);
 				for(int c = 0; c < childCount; c++) {
 					this.childIds[c] = buffer.getInt();
-					if(id == 8553) {
-						System.out.println(this.childIds[c]);
-					}
 					if(this.childIds[c] == 65535) {
 						this.childIds[c] = -1;
 					}
