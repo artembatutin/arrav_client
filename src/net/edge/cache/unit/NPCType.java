@@ -5,14 +5,13 @@ import net.edge.Config;
 import net.edge.Constants;
 import net.edge.cache.CacheArchive;
 import net.edge.game.model.Model;
+import net.edge.game.model.NPC;
 import net.edge.sign.SignLink;
 import net.edge.util.io.Buffer;
 import net.edge.Client;
 import net.edge.util.DataToolkit;
 
-import java.io.DataOutputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -132,7 +131,7 @@ public final class NPCType {
 			npc.actions = new String[] {"Trade", null, "Get-Skillcape", null, "Tan-hides", null};
 		}
 		if(id == 682 || id == 8270 || id == 4288 || id == 1658 || id == 705) {//masters with shop
-			npc.actions = new String[] {"Trade", null, "Get-Skillcape", null, "Trade", null};
+			npc.actions = new String[] {"Trade", null, "Get-Skillcape", null, null, null};
 		}
 		if(id == 4901) {//finlay
 			npc.actions = new String[] {"Trade", null, null, null, null, null};

@@ -8735,7 +8735,7 @@ public class Client extends ClientEngine {
 					i1 = -1;
 				}
 				final int i2 = stream.getUByte();
-				if(i1 == entity.anim && i1 != -1) {
+				if(i1 == entity.anim && i1 != -1 && i1 < DeformSequence.cache.length) {
 					final int l2 = DeformSequence.cache[i1].replayMode;
 					if(l2 == 1) {
 						entity.animFrame = 0;

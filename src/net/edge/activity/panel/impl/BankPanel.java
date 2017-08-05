@@ -123,7 +123,7 @@ public class BankPanel extends Panel {
 				for(int i = 0; i < Interface.cache[270 + t].invId.length; i++) {
 					int icon = Interface.cache[270 + t].invId[i];
 					int x = shift % 8 * 57;
-					if(icon != 0) {
+					if(icon > 0) {
 						String name = ObjectType.get(icon).name;
 						if(client.bankSearch.length() > 1 && name != null && name.toLowerCase().contains(client.bankSearch)) {
 							if(client.mouseDragButton == 0 && srcSlot != -1) {
@@ -324,7 +324,7 @@ public class BankPanel extends Panel {
 				for(int i = 0; i < Interface.cache[270 + t].invId.length; i++) {
 					int icon = Interface.cache[270 + t].invId[i];
 					int x = shift % 8 * 57;
-					if(icon != 0) {
+					if(icon > 0) {
 						String name = ObjectType.get(icon).name;
 						if(client.bankSearch.length() > 1 && name != null && name.toLowerCase().contains(client.bankSearch)) {
 							if(client.mouseInRegion(beginX + 14 + x, beginY + offset, beginX + 74 + x, beginY + offset + 44)) {
@@ -444,7 +444,7 @@ public class BankPanel extends Panel {
 		/* Dragging */
 		if(xSelected != 0 || ySelected != 0 && srcSlot != -1) {
 			int icon = Interface.cache[270 + tab].invId[srcSlot];
-			if(icon != 0) {
+			if(icon > 0) {
 				BitmapImage img = ObjectType.getIcon(icon, Interface.cache[270 + tab].invAmt[srcSlot], 0);
 				if(img != null) {
 					img.drawImage(xSelected, ySelected, 128);
