@@ -3,12 +3,12 @@ package net.edge.activity.panel.impl;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.edge.Config;
 import net.edge.activity.panel.Panel;
+import net.edge.cache.unit.ImageCache;
+import net.edge.cache.unit.Interface;
 import net.edge.cache.unit.ObjectType;
 import net.edge.cache.unit.NPCType;
-import net.edge.game.Scene;
 import net.edge.media.Rasterizer2D;
 import net.edge.media.img.BitmapImage;
-import net.edge.util.string.StringUtils;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,54 +47,10 @@ public class DropPanel extends Panel {
 		}
 	}
 	
-	public enum Drop {
-		HERB_SEEDS(5291, 2, 1, 3, 5292, 2, 1, 3, 5293, 2, 1, 3, 5294, 2, 1, 3, 6311, 2, 1, 3, 5295, 2, 1, 3, 12176, 2, 1, 3, 5296, 2, 1, 3, 5297, 2, 1, 3, 14870, 2, 1, 3, 5298, 2, 1, 3, 5299, 2, 1, 3, 5300, 2, 1, 3, 5301, 2, 1, 3, 5302, 2, 1, 3, 5303, 2, 1, 3, 5304, 3, 1, 3, 5304, 3, 1, 3, 21621, 3, 1, 3),
-		FLOWER_SEEDS(5096, 2, 1, 3, 5097, 2, 1, 3, 5098, 2, 1, 3, 5099, 2, 1, 3, 5100, 3, 1, 3, 14583, 3, 1, 3),
-		ALLOTMENT_SEEDS(5318, 2, 1, 3, 5319, 2, 1, 3, 5324, 2, 1, 3, 5322, 2, 1, 3, 5323, 2, 1, 3, 5321, 2, 1, 3, 5322, 3, 1, 3),
-		CHARMS(12158, 2, 1, 3, 12159, 2, 1, 3, 12160, 2, 1, 2, 12163, 2, 1, 2),
-		LOW_RUNES(554, 2, 0, 100, 555, 2, 0, 100, 556, 2, 0, 100, 557, 2, 0, 100, 558, 2, 0, 100, 559, 2, 0, 100),
-		MED_RUNES(554, 2, 50, 100, 555, 2, 50, 100, 556, 2, 50, 100, 557, 2, 50, 100, 564, 2, 50, 100, 560, 2, 50, 100, 561, 2, 50, 100, 562, 2, 50, 100, 563, 2, 50, 100, 565, 2, 50, 100, 566, 2, 50, 100),
-		HIGH_RUNES(554, 2, 50, 250, 555, 2, 50, 250, 556, 2, 50, 250, 557, 2, 50, 250, 564, 2, 50, 250, 560, 2, 50, 250, 561, 2, 50, 250, 562, 2, 50, 250, 563, 2, 50, 250, 565, 2, 50, 250, 566, 2, 50, 250),
-		LOW_HERBS(199, 2, 1, 1, 201, 2, 1, 1, 203, 2, 1, 1, 205, 2, 1, 1, 207, 2, 1, 1),
-		MED_HERBS(207, 2, 1, 1, 3049, 2, 1, 1, 209, 2, 1, 1, 211, 2, 1, 1, 213, 2, 1, 1),
-		HIGH_HERBS(208, 3, 1, 5, 3050, 3, 1, 5, 210, 3, 1, 5, 212, 3, 1, 5, 214, 3, 1, 5, 3052, 3, 1, 2, 216, 3, 1, 2, 2486, 3, 1, 2, 218, 3, 1, 2, 220, 3, 1, 2),
-		MED_MINERALS(445, 2, 1, 20, 448, 3, 1, 10, 450, 3, 1, 10, 452, 4, 1, 5),
-		LOW_GEMS(1624, 2, 1, 5, 1622, 2, 1, 5),
-		MED_GEMS(1624, 2, 1, 10, 1622, 2, 1, 10, 1620, 2, 1, 5, 1618, 2, 1, 5),
-		HIGH_GEMS(1624, 3, 10, 40, 1622, 3, 10, 40, 1620, 3, 10, 20, 1618, 3, 10, 20, 1632, 3, 1, 5, 6572, 3, 1, 2),
-		BARROWS(4708, 3, 1, 1, 4710, 3, 1, 1, 4712, 3, 1, 1, 4714, 3, 1, 1, 4716, 5, 1, 1, 4718, 5, 1, 1, 4720, 5, 1, 1, 4722, 5, 1, 1, 4724, 3, 1, 1, 4726, 3, 1, 1, 4728, 3, 1, 1, 4730, 3, 1, 1, 4732, 3, 1, 1, 4734, 3, 1, 1, 4736, 3, 1, 1, 4738, 3, 1, 1, 4740, 1, 10, 120, 4745, 3, 1, 1, 4747, 3, 1, 1, 4749, 3, 1, 1, 4751, 3, 1, 1, 4753, 3, 1, 1, 4755, 3, 1, 1, 4757, 3, 1, 1, 4759, 3, 1, 1),
-		CASKETS(405, 3, 1, 1);
-		
-		public int[] items;
-		public int[] min;
-		public int[] max;
-		public int[] chance;
-		public String name;
-		
-		Drop(int... ids) {
-			items = new int[ids.length / 4];
-			min = new int[ids.length / 4];
-			max = new int[ids.length / 4];
-			chance = new int[ids.length / 4];
-			name = StringUtils.formatName(this.name().replaceAll("_", " ").toLowerCase());
-			for(int id = 0; id < ids.length; id += 4) {
-				items[id / 4] = ids[id];
-				chance[id / 4] = ids[id + 1];
-				min[id / 4] = ids[id + 2];
-				max[id / 4] = ids[id + 3];
-			}
-		}
-	}
-	
 	/**
 	 * The npc type of this drop.
 	 */
 	private NPCType type;
-	
-	/**
-	 * Array of table drops.
-	 */
-	private Drop[] drops = Drop.values();
 	
 	/**
 	 * Array of chances.
@@ -126,11 +82,6 @@ public class DropPanel extends Panel {
 	 */
 	private int[] result;
 	
-	/**
-	 * The hovered cache.
-	 */
-	private int cacheHover = -1;
-	
 	@Override
 	public boolean process() {
 		if(type == null && client.npcInfoId != 0) {
@@ -150,8 +101,7 @@ public class DropPanel extends Panel {
 			max1 = 32 * seekable.length;
 			max2 = 0;
 		} else if(!client.panelSearch) {
-			max1 = 43 * client.npcDropsId.length;
-			max2 = (32 * client.npcDropsId.length);
+			max2 = 58 * ((client.npcDropsId.length + 4) / 5);
 		}
 		scrollMax = Math.max((max1 > max2 ? max1 : max2) - 285, 0);
 
@@ -290,7 +240,7 @@ public class DropPanel extends Panel {
 		if(Config.def.panelStyle == 2)
 			Rasterizer2D.setClip(beginX + 5, beginY + 50, beginX + 493, beginY + 330);
 		else
-			Rasterizer2D.setClip(beginX + 5, beginY + 42, beginX + 493, beginY + 330);
+			Rasterizer2D.setClip(beginX + 5, beginY + 42, beginX + 493, Config.def.panelStyle == 0 ? beginY + 328 : beginY + 325);
 		int offset = -scrollPos + (Config.def.panelStyle == 2 ? 52 : 42);
 		
 		if(client.panelSearch) {
@@ -314,66 +264,39 @@ public class DropPanel extends Panel {
 		} else {
 			if(type == null)
 				return;
-			Rasterizer2D.drawVerticalLine(beginX + 126, beginY + 39, 290, 0x000000);
-			cacheHover = -1;
-			for(int c = 0; c < client.npcDrops.length; c++) {
-				Drop drop = drops[client.npcDrops[c]];
-				Rasterizer2D.fillRectangle(beginX + 6, beginY + offset, 120, 30, 0x0000, 100);
-				plainFont.drawLeftAlignedString(drop.name, beginX + 15, beginY + offset + 17, 0xffffff);
-				if(client.mouseInRegion(beginX + 6, beginY + offset, beginX + 126, beginY + offset + 30)) {
-					Rasterizer2D.fillRectangle(beginX + 6, beginY + offset, 120, 30, 0x0000, 40);
-					cacheHover = client.npcDrops[c];
-				}
-				offset += 31;
-			}
-			
 			offset = -scrollPos + 52;
-			if(cacheHover == -1) {
-				for(int u = 0; u < client.npcDropsId.length; u++) {
-					int id = client.npcDropsId[u];
-					int min = client.npcDropsMin[u];
-					int max = client.npcDropsMax[u];
-					Chance ch = chances[client.npcDropsChance[u]];
-					ObjectType obj = ObjectType.get(id);
-					if(obj == null)
-						continue;
-					BitmapImage image = ObjectType.getIcon(id, max, 0);
-					if(image != null)
-						image.drawImage(beginX + 140, beginY + offset);
-					//Rasterizer2D.fillRectangle(beginX + 6, beginY + offset, 120, 30, 0x0000, 100);
-					plainFont.drawLeftAlignedString(obj.name, beginX + 190, beginY + offset + 14, 0xffffff);
-					smallFont.drawLeftAlignedString(ch.name, beginX + 190, beginY + offset + 26, ch.color);
-					if(min == 1 && max > 1) {
-						smallFont.drawLeftAlignedString("Up to " + max, beginX + 340, beginY + offset + 20, 0xffffff);
-					} else if(min != 1) {
-						smallFont.drawLeftAlignedString("From " + min + " up to " + max, beginX + 340, beginY + offset + 20, 0xffffff);
-					}
-					Rasterizer2D.drawHorizontalLine(beginX + 127, beginY + offset + 38, 345, 0x000000);
-					offset += 41;
+			String tooltip = null;
+			for(int u = 0; u < client.npcDropsId.length; u++) {
+				int id = client.npcDropsId[u];
+				int min = client.npcDropsMin[u];
+				int max = client.npcDropsMax[u];
+				Chance ch = chances[client.npcDropsChance[u]];
+				ObjectType obj = ObjectType.get(id);
+				if(obj == null)
+					continue;
+				int x = u % 5 * 93;
+				Rasterizer2D.fillRoundedRectangle(beginX + 12 + x, beginY + offset, 82, 50, 3, ch.color, 150);
+				Rasterizer2D.fillRoundedRectangle(beginX + 12 + x, beginY + offset, 82, 50, 3, 0x000000, 50);
+				if(client.mouseInRegion(beginX + 12 + x, beginY + offset, beginX + 100 + x, beginY + offset + 50)) {
+					Rasterizer2D.fillRoundedRectangle(beginX + 12 + x, beginY + offset, 82, 50, 3, 0x000000, 50);
+					tooltip = obj.name;
 				}
-			} else {
-				for(int u = 0; u < drops[cacheHover].items.length; u++) {
-					int id = drops[cacheHover].items[u];
-					int min = drops[cacheHover].min[u];
-					int max = drops[cacheHover].max[u];
-					Chance ch = chances[drops[cacheHover].chance[u]];
-					ObjectType obj = ObjectType.get(id);
-					if(obj == null)
-						continue;
-					BitmapImage image = ObjectType.getIcon(id, max, 0);
-					if(image != null)
-						image.drawImage(beginX + 140, beginY + offset);
-					//Rasterizer2D.fillRectangle(beginX + 6, beginY + offset, 120, 30, 0x0000, 100);
-					plainFont.drawLeftAlignedString(obj.name, beginX + 190, beginY + offset + 14, 0xffffff);
-					smallFont.drawLeftAlignedString(ch.name, beginX + 190, beginY + offset + 26, ch.color);
-					if(min == 1 && max > 1) {
-						smallFont.drawLeftAlignedString("Up to " + max, beginX + 340, beginY + offset + 20, 0xffffff);
-					} else if(min != 1) {
-						smallFont.drawLeftAlignedString("From " + min + " up to " + max, beginX + 340, beginY + offset + 20, 0xffffff);
-					}
-					Rasterizer2D.drawHorizontalLine(beginX + 127, beginY + offset + 38, 345, 0x000000);
-					offset += 41;
+				final BitmapImage img = ObjectType.getIcon(id, min, 0);
+				if(img != null) {
+					img.drawImage(beginX + 36 + x, beginY + offset + 3);
 				}
+				//plainFont.drawLeftAlignedString(obj.name, beginX + 190, beginY + offset + 14, 0xffffff);
+				///smallFont.drawLeftAlignedString(ch.name, beginX + 190, beginY + offset + 26, ch.color);
+				if(max > 1 && min != max) {
+					smallFont.drawLeftAlignedEffectString(min + "-" + max, beginX + 15 + x, beginY + offset + 14, 0xF3B13F, true);
+				}
+				smallFont.drawCenteredEffectString(ch.name, beginX + 52 + x, beginY + offset + 46, ch.color, true);
+				offset += u % 5 == 4 ? 55 : 0;
+			}
+			if(tooltip != null) {
+				boolean off = (client.mouseX - beginX + 8 + smallFont.getStringWidth(tooltip)) > 490;
+				Rasterizer2D.fillRoundedRectangle(client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 18) : 8), client.mouseY - 3, smallFont.getStringWidth(tooltip) + 7, 15, 3, 0x000000, 200);
+				smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 14) : 12), client.mouseY + 9, 0xF3B13F, true);
 			}
 		}
 
