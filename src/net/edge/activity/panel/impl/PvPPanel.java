@@ -105,7 +105,7 @@ public class PvPPanel extends Panel {
 			if(client.mouseInRegion(beginX + 382, beginY + 22, beginX + 438, beginY + 47)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 17, 54, 20, 2, 0x000000, 60);
 			}
-			fancyFont.drawCenteredString("Presets", beginX + 407, beginY + 32, 0xF3B13F);
+			fancyFont.drawCenteredString("Stats", beginX + 407, beginY + 32, 0xF3B13F);
 		}
 		smallFont.drawLeftAlignedString("Don't get fooled by certain hot spots.", beginX + 170, beginY + 33, 0xffffff);
 		plainFont.drawLeftAlignedEffectString(Interface.cache[16038].text, beginX + 10, beginY + 60, 0xffffff, true);

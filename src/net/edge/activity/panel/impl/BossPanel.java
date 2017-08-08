@@ -10,9 +10,9 @@ public class BossPanel extends Panel {
 
 	private enum Boss {
 		PHOENIX(false, 84, 1709),
-		SKELETAL_HORROR(false, 91, 1710),
+		SKELETAL_HORROR(true, 320, 1710),
 		SEA_TROLL_QUEEN(false, 91, 1711),
-		BORK(true, 107, 1712),
+		BORK(true, 267, 1712),
 		TORMENTED_DEMON(true, 119, 1713),
 		GIANT_MOLE(false, 230, 1714),
 		KING_BLACK_DRAG(true, 276, 1715),

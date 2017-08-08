@@ -9,7 +9,7 @@ public class SkillPanel extends Panel {
 	
 	public static final String[] SKILL_NAME = {"Prayer", "Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining", "Herblore", "Agility", "Thieving", "Farming", "Runecrafting", "Construction", "Hunter", "Summoning", "Dungeoneering"};
 	public static final boolean[] SKILL_ENABLED = {
-			false,//Prayer
+			true,//Prayer
 			true,//Cooking
 			true,//Woodcutting
 			true,//Fletching

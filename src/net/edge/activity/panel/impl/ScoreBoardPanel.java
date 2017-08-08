@@ -130,7 +130,7 @@ public class ScoreBoardPanel extends Panel {
 			if(client.mouseInRegion(beginX + 382, beginY + 22, beginX + 438, beginY + 47)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 17, 54, 20, 2, 0x000000, 60);
 			}
-			fancyFont.drawCenteredString("Presets", beginX + 407, beginY + 32, 0xF3B13F);
+			fancyFont.drawCenteredString("Stats", beginX + 407, beginY + 32, 0xF3B13F);
 		}
 		
 		/*if(Config.def.panelStyle == 2) {

@@ -4856,7 +4856,7 @@ public class Client extends ClientEngine {
 			anInt843 = anInt842;
 			anInt842 = anInt841;
 			anInt841 = pktType;
-			
+			//System.out.println("reading packet " + pktType);
 			switch(pktType) {
 
 				case 82:

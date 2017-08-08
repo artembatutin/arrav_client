@@ -9,7 +9,7 @@ import net.edge.util.string.StringUtils;
 public class MinigamePanel extends Panel {
 
 	private enum Minigames {
-		BARB_ASSAULT(false, 1683),
+		HORRORIS(true, 1683),
 		BARROWS(true, 1684),
 		CASTLE_WARS(false, 1685),
 		CLAN_WARS(false, 1686),
