@@ -9,14 +9,14 @@ import net.edge.util.string.StringUtils;
 public class BossPanel extends Panel {
 
 	private enum Boss {
-		PHOENIX(false, 84, 1709),
+		PHOENIX(true, 84, 1709),
 		SKELETAL_HORROR(true, 320, 1710),
 		SEA_TROLL_QUEEN(false, 91, 1711),
 		BORK(true, 267, 1712),
 		TORMENTED_DEMON(true, 119, 1713),
 		GIANT_MOLE(false, 230, 1714),
 		KING_BLACK_DRAG(true, 276, 1715),
-		CHOAS_ELE(false, 305, 1716),
+		CHAOS_ELSE(true, 305, 1716),
 		KALPHITE_QUEEN(true, 333, 1717),
 		WILDYWYRM(true, 382, 1718),
 		NOMAD(true, 699, 1719),
