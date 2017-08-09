@@ -1,5 +1,6 @@
 package net.edge.cache.unit;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.edge.media.Viewport;
 import net.edge.cache.CacheArchive;
@@ -11,11 +12,9 @@ import net.edge.util.io.Buffer;
 
 public final class ObjectType {
 	
-	public static ObjectType[] cache;
-	public static int pos;
 	public static Buffer data;
 	public static int[] index;
-	
+	public static Int2ObjectArrayMap<ObjectType> defCache = new Int2ObjectArrayMap<>();
 	public static Int2ObjectOpenHashMap<BitmapImage> iconcache = new Int2ObjectOpenHashMap<>();
 	public static Int2ObjectOpenHashMap<Model> modelcache = new Int2ObjectOpenHashMap<>();
 	
@@ -78,13 +77,9 @@ public final class ObjectType {
 	}
 	
 	public static ObjectType get(int id) {
-		for(int j = 0; j < 10; j++) {
-			if(cache[j].id == id) {
-				return cache[j];
-			}
-		}
-		pos = (pos + 1) % 10;
-		final ObjectType obj = cache[pos];
+		if(defCache.containsKey(id))
+			return defCache.get(id);
+		final ObjectType obj = new ObjectType();
 		if(id > index.length)
 			return null;
 		data.pos = index[id];
@@ -148,6 +143,7 @@ public final class ObjectType {
 		if(id == 3918)
 			obj.pet("Trapped Zilzy");//saradomin
 		
+		defCache.put(id, obj);
 		return obj;
 	}
 	
@@ -310,7 +306,6 @@ public final class ObjectType {
 		modelcache = null;
 		iconcache = null;
 		index = null;
-		cache = null;
 		data = null;
 	}
 	
@@ -324,10 +319,6 @@ public final class ObjectType {
 		for(int i = 0; i < length; i++) {
 			index[i] = pos;
 			pos += bufferidx.getUShort();
-		}
-		cache = new ObjectType[10];
-		for(int i = 0; i < 10; i++) {
-			cache[i] = new ObjectType();
 		}
 	}
 	
@@ -490,13 +481,14 @@ public final class ObjectType {
 		}
 		model.calculateLighting(64 + anInt196, 768 + anInt184, -50, -10, -50, true);
 		model.hoverable = true;
-		modelcache.put(id, model);
 		if(fixPriority) {
 			if(model.triPri != null) {
 				for(int p = 0; p < model.triPri.length; p++)
 					model.triPri[p] = 10;
 			}
 		}
+		if(!Rasterizer3D.textureMissing)
+			modelcache.put(id, model);
 		return model;
 	}
 	

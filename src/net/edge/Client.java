@@ -2839,8 +2839,9 @@ public class Client extends ClientEngine {
 		LocationType.defCache.clear();
 		LocationType.modelCache.clear();
 		LocationType.animatedModelCache.clear();
-		NPCType.defCache.clear();;
+		NPCType.defCache.clear();
 		NPCType.modelcache.clear();
+		ObjectType.defCache.clear();
 		ObjectType.modelcache.clear();
 		ObjectType.iconcache.clear();
 		Player.modelcache.clear();
@@ -3449,6 +3450,7 @@ public class Client extends ClientEngine {
 		ImageCache.clear();
 		Texture.clear();
 		LocationType.defCache.clear();
+		ObjectType.defCache.clear();
 		NPCType.defCache.clear();
 		PlayerPanel.tiers = null;
 		gameActivity.reset();
