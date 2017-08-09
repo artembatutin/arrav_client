@@ -133,6 +133,9 @@ public final class NPCType {
 		if(id == 682 || id == 8270 || id == 4288 || id == 1658 || id == 705) {//masters with shop
 			npc.actions = new String[] {"Trade", null, "Get-Skillcape", null, null, null};
 		}
+		if(id == 3299) {
+			npc.actions = new String[] {"Trade", null, "Get-Skillcape", null, "Pickpocket", null};
+		}
 		if(id == 4901) {//finlay
 			npc.actions = new String[] {"Trade", null, null, null, null, null};
 		}

@@ -21,11 +21,11 @@ public class SkillPanel extends Panel {
 			true,//Herblore
 			true,//Agility
 			true,//Thieving
-			false,//Farming
+			true,//Farming
 			true,//Runecrafting
-			false,//Hunter
-			true,//Construction
-			false,//Summoning
+			false,//Construction
+			true,//Hunter
+			true,//Summoning
 			false//Dungeoneering
 	};
 

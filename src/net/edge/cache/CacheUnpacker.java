@@ -477,14 +477,6 @@ public class CacheUnpacker {
 	 * Finalize stage.
 	 */
 	public void reset() {
-		successfullyLoaded = false;
-		while(successfullyLoaded) {
-			successfullyLoaded = false;
-			try {
-				Thread.sleep(50L);
-			} catch(final Exception ignored) {
-			}
-		}
 		successfullyLoaded = true;
 		client.runes = null;
 		client.anIntArray851 = null;
@@ -529,7 +521,7 @@ public class CacheUnpacker {
 		/**
 		 * Loading screen draw loop.
 		 */
-		private void updateLoading(int centerX, int centerY) {
+		private synchronized void updateLoading(int centerX, int centerY) {
 			if(client.onDemandRequester == null)
 				return;
 			if(loadingCircleStarts == null || loadingCircleLengths == null) {
