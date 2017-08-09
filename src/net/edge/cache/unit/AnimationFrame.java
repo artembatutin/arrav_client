@@ -16,7 +16,11 @@ public final class AnimationFrame {
 	int anInt636;
 
 	public static boolean ready(int id) {
+		if(id < 0)
+			return false;
 		int file = id >> 16;
+		if(file < 0 || file >= cache.length)
+			return false;
 		if(cache[file] == null) {
 			client.onDemandRequester.addRequest(1, file);
 			return false;

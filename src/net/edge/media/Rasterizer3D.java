@@ -3538,7 +3538,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 				hslToRgbMap[pos++] = color;
 			}
 		}
-		Texture.reset();
+		Texture.clear();
 	}
 	
 	public static void resetTextures() {

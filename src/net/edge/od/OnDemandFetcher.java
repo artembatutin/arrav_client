@@ -1,5 +1,7 @@
 package net.edge.od;
 
+import net.edge.activity.panel.impl.DropPanel;
+import net.edge.cache.unit.NPCType;
 import net.edge.util.collect.LinkedQueue;
 import net.edge.Client;
 import net.edge.Constants;
@@ -167,6 +169,16 @@ public final class OnDemandFetcher implements Runnable {
 				fileChecksums[index][fileId] = buffer.getInt();
 			}
 		}
+		
+		byte abyte1[] = archive.getFile("mob_drops");
+		System.out.println("mob_drops - " + abyte1.length);
+		int fileAmount = abyte1.length / 2;
+		Buffer mobs = new Buffer(abyte1);
+		DropPanel.seekable = new int[fileAmount];
+		for(int i = 0; i< fileAmount; i++) {
+			DropPanel.seekable[i] = mobs.getSShort();
+		}
+		
 
 		Buffer buffer = new Buffer(Constants.JAGGRAB_ENABLED ? archive.getFile("map_index") : DataToolkit.readFile(SignLink.getCacheDir() + "map_index"));
 		int length = buffer.getUShort();

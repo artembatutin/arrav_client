@@ -67,7 +67,7 @@ public final class ImageCache {
 			imageCache.get(id).imageWidth += value;
 	}
 
-	public static void reset() {
+	public static void clear() {
 		imageCache.clear();
 	}
 

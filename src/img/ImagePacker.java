@@ -137,7 +137,7 @@ public class ImagePacker {
 				byte[] pack = packRaw(data.data);
 				client.cacheIdx[6].writeFile(pack.length, pack, index);
 				//Setting images to null(for them to be reloaded).
-				ImageCache.reset();
+				ImageCache.clear();
 			}
 		}
 	}

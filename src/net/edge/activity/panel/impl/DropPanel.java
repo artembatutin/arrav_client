@@ -3,18 +3,11 @@ package net.edge.activity.panel.impl;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import net.edge.Config;
 import net.edge.activity.panel.Panel;
-import net.edge.cache.unit.ImageCache;
-import net.edge.cache.unit.Interface;
 import net.edge.cache.unit.ObjectType;
 import net.edge.cache.unit.NPCType;
 import net.edge.media.Rasterizer2D;
 import net.edge.media.img.BitmapImage;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.*;
 
 public class DropPanel extends Panel {
@@ -75,7 +68,7 @@ public class DropPanel extends Panel {
 	/**
 	 * An array of all npcs that have drops.
 	 */
-	private NPCType[] seekable;
+	public static int[] seekable;
 	
 	/**
 	 * An array of all found npcs in our search.
@@ -174,7 +167,7 @@ public class DropPanel extends Panel {
 					cachedSearch = client.panelSearchInput;
 					IntArrayList ids = new IntArrayList();
 					for(int i = 0; i < seekable.length; i++) {
-						NPCType n = seekable[i];
+						NPCType n = NPCType.get(seekable[i]);
 						if(n == null)
 							continue;
 						if(n.name == null)
@@ -184,17 +177,14 @@ public class DropPanel extends Panel {
 						if(n.name.toLowerCase().contains(cachedSearch.toLowerCase()))
 							ids.add(i);
 					}
-					result = new int[ids.size()];
-					for(int i = 0; i < ids.size(); i++) {
-						result[i] = ids.getInt(i);
-					}
+					result = ids.toIntArray();
 				}
 			}
 			if(result != null && result.length > 0) {
 				for(int i : result) {
 					if(client.leftClickInRegion(beginX + 6, beginY + offset, beginX + 468, beginY + 30 + offset)) {
 						client.outBuffer.putOpcode(134);
-						client.outBuffer.putShort(seekable[i].id);
+						client.outBuffer.putShort(NPCType.get(seekable[i]).id);
 						client.panelSearchInput = null;
 						return true;
 					}
@@ -246,8 +236,8 @@ public class DropPanel extends Panel {
 		if(client.panelSearch) {
 			if(result != null && result.length > 0) {
 				for(int i : result) {
-					NPCType npc = seekable[i];
-						if(npc == null)
+					NPCType npc = NPCType.get(seekable[i]);
+					if(npc == null)
 						continue;
 					Rasterizer2D.fillRectangle(beginX + 6, beginY + offset, 300, 30, 0x0000, 100);
 					Rasterizer2D.fillRectangle(beginX + 307, beginY + offset, 90, 30, 0x0000, 100);
@@ -319,33 +309,6 @@ public class DropPanel extends Panel {
 	public void initialize() {
 		client.npcSug = false;
 		client.panelSearchInput = "";
-		URL url;
-		IntArrayList ids = new IntArrayList();
-		try {
-			url = new URL("http://edgeville.net/game/drops.txt");
-			URLConnection conn = url.openConnection();
-			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
-			br.lines().forEach(line -> {
-				String[] l = line.split("-");
-				for(String num : l) {
-					if(num.length() == 0)
-						continue;
-					int id = Integer.parseInt(num);
-					if(id > 0)
-						ids.add(id);
-				}
-			});
-			br.close();
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		seekable = new NPCType[ids.size()];
-		for(int i = 0; i < ids.size(); i++) {
-			int id = ids.getInt(i);
-			if(id > 0 && id < NPCType.size())
-				seekable[i] = NPCType.get(id);
-		}
-		ids.clear();
 	}
 	
 	@Override

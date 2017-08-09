@@ -819,8 +819,8 @@ public class Client extends ClientEngine {
 			Model.reset();
 			AnimationFrame.reset();
 			MaterialType.reset();
-			ImageCache.reset();
-			Texture.reset();
+			ImageCache.clear();
+			Texture.clear();
 			//Performs garbage collect.
 			System.gc();
 		} catch(final Exception _ex) {
@@ -2836,8 +2836,10 @@ public class Client extends ClientEngine {
 	}
 
 	private void clearMemory() {
+		LocationType.defCache.clear();
 		LocationType.modelCache.clear();
 		LocationType.animatedModelCache.clear();
+		NPCType.defCache.clear();;
 		NPCType.modelcache.clear();
 		ObjectType.modelcache.clear();
 		ObjectType.iconcache.clear();
@@ -3444,8 +3446,10 @@ public class Client extends ClientEngine {
 		System.gc();
 		taskHandler = null;
 		updateWindow();
-		ImageCache.reset();
-		Texture.reset();
+		ImageCache.clear();
+		Texture.clear();
+		LocationType.defCache.clear();
+		NPCType.defCache.clear();
 		PlayerPanel.tiers = null;
 		gameActivity.reset();
 		panelHandler.close();
@@ -8215,7 +8219,7 @@ public class Client extends ClientEngine {
 			planeReq = -1;
 			aClass19_1056.clear();
 			aClass19_1013.clear();
-			Texture.reset();
+			Texture.clear();
 			clearMemory();
 			scene.clear();
 			for(int plane = 0; plane < 4; plane++) {
@@ -8348,10 +8352,11 @@ public class Client extends ClientEngine {
 		} catch(final Exception exception) {
 			exception.printStackTrace();
 		}
+		LocationType.defCache.clear();
 		LocationType.modelCache.clear();
 		LocationType.animatedModelCache.clear();
 		System.gc();
-		Texture.reset();
+		Texture.clear();
 		onDemandRequester.method566();
 		int k = (regionX - 6) / 8 - 1;
 		int j1 = (regionX + 6) / 8 + 1;

@@ -1,11 +1,12 @@
 package net.edge.cache.unit;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.edge.Config;
 import net.edge.Constants;
 import net.edge.cache.CacheArchive;
 import net.edge.game.model.Model;
-import net.edge.game.model.NPC;
+import net.edge.media.Rasterizer3D;
 import net.edge.sign.SignLink;
 import net.edge.util.io.Buffer;
 import net.edge.Client;
@@ -18,9 +19,10 @@ import java.util.Set;
 public final class NPCType {
 
 	private static final boolean REPACK = false;
-
-	private static NPCType[] cache;
-	private static int pos;
+	private static NPCType dummy;
+	public final static Int2ObjectArrayMap<NPCType> defCache = new Int2ObjectArrayMap<>();
+	public static Int2ObjectOpenHashMap<Model> modelcache = new Int2ObjectOpenHashMap<>();
+	
 	public int turnLeftAnimationId;
 	private int varBitId;
 	public int turnAroundAnimationId;
@@ -52,7 +54,6 @@ public final class NPCType {
 	public boolean visible;
 	private int[] modelId;
 	private boolean nonTextured;
-	public static Int2ObjectOpenHashMap<Model> modelcache = new Int2ObjectOpenHashMap<>();
 	private boolean fixPriority;
 
 	private NPCType() {
@@ -76,72 +77,15 @@ public final class NPCType {
 	}
 	
 	public static NPCType get(int id) {
-		for(int i = 0; i < 20; i++) {
-			if(cache[i].id == id) {
-				return cache[i];
-			}
+		if(defCache.containsKey(id))
+			return defCache.get(id);
+		NPCType npc = new NPCType();
+		if(id >= index.length || id < 0) {
+			return dummy;
 		}
-		pos = (pos + 1) % 20;
-		NPCType npc = cache[pos] = new NPCType();
 		data.pos = index[id];
 		npc.id = id;
 		npc.decode(data);
-		if(id == 3705) {
-			npc.actions = new String[] {"Talk-to", null, "Trade", null, "Max-out", null};
-			npc.modelId[6] = 4443;
-			npc.headIcon = -1;
-			npc.name = "Ironmen captain";
-			npc.fixPriority = true;
-		}
-		if(id == 8027) {
-			npc.actions = new String[] {"Talk-to", null, null, null, null, null};
-			npc.name = "Ironmen orb";
-		}
-		if(id == 6183 || id == 6184) {
-			npc.actions = new String[] {"Talk-to", null, null, null, null, null};
-			npc.combatLevel = 99;
-			npc.name = "Ironmen guard";
-		}
-		if(id == 7605) {
-			npc.actions = new String[] {"Bank", null, "Trade", null, null, null};
-		}
-		if(id == 8091) {//star sprite
-			npc.actions = new String[] {"Talk-to", null, "Exchange-stardust", null, "Trade", null};
-		}
-		if(id == 13926) {//scoreboard manager
-			npc.name = "Scoreboard manager";
-			npc.actions = new String[] {"Talk-to", null, "Claim-rewards", null, null, null};
-		}
-		if(id == 3400 || id == 669) {//culinaromancer and bmoney store
-			npc.actions = new String[] {"Talk-to", null, "Trade", null, null, null};
-		}
-		if(id == 5913) {//aubury
-			npc.actions = new String[] {"Talk-to", null, "Get-Skillcape", null, "Teleport", null};
-		}
-		if(id == 2270) {//thieving
-			npc.actions = new String[] {"Trade", null, "Get-Skillcape", null, null, null};
-		}
-		if(id == 8462) {//slayer master
-			npc.actions = new String[] {"Talk-to", null, "Tasks", null, "Trade", null };
-		}
-		if(id == 5113) {//healer
-			npc.actions = new String[] {"Talk-to", null, "Get-Skillcape", null, "Trade", null };
-		}
-		if(id == 805) {//master crafter
-			npc.actions = new String[] {"Trade", null, "Get-Skillcape", null, "Tan-hides", null};
-		}
-		if(id == 682 || id == 8270 || id == 4288 || id == 1658 || id == 705) {//masters with shop
-			npc.actions = new String[] {"Trade", null, "Get-Skillcape", null, null, null};
-		}
-		if(id == 3299) {
-			npc.actions = new String[] {"Trade", null, "Get-Skillcape", null, "Pickpocket", null};
-		}
-		if(id == 4901) {//finlay
-			npc.actions = new String[] {"Trade", null, null, null, null, null};
-		}
-		if(id == 3495 || id == 1613 || id == 10702 || id == 111 || (npc.name != null && npc.name.contains("Waterfiend"))) {//fixes
-			npc.nonTextured = true;
-		}
 		
 		//pets
 		if(id == 3167)
@@ -163,6 +107,7 @@ public final class NPCType {
 			npc.pet(6247, "Zilzy", 68);//saradomin
 		if(Config.def.idx())
 			System.out.println(npc.id + " - " + npc.standAnimationId + " - " + npc.walkAnimationId);
+		defCache.put(id, npc);
 		return npc;
 	}
 	
@@ -185,10 +130,8 @@ public final class NPCType {
 	public static void reset() {
 		modelcache = null;
 		index = null;
-		cache = null;
 		data = null;
 	}
-
 
 	public static void unpack(CacheArchive archive) {
 		final Buffer buffer;
@@ -207,10 +150,7 @@ public final class NPCType {
 			index[i] = pos;
 			pos += buffer.getUShort();
 		}
-		cache = new NPCType[20];
-		for(int i = 0; i < 20; i++) {
-			cache[i] = new NPCType();
-		}
+		dummy = get(1);
 		//Repacking with fixes.
 		if(REPACK) {
 			try {

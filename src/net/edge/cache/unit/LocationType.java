@@ -1,11 +1,13 @@
 package net.edge.cache.unit;
 
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.edge.Config;
 import net.edge.cache.CacheArchive;
 import net.edge.game.model.Model;
+import net.edge.media.Rasterizer3D;
 import net.edge.od.OnDemandFetcher;
 import net.edge.util.io.Buffer;
 import net.edge.Client;
@@ -15,12 +17,10 @@ import java.io.*;
 public final class LocationType {
 
 	public static Client client;
-
-	private static int pos;
 	private static Buffer data;
-	private static LocationType[] cache;
 	private static int[] index;
 
+	public final static Int2ObjectArrayMap<LocationType> defCache = new Int2ObjectArrayMap<>();
 	public final static Long2ObjectOpenHashMap<Model> animatedModelCache = new Long2ObjectOpenHashMap<>();
 	public final static Int2ObjectOpenHashMap<Model> modelCache = new Int2ObjectOpenHashMap<>();
 
@@ -91,14 +91,9 @@ public final class LocationType {
 		}
 		if(id > index.length)
 			id = index.length - 1;
-
-		for(int i = 0; i < 20; i++) {
-			if(cache[i].id == id)
-				return cache[i];
-		}
-
-		pos = (pos + 1) % 20;
-		LocationType loc = cache[pos];
+		if(defCache.containsKey(id))
+			return defCache.get(id);
+		LocationType loc = new LocationType();
 		data.pos = index[id];
 
 		loc.id = id;
@@ -110,6 +105,7 @@ public final class LocationType {
 			loc.originalModelColors[0] = 0;
 			loc.modifiedModelColors[0] = 1;
 		}
+		defCache.put(id, loc);
 		return loc;
 	}
 
@@ -118,7 +114,6 @@ public final class LocationType {
 		modelCache.clear();
 		animatedModelCache.clear();
 		index = null;
-		cache = null;
 		data = null;
 	}
 
@@ -134,11 +129,6 @@ public final class LocationType {
 		for(int j = 0; j < length; j++) {
 			index[j] = pos;
 			pos += idx.getUShort();
-		}
-
-		cache = new LocationType[20];
-		for(int i = 0; i < 20; i++) {
-			cache[i] = new LocationType();
 		}
 	}
 

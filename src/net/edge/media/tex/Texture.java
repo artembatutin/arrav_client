@@ -29,7 +29,7 @@ public final class Texture {
 		return cache.get(index);
 	}
 
-	public static void reset() {
+	public static void clear() {
 		cache.clear();
 	}
 
