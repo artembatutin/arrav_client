@@ -9,7 +9,7 @@ import net.edge.util.string.StringUtils;
 public class BossPanel extends Panel {
 
 	private enum Boss {
-		PHOENIX(true, 84, 1709),
+		PHOENIX(true, 235, 1709),
 		SKELETAL_HORROR(true, 320, 1710),
 		SEA_TROLL_QUEEN(true, 91, 1711),
 		BORK(true, 267, 1712),

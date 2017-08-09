@@ -135,7 +135,7 @@ public final class Player extends Mobile {
 		int currCycle = -1;
 		int nextCycle = -1;
 		if(desc != null) {
-			if(super.anim >= 0 && super.animDelay == 0) {
+			if(super.anim >= 0 && super.animDelay == 0 && super.anim <= DeformSequence.cache.length) {
 				final DeformSequence seq = DeformSequence.cache[super.anim];
 				currAnim = seq.frameList[super.animFrame];
 				if(Config.def.tween() && super.nextAnimFrame != -1) {
