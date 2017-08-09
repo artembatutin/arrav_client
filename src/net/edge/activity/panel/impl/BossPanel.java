@@ -2,36 +2,33 @@ package net.edge.activity.panel.impl;
 
 import net.edge.activity.panel.Panel;
 import net.edge.cache.unit.ImageCache;
-import net.edge.game.Scene;
 import net.edge.media.Rasterizer2D;
 import net.edge.util.string.StringUtils;
 
 public class BossPanel extends Panel {
 
 	private enum Boss {
-		PHOENIX(true, 235, 1709),
-		SKELETAL_HORROR(true, 320, 1710),
-		SEA_TROLL_QUEEN(true, 91, 1711),
-		BORK(true, 267, 1712),
-		TORMENTED_DEMON(true, 119, 1713),
-		GIANT_MOLE(false, 230, 1714),
-		KING_BLACK_DRAG(true, 276, 1715),
-		CHAOS_ELE(true, 305, 1716),
-		KALPHITE_QUEEN(true, 333, 1717),
-		WILDYWYRM(true, 382, 1718),
-		NOMAD(true, 699, 1719),
-		JAD(true, 702, 1720),
-		CORP_BEAST(true, 785, 1721),
-		NEX(false, 1001, 1722),
-		GOD_WARS(true, 0, 1723),
-		DAGANNOTH(true, 0, 1724);
+		PHOENIX(235, 1709),
+		SKELETAL_HORROR(320, 1710),
+		SEA_TROLL_QUEEN(91, 1711),
+		BORK(267, 1712),
+		TORMENTED_DEMON(119, 1713),
+		GIANT_MOLE(230, 1714),
+		KING_BLACK_DRAG(276, 1715),
+		CHAOS_ELE(305, 1716),
+		KALPHITE_QUEEN(333, 1717),
+		WILDYWYRM(382, 1718),
+		NOMAD(699, 1719),
+		JAD(702, 1720),
+		CORP_BEAST(785, 1721),
+		NEX(1001, 1722),
+		GOD_WARS(0, 1723),
+		DAGANNOTH(0, 1724);
 
 		int level, img;
-		boolean enabled;
 		String name;
 
-		Boss(boolean enabled, int level, int img) {
-			this.enabled = enabled;
+		Boss(int level, int img) {
 			this.img = img;
 			this.level = level;
 			this.name = StringUtils.formatName(name().toLowerCase());
@@ -60,7 +57,7 @@ public class BossPanel extends Panel {
 		int offset = 45;
 		for(int i = 0; i < bosses.length; i++) {
 			int x = i % 6 * 81;
-			if(bosses[i].enabled && client.leftClickInRegion(beginX + 12 + x, beginY + offset, beginX + 82 + x, beginY + offset + 70)) {
+			if(client.leftClickInRegion(beginX + 12 + x, beginY + offset, beginX + 82 + x, beginY + offset + 70)) {
 				client.outBuffer.putOpcode(185);
 				client.outBuffer.putShort(i + 50);
 				return true;
@@ -93,9 +90,7 @@ public class BossPanel extends Panel {
 		for(int i = 0; i < bosses.length; i++) {
 			int x = i % 6 * 81;
 			ImageCache.get(bosses[i].img).drawImage(beginX + 12 + x, beginY + offset);
-			if(!bosses[i].enabled) {
-				Rasterizer2D.fillRectangle(beginX + 12 + x, beginY + offset, 70, 70, 0, 200);
-			} else if(client.mouseInRegion(beginX + 12 + x, beginY + offset, beginX + 82 + x, beginY + offset + 70)) {
+			if(client.mouseInRegion(beginX + 12 + x, beginY + offset, beginX + 82 + x, beginY + offset + 70)) {
 				Rasterizer2D.fillRectangle(beginX + 12 + x, beginY + offset, 70, 70, 0, 40);
 			}
 			smallFont.drawCenteredEffectString(bosses[i].name, beginX + 46 + x, beginY + offset + 82, 0xF3B13F, true);
