@@ -566,10 +566,14 @@ public final class NPCType {
 		Model cachedModel = modelcache.get(id);
 		if(cachedModel == null) {
 			boolean flag = false;
-			for(int aModelId : modelId) {
-				if(!Model.isCached(aModelId)) {
-					flag = true;
+			if(modelId != null) {
+				for(int aModelId : modelId) {
+					if(!Model.isCached(aModelId)) {
+						flag = true;
+					}
 				}
+			} else {
+				return null;
 			}
 			if(flag) {
 				return null;

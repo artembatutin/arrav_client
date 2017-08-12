@@ -76,7 +76,7 @@ public class SkillPanel extends Panel {
 		drawOver(beginX, beginY);
 		
 		drawClose(beginX, beginY);
-		fancyFont.drawLeftAlignedEffectString("Skilling teleport", beginX + 20, beginY + 31, 0xF3B13F, true);
+		fancyFont.drawLeftAlignedEffectString("Skilling Teleport", beginX + 20, beginY + 31, 0xF3B13F, true);
 
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
 		int offset = 45;

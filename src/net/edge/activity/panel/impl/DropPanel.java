@@ -22,19 +22,20 @@ public class DropPanel extends Panel {
 	}
 	
 	public enum Chance {
-		ALWAYS(0xffffff),
-		COMMON(0x66ff66),
-		UNCOMMON(0x33cc33),
-		VERY_UNCOMMON(0xff9933),
-		RARE(0xcc3300),
-		VERY_RARE(0x990000),
-		EXTREMELY_RARE(0x660000);
+		ALWAYS(0xffffff, ""),
+		VERY_COMMON(0x66ff66, " 1/2"),
+		COMMON(0x33cc33, " 1/4"),
+		UNCOMMON(0xff9933, " 2/10"),
+		VERY_UNCOMMON(0xcc8600, " 3/20"),
+		RARE(0xcc3300, " 2/40"),
+		VERY_RARE(0x990000, " 1/40"),
+		EXTREMELY_RARE(0x660000, " 1/125");
 		
 		public String name;
 		
 		public int color;
 		
-		Chance(int color) {
+		Chance(int color, String rate) {
 			this.color = color;
 			name = this.name().replaceAll("_", " ").toLowerCase();
 		}

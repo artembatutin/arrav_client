@@ -128,8 +128,8 @@ public class SettingPanel extends Panel {
 				client.loadRegion();
 		} else if(client.leftClickInRegion(x + 150, y + 168, x + 192, y + 183))
 			Config.def.groundMat(!Config.def.groundMat());
-		else if(client.leftClickInRegion(x + 150, y + 192, x + 192, y + 207))
-			Config.def.fog(!Config.def.fog());
+		//else if(client.leftClickInRegion(x + 150, y + 192, x + 192, y + 207))
+			//Config.def.fog(!Config.def.fog());
 		else if(client.leftClickInRegion(x + 150, y + 216, x + 192, y + 231))
 			Config.def.names(!Config.def.names());
 		else if(client.leftClickInRegion(x + 150, y + 240, x + 192, y + 255)) {
@@ -248,7 +248,7 @@ public class SettingPanel extends Panel {
 
 		plainFont.drawLeftAlignedEffectString((Config.def.groundDec() ? "@gre@" : "@red@") + "Ground decorations", x + 20, y + 147, 0, true);
 		plainFont.drawLeftAlignedEffectString((Config.def.groundMat() ? "@gre@" : "@red@") + "Ground materials", x + 20, y + 171, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.fog() ? "@gre@" : "@red@") + "Smooth fog", x + 20, y + 195, 0, true);
+		//plainFont.drawLeftAlignedEffectString((Config.def.fog() ? "@gre@" : "@red@") + "Smooth fog", x + 20, y + 195, 0, true);
 		plainFont.drawLeftAlignedEffectString((Config.def.names() ? "@gre@" : "@red@") + "Display names", x + 20, y + 219, 0, true);
 		plainFont.drawLeftAlignedEffectString((!Config.def.roof() ? "@red@" : "@gre@") + "Visible roofs", x + 20, y + 243, 0, true);
 

@@ -67,9 +67,9 @@ public abstract class Panel extends Activity {
 			Rasterizer2D.fillRectangle(x, y, width, height, color1, alpha);
 			Rasterizer2D.drawRectangle(x, y, width, height, color2);
 		} else if(Config.def.panelStyle == 0) {
-			ImageCache.get(1996).drawImage(x, y);
+			ImageCache.get(1996, true).drawImage(x, y);
 		} else if(Config.def.panelStyle == 1) {
-			ImageCache.get(1997).drawImage(x, y);
+			ImageCache.get(1997, true).drawImage(x, y);
 		}
 	}
 	

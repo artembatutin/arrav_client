@@ -61,7 +61,7 @@ public class MonsterPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 
-		fancyFont.drawLeftAlignedEffectString("Monster teleport", beginX + 20, beginY + 31, 0xF3B13F, true);
+		fancyFont.drawLeftAlignedEffectString("Dungeon Teleport", beginX + 20, beginY + 31, 0xF3B13F, true);
 		smallFont.drawLeftAlignedString("You can right click \"More info\" to check drops on monsters", beginX + 150, beginY + 25, 0xF3B13F);
 		smallFont.drawLeftAlignedString("or access the Monster database from the quest tab.", beginX + 150, beginY + 36, 0xF3B13F);
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);

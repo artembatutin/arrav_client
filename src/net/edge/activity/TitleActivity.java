@@ -41,7 +41,7 @@ public class TitleActivity extends Activity {
 	}
 	
 	public final static Connection[] CONNECTIONS = {
-			new Connection("Main", 3227459972L, 43594),
+			new Connection("Main", 3227739482L, 43594),
 			new Connection("Dev", 2130706433L, 43594)
 	};
 	
@@ -355,6 +355,7 @@ public class TitleActivity extends Activity {
 		if(Client.firstRun) {
 			settings = new SettingPanel();
 			client.titleMessage = "Welcome to Edgeville, choose your preferences.";
+			Client.firstRun = false;
 		}
 	}
 

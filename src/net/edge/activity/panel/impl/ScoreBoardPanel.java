@@ -147,7 +147,7 @@ public class ScoreBoardPanel extends Panel {
 			fancyFont.drawCenteredString(clan ? "Indiv." : "Clan", beginX + 434, beginY + 33, 0xF3B13F);
 		}*/
 		
-		fancyFont.drawLeftAlignedEffectString((clan ? "Clan " : "Individual ") + "Scoreboard", beginX + 20, beginY + 30, 0xF3B13F, true);
+		fancyFont.drawLeftAlignedEffectString((clan ? "Clan " : "Player Killing ") + "Scoreboard", beginX + 20, beginY + 30, 0xF3B13F, true);
 		smallFont.drawLeftAlignedEffectString("#", beginX + 20, beginY + 53, 0xF3B13F, true);
 		smallFont.drawLeftAlignedEffectString("Player name", beginX + 50, beginY + 53, 0xF3B13F, true);
 		smallFont.drawLeftAlignedEffectString("Killstreak", beginX + 180, beginY + 53, 0xF3B13F, true);
