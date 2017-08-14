@@ -2337,6 +2337,20 @@ public class Client extends ClientEngine {
 										}
 									} else {
 										if(childWidget.isInv) {
+											if(shiftDown) {
+												for(int l3 = 4; l3 >= 3; l3--) {
+													if(itemDef.actions != null && itemDef.actions[l3] != null) {
+													} else if(l3 == 4) {
+														menuItemName[menuPos] = "Drop @lre@" + itemDef.name;
+														menuItemCode[menuPos] = 847;
+														menuItemArg1[menuPos] = itemDef.id;
+														menuItemArg2[menuPos] = k2;
+														menuItemArg3[menuPos] = childWidget.id;
+														menuPos++;
+														return;
+													}
+												}
+											}
 											for(int l3 = 4; l3 >= 3; l3--) {
 												if(itemDef.actions != null && itemDef.actions[l3] != null) {
 													menuItemName[menuPos] = itemDef.actions[l3] + " @lre@" + itemDef.name;

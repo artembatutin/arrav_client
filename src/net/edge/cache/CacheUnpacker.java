@@ -237,66 +237,46 @@ public class CacheUnpacker {
 		} catch(Exception _ex) {
 			_ex.printStackTrace();
 		}
-
 		if(buffer != null) {
 			if(Constants.JAGGRAB_ENABLED) {
-				System.out.println("new jaggrab " + fileName);
 				client.getCrc().reset();
 				client.getCrc().update(buffer);
 				int crcValue = (int) client.getCrc().getValue();
-
 				if(crcValue != crc) {
 					buffer = null;
 				}
 			}
 		}
-
 		if(buffer != null) {
-			System.out.println("getting jaggrab " + fileName);
-			CacheArchive streamLoader = new CacheArchive(index, fileName, buffer);
-			return streamLoader;
+			System.out.println("give jaggrab " + fileName);
+			return new CacheArchive(index, fileName, buffer);
 		}
 
 		int errorCount = 0;
-
 		while(buffer == null) {
-
-			String error = "Unknown error";
 			sideMessage = "Requesting " + fileName;
-
-			try {
-				DataInputStream datainputstream = openJagGrabInputStream(fileName + crc);
-				byte temp[] = new byte[6];
-				datainputstream.readFully(temp, 0, 6);
-				Buffer stream = new Buffer(temp);
-				stream.pos = 3;
-				int totalLength = stream.getUMedium() + 6;
-				int currentLength = 6;
-				buffer = new byte[totalLength];
-				System.arraycopy(temp, 0, buffer, 0, 6);
-
-				while(currentLength < totalLength) {
-					int remainingAmount = totalLength - currentLength;
-
-					if(remainingAmount > 1000) {
-						remainingAmount = 1000;
-					}
-
-					int remaining = datainputstream.read(buffer, currentLength, remainingAmount);
-
-					if(remaining < 0) {
-						error = "Length error: " + currentLength + "/" + totalLength;
-						throw new IOException("EOF");
-					}
-
-					currentLength += remaining;
-					int percentage = currentLength * 100 / totalLength;
-
-					sideMessage = "Loading " + fileName + " - " + percentage + "%";
+			try(DataInputStream in = openJagGrabInputStream(fileName)) {
+				int size = in.readInt();
+				if(size <= 0) {
+					buffer = null;
+				} else {
+					buffer = new byte[size];
+					in.readFully(buffer, 0, size);
+					in.close();
 				}
-
-				datainputstream.close();
-
+				if(buffer != null) {
+					if(Constants.JAGGRAB_ENABLED) {
+						System.out.println("new jaggrab " + fileName);
+						client.getCrc().reset();
+						client.getCrc().update(buffer);
+						int crcValue = (int) client.getCrc().getValue();
+						if(crcValue != crc) {
+							buffer = null;
+							errorCount++;
+						}
+					}
+				}
+				
 				try {
 					if(client.cacheIdx[0] != null) {
 						client.cacheIdx[0].writeFile(buffer.length, buffer, index);
@@ -305,49 +285,10 @@ public class CacheUnpacker {
 					_ex.printStackTrace();
 					client.cacheIdx[0] = null;
 				}
-
-				if(Constants.JAGGRAB_ENABLED) {
-					client.getCrc().reset();
-					client.getCrc().update(buffer);
-					int currentCrc = (int) client.getCrc().getValue();
-
-					if(currentCrc != crc) {
-						buffer = null;
-						errorCount++;
-						error = "Checksum error: " + currentCrc;
-					}
-				}
-			} catch(IOException ioexception) {
-				if(error.equals("Unknown error")) {
-					error = "Connection error";
-				}
-
-				ioexception.printStackTrace();
+				
+			} catch (Exception e) {
+				e.printStackTrace();
 				buffer = null;
-			} catch(NullPointerException _ex) {
-				error = "Null error";
-				buffer = null;
-
-				_ex.printStackTrace();
-				if(!SignLink.reportError) {
-					return null;
-				}
-			} catch(ArrayIndexOutOfBoundsException _ex) {
-				error = "Bounds error";
-				buffer = null;
-
-				_ex.printStackTrace();
-				if(!SignLink.reportError) {
-					return null;
-				}
-			} catch(Exception _ex) {
-				error = "Unexpected error";
-				buffer = null;
-
-				_ex.printStackTrace();
-				if(!SignLink.reportError) {
-					return null;
-				}
 			}
 			if(buffer == null) {
 				for(int seconds = timeToWait; seconds > 0; seconds--) {
@@ -364,19 +305,13 @@ public class CacheUnpacker {
 						_ex.printStackTrace();
 					}
 				}
-
 				timeToWait *= 2;
-
 				if(timeToWait > 60) {
 					timeToWait = 60;
 				}
-
-				//httpFallback = !httpFallback;
 			}
 		}
-
-		CacheArchive archive = new CacheArchive(index, fileName, buffer);
-		return archive;
+		return new CacheArchive(index, fileName, buffer);
 	}
 
 	private void compareCrcValues() {
@@ -388,22 +323,20 @@ public class CacheUnpacker {
 			message = "Connecting to the web server...";
 
 			try {
-				DataInputStream in = openJagGrabInputStream("crc" + (int) (Math.random() * 99999999D) + "-" + 317);
-				Buffer buffer = new Buffer(new byte[40]);
-				in.readFully(buffer.data, 0, 40);
+				DataInputStream in = openJagGrabInputStream("crc");
+				Buffer buffer = new Buffer(new byte[44]);
+				in.readFully(buffer.data, 0, 44);
 				in.close();
-
+				buffer.getInt();
 				for(int index = 0; index < 9; index++) {
 					EXPECTED_CRC[index] = buffer.getInt();
 				}
 
 				int checksumValue = buffer.getInt();
-				int expectedValue = 1235;
-
+				int expectedValue = 1234;
 				for(int index = 0; index < 9; index++) {
 					expectedValue = (expectedValue << 1) + EXPECTED_CRC[index];
 				}
-
 				if(checksumValue != expectedValue) {
 					EXPECTED_CRC[8] = 0;
 				}
@@ -469,7 +402,7 @@ public class CacheUnpacker {
 		loadingSocket.setSoTimeout(10000);
 		final java.io.InputStream inputstream = loadingSocket.getInputStream();
 		final OutputStream outputstream = loadingSocket.getOutputStream();
-		outputstream.write(("JAGGRAB /" + file + "\n\n").getBytes());
+		outputstream.write((file).getBytes());
 		return new DataInputStream(inputstream);
 	}
 

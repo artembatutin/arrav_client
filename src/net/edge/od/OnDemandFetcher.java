@@ -234,34 +234,17 @@ public final class OnDemandFetcher implements Runnable {
 
 	private void closeRequest(OnDemandEntry entry) {
 		try {
-			if(socket == null) {
-				long l = System.currentTimeMillis();
-				if(l - openSocketTime < 4000L) {
-					return;
-				}
-				openSocketTime = l;
-				socket = client.openSocket(43595);
+			if(socket == null || !socket.isConnected()) {
+				socket = Client.instance.openSocket(43595);
 				inputStream = socket.getInputStream();
 				outputStream = socket.getOutputStream();
-				outputStream.write(15);
-				for(int j = 0; j < 8; j++) {
-					inputStream.read();
-				}
-				loopCycle = 0;
 			}
 			ioBuffer[0] = (byte) entry.type;
 			ioBuffer[1] = (byte) (entry.id >> 24);
 			ioBuffer[2] = (byte) (entry.id >> 16);
 			ioBuffer[3] = (byte) (entry.id >> 8);
 			ioBuffer[4] = (byte) entry.id;
-			if(entry.incomplete) {
-				ioBuffer[5] = 1;
-			} else if(!client.loggedIn) {
-				ioBuffer[5] = 1;
-			} else {
-				ioBuffer[5] = 0;
-			}
-			outputStream.write(ioBuffer, 0, 6);
+			outputStream.write(ioBuffer, 0, 5);
 			writeLoopCycle = 0;
 			return;
 		} catch(IOException ioe) {

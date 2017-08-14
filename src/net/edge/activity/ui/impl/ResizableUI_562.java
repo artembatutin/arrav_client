@@ -2,6 +2,7 @@ package net.edge.activity.ui.impl;
 
 import net.edge.Config;
 import net.edge.Constants;
+import net.edge.activity.panel.impl.PlayerPanel;
 import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.activity.ui.UIComponent;
 import net.edge.activity.ui.util.CounterHandler;
@@ -484,8 +485,12 @@ public class ResizableUI_562 extends ResizableUI {
 				}
 				if(tabClick == client.invTab && client.showTab) {
 					client.showTab = false;
-				} else if(client.newerTabInterfaces[tabClick] != -1) {
+				} else if(client.newerTabInterfaces[tabClick] != -1 || tabClick == 3) {
 					client.showTab = true;
+					if(tabClick == 3) {
+						client.panelHandler.open(new PlayerPanel());
+						return;
+					}
 					client.invTab = tabClick;
 				}
 			}
@@ -705,7 +710,7 @@ public class ResizableUI_562 extends ResizableUI {
 	private void displaySideIcons() {
 		if(client.windowWidth < 1000) {
 			for(int i = 0; i < 16; i++) {
-				if(client.newerTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1) {
+				if(client.newerTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1 || i == 3) {
 					int xOffset = 16 - ImageCache.get(i + 22).imageWidth / 2;
 					int yOffset = 18 - ImageCache.get(i + 22).imageHeight / 2;
 					if(i < 8) {
@@ -719,7 +724,7 @@ public class ResizableUI_562 extends ResizableUI {
 			for(int i = 0; i < 16; i++) {
 				int xOffset = 16 - ImageCache.get(i + 22).imageWidth / 2;
 				int yOffset = 18 - ImageCache.get(i + 22).imageHeight / 2;
-				if(client.newerTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1) {
+				if(client.newerTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1 || i == 3) {
 					ImageCache.get(22 + i).drawImage(xOffset + client.windowWidth - 482 + 30 * i, yOffset + client.windowHeight - 34);
 				}
 			}
