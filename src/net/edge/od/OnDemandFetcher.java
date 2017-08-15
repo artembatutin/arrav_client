@@ -24,7 +24,6 @@ public final class OnDemandFetcher implements Runnable {
 	private final LinkedDeque requested;
 	public String statusString;
 	private int writeLoopCycle;
-	private long openSocketTime;
 	private int[] regionObjectFiles;
 	private final byte[] ioBuffer;
 	private Client client;
@@ -72,6 +71,11 @@ public final class OnDemandFetcher implements Runnable {
 
 	private void readData() {
 		try {
+			if(socket == null || !socket.isConnected()) {
+				socket = Client.instance.openSocket(43595);
+				inputStream = socket.getInputStream();
+				outputStream = socket.getOutputStream();
+			}
 			int j = inputStream.available();
 			if(expectedSize == 0 && j >= 6) {
 				waiting = true;
@@ -238,6 +242,7 @@ public final class OnDemandFetcher implements Runnable {
 				socket = Client.instance.openSocket(43595);
 				inputStream = socket.getInputStream();
 				outputStream = socket.getOutputStream();
+				loopCycle = 0;
 			}
 			ioBuffer[0] = (byte) entry.type;
 			ioBuffer[1] = (byte) (entry.id >> 24);
