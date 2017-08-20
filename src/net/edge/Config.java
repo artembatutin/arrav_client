@@ -78,7 +78,7 @@ public class Config {
 	 */
 	private boolean lowMem = false;
 	private boolean groundDec = true;
-	private boolean groundMat = false;
+	public boolean groundMat = false;
 	private boolean fog = false;
 	private boolean tween = false;
 	private boolean modelPrecision = true;

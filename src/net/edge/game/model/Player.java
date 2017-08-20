@@ -4,6 +4,7 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.edge.Client;
 import net.edge.Config;
 import net.edge.cache.unit.*;
+import net.edge.media.Rasterizer3D;
 import net.edge.util.io.Buffer;
 import net.edge.util.string.StringUtils;
 
@@ -422,6 +423,11 @@ public final class Player extends Mobile {
 		} else {
 			Interface.cache[250].modelId = (int) (0x12345678L + desc.id);
 		}
+	}
+	
+	@Override
+	public double getType() {
+		return Rasterizer3D.TYPES[1];
 	}
 	
 }

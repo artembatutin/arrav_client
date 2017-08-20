@@ -173,6 +173,9 @@ public final class ObjectType {
 			}
 		}
 		ObjectType obj = get(id);
+		if(obj == null) {
+			return null;
+		}
 		if(obj.stackableIds == null) {
 			itemAmount = -1;
 		}

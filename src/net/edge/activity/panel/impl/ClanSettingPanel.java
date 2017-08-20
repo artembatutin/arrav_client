@@ -150,7 +150,7 @@ public class ClanSettingPanel extends Panel {
 		for(int i = 0; i < client.clanMatesList.length; i++) {
 			ClanMember name = client.clanMatesList[i];
 			if(name == null)
-				break;
+				continue;
 			if(name.getRank() <= 1)
 				continue;
 			if(client.rightClickInRegion(beginX + 8, beginY + offset, beginX + 158, beginY + offset + 30)) {
@@ -178,7 +178,7 @@ public class ClanSettingPanel extends Panel {
 		for(int i = 0; i < client.clanMatesList.length; i++) {
 			ClanMember name = client.clanMatesList[i];
 			if(name == null)
-				break;
+				continue;
 			if(!name.isMuted())
 				continue;
 			if(client.leftClickInRegion(beginX + 188, beginY + offset, beginX + 338, beginY + offset + 30) || client.rightClickInRegion(beginX + 188, beginY + offset, beginX + 338, beginY + offset + 30)) {
@@ -195,7 +195,7 @@ public class ClanSettingPanel extends Panel {
 		for(int i = 0; i < client.clanBansList.length; i++) {
 			String name = client.clanBansList[i];
 			if(name == null || name.length() == 0)
-				break;
+				continue;
 			if(client.leftClickInRegion(beginX + 188, beginY + offset, beginX + 338, beginY + offset + 30) || client.rightClickInRegion(beginX + 188, beginY + offset, beginX + 338, beginY + offset + 30)) {
 				client.menuItemName[client.menuPos] = "Unban " + name;
 				client.menuItemCode[client.menuPos] = 647;
@@ -224,12 +224,9 @@ public class ClanSettingPanel extends Panel {
 		drawMain(beginX, beginY + 8, 500, 328, 0x000000, 0x63625e, 200);
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
-		for(int fresh = 0; fresh < 100; fresh++) {
-			if(Interface.cache[50144 + fresh] != null)
-				Interface.cache[50144 + fresh].actions = new String[]{"Promote", "Mute", "Ban"};
-		}
-		fancyFont.drawLeftAlignedEffectString("Clan: " + Interface.cache[50306].text + " - " + Interface.cache[50140].text, beginX + 20, beginY + 31, 0xF3B13F, true);
-
+		fancyFont.drawLeftAlignedEffectString(Interface.cache[50306].text, beginX + 20, beginY + 31, 0xF3B13F, true);
+		smallFont.drawLeftAlignedEffectString("Ranked members", beginX + 180, beginY + 31, 0xF3B13F, false);
+		smallFont.drawLeftAlignedEffectString("Banned/Muted", beginX + 360, beginY + 31, 0xF3B13F, false);
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
 		int offset = 45;
 		if(advanced) {
@@ -244,7 +241,7 @@ public class ClanSettingPanel extends Panel {
 					smallFont.drawCenteredEffectString(Interface.cache[info[i]].text, beginX + 66, beginY + offset + 16, 0xF3B13F, true);
 					smallFont.drawCenteredEffectString(Interface.cache[info[i] + 1].text, beginX + 66, beginY + offset + 34, 0xFFFFFF, true);
 				} else {
-					smallFont.drawCenteredEffectString(Interface.cache[info[i]].text, beginX + 66, beginY + offset + 16, 0xF3B13F, true);
+					smallFont.drawCenteredEffectString(info[i] == 50320 ? "Rename" : "Delete", beginX + 66, beginY + offset + 16, 0xF3B13F, true);
 				}
 				offset += i < 4 ? 55 : 32;
 			}
@@ -263,7 +260,7 @@ public class ClanSettingPanel extends Panel {
 		for(int i = 0; i < client.clanMatesList.length; i++) {
 			ClanMember name = client.clanMatesList[i];
 			if(name == null)
-				break;
+				continue;
 			if(name.getRank() <= 1)
 				continue;
 			Rasterizer2D.fillRoundedRectangle(beginX + 8, beginY + offset, 150, 30, 3, 0x000000, 100);
@@ -290,7 +287,7 @@ public class ClanSettingPanel extends Panel {
 		for(int i = 0; i < client.clanMatesList.length; i++) {
 			ClanMember name = client.clanMatesList[i];
 			if(name == null)
-				break;
+				continue;
 			if(!name.isMuted())
 				continue;
 			Rasterizer2D.fillRoundedRectangle(beginX + 188, beginY + offset, 150, 30, 3, 0x376884, 100);
@@ -303,7 +300,7 @@ public class ClanSettingPanel extends Panel {
 		for(int i = 0; i < client.clanBansList.length; i++) {
 			String name = client.clanBansList[i];
 			if(name == null || name.length() == 0)
-				break;
+				continue;
 			Rasterizer2D.fillRoundedRectangle(beginX + 188, beginY + offset, 150, 30, 3, 0x460000, 100);
 			if(client.mouseInRegion(beginX + 188, beginY + offset, beginX + 338, beginY + offset + 30)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 188, beginY + offset, 150, 30, 3, 0x000000, 40);
@@ -356,10 +353,17 @@ public class ClanSettingPanel extends Panel {
 			if(m == null)
 				continue;
 			if(m.getRank() == 8) {
-				if(m.getName().toLowerCase().equals(client.localUsername)) {
+				if(m.getName().equalsIgnoreCase(client.localUsername)) {
 					advanced = true;
 				}
 			}
+		}
+	}
+	
+	public static void prepare() {
+		for(int fresh = 0; fresh < 100; fresh++) {
+			if(Interface.cache[50144 + fresh] != null)
+				Interface.cache[50144 + fresh].actions = new String[]{"Promote", "Mute", "Ban"};
 		}
 	}
 

@@ -9,7 +9,7 @@ import net.edge.media.Rasterizer3D;
 import net.edge.util.collect.LinkedDeque;
 
 public final class Scene {
-
+	
 	private static final byte DRAW_DISTANCE_TILES = 30;
 	public static int focalLength = 512;
 	private final int planesDisplayed;
@@ -73,13 +73,13 @@ public final class Scene {
 	private static int viewportTop;
 	private static int viewportRight;
 	private static int viewportBottom;
-
+	
 	static {
 		planeCount = 4;
 		perspectiveCount = new int[planeCount];
 		perspectives = new Perspective[planeCount][500];
 	}
-
+	
 	public Scene(int[][][] grndz) {
 		final int tilesY = 104;
 		final int tilesX = 104;
@@ -95,7 +95,7 @@ public final class Scene {
 		heightMap3d = grndz;
 		clear();
 	}
-
+	
 	static void method277(int i, int j, int k, int l, int i1, int j1, int l1, int i2) {
 		final Perspective class47 = new Perspective();
 		class47.tileX1 = j >> 7;
@@ -111,7 +111,7 @@ public final class Scene {
 		class47.pixelZ2 = k;
 		perspectives[i][perspectiveCount[i]++] = class47;
 	}
-
+	
 	public static void setViewport(int minZ, int maxZ, int width, int height, int ai[]) {
 		viewportLeft = 0;
 		viewportTop = 0;
@@ -174,7 +174,7 @@ public final class Scene {
 			}
 		}
 	}
-
+	
 	private static boolean tileIsVisible(int z, int y, int x) {
 		final int l = y * yawSine + x * yawCosine >> 16;
 		final int i1 = y * yawCosine - x * yawSine >> 16;
@@ -188,7 +188,7 @@ public final class Scene {
 		final int py = viewportMidY + (k1 * focalLength) / j1;
 		return px >= viewportLeft && px <= viewportRight && py >= viewportTop && py <= viewportBottom;
 	}
-
+	
 	public static void reset() {
 		entities2 = null;
 		perspectiveCount = null;
@@ -197,7 +197,7 @@ public final class Scene {
 		aBooleanArrayArrayArrayArray491 = null;
 		aBooleanArrayArray492 = null;
 	}
-
+	
 	private void drawComplexGround(ShapedGround ground, int x, int y, int rollsin, int rollcos, int yawsin, int yawcos) {
 		int length = ground.vertexX.length;
 		for(int i = 0; i < length; i++) {
@@ -213,7 +213,7 @@ public final class Scene {
 			if(tvz < Constants.CAM_NEAR) {
 				return;
 			}
-			if(ground.texId != null || Config.def.groundMat()) {
+			if(ground.texId != null || Config.def.groundMat) {
 				ShapedGround.texVertexX[i] = tvx;
 				ShapedGround.texVertexY[i] = tvy;
 				ShapedGround.texVertexZ[i] = tvz;
@@ -222,7 +222,7 @@ public final class Scene {
 			ShapedGround.vertex2dY[i] = Rasterizer3D.viewport.centerY + (tvy * focalLength) / tvz;
 			ShapedGround.vertex2dZ[i] = tvz;
 		}
-
+		
 		Rasterizer3D.alphaFilter = 0;
 		length = ground.tex1.length;
 		for(int i = 0; i < length; i++) {
@@ -244,24 +244,24 @@ public final class Scene {
 					hoverX = x;
 					hoverY = y;
 				}
-				if((ground.texId == null || ground.texId[i] == -1) || !Config.def.groundMat()) {
+				if((ground.texId == null || ground.texId[i] == -1) || !Config.def.groundMat) {
 					if(ground.color1[i] != 12345678) {
 						Rasterizer3D.drawGouraudTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i]);
 					}
 				} else {
 					if(ground.color1[i] != 12345678) {
 						if(ground.messed) {
-							Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i], ShapedGround.texVertexX[0], ShapedGround.texVertexX[1], ShapedGround.texVertexX[3], ShapedGround.texVertexY[0], ShapedGround.texVertexY[1], ShapedGround.texVertexY[3], ShapedGround.texVertexZ[0], ShapedGround.texVertexZ[1], ShapedGround.texVertexZ[3], ground.texId[i], Config.def.groundMat(), true);
+							Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i], ShapedGround.texVertexX[0], ShapedGround.texVertexX[1], ShapedGround.texVertexX[3], ShapedGround.texVertexY[0], ShapedGround.texVertexY[1], ShapedGround.texVertexY[3], ShapedGround.texVertexZ[0], ShapedGround.texVertexZ[1], ShapedGround.texVertexZ[3], ground.texId[i], Config.def.groundMat, true);
 						} else {
-							Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i], ShapedGround.texVertexX[l2], ShapedGround.texVertexX[j3], ShapedGround.texVertexX[l3], ShapedGround.texVertexY[l2], ShapedGround.texVertexY[j3], ShapedGround.texVertexY[l3], ShapedGround.texVertexZ[l2], ShapedGround.texVertexZ[j3], ShapedGround.texVertexZ[l3], ground.texId[i], Config.def.groundMat(), true);
+							Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, ground.color1[i], ground.color2[i], ground.color3[i], ShapedGround.texVertexX[l2], ShapedGround.texVertexX[j3], ShapedGround.texVertexX[l3], ShapedGround.texVertexY[l2], ShapedGround.texVertexY[j3], ShapedGround.texVertexY[l3], ShapedGround.texVertexZ[l2], ShapedGround.texVertexZ[j3], ShapedGround.texVertexZ[l3], ground.texId[i], Config.def.groundMat, true);
 						}
 					}
 				}
 			}
 		}
-
+		
 	}
-
+	
 	/**
 	 * Draws the scene landscape and spawns by given position and rotation
 	 * values.
@@ -427,7 +427,7 @@ public final class Scene {
 		focalLength = 512;
 		Rasterizer3D.drawFog(Constants.FOG_BEGIN, Constants.FOG_END, fogRgb);
 	}
-
+	
 	private void drawTile(Tile tile, boolean flag) {
 		tilelist.addLast(tile);
 		do {
@@ -490,12 +490,12 @@ public final class Scene {
 					}
 					final Wall wall = tile_2.wall;
 					if(wall != null) {
-						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash);
+						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash, Rasterizer3D.TYPES[6]);
 					}
 					for(int i2 = 0; i2 < tile_2.entityUnitAmount; i2++) {
 						final EntityUnit entity = tile_2.entityUnit[i2];
 						if(entity != null) {
-							entity.model.drawModel(entity.yaw, rollSine, rollCosine, yawSine, yawCosine, entity.x - cameraPixelX, entity.y - cameraPixelY, entity.z - cameraPixelZ, entity.hash);
+							entity.model.drawModel(entity.yaw, rollSine, rollCosine, yawSine, yawCosine, entity.x - cameraPixelX, entity.y - cameraPixelY, entity.z - cameraPixelZ, entity.hash, entity.model.getType());
 						}
 					}
 				}
@@ -550,15 +550,15 @@ public final class Scene {
 						tile1.anInt1325 = 0;
 					}
 					if((wall.face1 & j2) != 0 && !method321(z, x, y, wall.face1)) {
-						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash);
+						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash, Rasterizer3D.TYPES[6]);
 					}
 					if((wall.face2 & j2) != 0 && !method321(z, x, y, wall.face2)) {
-						wall.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash);
+						wall.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash, Rasterizer3D.TYPES[6]);
 					}
 				}
 				if(walldecor != null && !method322(z, x, y, walldecor.model.maxVerticalDistUp)) {
 					if((walldecor.face & j2) != 0) {
-						walldecor.model.drawModel(walldecor.anInt503, rollSine, rollCosine, yawSine, yawCosine, walldecor.x - cameraPixelX, walldecor.y - cameraPixelY, walldecor.z - cameraPixelZ, walldecor.hash);
+						walldecor.model.drawModel(walldecor.anInt503, rollSine, rollCosine, yawSine, yawCosine, walldecor.x - cameraPixelX, walldecor.y - cameraPixelY, walldecor.z - cameraPixelZ, walldecor.hash, Rasterizer3D.TYPES[5]);
 					} else if((walldecor.face & 0x300) != 0) {
 						final int j4 = walldecor.x - cameraPixelX;
 						final int l5 = walldecor.y - cameraPixelY;
@@ -579,30 +579,30 @@ public final class Scene {
 						if((walldecor.face & 0x100) != 0 && k10 < k9) {
 							final int i11 = j4 + anIntArray463[i8];
 							final int k11 = k6 + anIntArray464[i8];
-							walldecor.model.drawModel(i8 * 512 + 256, rollSine, rollCosine, yawSine, yawCosine, i11, l5, k11, walldecor.hash);
+							walldecor.model.drawModel(i8 * 512 + 256, rollSine, rollCosine, yawSine, yawCosine, i11, l5, k11, walldecor.hash, Rasterizer3D.TYPES[5]);
 						}
 						if((walldecor.face & 0x200) != 0 && k10 > k9) {
 							final int j11 = j4 + anIntArray465[i8];
 							final int l11 = k6 + anIntArray466[i8];
-							walldecor.model.drawModel(i8 * 512 + 1280 & 0x7ff, rollSine, rollCosine, yawSine, yawCosine, j11, l5, l11, walldecor.hash);
+							walldecor.model.drawModel(i8 * 512 + 1280 & 0x7ff, rollSine, rollCosine, yawSine, yawCosine, j11, l5, l11, walldecor.hash, Rasterizer3D.TYPES[5]);
 						}
 					}
 				}
 				if(groundExists) {
 					final GroundDecoration grounddecor = tile1.groundDecor;
 					if(grounddecor != null) {
-						grounddecor.model.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, grounddecor.x - cameraPixelX, grounddecor.y - cameraPixelY, grounddecor.z - cameraPixelZ, grounddecor.hash);
+						grounddecor.model.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, grounddecor.x - cameraPixelX, grounddecor.y - cameraPixelY, grounddecor.z - cameraPixelZ, grounddecor.hash, Rasterizer3D.TYPES[4]);
 					}
 					final ObjectUnit object = tile1.objectUnit;
 					if(object != null && object.anInt52 == 0) {
 						if(object.model2 != null) {
-							object.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, object.x - cameraPixelX, object.y - cameraPixelY, object.z - cameraPixelZ, object.hash);
+							object.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, object.x - cameraPixelX, object.y - cameraPixelY, object.z - cameraPixelZ, object.hash, Rasterizer3D.TYPES[0]);
 						}
 						if(object.model3 != null) {
-							object.model3.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, object.x - cameraPixelX, object.y - cameraPixelY, object.z - cameraPixelZ, object.hash);
+							object.model3.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, object.x - cameraPixelX, object.y - cameraPixelY, object.z - cameraPixelZ, object.hash, Rasterizer3D.TYPES[0]);
 						}
 						if(object.model1 != null) {
-							object.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, object.x - cameraPixelX, object.y - cameraPixelY, object.z - cameraPixelZ, object.hash);
+							object.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, object.x - cameraPixelX, object.y - cameraPixelY, object.z - cameraPixelZ, object.hash, Rasterizer3D.TYPES[0]);
 						}
 					}
 				}
@@ -643,11 +643,11 @@ public final class Scene {
 					flag2 = false;
 					break;
 				}
-
+				
 				if(flag2) {
 					final Wall wall = tile1.wall;
 					if(!method321(z, x, y, wall.face1)) {
-						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash);
+						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash, Rasterizer3D.TYPES[6]);
 					}
 					tile1.anInt1325 = 0;
 				}
@@ -693,7 +693,7 @@ public final class Scene {
 								continue label0;
 							}
 						}
-
+						
 						entities2[l1++] = npcspw;
 						int i5 = cameraTileX - npcspw.tileX;
 						final int i6 = npcspw.sizeX - cameraTileX;
@@ -708,7 +708,7 @@ public final class Scene {
 							npcspw.anInt527 = i5 + i7;
 						}
 					}
-
+					
 					while(l1 > 0) {
 						int i3 = -50;
 						int l3 = -1;
@@ -735,7 +735,7 @@ public final class Scene {
 						final EntityUnit npcspw = entities2[l3];
 						npcspw.anInt528 = drawCycle;
 						if(!method323(z, npcspw.tileX, npcspw.sizeX, npcspw.tileY, npcspw.sizeY, npcspw.model.maxVerticalDistUp)) {
-							npcspw.model.drawModel(npcspw.yaw, rollSine, rollCosine, yawSine, yawCosine, npcspw.x - cameraPixelX, npcspw.y - cameraPixelY, npcspw.z - cameraPixelZ, npcspw.hash);
+							npcspw.model.drawModel(npcspw.yaw, rollSine, rollCosine, yawSine, yawCosine, npcspw.x - cameraPixelX, npcspw.y - cameraPixelY, npcspw.z - cameraPixelZ, npcspw.hash, npcspw.model.getType());
 						}
 						for(int k7 = npcspw.tileX; k7 <= npcspw.sizeX; k7++) {
 							for(int l8 = npcspw.tileY; l8 <= npcspw.sizeY; l8++) {
@@ -747,7 +747,7 @@ public final class Scene {
 								}
 							}
 						}
-
+						
 					}
 					if(tile1.aBoolean1324) {
 						continue;
@@ -789,20 +789,20 @@ public final class Scene {
 			final ObjectUnit itemspw = tile1.objectUnit;
 			if(itemspw != null && itemspw.anInt52 != 0) {
 				if(itemspw.model2 != null) {
-					itemspw.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, itemspw.x - cameraPixelX, itemspw.y - cameraPixelY - itemspw.anInt52, itemspw.z - cameraPixelZ, itemspw.hash);
+					itemspw.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, itemspw.x - cameraPixelX, itemspw.y - cameraPixelY - itemspw.anInt52, itemspw.z - cameraPixelZ, itemspw.hash, Rasterizer3D.TYPES[0]);
 				}
 				if(itemspw.model3 != null) {
-					itemspw.model3.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, itemspw.x - cameraPixelX, itemspw.y - cameraPixelY - itemspw.anInt52, itemspw.z - cameraPixelZ, itemspw.hash);
+					itemspw.model3.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, itemspw.x - cameraPixelX, itemspw.y - cameraPixelY - itemspw.anInt52, itemspw.z - cameraPixelZ, itemspw.hash, Rasterizer3D.TYPES[0]);
 				}
 				if(itemspw.model1 != null) {
-					itemspw.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, itemspw.x - cameraPixelX, itemspw.y - cameraPixelY - itemspw.anInt52, itemspw.z - cameraPixelZ, itemspw.hash);
+					itemspw.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, itemspw.x - cameraPixelX, itemspw.y - cameraPixelY - itemspw.anInt52, itemspw.z - cameraPixelZ, itemspw.hash, Rasterizer3D.TYPES[0]);
 				}
 			}
 			if(tile1.anInt1328 != 0) {
 				final WallDecoration walldec = tile1.wallDecor;
 				if(walldec != null && !method322(z, x, y, walldec.model.maxVerticalDistUp)) {
 					if((walldec.face & tile1.anInt1328) != 0) {
-						walldec.model.drawModel(walldec.anInt503, rollSine, rollCosine, yawSine, yawCosine, walldec.x - cameraPixelX, walldec.y - cameraPixelY, walldec.z - cameraPixelZ, walldec.hash);
+						walldec.model.drawModel(walldec.anInt503, rollSine, rollCosine, yawSine, yawCosine, walldec.x - cameraPixelX, walldec.y - cameraPixelY, walldec.z - cameraPixelZ, walldec.hash, Rasterizer3D.TYPES[5]);
 					} else if((walldec.face & 0x300) != 0) {
 						final int xoff = walldec.x - cameraPixelX;
 						final int zoff = walldec.y - cameraPixelY;
@@ -823,22 +823,22 @@ public final class Scene {
 						if((walldec.face & 0x100) != 0 && l7 >= j6) {
 							final int i9 = xoff + anIntArray463[k5];
 							final int i10 = yoff + anIntArray464[k5];
-							walldec.model.drawModel(k5 * 512 + 256, rollSine, rollCosine, yawSine, yawCosine, i9, zoff, i10, walldec.hash);
+							walldec.model.drawModel(k5 * 512 + 256, rollSine, rollCosine, yawSine, yawCosine, i9, zoff, i10, walldec.hash, Rasterizer3D.TYPES[5]);
 						}
 						if((walldec.face & 0x200) != 0 && l7 <= j6) {
 							final int j9 = xoff + anIntArray465[k5];
 							final int j10 = yoff + anIntArray466[k5];
-							walldec.model.drawModel(k5 * 512 + 1280 & 0x7ff, rollSine, rollCosine, yawSine, yawCosine, j9, zoff, j10, walldec.hash);
+							walldec.model.drawModel(k5 * 512 + 1280 & 0x7ff, rollSine, rollCosine, yawSine, yawCosine, j9, zoff, j10, walldec.hash, Rasterizer3D.TYPES[5]);
 						}
 					}
 				}
 				final Wall wall = tile1.wall;
 				if(wall != null) {
 					if((wall.face2 & tile1.anInt1328) != 0 && !method321(z, x, y, wall.face2)) {
-						wall.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash);
+						wall.model2.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash, Rasterizer3D.TYPES[6]);
 					}
 					if((wall.face1 & tile1.anInt1328) != 0 && !method321(z, x, y, wall.face1)) {
-						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash);
+						wall.model1.drawModel(0, rollSine, rollCosine, yawSine, yawCosine, wall.x - cameraPixelX, wall.y - cameraPixelY, wall.z - cameraPixelZ, wall.hash, Rasterizer3D.TYPES[6]);
 					}
 				}
 			}
@@ -874,7 +874,7 @@ public final class Scene {
 			}
 		} while(true);
 	}
-
+	
 	private void drawGenericGround(QuadGround ground, int plane, int x, int y, int rollsin, int rollcos, int yawsin, int yawcos) {
 		if(ground.texture == 5) {
 			return;
@@ -942,12 +942,12 @@ public final class Scene {
 				hoverX = x;
 				hoverY = y;
 			}
-			if(ground.texture != -1 && Config.def.groundMat()) {
+			if(ground.texture != -1 && Config.def.groundMat) {
 				if(ground.color3 != 12345678) {
 					if(ground.solid) {
-						Rasterizer3D.drawTexturedTriangle(y3, y4, y2, x3, x4, x2, y3d3, y3d4, y3d2, ground.color3, ground.color4, ground.color2, x3d1, x3d3, x3d2, z1, z2, z4, y3d1, y3d2, y3d4, ground.texture, Config.def.groundMat(), true);
+						Rasterizer3D.drawTexturedTriangle(y3, y4, y2, x3, x4, x2, y3d3, y3d4, y3d2, ground.color3, ground.color4, ground.color2, x3d1, x3d3, x3d2, z1, z2, z4, y3d1, y3d2, y3d4, ground.texture, Config.def.groundMat, true);
 					} else {
-						Rasterizer3D.drawTexturedTriangle(y3, y4, y2, x3, x4, x2, y3d3, y3d4, y3d2, ground.color3, ground.color4, ground.color2, x3d4, x3d2, x3d3, z3, z4, z2, y3d3, y3d4, y3d2, ground.texture, Config.def.groundMat(), true);
+						Rasterizer3D.drawTexturedTriangle(y3, y4, y2, x3, x4, x2, y3d3, y3d4, y3d2, ground.color3, ground.color4, ground.color2, x3d4, x3d2, x3d3, z3, z4, z2, y3d3, y3d4, y3d2, ground.texture, Config.def.groundMat, true);
 					}
 				}
 			} else if(ground.color3 != 12345678) {
@@ -960,18 +960,18 @@ public final class Scene {
 				hoverX = x;
 				hoverY = y;
 			}
-			if(!Config.def.groundMat() || ground.texture == -1) {
+			if(!Config.def.groundMat || ground.texture == -1) {
 				if(ground.color1 != 12345678) {
 					Rasterizer3D.drawGouraudTriangle(y1, y2, y4, x1, x2, x4, y3d1, y3d2, y3d4, ground.color1, ground.color2, ground.color4);
 				}
 			} else {
 				if(ground.color1 != 12345678) {
-					Rasterizer3D.drawTexturedTriangle(y1, y2, y4, x1, x2, x4, y3d1, y3d2, y3d4, ground.color1, ground.color2, ground.color4, x3d1, x3d3, x3d2, z1, z2, z4, y3d1, y3d2, y3d4, ground.texture, Config.def.groundMat(), true);
+					Rasterizer3D.drawTexturedTriangle(y1, y2, y4, x1, x2, x4, y3d1, y3d2, y3d4, ground.color1, ground.color2, ground.color4, x3d1, x3d3, x3d2, z1, z2, z4, y3d1, y3d2, y3d4, ground.texture, Config.def.groundMat, true);
 				}
 			}
 		}
 	}
-
+	
 	public EntityUnit getEntityUnit(int plane, int x, int y) {
 		final Tile tile = tileMap[plane][x][y];
 		if(tile == null) {
@@ -985,7 +985,7 @@ public final class Scene {
 		}
 		return null;
 	}
-
+	
 	public long getEntityUnitHash(int plane, int x, int y) {
 		final Tile tile = tileMap[plane][x][y];
 		if(tile == null) {
@@ -999,7 +999,7 @@ public final class Scene {
 		}
 		return 0;
 	}
-
+	
 	public Wall getWall(int plane, int x, int y) {
 		final Tile tile = tileMap[plane][x][y];
 		if(tile == null) {
@@ -1008,7 +1008,7 @@ public final class Scene {
 			return tile.wall;
 		}
 	}
-
+	
 	public long getWallHash(int plane, int x, int y) {
 		final Tile tile = tileMap[plane][x][y];
 		if(tile == null || tile.wall == null) {
@@ -1017,7 +1017,7 @@ public final class Scene {
 			return tile.wall.hash;
 		}
 	}
-
+	
 	public WallDecoration getWallDecor(int plane, int x, int y) {
 		final Tile tile = tileMap[plane][x][y];
 		if(tile == null) {
@@ -1026,7 +1026,7 @@ public final class Scene {
 			return tile.wallDecor;
 		}
 	}
-
+	
 	public long getWallDecorHash(int plane, int x, int y) {
 		final Tile tile = tileMap[plane][x][y];
 		if(tile == null || tile.wallDecor == null) {
@@ -1035,7 +1035,7 @@ public final class Scene {
 			return tile.wallDecor.hash;
 		}
 	}
-
+	
 	public int getWallsForMinimap(int plane, int x, int y, long hash) {
 		final Tile tile = tileMap[plane][x][y];
 		if(tile == null) {
@@ -1057,7 +1057,7 @@ public final class Scene {
 		}
 		return -1;
 	}
-
+	
 	public void clear() {
 		for(int plane = 0; plane < planesDisplayed; plane++) {
 			for(int x = 0; x < tilesDisplayedX; x++) {
@@ -1080,7 +1080,7 @@ public final class Scene {
 			entities2[l1] = null;
 		}
 	}
-
+	
 	void method276(int x, int y) {
 		final Tile tile = tileMap[0][x][y];
 		for(int plane = 0; plane < 3; plane++) {
@@ -1101,14 +1101,14 @@ public final class Scene {
 		tileMap[0][x][y].tile = tile;
 		tileMap[3][x][y] = null;
 	}
-
+	
 	void method278(int i, int j, int k, int l) {
 		final Tile class30_sub3 = tileMap[i][j][k];
 		if(class30_sub3 != null) {
 			tileMap[i][j][k].anInt1321 = l;
 		}
 	}
-
+	
 	void setWallDecor(long hash, int y, int k, int plane, int xoff, int height, Entity entity, int x, byte config, int yoff, int face) {
 		if(entity == null) {
 			return;
@@ -1129,7 +1129,7 @@ public final class Scene {
 		}
 		tileMap[plane][x][y].wallDecor = wallDecor;
 	}
-
+	
 	boolean method284(long hash, byte byte0, int j, int sizeY, Entity entity, int sizeX, int plane, int j1, int y, int x) {
 		if(entity == null) {
 			return true;
@@ -1148,7 +1148,7 @@ public final class Scene {
 		}
 		entity1Count = 0;
 	}
-
+	
 	public boolean addEntity(int z, int j, int k, long hash, int y, int j1, int x, Entity entity, boolean flag) {
 		if(entity == null) {
 			return true;
@@ -1177,11 +1177,11 @@ public final class Scene {
 		k2 /= 128;
 		return addEntityUnit(z, l1, i2, j2 - l1 + 1, k2 - i2 + 1, x, y, k, entity, j, true, hash, (byte) 0);
 	}
-
+	
 	public boolean addPlayer(int j, int y, Entity entity, int yaw, int i1, int x, int k1, int l1, int i2, long hash, int k2) {
 		return entity == null || addEntityUnit(j, l1, k2, i2 - l1 + 1, i1 - k2 + 1, x, y, k1, entity, yaw, true, hash, (byte) 0);
 	}
-
+	
 	void method290(int y, int k, int x, int plane) {
 		final Tile tile = tileMap[plane][x][y];
 		if(tile == null) {
@@ -1195,7 +1195,7 @@ public final class Scene {
 			walldec.z = y1 + (walldec.z - y1) * k / 16;
 		}
 	}
-
+	
 	protected void shadeModels(int lighty, int lightx, int lightz) {
 		final int lightness = 104;
 		final int roundness = 1480;//1280;
@@ -1233,7 +1233,7 @@ public final class Scene {
 			}
 		}
 	}
-
+	
 	private void method306(Model model, int plane, int x, int y) {
 		if(x < tilesDisplayedX) {
 			final Tile tile = tileMap[plane][x + 1][y];
@@ -1260,7 +1260,7 @@ public final class Scene {
 			}
 		}
 	}
-
+	
 	//fade models together
 	private void method307(Model model, int plane, int x, int y, int xSize, int ySize) {
 		boolean flag = true;
@@ -1352,7 +1352,7 @@ public final class Scene {
 		}
 		
 	}
-
+	
 	public void click(int x, int y) {
 		hasClicked = true;
 		clickX = x;
@@ -1360,7 +1360,7 @@ public final class Scene {
 		hoverX = -1;
 		hoverY = -1;
 	}
-
+	
 	private int adjustLightness(int hsl, int adj) {
 		adj = 127 - adj;
 		adj = adj * (hsl & 0x7f) / 160;
@@ -1371,7 +1371,7 @@ public final class Scene {
 		}
 		return (hsl & 0xff80) + adj;
 	}
-
+	
 	private boolean triangleContains(int pointx, int pointy, int y1, int y2, int y3, int x1, int x2, int x3) {
 		if(pointy < y1 && pointy < y2 && pointy < y3) {
 			return false;
@@ -1390,7 +1390,7 @@ public final class Scene {
 		final int k2 = (pointy - y2) * (x3 - x2) - (pointx - x2) * (y3 - y2);
 		return i2 * k2 > 0 && k2 * j2 > 0;
 	}
-
+	
 	private void method319() {
 		final int j = perspectiveCount[cameraPlane];
 		final Perspective[] aclass47 = perspectives[cameraPlane];
@@ -1506,7 +1506,7 @@ public final class Scene {
 								break label0;
 							}
 						}
-
+						
 						if(flag2) {
 							perspective.renderZ = 5;
 							perspective.anInt799 = (perspective.pixelX1 - cameraPixelX << 8) / j1;
@@ -1520,7 +1520,7 @@ public final class Scene {
 			}
 		}
 	}
-
+	
 	private boolean groundHidden(int plane, int x, int y) {
 		final int l = heightMap2d[plane][x][y];
 		if(l == -drawCycle) {
@@ -1539,7 +1539,7 @@ public final class Scene {
 			return false;
 		}
 	}
-
+	
 	private boolean method321(int i, int j, int k, int type) {
 		if(!groundHidden(i, j, k)) {
 			return false;
@@ -1647,7 +1647,7 @@ public final class Scene {
 			return true;
 		}
 	}
-
+	
 	private boolean method322(int plane, int x, int y, int z) {
 		if(!groundHidden(plane, x, y)) {
 			return false;
@@ -1656,7 +1656,7 @@ public final class Scene {
 		final int pxY = y << 7;
 		return method324(pxX + 1, pxY + 1, heightMap3d[plane][x][y] - z) && method324(pxX + 128 - 1, pxY + 1, heightMap3d[plane][x + 1][y] - z) && method324(pxX + 128 - 1, pxY + 128 - 1, heightMap3d[plane][x + 1][y + 1] - z) && method324(pxX + 1, pxY + 128 - 1, heightMap3d[plane][x][y + 1] - z);
 	}
-
+	
 	private boolean method323(int plane, int startX, int endX, int startY, int endY, int j1) {
 		if(startX == endX && startY == endY) {
 			if(!groundHidden(plane, startX, startY)) {
@@ -1686,7 +1686,7 @@ public final class Scene {
 		final int k3 = (endY << 7) - 1;
 		return method324(k2, k3, i3) && method324(j3, k3, i3);
 	}
-
+	
 	private boolean method324(int x, int y, int z) {
 		for(int l = 0; l < anInt475; l++) {
 			final Perspective class47 = aClass47Array476[l];
@@ -1747,10 +1747,10 @@ public final class Scene {
 				}
 			}
 		}
-
+		
 		return false;
 	}
-
+	
 	public void removeEntityUnit(EntityUnit entity) {
 		for(int x = entity.tileX; x <= entity.sizeX; x++) {
 			for(int y = entity.tileY; y <= entity.sizeY; y++) {
@@ -1776,21 +1776,21 @@ public final class Scene {
 			}
 		}
 	}
-
+	
 	public void removeObjectUnit(int plane, int x, int y) {
 		final Tile tile = tileMap[plane][x][y];
 		if(tile != null) {
 			tile.objectUnit = null;
 		}
 	}
-
+	
 	public void removeGroundDecor(int plane, int x, int y) {
 		final Tile tile = tileMap[plane][x][y];
 		if(tile != null) {
 			tile.groundDecor = null;
 		}
 	}
-
+	
 	public void removeEntityUnits(int plane, int x, int y) {
 		final Tile tile = tileMap[plane][x][y];
 		if(tile == null) {
@@ -1804,21 +1804,21 @@ public final class Scene {
 			}
 		}
 	}
-
+	
 	public void removeWall(int x, int plane, int y) {
 		final Tile tile = tileMap[plane][x][y];
 		if(tile != null) {
 			tile.wall = null;
 		}
 	}
-
+	
 	public void removeWallDecor(int plane, int x, int y) {
 		final Tile tile = tileMap[plane][x][y];
 		if(tile != null) {
 			tile.wallDecor = null;
 		}
 	}
-
+	
 	private boolean addEntityUnit(int plane, int x, int y, int sizeX, int sizeY, int baseX, int baseY, int l1, Entity entity, int yaw, boolean flag, long hash, byte config) {
 		for(int xPos = x; xPos < x + sizeX; xPos++) {
 			for(int yPos = y; yPos < y + sizeY; yPos++) {
@@ -1864,7 +1864,7 @@ public final class Scene {
 						tileMap[planePos][xPos][yPos] = new Tile(planePos, xPos, yPos);
 					}
 				}
-
+				
 				final Tile tile_1 = tileMap[plane][xPos][yPos];
 				tile_1.entityUnit[tile_1.entityUnitAmount] = spawn;
 				tile_1.entityUnitSize[tile_1.entityUnitAmount] = count;
@@ -1877,7 +1877,7 @@ public final class Scene {
 		}
 		return true;
 	}
-
+	
 	public void initPlane(int plane) {
 		currentPlane = plane;
 		for(int x = 0; x < tilesDisplayedX; x++) {
@@ -1888,7 +1888,7 @@ public final class Scene {
 			}
 		}
 	}
-
+	
 	void setGroundDecor(Entity entity, int plane, int x, int y, int height, long hash, byte config) {
 		if(entity == null) {
 			return;
@@ -1905,7 +1905,7 @@ public final class Scene {
 		}
 		tileMap[plane][x][y].groundDecor = groundDecor;
 	}
-
+	
 	public GroundDecoration getGroundDecor(int plane, int x, int y) {
 		Tile tile = tileMap[plane][x][y];
 		if(tile == null || tile.groundDecor == null) {
@@ -1914,7 +1914,7 @@ public final class Scene {
 			return tile.groundDecor;
 		}
 	}
-
+	
 	public long getGroundDecorHash(int plane, int x, int y) {
 		Tile tile = tileMap[plane][x][y];
 		if(tile == null || tile.groundDecor == null) {
@@ -1923,7 +1923,7 @@ public final class Scene {
 			return tile.groundDecor.hash;
 		}
 	}
-
+	
 	public void setObjectUnit(Entity model1, Entity model2, Entity model3, int plane, int x, int y, int height, long hash) {
 		final ObjectUnit obj = new ObjectUnit();
 		obj.model1 = model1;
@@ -1951,7 +1951,7 @@ public final class Scene {
 		}
 		tileMap[plane][x][y].objectUnit = obj;
 	}
-
+	
 	void setGround(int plane, int x, int y, int lay, int orientation, int tex1, int tex2, int k1, int l1, int i2, int j2, int color1, int color2, int color3, int color4, int color5, int color6, int color7, int color8, int k4, int mapColor) {
 		if(lay == 0) {
 			final QuadGround ground = new QuadGround(color1, color2, color3, color4, tex1, k4, false);
@@ -2210,7 +2210,7 @@ public final class Scene {
 			}
 		}
 	}
-
+	
 	void setWallDecor(Entity model1, Entity model2, int plane, int x, int y, int height, int face1, int face2, long hash, byte config) {
 		if(model1 == null && model2 == null) {
 			return;

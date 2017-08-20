@@ -1,5 +1,6 @@
 package net.edge.game.model;
 
+import net.edge.media.Rasterizer3D;
 import net.edge.util.collect.DoublyLinkableEntry;
 
 public class Entity extends DoublyLinkableEntry {
@@ -19,11 +20,15 @@ public class Entity extends DoublyLinkableEntry {
 		return null;
 	}
 
-	public void drawModel(int modelYaw, int rollSin, int rollCos, int yawSin, int yawCos, int camX, int camY, int camZ, long hash) {
+	public void drawModel(int modelYaw, int rollSin, int rollCos, int yawSin, int yawCos, int camX, int camY, int camZ, long hash, double type) {
 		final Model model = getTransformedModel();
 		if(model != null) {
 			maxVerticalDistUp = model.maxVerticalDistUp;
-			model.drawModel(modelYaw, rollSin, rollCos, yawSin, yawCos, camX, camY, camZ, hash);
+			model.drawModel(modelYaw, rollSin, rollCos, yawSin, yawCos, camX, camY, camZ, hash, type);
 		}
+	}
+	
+	public double getType() {
+		return Rasterizer3D.TYPES[0];
 	}
 }

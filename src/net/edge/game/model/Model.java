@@ -2259,11 +2259,12 @@ public final class Model extends Entity {
 	
 	
 	@Override
-	public void drawModel(int modelYaw, int rollSin, int rollCos, int yawSin, int yawCos, int camX, int camY, int camZ, long hash) {
+	public void drawModel(int modelYaw, int rollSin, int rollCos, int yawSin, int yawCos, int camX, int camY, int camZ, long hash, double type) {
 		renderAtPointX = camX + Client.instance.cameraLocationX;
 		renderAtPointY = camZ + Client.instance.cameraLocationY;
 		renderAtPointZ = camY + Client.instance.cameraLocationZ;
 		lastRenderedRotation = modelYaw;
+		Rasterizer3D.renderType = type;
 		final int j2 = camZ * yawCos - camX * yawSin >> 16;
 		final int k2 = camY * rollSin + j2 * rollCos >> 16;
 		final int l2 = maxHorizontalDist * rollCos >> 16;

@@ -1536,8 +1536,9 @@ public class Client extends ClientEngine {
 						}
 						int rank = 0;
 						if(message.contains("@ra")) {
-							rank = Byte.parseByte(Character.toString(message.charAt(3)));
-							message = message.substring(5);
+							int spot = message.contains("@red@") ? 8 : 3;
+							rank = Byte.parseByte(Character.toString(message.charAt(spot)));
+							message = message.replaceAll("@ra" + rank +"@", "");
 						}
 						final int l8 = message.indexOf("\\n");
 						String s1;
@@ -2315,7 +2316,7 @@ public class Client extends ClientEngine {
 							if(k >= j3 && i1 >= k3 && k < j3 + 32 && i1 < k3 + 32) {
 								invDestSlot = k2;
 								lastActiveInvInterface = childWidget.id;
-								if(childWidget.invId[k2] > 0) {
+								if(k2 < childWidget.invId.length && childWidget.invId[k2] > 0) {
 									final ObjectType itemDef = ObjectType.get(childWidget.invId[k2] - 1);
 									if(itemSelected == 1 && childWidget.isInv) {
 										if(childWidget.id != anInt1284 || k2 != anInt1283) {
@@ -3286,6 +3287,8 @@ public class Client extends ClientEngine {
 				} else {
 					invTab = 4;
 				}
+				ClanSettingPanel.prepare();
+				clanMatesList = new ClanSettingPanel.ClanMember[100];
 				fancyFont.drawCenteredString("Connecting... This might take a while.", windowWidth / 2, windowHeight / 2, 0xffffff);
 				return;
 			}
@@ -6905,12 +6908,11 @@ public class Client extends ClientEngine {
 										continue;
 									if(obj.name == null)
 										continue;
-									if(Objects.equals(obj.name.toLowerCase(), panelSearchInput.toLowerCase())) {
+									if(Objects.equals(obj.name.toLowerCase().replaceAll("_", " "), panelSearchInput.toLowerCase().replaceAll("_", " "))) {
 										item = obj;
 										break;
 									}
 								} catch(Exception e) {
-									
 								}
 							}
 							DropPanel.Chance ch = DropPanel.getChance(promptInput);

@@ -5,6 +5,7 @@ import net.edge.cache.unit.AnimationFrame;
 import net.edge.cache.unit.DeformSequence;
 import net.edge.cache.unit.NPCType;
 import net.edge.cache.unit.SpotAnimation;
+import net.edge.media.Rasterizer3D;
 
 public final class NPC extends Mobile {
 
@@ -84,6 +85,11 @@ public final class NPC extends Mobile {
 			}
 		}
 		return type.getModel(-1, currAnim, nextAnim, currCycle, nextCycle, null);
+	}
+	
+	@Override
+	public double getType() {
+		return Rasterizer3D.TYPES[2];
 	}
 	
 }

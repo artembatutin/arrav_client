@@ -361,7 +361,9 @@ public class BankPanel extends Panel {
 				}
 				itemsCount++;
 				if(client.mouseInRegion(beginX + 14 + x, beginY + offset, beginX + 74 + x, beginY + offset + 44)) {
-					tooltip = ObjectType.get(icon).name;
+					ObjectType def = ObjectType.get(icon);
+					if(def != null)
+						tooltip = def.name;
 				}
 				/* Icons */
 				final BitmapImage img = ObjectType.getIcon(icon, Interface.cache[270 + tab].invAmt[i], 0);
