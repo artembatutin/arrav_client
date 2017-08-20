@@ -79,7 +79,7 @@ public class Updater implements Runnable {
 			try {
 				File jar = new File(Client.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath());
 				dest = new BufferedOutputStream(new FileOutputStream(jar));
-				download = new URL("http://edgeville.net/game/edgeville.jar").openConnection();
+				download = new URL("http://edgeville.net/game/Edgeville.jar").openConnection();
 				readFileToDownload = download.getInputStream();
 				byte[] data = new byte[1024];
 				int numRead;
