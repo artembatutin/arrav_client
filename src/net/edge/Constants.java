@@ -6,7 +6,7 @@ public final class Constants {
 	}
 	
 	public static boolean JAGGRAB_ENABLED = true;
-	public static boolean USER_HOME_FILE_STORE = true;
+	public static boolean USER_HOME_FILE_STORE = false;
 
 	/*
 	 * Miscellaneous constants
