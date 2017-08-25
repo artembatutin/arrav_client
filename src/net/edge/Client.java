@@ -3118,8 +3118,8 @@ public class Client extends ClientEngine {
 			}
 			socketStream = new Session(this, openSocket(TitleActivity.CONNECTIONS[TitleActivity.connection].getPort()));
 			outBuffer.pos = 0;
-			outBuffer.putByte(14);
-			socketStream.write(outBuffer.data, 1);
+			outBuffer.putShort(Constants.BUILD);
+			socketStream.write(outBuffer.data, 2);
 			for(int j = 0; j < 8; j++) {
 				socketStream.read();
 			}
@@ -3135,7 +3135,6 @@ public class Client extends ClientEngine {
 				ai[2] = (int) (aLong1215 >> 32);
 				ai[3] = (int) aLong1215;
 				outBuffer.pos = 0;
-				outBuffer.putByte(10);
 				outBuffer.putInt(ai[0]);
 				outBuffer.putInt(ai[1]);
 				outBuffer.putInt(ai[2]);
@@ -3145,13 +3144,12 @@ public class Client extends ClientEngine {
 				inet = InetAddress.getLocalHost();
 				NetworkInterface network = NetworkInterface.getByInetAddress(inet);
 				int mac = ByteBuffer.wrap(network.getHardwareAddress()).getInt();
-				outBuffer.putLine(String.valueOf(mac));
+				outBuffer.putInt(mac);
 				outBuffer.putLine(username);
 				outBuffer.putLine(password);
 				outBuffer.doKeys();
 				outStream.pos = 0;
-				outStream.putShort(Constants.BUILD);
-				outStream.putByte(outBuffer.pos + 36 + 1 + 1 + 2);
+				outStream.putByte(outBuffer.pos);
 				outStream.putBytes(outBuffer.data, 0, outBuffer.pos);
 				outBuffer.cipher = new ISAACCipher(ai);
 				for(int j2 = 0; j2 < 4; j2++) {
