@@ -51,8 +51,10 @@ import java.applet.AppletContext;
 import java.awt.*;
 import java.io.*;
 import java.net.InetAddress;
+import java.net.NetworkInterface;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.ByteBuffer;
 import java.util.Objects;
 import java.util.zip.CRC32;
 
@@ -3115,11 +3117,8 @@ public class Client extends ClientEngine {
 				titleActivity.update();
 			}
 			socketStream = new Session(this, openSocket(TitleActivity.CONNECTIONS[TitleActivity.connection].getPort()));
-			final long nameAsLong = StringUtils.encryptName(username);
-			final int i = (int) (nameAsLong >> 16 & 31L);
 			outBuffer.pos = 0;
-			outBuffer.putByte(14);
-			outBuffer.putByte(i);
+			outBuffer.putShort(Constants.BUILD);
 			socketStream.write(outBuffer.data, 2);
 			for(int j = 0; j < 8; j++) {
 				socketStream.read();
@@ -3136,24 +3135,21 @@ public class Client extends ClientEngine {
 				ai[2] = (int) (aLong1215 >> 32);
 				ai[3] = (int) aLong1215;
 				outBuffer.pos = 0;
-				outBuffer.putByte(10);
 				outBuffer.putInt(ai[0]);
 				outBuffer.putInt(ai[1]);
 				outBuffer.putInt(ai[2]);
 				outBuffer.putInt(ai[3]);
-				outBuffer.putInt(999999);
+				//MAC address
+				InetAddress inet;
+				inet = InetAddress.getLocalHost();
+				NetworkInterface network = NetworkInterface.getByInetAddress(inet);
+				int mac = ByteBuffer.wrap(network.getHardwareAddress()).getInt();
+				outBuffer.putInt(mac);
 				outBuffer.putLine(username);
 				outBuffer.putLine(password);
 				outBuffer.doKeys();
 				outStream.pos = 0;
-				outStream.putByte(16);
-				outStream.putByte(outBuffer.pos + 36 + 1 + 1 + 2);
-				outStream.putByte(255);
-				outStream.putShort(Constants.BUILD);
-				outStream.putByte(1);
-				for(int l1 = 0; l1 < 9; l1++) {
-					outStream.putInt(CacheUnpacker.EXPECTED_CRC[l1]);
-				}
+				outStream.putByte(outBuffer.pos);
 				outStream.putBytes(outBuffer.data, 0, outBuffer.pos);
 				outBuffer.cipher = new ISAACCipher(ai);
 				for(int j2 = 0; j2 < 4; j2++) {
@@ -3314,7 +3310,7 @@ public class Client extends ClientEngine {
 				return;
 			}
 			if(returnCode == 4) {
-				titleMessage = "Your account has been disabled.\nPlease check your message-center for details.";
+				titleMessage = "Your account has been disabled.\nPlease appeal on the forums.";
 				return;
 			}
 			if(returnCode == 5) {
@@ -3322,7 +3318,7 @@ public class Client extends ClientEngine {
 				return;
 			}
 			if(returnCode == 6) {
-				titleMessage = "Edgeville has been updated!\nPlease reload this page.";
+				titleMessage = "Edgeville has been updated!\nRestart this client.";
 				return;
 			}
 			if(returnCode == 7) {
@@ -3421,23 +3417,7 @@ public class Client extends ClientEngine {
 		}
 	}
 
-	/*public long ipToLong(String ipAddress) {
-
-		String[] ipAddressInArray = ipAddress.split("\\.");
-
-		long result = 0;
-		for (int i = 0; i < ipAddressInArray.length; i++) {
-
-			int power = 3 - i;
-			int ip = Integer.parseInt(ipAddressInArray[i]);
-			result += ip * Math.pow(256, power);
-
-		}
-
-		return result;
-	}*/
-
-	public String longToIp(long ip) {
+	private String longToIp(long ip) {
 		return ((ip >> 24) & 0xFF) + "." + ((ip >> 16) & 0xFF) + "." + ((ip >> 8) & 0xFF) + "." + (ip & 0xFF);
 	}
 
