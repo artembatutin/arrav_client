@@ -170,6 +170,7 @@ public class Client extends ClientEngine {
 	private final int[][][] constructRegionData;
 	private final long[] ignoreListAsLongs;
 	private boolean rollCharacterInInterface;
+	public static int mac;
 
 	/*
 	 * Instance fields.
@@ -3109,6 +3110,9 @@ public class Client extends ClientEngine {
 			}
 			titleMessage = "You have to input username\nand password to play.";
 			return;
+		} else if(mac == 0) {
+			titleMessage = "Error finding your mac address.\nPlease contact our forums.";
+			return;
 		}
 		SignLink.errorName = username;
 		try {
@@ -3119,7 +3123,9 @@ public class Client extends ClientEngine {
 			socketStream = new Session(this, openSocket(TitleActivity.CONNECTIONS[TitleActivity.connection].getPort()));
 			outBuffer.pos = 0;
 			outBuffer.putShort(Constants.BUILD);
-			socketStream.write(outBuffer.data, 2);
+			outBuffer.putInt(mac);
+			outBuffer.putLong(StringUtils.encryptName(username));
+			socketStream.write(outBuffer.data, 14);
 			for(int j = 0; j < 8; j++) {
 				socketStream.read();
 			}
@@ -3139,13 +3145,6 @@ public class Client extends ClientEngine {
 				outBuffer.putInt(ai[1]);
 				outBuffer.putInt(ai[2]);
 				outBuffer.putInt(ai[3]);
-				//MAC address
-				InetAddress inet;
-				inet = InetAddress.getLocalHost();
-				NetworkInterface network = NetworkInterface.getByInetAddress(inet);
-				int mac = ByteBuffer.wrap(network.getHardwareAddress()).getInt();
-				outBuffer.putInt(mac);
-				outBuffer.putLine(username);
 				outBuffer.putLine(password);
 				outBuffer.doKeys();
 				outStream.pos = 0;
@@ -3162,6 +3161,7 @@ public class Client extends ClientEngine {
 			} else {
 				TitleActivity.scrollOpened = true;
 			}
+			System.out.println(returnCode + " code");
 			if(returnCode == 1) {
 				try {
 					Thread.sleep(2000L);
