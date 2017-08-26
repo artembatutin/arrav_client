@@ -170,6 +170,7 @@ public class Client extends ClientEngine {
 	private final int[][][] constructRegionData;
 	private final long[] ignoreListAsLongs;
 	private boolean rollCharacterInInterface;
+	public static int mac;
 
 	/*
 	 * Instance fields.
@@ -3109,6 +3110,9 @@ public class Client extends ClientEngine {
 			}
 			titleMessage = "You have to input username\nand password to play.";
 			return;
+		} else if(mac == 0) {
+			titleMessage = "Error finding your mac address.\nPlease contact our forums.";
+			return;
 		}
 		SignLink.errorName = username;
 		try {
@@ -3119,13 +3123,8 @@ public class Client extends ClientEngine {
 			socketStream = new Session(this, openSocket(TitleActivity.CONNECTIONS[TitleActivity.connection].getPort()));
 			outBuffer.pos = 0;
 			outBuffer.putShort(Constants.BUILD);
-			//MAC address
-			InetAddress inet;
-			inet = InetAddress.getLocalHost();
-			NetworkInterface network = NetworkInterface.getByInetAddress(inet);
-			int mac = ByteBuffer.wrap(network.getHardwareAddress()).getInt();
 			outBuffer.putInt(mac);
-			outBuffer.putLong(StringUtils.toHash(username));
+			outBuffer.putLong(StringUtils.encryptName(username));
 			socketStream.write(outBuffer.data, 14);
 			for(int j = 0; j < 8; j++) {
 				socketStream.read();

@@ -181,7 +181,7 @@ public class TitleActivity extends Activity {
 						selectedInputForm = 2;
 					} else if(valid) {
 						client.localUsername += (char) key;
-						if(client.localUsername.length() > 15) {
+						if(client.localUsername.length() > 13) {
 							client.localUsername = client.localUsername.substring(0, 15);
 						}
 						formatted = StringUtils.formatName(client.localUsername);
