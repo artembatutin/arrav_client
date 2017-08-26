@@ -3969,6 +3969,26 @@ public class Client extends ClientEngine {
 			outBuffer.putShort(arg1);
 			outBuffer.putShortPlus128(arg2 + baseX);
 		}
+		if (code == 661) { // intid, slot, itemid;
+			outBuffer.putOpcode(232);
+			outBuffer.putShortPlus128(1);
+			outBuffer.putShortPlus128(arg2);
+		}
+		if (code == 662) {
+			outBuffer.putOpcode(232);
+			outBuffer.putShortPlus128(2);
+			outBuffer.putShortPlus128(arg2);
+		}
+		if (code == 663) {
+			outBuffer.putOpcode(232);
+			outBuffer.putShortPlus128(3);
+			outBuffer.putShortPlus128(arg2);
+		}
+		if (code == 664) {
+			outBuffer.putOpcode(232);
+			outBuffer.putShortPlus128(4);
+			outBuffer.putShortPlus128(arg2);
+		}
 		if(code == 632) {
 			outBuffer.putOpcode(145);
 			outBuffer.putShortPlus128(arg3);
