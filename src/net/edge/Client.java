@@ -2406,44 +2406,61 @@ public class Client extends ClientEngine {
 												}
 											}
 										}
-										if(childWidget.menuItem != null) {
-											for(int j4 = 4; j4 >= 0; j4--) {
-												if(childWidget.menuItem[j4] != null) {
-													menuItemName[menuPos] = childWidget.menuItem[j4] + " @lre@" + itemDef.name;
-													if(j4 == 0) {
-														menuItemCode[menuPos] = 632;
-													}
-													if(j4 == 1) {
-														menuItemCode[menuPos] = 78;
-													}
-													if(j4 == 2) {
-														menuItemCode[menuPos] = 867;
-													}
-													if(j4 == 3) {
-														menuItemCode[menuPos] = 431;
-													}
-													if(j4 == 4) {
-														menuItemCode[menuPos] = 53;
-													}
-													menuItemArg1[menuPos] = itemDef.id;
-													menuItemArg2[menuPos] = k2;
-													menuItemArg3[menuPos] = childWidget.id;
-													menuPos++;
-												}
-											}
-										}
-										menuItemName[menuPos] = "Examine @lre@" + itemDef.name;
-										if(Config.def.idx()) {
-											menuItemName[menuPos] += " @mag@" + itemDef.id;
-										}
-										menuItemCode[menuPos] = 1125;
-										menuItemArg1[menuPos] = itemDef.id;
-										menuItemArg2[menuPos] = k2;
-										menuItemArg3[menuPos] = childWidget.id;
-										menuPos++;
-									}
-								}
-							}
+                                        if(childWidget.menuItem != null) {
+                                            for(int j4 = 4; j4 >= 0; j4--) {
+                                                if(childWidget.id == 1688 && menuPos <= itemDef.equipActions.length -1 && itemDef.equipActions[menuPos] != null) {
+                                                    menuItemName[menuPos] = itemDef.equipActions[menuPos] + " @lre@" + itemDef.name;
+                                                    if (j4 == 0)
+                                                        menuItemCode[menuPos] = 632; // remove
+                                                    if (j4 == 1)
+                                                        menuItemCode[menuPos] = 661; // operate 1
+                                                    if (j4 == 2)
+                                                        menuItemCode[menuPos] = 662; // operate 2
+                                                    if (j4 == 3)
+                                                        menuItemCode[menuPos] = 663; //operate 3
+                                                    if (j4 == 4)
+                                                        menuItemCode[menuPos] = 664; //operate 4
+
+                                                    menuItemArg1[menuPos] = itemDef.id;
+                                                    menuItemArg2[menuPos] = k2;
+                                                    menuItemArg3[menuPos] = childWidget.id;
+                                                    menuPos++;
+                                                } else if(childWidget.menuItem[j4] != null) {
+                                                    menuItemName[menuPos] = childWidget.menuItem[j4] + " @lre@" + itemDef.name;
+                                                    if(j4 == 0) {
+                                                        menuItemCode[menuPos] = 632;
+                                                    }
+                                                    if(j4 == 1) {
+                                                        menuItemCode[menuPos] = 78;
+                                                    }
+                                                    if(j4 == 2) {
+                                                        menuItemCode[menuPos] = 867;
+                                                    }
+                                                    if(j4 == 3) {
+                                                        menuItemCode[menuPos] = 431;
+                                                    }
+                                                    if(j4 == 4) {
+                                                        menuItemCode[menuPos] = 53;
+                                                    }
+                                                    menuItemArg1[menuPos] = itemDef.id;
+                                                    menuItemArg2[menuPos] = k2;
+                                                    menuItemArg3[menuPos] = childWidget.id;
+                                                    menuPos++;
+                                                }
+                                            }
+                                        }
+                                        menuItemName[menuPos] = "Examine @lre@" + itemDef.name;
+                                        if(Config.def.idx()) {
+                                            menuItemName[menuPos] += " @mag@" + itemDef.id;
+                                        }
+                                        menuItemCode[menuPos] = 1125;
+                                        menuItemArg1[menuPos] = itemDef.id;
+                                        menuItemArg2[menuPos] = k2;
+                                        menuItemArg3[menuPos] = childWidget.id;
+                                        menuPos++;
+                                    }
+                                }
+                            }
 							k2++;
 						}
 					}

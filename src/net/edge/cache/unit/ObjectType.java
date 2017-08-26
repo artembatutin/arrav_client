@@ -71,6 +71,7 @@ public final class ObjectType {
 	private int maleEquipOffsetX;
 	private int[] campaigns;
 	private boolean fixPriority;
+	public String[] equipActions;
 	
 	public ObjectType() {
 		id = -1;
@@ -88,7 +89,35 @@ public final class ObjectType {
 		obj.read(data);
 		
 		obj.transform();
-		
+
+		switch(id) {
+			case 2552:
+			case 2554:
+			case 2556:
+			case 2558:
+			case 2560:
+			case 2562:
+			case 2564:
+			case 2566: //Ring of duelling
+				obj.equipActions[3] = "Duel Arena";
+				obj.equipActions[2] = "Castle Wars";
+				obj.equipActions[1] = "Clan wars";
+				break;
+			case 11283:
+				obj.equipActions[1] = "Operate";
+				break;
+			case 1706:
+			case 1708:
+			case 1710:
+			case 1712:
+            case 10362:
+                obj.equipActions[4] = "Edgeville";
+                obj.equipActions[3] = "Karamja";
+                obj.equipActions[2] = "Draynor Village";
+                obj.equipActions[1] = "Al-Kharid";
+                break;
+
+		}
 		if(obj.noteTemplateId != -1) {
 			obj.toNote();
 		}
@@ -758,6 +787,7 @@ public final class ObjectType {
 		womanEquipOffsetX = 0;
 		womanEquipOffsetY = 0;
 		womanEquipOffsetZ = 0;
+		equipActions = new String[5];
 		// TODO: Are all of the fields cleared?
 	}
 	
