@@ -6,12 +6,12 @@ public final class Constants {
 	}
 	
 	public static boolean JAGGRAB_ENABLED = true;
-	public static boolean USER_HOME_FILE_STORE = false;
+	public static boolean USER_HOME_FILE_STORE = true;
 
 	/*
 	 * Miscellaneous constants
 	 */
-	public static final int BUILD = 33;
+	public static final int BUILD = 35;
 	public static final boolean ANTI_BOT_ENABLED = true;
 	public static final int CACHE_INDEX_COUNT = 9;
 
