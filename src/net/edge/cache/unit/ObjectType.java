@@ -202,7 +202,10 @@ public final class ObjectType {
 			}
 		}
 		ObjectType obj = get(id);
+		double oldType = Rasterizer3D.renderType;
+		Rasterizer3D.renderType = 10000;
 		if(obj == null) {
+			Rasterizer3D.renderType = oldType;
 			return null;
 		}
 		if(obj.stackableIds == null) {
@@ -221,12 +224,14 @@ public final class ObjectType {
 		}
 		final Model model = obj.getAmountModel(1);
 		if(model == null) {
+			Rasterizer3D.renderType = oldType;
 			return null;
 		}
 		BitmapImage sprite = null;
 		if(obj.noteTemplateId != -1) {
 			sprite = getIcon(obj.noteId, 10, -1);
 			if(sprite == null) {
+				Rasterizer3D.renderType = oldType;
 				return null;
 			}
 		}
@@ -236,6 +241,7 @@ public final class ObjectType {
 			} catch(Exception ignored) {
 			}
 			if(sprite == null) {
+				Rasterizer3D.renderType = oldType;
 				return null;
 			}
 		}
@@ -319,7 +325,7 @@ public final class ObjectType {
 			sprite.imageOriginalWidth = l5;
 			sprite.imageOriginalHeight = j6;
 		}
-		if(border == 0 && !Rasterizer3D.textureMissing) {
+		if(!Rasterizer3D.textureMissing) {
 			iconcache.put((border << 16) + id, sprite2);
 		}
 		Rasterizer2D.setCanvas(pixels, height, width);
@@ -331,6 +337,7 @@ public final class ObjectType {
 			sprite2.imageOriginalWidth = 32;
 		}
 		sprite2.imageOriginalHeight = itemAmount;
+		Rasterizer3D.renderType = oldType;
 		return sprite2;
 	}
 	

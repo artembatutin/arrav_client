@@ -11,7 +11,7 @@ public final class Constants {
 	/*
 	 * Miscellaneous constants
 	 */
-	public static final int BUILD = 35;
+	public static final int BUILD = 37;
 	public static final boolean ANTI_BOT_ENABLED = true;
 	public static final int CACHE_INDEX_COUNT = 9;
 
@@ -19,7 +19,7 @@ public final class Constants {
 	 * Scene constants
 	 */
 	public static final int CAM_NEAR = 50;
-	public static final int CAM_FAR = 4000; //originally 3500, = 140 * VISIBLE_DISTANCE
+	public static final int CAM_FAR = 4500; //originally 3500, = 140 * VISIBLE_DISTANCE
 	private static final int CAM_FRUSTUM = CAM_FAR - CAM_NEAR;
 	public static final int FOG_BEGIN = Constants.CAM_FRUSTUM - 1000;
 	public static final int FOG_END = Constants.CAM_FRUSTUM - 400;

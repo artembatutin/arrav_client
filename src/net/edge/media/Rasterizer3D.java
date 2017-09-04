@@ -84,23 +84,18 @@ public final class Rasterizer3D extends Rasterizer2D {
 		if (factor <= 0f) {
 			return c1;
 		}
-		
 		int r1 = (c1 >> 16) & 0xff;
 		int g1 = (c1 >> 8) & 0xff;
 		int b1 = (c1) & 0xff;
-		
 		int r2 = (c2 >> 16) & 0xff;
 		int g2 = (c2 >> 8) & 0xff;
 		int b2 = (c2) & 0xff;
-		
 		int r3 = r2 - r1;
 		int g3 = g2 - g1;
 		int b3 = b2 - b1;
-		
 		int r = (int) (r1 + (r3 * factor));
 		int g = (int) (g1 + (g3 * factor));
 		int b = (int) (b1 + (b3 * factor));
-		
 		return (r << 16) + (g << 8) + b;
 	}
 	

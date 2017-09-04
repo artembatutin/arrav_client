@@ -1303,8 +1303,6 @@ public final class MapDecoder {
 						final LocationType loc = LocationType.getSpecific(objectId, oldMap);
 						final int x = j + TileUtils.method157(j1, loc.sizeY, localX & 7, localY & 7, loc.sizeX);
 						final int y = k1 + TileUtils.method158(localY & 7, loc.sizeY, j1, loc.sizeX, localX & 7);
-
-
 						if(x > 0 && y > 0 && x < 103 && y < 103) {
 							int markingPlane = height;
 							if((renderRuleFlags[1][x][y] & 2) == 2) {
@@ -1344,10 +1342,14 @@ public final class MapDecoder {
 		return (i & 0xff80) + j;
 	}
 
-	public final void method190(int i, CollisionMap[] collmaps, int j, Scene scene, byte[] data, boolean oldMap) {
+	public final void method190(int mapId, int i, CollisionMap[] collmaps, int j, Scene scene, byte[] data, boolean oldMap) {
 		label0:
 		{
 			final Buffer buffer = new Buffer(data);
+			int offset = 0;
+			if(mapId == 625) {
+				offset = 5;
+			}
 			int l = -1;
 			do {
 				int i1 = buffer.getUSmart();
@@ -1366,7 +1368,7 @@ public final class MapDecoder {
 					final int i2 = j1 >> 6 & 0x3f;
 					final int j2 = j1 >> 12;
 					final int k2 = buffer.getUByte();
-					final int l2 = k2 >> 2;
+					final int l2 = (k2 >> 2) - offset;
 					final int i3 = k2 & 3;
 					final int j3 = i2 + i;
 					final int k3 = l1 + j;

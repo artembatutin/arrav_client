@@ -241,6 +241,7 @@ public class Client extends ClientEngine {
 	public byte[][][] tiles;
 	public boolean bankSearching;
 	public String bankSearch;
+	public boolean home;
 	public boolean flagged;
 	public boolean menuOpened;
 	public boolean aBoolean954;
@@ -3178,7 +3179,6 @@ public class Client extends ClientEngine {
 			} else {
 				TitleActivity.scrollOpened = true;
 			}
-			System.out.println(returnCode + " code");
 			if(returnCode == 1) {
 				try {
 					Thread.sleep(2000L);
@@ -5177,6 +5177,7 @@ public class Client extends ClientEngine {
 						terrainDataIds = new int[r];
 						objectDataIds = new int[r];
 						r = 0;
+						home = false;
 						for(int x = (regionX - 6) / 8; x <= (regionX + 6) / 8; x++) {
 							for(int y = (regionY - 6) / 8; y <= (regionY + 6) / 8; y++) {
 								mapCoordinates[r] = (x << 8) + y;
@@ -5188,6 +5189,9 @@ public class Client extends ClientEngine {
 									final int k28 = terrainDataIds[r] = onDemandRequester.getMapId(0, y, x);
 									if(k28 != -1) {
 										onDemandRequester.addRequest(3, k28);
+									}
+									if(terrainDataIds[r] == 624) {
+										home = true;
 									}
 									final int j30 = objectDataIds[r] = onDemandRequester.getMapId(1, y, x);
 									if(j30 != -1) {
@@ -6344,7 +6348,6 @@ public class Client extends ClientEngine {
 				}
 				switch(button) {
 					case 19136:
-						System.out.println("toggle = " + toggle);
 						if(toggle == 0) {
 							sendFrame36(173, toggle);
 						}
@@ -6524,7 +6527,7 @@ public class Client extends ClientEngine {
 	}
 
 	public int method120() {
-		if(!Config.def.roof()) {
+		if(!Config.def.roof() || home) {
 			return cameraPlane;
 		}
 		int j = 3;
@@ -6611,7 +6614,7 @@ public class Client extends ClientEngine {
 	}
 
 	public int method121() {
-		if(!Config.def.roof()) {
+		if(!Config.def.roof() || home) {
 			return cameraPlane;
 		}
 		final int j = method42(cameraPlane, cameraLocationX, cameraLocationY);
@@ -8298,7 +8301,7 @@ public class Client extends ClientEngine {
 					if(data != null) {
 						final int offsetX = ((mapCoordinates[i6] >> 8) << 6) - baseX;
 						final int offsetY = ((mapCoordinates[i6] & 0xff) << 6) - baseY;
-						decoder.method190(offsetX, collisionMaps, offsetY, scene, data, oldMap);
+						decoder.method190(objectDataIds[i6], offsetX, collisionMaps, offsetY, scene, data, oldMap);
 					}
 				}
 			}

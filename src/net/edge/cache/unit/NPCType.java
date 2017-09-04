@@ -87,6 +87,9 @@ public final class NPCType {
 		npc.id = id;
 		npc.decode(data);
 		
+		if(id == 8331) {
+			npc.name = "Guardian";
+		}
 		//pets
 		if(id == 3167)
 			npc.pet(1615, "Abyssal orphan", 48);
@@ -96,7 +99,6 @@ public final class NPCType {
 			npc.pet(8349, "Toram", 48);
 		if(id == 3170)
 			npc.pet(3334, "Wyrmy", 48);
-		
 		if(id == 3177)
 			npc.pet(6222, "Kraa", 28);//armadyl
 		if(id == 3178)

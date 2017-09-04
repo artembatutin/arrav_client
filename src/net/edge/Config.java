@@ -2,6 +2,7 @@ package net.edge;
 
 import net.edge.activity.panel.impl.SettingPanel;
 import net.edge.activity.ui.util.CounterHandler;
+import net.edge.media.Rasterizer3D;
 import net.edge.sign.SignLink;
 import net.edge.util.FileToolkit;
 import net.edge.util.io.Buffer;
@@ -265,6 +266,7 @@ public class Config {
 	
 	public void fog(boolean fog) {
 		this.fog = fog;
+		Rasterizer3D.textured = fog;
 	}
 	
 	public boolean tween() {
