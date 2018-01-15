@@ -10,9 +10,9 @@ public class OverlayFloorType {
 	public static OverlayFloorType[] floorTypes;
 
 	public int textureId = -1;
-	public int groundColorOverlay;
+	public int groundColorOverlay; // rgb
 	public boolean boolean_5;
-	public int detailedColor;
+	public int detailedColor; //anotherRgb
 	public int int_9;
 	public boolean boolean_10;
 	public int int_11;
@@ -21,6 +21,10 @@ public class OverlayFloorType {
 	public int int_14;
 	public int int_15;
 	public int int_16;
+
+	public int anotherHue;
+	public int anotherSaturation;
+	public int anotherLuminance;
 
 	/**
 	 * Hsl
@@ -40,9 +44,21 @@ public class OverlayFloorType {
 			if(floorTypes[i] == null)
 				floorTypes[i] = new OverlayFloorType();
 			floorTypes[i].parse(buffer);
+			floorTypes[i].generateHsl();
 		}
 		System.out.println("[loading] flo2 size: " + count);
 	}
+
+	public void generateHsl() {
+		if (this.detailedColor != -1) {
+			this.method262(this.detailedColor);
+			this.anotherHue =  this.hue;
+			this.anotherSaturation = this.saturation;
+			this.anotherLuminance = this.lightness;
+		}
+		this.method262(this.groundColorOverlay);
+	}
+
 
 	private void parse(ByteBuffer byteBuffer) {
 		for(; ; ) {
@@ -94,71 +110,134 @@ public class OverlayFloorType {
 		}
 	}
 
+
 	private void method262(int arg0) {
-		double d = (double) (arg0 >> 16 & 0xff) / 256.0;
-		double d_5_ = (double) (arg0 >> 8 & 0xff) / 256.0;
-		double d_6_ = (double) (arg0 & 0xff) / 256.0;
+		double d = (arg0 >> 16 & 0xff) / 256.0;
+		double d_5_ = (arg0 >> 8 & 0xff) / 256.0;
+		double d_6_ = (arg0 & 0xff) / 256.0;
 		double d_7_ = d;
-		if(d_5_ < d_7_)
+		if (d_5_ < d_7_) {
 			d_7_ = d_5_;
-		if(d_6_ < d_7_)
+		}
+		if (d_6_ < d_7_) {
 			d_7_ = d_6_;
+		}
 		double d_8_ = d;
-		if(d_5_ > d_8_)
+		if (d_5_ > d_8_) {
 			d_8_ = d_5_;
-		if(d_6_ > d_8_)
+		}
+		if (d_6_ > d_8_) {
 			d_8_ = d_6_;
+		}
 		double d_9_ = 0.0;
 		double d_10_ = 0.0;
 		double d_11_ = (d_7_ + d_8_) / 2.0;
-		if(d_7_ != d_8_) {
-			if(d_11_ < 0.5)
+		if (d_7_ != d_8_) {
+			if (d_11_ < 0.5) {
 				d_10_ = (d_8_ - d_7_) / (d_8_ + d_7_);
-			if(d_11_ >= 0.5)
+			}
+			if (d_11_ >= 0.5) {
 				d_10_ = (d_8_ - d_7_) / (2.0 - d_8_ - d_7_);
-			if(d == d_8_)
+			}
+			if (d == d_8_) {
 				d_9_ = (d_5_ - d_6_) / (d_8_ - d_7_);
-			else if(d_5_ == d_8_)
+			} else if (d_5_ == d_8_) {
 				d_9_ = 2.0 + (d_6_ - d) / (d_8_ - d_7_);
-			else if(d_6_ == d_8_)
+			} else if (d_6_ == d_8_) {
 				d_9_ = 4.0 + (d - d_5_) / (d_8_ - d_7_);
+			}
 		}
 		d_9_ /= 6.0;
 		hue = (int) (d_9_ * 256.0);
 		saturation = (int) (d_10_ * 256.0);
 		lightness = (int) (d_11_ * 256.0);
-		if(saturation < 0)
+		if (saturation < 0) {
 			saturation = 0;
-		else if(saturation > 255)
+		} else if (saturation > 255) {
 			saturation = 255;
-		if(lightness < 0)
+		}
+		if (lightness < 0) {
 			lightness = 0;
-		else if(lightness > 255)
+		} else if (lightness > 255) {
 			lightness = 255;
-		if(d_11_ > 0.5)
+		}
+		if (d_11_ > 0.5) {
 			anInt398 = (int) ((1.0 - d_11_) * d_10_ * 512.0);
-		else
+		} else {
 			anInt398 = (int) (d_11_ * d_10_ * 512.0);
-		if(anInt398 < 1)
+		}
+		if (anInt398 < 1) {
 			anInt398 = 1;
-		anInt397 = (int) (d_9_ * (double) anInt398);
-		int i = hue + (int) (Math.random() * 16.0) - 8;
-		if(i < 0)
-			i = 0;
-		else if(i > 255)
-			i = 255;
-		int i_12_ = saturation + (int) (Math.random() * 48.0) - 24;
-		if(i_12_ < 0)
-			i_12_ = 0;
-		else if(i_12_ > 255)
-			i_12_ = 255;
-		int i_13_ = lightness + (int) (Math.random() * 48.0) - 24;
-		if(i_13_ < 0)
-			i_13_ = 0;
-		else if(i_13_ > 255)
-			i_13_ = 255;
-		hsl = method263(i, i_12_, i_13_);
+		}
+		anInt397 = (int) (d_9_ * anInt398);
+		hsl = method263(hue, saturation, lightness);
 	}
+
+//	private void method262(int arg0) {
+//		double d = (double) (arg0 >> 16 & 0xff) / 256.0;
+//		double d_5_ = (double) (arg0 >> 8 & 0xff) / 256.0;
+//		double d_6_ = (double) (arg0 & 0xff) / 256.0;
+//		double d_7_ = d;
+//		if(d_5_ < d_7_)
+//			d_7_ = d_5_;
+//		if(d_6_ < d_7_)
+//			d_7_ = d_6_;
+//		double d_8_ = d;
+//		if(d_5_ > d_8_)
+//			d_8_ = d_5_;
+//		if(d_6_ > d_8_)
+//			d_8_ = d_6_;
+//		double d_9_ = 0.0;
+//		double d_10_ = 0.0;
+//		double d_11_ = (d_7_ + d_8_) / 2.0;
+//		if(d_7_ != d_8_) {
+//			if(d_11_ < 0.5)
+//				d_10_ = (d_8_ - d_7_) / (d_8_ + d_7_);
+//			if(d_11_ >= 0.5)
+//				d_10_ = (d_8_ - d_7_) / (2.0 - d_8_ - d_7_);
+//			if(d == d_8_)
+//				d_9_ = (d_5_ - d_6_) / (d_8_ - d_7_);
+//			else if(d_5_ == d_8_)
+//				d_9_ = 2.0 + (d_6_ - d) / (d_8_ - d_7_);
+//			else if(d_6_ == d_8_)
+//				d_9_ = 4.0 + (d - d_5_) / (d_8_ - d_7_);
+//		}
+//		d_9_ /= 6.0;
+//		hue = (int) (d_9_ * 256.0);
+//		saturation = (int) (d_10_ * 256.0);
+//		lightness = (int) (d_11_ * 256.0);
+//		if(saturation < 0)
+//			saturation = 0;
+//		else if(saturation > 255)
+//			saturation = 255;
+//		if(lightness < 0)
+//			lightness = 0;
+//		else if(lightness > 255)
+//			lightness = 255;
+//		if(d_11_ > 0.5)
+//			anInt398 = (int) ((1.0 - d_11_) * d_10_ * 512.0);
+//		else
+//			anInt398 = (int) (d_11_ * d_10_ * 512.0);
+//		if(anInt398 < 1)
+//			anInt398 = 1;
+//		anInt397 = (int) (d_9_ * (double) anInt398);
+//		int i = hue + (int) (Math.random() * 16.0) - 8;
+//		if(i < 0)
+//			i = 0;
+//		else if(i > 255)
+//			i = 255;
+//		int i_12_ = saturation + (int) (Math.random() * 48.0) - 24;
+//		if(i_12_ < 0)
+//			i_12_ = 0;
+//		else if(i_12_ > 255)
+//			i_12_ = 255;
+//		int i_13_ = lightness + (int) (Math.random() * 48.0) - 24;
+//		if(i_13_ < 0)
+//			i_13_ = 0;
+//		else if(i_13_ > 255)
+//			i_13_ = 255;
+//		hsl = method263(i, i_12_, i_13_);
+//	}
 
 	private final int method263(int arg0, int arg1, int arg2) {
 		if(arg2 > 179)

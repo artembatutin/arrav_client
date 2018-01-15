@@ -615,6 +615,11 @@ public final class MapDecoder {
 										flohsl = getHSLHashCode(overlayFlo.hue, overlayFlo.saturation, overlayFlo.lightness);
 										mapColor = Rasterizer3D.hslToRgbMap[method185(overlayFlo.hsl, shadow)];
 									}
+									if (mapColor == 0x000000 && overlayFlo.detailedColor != -1) {
+										int temporaryMinimapColor = hslToRgb(overlayFlo.anotherHue,
+												overlayFlo.anotherSaturation, overlayFlo.anotherLuminance);
+										mapColor = Rasterizer3D.hslToRgbMap[poesy(temporaryMinimapColor, 96)];
+									}
 									scene.setGround(z, x, y, lay, k23, underlay_floor_texture, overlay_texture, j19, k19, l19, i20, adjustLightness(hsl, j20), adjustLightness(hsl, k20), adjustLightness(hsl, l20), adjustLightness(hsl, i21), method185(flohsl, j20), method185(flohsl, k20), method185(flohsl, l20), method185(flohsl, i21), rgb_bitset_randomized, mapColor);
 
 								}
@@ -789,6 +794,59 @@ public final class MapDecoder {
 		}
 	}
 
+	static final int hslToRgb(int var0, int var1, int var2) {
+		if (var2 > 179) {
+			var1 /= 2;
+		}
+
+
+		if (var2 > 192) {
+			var1 /= 2;
+		}
+
+
+		if (var2 > 217) {
+			var1 /= 2;
+		}
+
+
+		if (var2 > 243) {
+			var1 /= 2;
+		}
+
+
+		int var3 = var2 / 2 + (var0 / 4 << 10) + (var1 / 32 << 7);
+		return var3;
+	}
+
+
+
+
+	static final int poesy(int var0, int var1) {
+		if (var0 == -2) {
+			return 12345678;
+		} else if (var0 == -1) {
+			if (var1 < 2) {
+				var1 = 2;
+			} else if (var1 > 126) {
+				var1 = 126;
+			}
+
+
+			return var1;
+		} else {
+			var1 = var1 * (var0 & 127) / 128;
+			if (var1 < 2) {
+				var1 = 2;
+			} else if (var1 > 126) {
+				var1 = 126;
+			}
+
+
+			return var1 + (var0 & '\uff80');
+		}
+	}
+
 	private void method175(int y, Scene worldController, CollisionMap class11, int j, int p, int x, int id, int j1, boolean oldMap) {
 		/*if(!Config.VISIBLE_LEVELS.isOn() && (renderRuleFlags[0][x][y] & 2) == 0) {
 			if((renderRuleFlags[p][x][y] & 0x10) != 0) {
@@ -935,6 +993,7 @@ public final class MapDecoder {
 			} else {
 				obj3 = new Location(id, j1, 0, l1, i2, k1, j2, loc.animationId, true);
 			}
+
 			worldController.setWallDecor((Entity) obj3, null, p, x, y, k2, anIntArray152[j1], 0, hash, byte0);
 			if(j1 == 0) {
 				if(loc.castsShadow) {
@@ -1342,14 +1401,14 @@ public final class MapDecoder {
 		return (i & 0xff80) + j;
 	}
 
-	public final void method190(int mapId, int i, CollisionMap[] collmaps, int j, Scene scene, byte[] data, boolean oldMap) {
+	public final void method190(int i, CollisionMap[] collmaps, int j, Scene scene, byte[] data, boolean oldMap) {
 		label0:
 		{
 			final Buffer buffer = new Buffer(data);
-			int offset = 0;
-			if(mapId == 625) {
-				offset = 5;
-			}
+//			int offset = 0;
+//			if(mapId == 625) {
+//				offset = 5;
+//			}
 			int l = -1;
 			do {
 				int i1 = buffer.getUSmart();
@@ -1368,7 +1427,7 @@ public final class MapDecoder {
 					final int i2 = j1 >> 6 & 0x3f;
 					final int j2 = j1 >> 12;
 					final int k2 = buffer.getUByte();
-					final int l2 = (k2 >> 2) - offset;
+					final int l2 = (k2 >> 2);
 					final int i3 = k2 & 3;
 					final int j3 = i2 + i;
 					final int k3 = l1 + j;

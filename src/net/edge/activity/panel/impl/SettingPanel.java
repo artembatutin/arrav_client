@@ -285,7 +285,7 @@ public class SettingPanel extends Panel {
 		if(client.mouseInRegion(x + 280, y + 185, x + 430, y + 208)) {
 			Rasterizer2D.fillRoundedRectangle(x + 280, y + 185, 150, 20, 4, 0xffffff, 25);
 		}
-		boldFont.drawCenteredEffectString("Panel style: " + (Config.def.panelStyle == 0 ? "OSRS" : (Config.def.panelStyle == 1 ? "EOC" : "Custom")), x + 355, y + 200, 0xFFFFFF, true);
+		boldFont.drawCenteredEffectString("Interface style: " + (Config.def.panelStyle == 0 ? "OSRS" : (Config.def.panelStyle == 1 ? "EOC" : "Custom")), x + 355, y + 200, 0xFFFFFF, true);
 		
 		
 		/* Menus */

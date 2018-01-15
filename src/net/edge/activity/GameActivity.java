@@ -485,7 +485,7 @@ public class GameActivity extends Activity {
 				}
 			} else {
 				if(client.panelHandler.action()) {
-					if(client.mouseWheelAmt != 0) {
+					if(client.mouseWheelAmt != 0 ) {
 						client.cameraZoom += client.mouseWheelAmt * 20;
 					}
 					if(client.cameraZoom < -150) {
@@ -1781,10 +1781,7 @@ public class GameActivity extends Activity {
 				else
 					ImageCache.get(15).drawImage(client.windowWidth - 35, 170);
 			} else {
-				if(client.uiRenderer.getId() < 500 && client.uiRenderer.getId() != 1)
 					ImageCache.get(1926).drawImage(485, 310);
-				else
-					ImageCache.get(15).drawImage(472, 300);
 			}
 		}
 		if(client.systemUpdateTimer != 0) {
@@ -1825,7 +1822,16 @@ public class GameActivity extends Activity {
 			smallFont.drawRightAlignedString("Center: " + (client.mouseX - centerX) + "," + (client.mouseY - centerY), off, (line += 15), 0xffff00);
 			smallFont.drawRightAlignedString("Coords: " + x + "," + y, off, (line += 15), 0xffff00);
 			smallFont.drawRightAlignedString("Screen: " + client.windowWidth + "x" + client.windowHeight, off, (line += 15), 0xffff00);
-		}
+			int[] flo = client.terrainDataIds;
+			for(int num = 0; num < client.terrainDataIds.length; num++) {
+			}
+			smallFont.drawRightAlignedString("Map Data: " + Arrays.toString(flo), off, (line += 15), 0xffff00);
+			int[] obj = client.objectDataIds;
+			for(int num = 0; num < client.objectDataIds.length; num++) {
+				obj = client.objectDataIds;
+			}
+				smallFont.drawRightAlignedString("Obj Data: " + Arrays.toString(obj), off, (line += 15), 0xffff00);
+			}
 	}
 
 	private void drawSplitPrivateChat() {

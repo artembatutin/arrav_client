@@ -8301,7 +8301,7 @@ public class Client extends ClientEngine {
 					if(data != null) {
 						final int offsetX = ((mapCoordinates[i6] >> 8) << 6) - baseX;
 						final int offsetY = ((mapCoordinates[i6] & 0xff) << 6) - baseY;
-						decoder.method190(objectDataIds[i6], offsetX, collisionMaps, offsetY, scene, data, oldMap);
+						decoder.method190(offsetX, collisionMaps, offsetY, scene, data, oldMap);
 					}
 				}
 			}

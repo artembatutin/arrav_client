@@ -7,16 +7,17 @@ import net.edge.Config;
 import net.edge.cache.unit.ImageCache;
 import net.edge.media.Rasterizer2D;
 
+import java.text.NumberFormat;
 import java.util.Iterator;
 
 public class CounterHandler {
-	
+
 	private static final ObjectList<SkillUpdate> updates = new ObjectArrayList<>();
 	private static boolean counterToggled;
 	private static int gainedXPWidth = 5;
 	private static int movable = 0;
 	public static int gainedXP;
-	
+
 	public static Client client;
 	private static boolean login = true;
 	private static int drawingLevelUp = -1;
@@ -36,56 +37,77 @@ public class CounterHandler {
 		progress = getProgress(skill);
 		levelUpTo = -1;
 	}
-	
+
 	public static void drawCounter() {
 		Iterator<SkillUpdate> it = updates.iterator();
-		int x = client.uiRenderer.isFixed() ? 510 : client.windowWidth - 223;
-		int yMove = (client.uiRenderer.isResizableOrFull() ? 15 : client.uiRenderer.getId() > 500 ? -15 : -10) - 30;
+		int x = client.uiRenderer.isFixed() ? 513 : client.windowWidth - 223;
+		int yMove = (client.uiRenderer.isResizableOrFull() ? 15 : client.uiRenderer.getId() > 500 ? -65 : -130) - 30;
 		while(it.hasNext()) {
 			SkillUpdate update = it.next();
-			update.move += 1;
+			/* Moving the xp drop up or down by 1 */
+			if(client.uiRenderer.getId() > 500) {
+				update.move += 2;
+			} else {
+				update.move -= 2;
+			}
+			/* Increasing transparency of the xp drop */
 			if(movable < -20)
 				movable++;
-			if(update.move > 40) {
+			if(update.move > 30 && client.uiRenderer.getId() > 500) {
+				update.alpha -= 10;
+			} else if (update.move < -185) {
 				update.alpha -= 10;
 			}
-			if(update.move > 60) {
+
+
+			/* Removing xp drop */
+			if(update.move > 50 && client.uiRenderer.getId() > 500) {
+				it.remove();
+				continue;
+			} else if (update.move < -205) {
 				it.remove();
 				continue;
 			}
 			if(counterToggled) {
-				ImageCache.get(update.skill + 1957).drawImage(x - 25 - update.width, 80 + update.move - yMove, update.alpha);
-				client.smallFont.drawRightAlignedString("" + update.xp, x, 100 + update.move - yMove, 0xffffff);
+				ImageCache.get(update.skill + (client.uiRenderer.getId() > 500 ? 1957 : 2053)).drawImage(x - 25 - update.width, 80 + update.move - yMove, update.alpha);
+				client.smallFont.drawRightAlignedEffectString("" + update.xp, x, 100 + update.move - yMove, 0xffffff, true);
 			}
 		}
 		if(counterToggled) {
-			int y = client.uiRenderer.isResizableOrFull() ? 15 : client.uiRenderer.getId() > 500 ? 56 : 28;
-			int width = gainedXPWidth + 7;
+			int y = client.uiRenderer.isResizableOrFull() ? 10 : client.uiRenderer.getId() > 500 ? 58 : 8;
+			int width = gainedXPWidth + (client.uiRenderer.getId() > 500 ? 25 : 80);
 			if(gainedXPWidth == 5 && gainedXP > 0) {
-				gainedXPWidth = client.smallFont.getStringWidth("" + gainedXP);
+				if(client.uiRenderer.getId() > 500) {
+					gainedXPWidth = client.smallFont.getStringWidth("" + gainedXP);
+				}
 			}
 			if(client.uiRenderer.getId() > 500) {
-				Rasterizer2D.fillRectangle(x - width, y, width, 15, 0x4d493e, 170);
-				Rasterizer2D.drawRectangle(x - width, y, width, 15, 0xad7d3f);
-				Rasterizer2D.drawRectangle(x - width - 1, y - 1, width + 2, 17, 0x91825c, 100);
+				Rasterizer2D.fillRectangle(x - width - 37, y, width + 37, 16, 0x4d493e, 220); // Rectangle filled
+				Rasterizer2D.drawRectangle(x - width - 37, y, width + 37, 17, 0x323130, 100); // darker inner line
+				Rasterizer2D.drawRectangle(x - width - 1 - 37, y - 1, width + 2 + 37, 19, 0xad7d3f); // orange outline
+				Rasterizer2D.drawRectangle(x - width - 1 - 37, y - 1, width + 2 + 37, 19, 0x91825c, 100); // yellow glowlike outline
+				//client.smallFont.drawRightAlignedEffectString("XP:", x - 20, y + 12, 0xffffff, true);
+				client.plainFont.drawRightAlignedEffectString("XP:         " + NumberFormat.getInstance().format(gainedXP), x - 5, y + 13, 0xffffff, true);
 			} else {
-				Rasterizer2D.fillRectangle(x - width, y, width, 15, client.uiRenderer.getId() == 1 ? 0x000000 : 0x413c34, 170);
-				Rasterizer2D.drawRectangle(x - width, y, width, 15, 0x5b5348);
-				Rasterizer2D.drawRectangle(x - width - 1, y - 1, width + 2, 17, 0x383322);
+				Rasterizer2D.fillRectangle(x - width, y, width, 28, client.uiRenderer.getId() == 1 ? 0x000000 : 0x413c34, 170);
+				Rasterizer2D.drawRectangle(x - width, y, width, 28, 0x5b5348);
+				Rasterizer2D.drawRectangle(x - width - 1, y - 1, width + 2, 30, 0x383322);
+				ImageCache.get(975).drawImage(x - width + 2, 10);
+				client.plainFont.drawRightAlignedEffectString(""+ NumberFormat.getInstance().format(gainedXP), x - 5, y + 19, 0xffffff, true);
+
 			}
-			client.smallFont.drawRightAlignedString("" + gainedXP, x - 3, y + 12, 0xffffff);
 		}
 	}
-	
+
 	public static void toggleCounter() {
 		counterToggled = !counterToggled;
 	}
-	
+
 	public static void resetCounter() {
 		gainedXP = 0;
 		gainedXPWidth = 5;
 	}
-	
+
 	public static boolean isCounterOn() {
 		return counterToggled;
 	}
@@ -177,7 +199,7 @@ public class CounterHandler {
 				}
 			}
 		}
-		int alpha = 256;
+		int alpha = 200;
 		if(client.loopCycle - orbs[skill].appearCycle < 32) {
 			alpha = 8 * (client.loopCycle - orbs[skill].appearCycle);
 		}
@@ -195,14 +217,14 @@ public class CounterHandler {
 				xPosition -= orbs[skill].position / 2 * 54;
 			}
 		}
-		final int yPosition = -4;
+		final int yPosition = 10;
 		ImageCache.get(88).drawImage(xPosition, yPosition, alpha);
-		Rasterizer2D.setClip(xPosition + 7, (int) (45 - orbs[skill].progress) + 5 + yPosition, xPosition + 30, 60 + yPosition);
-		ImageCache.get(89).drawImage(xPosition + 7, 7 + yPosition, alpha);
-		Rasterizer2D.setClip(xPosition + 30, 7 + yPosition, xPosition + 52, (int) (orbs[skill].progress - 38) + yPosition);
-		ImageCache.get(89).drawImage(xPosition + 7, 7 + yPosition, alpha);
+		Rasterizer2D.setClip(xPosition + 8, (int) (45 - orbs[skill].progress) + 5 + yPosition, xPosition + 30, 60 + yPosition);
+		ImageCache.get(89).drawImage(xPosition + 8, 7 + yPosition, alpha);
+		Rasterizer2D.setClip(xPosition + 30, 8 + yPosition, xPosition + 52, (int) (orbs[skill].progress - 38) + yPosition);
+		ImageCache.get(89).drawImage(xPosition + 8, 7 + yPosition, alpha);
 		Rasterizer2D.removeClip();
-		ImageCache.get(skill + 124).drawImage(xPosition + 30 - ImageCache.get(skill + 124).imageWidth / 2, 28 - ImageCache.get(skill + 124).imageHeight / 2 + yPosition, alpha);
+		ImageCache.get(skill + 1957).drawImage(xPosition + 31 - ImageCache.get(skill + 1957).imageWidth / 2, 28 - ImageCache.get(skill + 1957).imageHeight / 2 + yPosition + 2, alpha);
 	}
 
 	public static void drawOrbs() {
@@ -287,21 +309,21 @@ public class CounterHandler {
 		levelUpCycle = client.loopCycle;
 		levelUpTo = level;
 	}
-	
+
 	public static void add(SkillUpdate update) {
 		gainedXP += update.xp;
 		gainedXPWidth = client.smallFont.getStringWidth("" + gainedXP);
 		updates.add(update);
 	}
-	
+
 	public static class SkillUpdate {
-		
+
 		private final int skill;
 		private final int xp;
 		private final int width;
 		private int move = 0;
 		private int alpha = 250;
-		
+
 		public SkillUpdate(int skill, int xp) {
 			this.skill = skill;
 			this.xp = xp;
@@ -309,6 +331,6 @@ public class CounterHandler {
 			movable -= 25;
 			this.move = movable;
 		}
-		
+
 	}
 }
