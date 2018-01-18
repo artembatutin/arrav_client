@@ -43,7 +43,6 @@ public final class CacheIndex {
 					indexFile.get(buffer, i, 6 - i);
 					n = 6 - i;
 				} catch(Exception e) {
-					e.printStackTrace();
 					return null;
 				}
 			}
@@ -70,7 +69,6 @@ public final class CacheIndex {
 						dataFile.get(buffer, size, remaining + 8 - size);
 						nbytes = remaining + 8 - size;
 					} catch(Exception e) {
-						e.printStackTrace();
 						return null;
 					}
 				}

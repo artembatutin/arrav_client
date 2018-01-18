@@ -3144,9 +3144,6 @@ public class Client extends ClientEngine {
 			outBuffer.putInt(mac);
 			outBuffer.putLong(StringUtils.encryptName(username));
 			socketStream.write(outBuffer.data, 14);
-			for(int j = 0; j < 8; j++) {
-				socketStream.read();
-			}
 			int returnCode = socketStream.read();
 			final int i1 = returnCode;
 			if(returnCode == 0) {
