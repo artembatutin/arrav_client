@@ -2,12 +2,13 @@ package net.edge.cache;
 
 import java.io.IOException;
 import java.io.RandomAccessFile;
+import java.nio.MappedByteBuffer;
 
 public final class CacheIndex {
 
 	private static final byte[] buffer = new byte[520];
-	private final RandomAccessFile dataFile;
-	private final RandomAccessFile indexFile;
+	private final MappedByteBuffer dataFile;
+	private final MappedByteBuffer indexFile;
 	private final int index;
 
 	/**
@@ -16,7 +17,7 @@ public final class CacheIndex {
 	public long getFileCount() {
 		try {
 			if(indexFile != null) {
-				return (indexFile.length() / 6);
+				return (indexFile.capacity() / 6);
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -24,7 +25,7 @@ public final class CacheIndex {
 		return -1;
 	}
 
-	CacheIndex(RandomAccessFile dat, RandomAccessFile idx, int id) {
+	CacheIndex(MappedByteBuffer dat, MappedByteBuffer idx, int id) {
 		index = id;
 		dataFile = dat;
 		indexFile = idx;
@@ -38,51 +39,57 @@ public final class CacheIndex {
 			seekTo(indexFile, id * 6);
 			int n;
 			for(int i = 0; i < 6; i += n) {
-				n = indexFile.read(buffer, i, 6 - i);
-				if(n == -1) {
+				try {
+					indexFile.get(buffer, i, 6 - i);
+					n = 6 - i;
+				} catch(Exception e) {
+					e.printStackTrace();
 					return null;
 				}
 			}
-			int len = ((buffer[0] & 0xff) << 16) + ((buffer[1] & 0xff) << 8) + (buffer[2] & 0xff);
-			int page = ((buffer[3] & 0xff) << 16) + ((buffer[4] & 0xff) << 8) + (buffer[5] & 0xff);
-			if(page <= 0 || page > dataFile.length() / 520L) {
+			int fileSize = ((buffer[0] & 0xff) << 16) + ((buffer[1] & 0xff) << 8) + (buffer[2] & 0xff);
+			int fileBlock = ((buffer[3] & 0xff) << 16) + ((buffer[4] & 0xff) << 8) + (buffer[5] & 0xff);
+			if(fileBlock <= 0 || fileBlock > dataFile.capacity() / 520L) {
 				return null;
 			}
-			byte[] obuf = new byte[len];
-			int opos = 0;
-			for(int i = 0; opos < len; i++) {
-				if(page == 0) {
+			byte[] fileBuffer = new byte[fileSize];
+			int read = 0;
+			for(int i = 0; read < fileSize; i++) {
+				if(fileBlock == 0) {
 					return null;
 				}
-				seekTo(dataFile, page * 520);
-				int ipos = 0;
-				int end = len - opos;
-				if(end > 512) {
-					end = 512;
+				seekTo(dataFile, fileBlock * 520);
+				int size = 0;
+				int remaining = fileSize - read;
+				if(remaining > 512) {
+					remaining = 512;
 				}
 				int nbytes;
-				for(; ipos < end + 8; ipos += nbytes) {
-					nbytes = dataFile.read(buffer, ipos, end + 8 - ipos);
-					if(nbytes == -1) {
+				for(; size < remaining + 8; size += nbytes) {
+					try {
+						dataFile.get(buffer, size, remaining + 8 - size);
+						nbytes = remaining + 8 - size;
+					} catch(Exception e) {
+						e.printStackTrace();
 						return null;
 					}
 				}
-				int k2 = ((buffer[0] & 0xff) << 8) + (buffer[1] & 0xff);
-				int l2 = ((buffer[2] & 0xff) << 8) + (buffer[3] & 0xff);
-				int page_ = ((buffer[4] & 0xff) << 16) + ((buffer[5] & 0xff) << 8) + (buffer[6] & 0xff);
-				int j3 = buffer[7] & 0xff;
-				if(k2 != id || l2 != i || j3 != index) {
+				int nextFileId = ((buffer[0] & 0xff) << 8) + (buffer[1] & 0xff);
+				int currentPartId = ((buffer[2] & 0xff) << 8) + (buffer[3] & 0xff);
+				int nextBlockId = ((buffer[4] & 0xff) << 16) + ((buffer[5] & 0xff) << 8) + (buffer[6] & 0xff);
+				int nextStoreId = buffer[7] & 0xff;
+				if(nextFileId != id || currentPartId != i || nextStoreId != index) {
 					return null;
 				}
-				if(page_ < 0 || page_ > dataFile.length() / 520L) {
+				if(nextBlockId < 0 || nextBlockId > dataFile.capacity() / 520L) {
 					return null;
 				}
-				for(int k3 = 0; k3 < end; k3++) {
-					obuf[opos++] = buffer[k3 + 8];
+				for(int k3 = 0; k3 < remaining; k3++) {
+					fileBuffer[read++] = buffer[k3 + 8];
 				}
-				page = page_;
+				fileBlock = nextBlockId;
 			}
-			return obuf;
+			return fileBuffer;
 		} catch(final IOException _ex) {
 			_ex.printStackTrace();
 			return null;
@@ -110,17 +117,20 @@ public final class CacheIndex {
 				seekTo(indexFile, id * 6);
 				int k1;
 				for(int i1 = 0; i1 < 6; i1 += k1) {
-					k1 = indexFile.read(buffer, i1, 6 - i1);
-					if(k1 == -1) {
+					try {
+						indexFile.get(buffer, i1, 6 - i1);
+						k1 = 6 - i1;
+					} catch(Exception e) {
+						e.printStackTrace();
 						return false;
 					}
 				}
 				l = ((buffer[3] & 0xff) << 16) + ((buffer[4] & 0xff) << 8) + (buffer[5] & 0xff);
-				if(l <= 0 || l > dataFile.length() / 520L) {
+				if(l <= 0 || l > dataFile.capacity() / 520L) {
 					return false;
 				}
 			} else {
-				l = (int) ((dataFile.length() + 519L) / 520L);
+				l = (int) ((dataFile.capacity() + 519L) / 520L);
 				if(l == 0) {
 					l = 1;
 				}
@@ -132,7 +142,7 @@ public final class CacheIndex {
 			buffer[4] = (byte) (l >> 8);
 			buffer[5] = (byte) l;
 			seekTo(indexFile, id * 6);
-			indexFile.write(buffer, 0, 6);
+			indexFile.put(buffer, 0, 6);
 			int j1 = 0;
 			for(int l1 = 0; j1 < length; l1++) {
 				int i2 = 0;
@@ -141,9 +151,12 @@ public final class CacheIndex {
 					int j2;
 					int l2;
 					for(j2 = 0; j2 < 8; j2 += l2) {
-						l2 = dataFile.read(buffer, j2, 8 - j2);
-						if(l2 == -1) {
-							break;
+						try {
+							dataFile.get(buffer, j2, 8 - j2);
+							l2 = 8 - j2;
+						} catch(Exception e) {
+							e.printStackTrace();
+							return false;
 						}
 					}
 					if(j2 == 8) {
@@ -154,14 +167,14 @@ public final class CacheIndex {
 						if(i3 != id || j3 != l1 || k3 != index) {
 							return false;
 						}
-						if(i2 < 0 || i2 > dataFile.length() / 520L) {
+						if(i2 < 0 || i2 > dataFile.capacity() / 520L) {
 							return false;
 						}
 					}
 				}
 				if(i2 == 0) {
 					flag = false;
-					i2 = (int) ((dataFile.length() + 519L) / 520L);
+					i2 = (int) ((dataFile.capacity() + 519L) / 520L);
 					if(i2 == 0) {
 						i2++;
 					}
@@ -181,12 +194,12 @@ public final class CacheIndex {
 				buffer[6] = (byte) i2;
 				buffer[7] = (byte) index;
 				seekTo(dataFile, l * 520);
-				dataFile.write(buffer, 0, 8);
+				dataFile.put(buffer, 0, 8);
 				int k2 = length - j1;
 				if(k2 > 512) {
 					k2 = 512;
 				}
-				dataFile.write(data, j1, k2);
+				dataFile.put(data, j1, k2);
 				j1 += k2;
 				l = i2;
 			}
@@ -200,9 +213,9 @@ public final class CacheIndex {
 	/**
 	 * Seeks to the given position.
 	 */
-	private synchronized void seekTo(RandomAccessFile file, int pos) throws IOException {
+	private synchronized void seekTo(MappedByteBuffer file, int pos) throws IOException {
 		try {
-			file.seek(pos);
+			file.position(pos);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

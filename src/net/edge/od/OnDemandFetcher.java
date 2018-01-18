@@ -174,14 +174,14 @@ public final class OnDemandFetcher implements Runnable {
 			}
 		}
 		
-		byte abyte1[] = archive.getFile("mob_drops");
+		/*byte abyte1[] = archive.getFile("mob_drops");
 		System.out.println("mob_drops - " + abyte1.length);
 		int fileAmount = abyte1.length / 2;
 		Buffer mobs = new Buffer(abyte1);
 		DropPanel.seekable = new int[fileAmount];
 		for(int i = 0; i< fileAmount; i++) {
 			DropPanel.seekable[i] = mobs.getSShort();
-		}
+		}*/
 		
 
 		Buffer buffer = new Buffer(Constants.JAGGRAB_ENABLED ? archive.getFile("map_index") : DataToolkit.readFile(SignLink.getCacheDir() + "map_index"));

@@ -11,12 +11,14 @@ import java.io.RandomAccessFile;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
+import java.nio.MappedByteBuffer;
+import java.nio.channels.FileChannel;
 
 public final class SignLink implements Runnable {
 
 	public static int storeId = 32;
-	public static RandomAccessFile cacheDat = null;
-	public static final RandomAccessFile[] cacheIdx = new RandomAccessFile[Constants.CACHE_INDEX_COUNT];
+	public static MappedByteBuffer cacheDat = null;
+	public static final MappedByteBuffer[] cacheIdx = new MappedByteBuffer[Constants.CACHE_INDEX_COUNT];
 	public static boolean sunJava;
 	public static Applet mainApp = null;
 	private static boolean active;
@@ -161,11 +163,24 @@ public final class SignLink implements Runnable {
 		active = true;
 		final String cacheDir = getCacheDir();
 		try {
-			cacheDat = new RandomAccessFile(cacheDir + "main_file_cache.dat", "rw");
+			RandomAccessFile cacheDatFile = new RandomAccessFile(cacheDir + "main_file_cache.dat", "rw");
+			cacheDat = cacheDatFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, cacheDatFile.length());
 			for(int j = 0; j < Constants.CACHE_INDEX_COUNT; j++) {
-				cacheIdx[j] = new RandomAccessFile(cacheDir + "main_file_cache.idx" + j, "rw");
+				RandomAccessFile cacheIdxFile = new RandomAccessFile(cacheDir + "main_file_cache.idx" + j, "rw");
+				cacheIdx[j] = cacheIdxFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, cacheIdxFile.length());
 			}
-		} catch(final Exception ignored) {
+			
+			boolean loaded = false;
+			while(!loaded) {
+				loaded = cacheDat.isLoaded();
+				for(int j = 0; j < Constants.CACHE_INDEX_COUNT; j++) {
+					if(!cacheIdx[j].isLoaded())
+						loaded = false;
+				}
+				Thread.sleep(100l);
+			}
+		} catch(final Exception e) {
+			e.printStackTrace();
 		}
 		for(final int i = threadLiveId; threadLiveId == i; ) {
 			if(socketReq != 0) {
