@@ -84221,7 +84221,7 @@
 84220-Counter
 84221-null
 84222-Soul Wars portal
-84223-Edgeville portal
+84223-Arrav portal
 84224-null
 84225-null
 84226-null

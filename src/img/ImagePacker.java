@@ -1,10 +1,10 @@
 package img;
 
-import net.edge.Client;
-import net.edge.cache.unit.ImageCache;
-import net.edge.sign.SignLink;
-import net.edge.util.FileToolkit;
-import net.edge.util.io.Buffer;
+import net.arrav.Client;
+import net.arrav.cache.unit.ImageCache;
+import net.arrav.sign.SignLink;
+import net.arrav.util.FileToolkit;
+import net.arrav.util.io.Buffer;
 
 import javax.imageio.ImageIO;
 import java.awt.*;
