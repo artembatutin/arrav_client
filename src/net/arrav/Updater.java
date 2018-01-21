@@ -127,7 +127,7 @@ public class Updater implements Runnable {
 	private int getVersion() {
 		URL url;
 		try {
-			url = new URL("http://edgeville.net/game/version.txt");
+			url = new URL("http://arrav.net/game/version.txt");
 			URLConnection conn = url.openConnection();
 			BufferedReader br = new BufferedReader(new InputStreamReader(conn.getInputStream()));
 			int version = Integer.parseInt(br.readLine());

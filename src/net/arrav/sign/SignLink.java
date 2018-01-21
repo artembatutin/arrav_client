@@ -60,7 +60,7 @@ public final class SignLink implements Runnable {
 			if(!home.endsWith(separator)) {
 				sb.append(separator);
 			}
-			sb.append(".edgeville");
+			sb.append(".arrav");
 			sb.append(separator);
 			String dir = sb.toString();
 			File file = new File(dir);
