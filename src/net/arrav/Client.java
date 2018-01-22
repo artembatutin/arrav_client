@@ -3094,11 +3094,8 @@ public class Client extends ClientEngine {
 		if(Config.def.lowMem() && loadingStage == 2 && MapDecoder.plane != cameraPlane) {
 			gameGraphics.setCanvas();
 			fancyFont.drawLeftAlignedEffectString("Loading - please wait...", 10, 20, 0xffffff, true);
-			if(uiRenderer.isResizableOrFull()) {
-				gameGraphics.drawGraphics(0, 0, super.graphics);
-			} else {
-				gameGraphics.drawGraphics(4, 4, super.graphics);
-			}
+			int off = uiRenderer.isResizableOrFull() ? 0 : 4;
+			gameGraphics.drawGraphics(off, off, super.graphics);
 			loadingStage = 1;
 			aLong824 = System.currentTimeMillis();
 		}
@@ -3125,9 +3122,6 @@ public class Client extends ClientEngine {
 				return;
 			}
 			titleMessage = "You have to input username\nand password to play.";
-			return;
-		} else if(mac == 0) {
-			titleMessage = "Error finding your mac address.\nPlease contact our forums.";
 			return;
 		}
 		SignLink.errorName = username;

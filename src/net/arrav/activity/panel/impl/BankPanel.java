@@ -273,7 +273,7 @@ public class BankPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 
-		boldFont.drawCenteredEffectString("Bank of Zulva", 250, beginY + 31, 0xff981f, true);
+		boldFont.drawCenteredEffectString("Bank of Arrav", 250, beginY + 31, 0xff981f, true);
 
 		/* Slots */
 		if (client.bankSearching) {

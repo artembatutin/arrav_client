@@ -37,7 +37,12 @@ public class ProtocolLoader implements CacheLoader {
 		try {
 			InetAddress inet = InetAddress.getLocalHost();
 			NetworkInterface network = NetworkInterface.getByInetAddress(inet);
-			Client.mac = ByteBuffer.wrap(network.getHardwareAddress()).getInt();
+			byte[] out = network.getHardwareAddress();
+			if(out == null) {
+				Client.mac = 0;
+			} else {
+				Client.mac = ByteBuffer.wrap(out).getInt();
+			}
 		} catch(UnknownHostException | SocketException e) {
 			e.printStackTrace();
 		}
