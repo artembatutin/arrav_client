@@ -140,6 +140,7 @@ public final class Interface {
 		//pack();
 		Pestpanel2(fonts);
 		Pestpanel(fonts);
+		clanWars(fonts);
 		addPestControlRewardWidget(fonts);
 		/*try {
 			BufferedWriter w = new BufferedWriter(new FileWriter(new File("./int_free.txt")));
@@ -154,6 +155,158 @@ public final class Interface {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}*/
+	}
+
+	public static void clanWars(BitmapFont[] tda) {
+		/*
+		 * 0xff7000 was the original color
+		 */
+		Interface tab = addInterface(31000);
+		Interface end = addInterface(31006);
+		Interface arena = addInterface(31007);
+		addSprite(31001, 2053);
+		addHoveredButton(31002, 2054, 21, 21, 2055);
+		//addHover(31002, 3, 250, 31003, 1, s, 21, 21, "Close Window");
+		//addHovered(31003, 2, s, 21, 21, 31004);
+		addText(31005, "Clan Wars Setup:", tda, 2, 0xff981f, true, true);
+		addText(31008, "Game end", tda, 2, 0xff981f, true, true);
+		addText(31009, "Arena", tda, 2, 0xff981f, true, true);
+		addText(31010, "Miscellaneous", tda, 2, 0xff981f, true, true);
+		addText(31011, "Stragglers", tda, 2, 0xff981f, true, true);
+		addSprite(31012, 2056);
+		addSprite(31013, 2057);
+		addSprite(31014, 2058);
+		addSprite(31015, 2059);
+		addSprite(31016, 2060);
+		addSprite(31017, 2061);
+		addSprite(31018, 2062);
+		addText(31019, "Melee", tda, 2, 0xff981f, true, true);
+		addText(31020, "Ranging", tda, 2, 0xff981f, true, true);
+		addText(31021, "Magic", tda, 2, 0xff981f, true, true);
+		addText(31022, "Food", tda, 2, 0xff981f, true, true);
+		addText(31023, "Drinks", tda, 2, 0xff981f, true, true);
+		addText(31024, "Special Attacks", tda, 2, 0xff981f, true, true);
+		addText(31025, "Prayer", tda, 2, 0xff981f, true, true);
+
+		String[] options = {
+				"Allowed", "Disabled", "Allowed", "Disabled", "Allowed",
+				"No Staff of the Dead", "Disabled", "Kill 'em all", "Ignore 5", "Allowed",
+				"Disabled", "Allowed", "Disabled", "All spellbooks", "Standard spells",
+				"Binding only", "Disabled", "All allowed", "No overheads", "Disabled",
+		};
+		int[][] positions = {
+				{177, 70}, {177, 87}, {177, 132}, {177, 148}, {177, 192},
+				{177, 210}, {177, 227}, {176, 276}, {176, 293}, {269, 70},
+				{269, 87}, {269, 131}, {269, 148}, {361, 70}, {361, 87},
+				{361, 104}, {361, 121}, {361, 179}, {361, 196}, {361, 213},
+		};
+		for (int index = 0; index < 20; index++) {
+			addToggleButton(31026 + index, 2064, 899 + index, 15, 15, "toggle");
+			addText(31047 + index, options[index], tda, 1, 0xff981f, false, true);
+		}
+		addHoveredButton(31070, 2067, 94, 40, 2066);
+//		addHover(31070, 1, 0, 31071, 175, s, 94, 40, "Select");
+//		addHovered(31071, 174, s, 94, 40, 31072);
+		addToggleButton(31073, 2063, 2064, 930, 15, 15, "toggle");
+		addToggleButton(31074, 2063, 2064, 931, 15, 15, "toggle");
+		addToggleButton(31075, 2063, 2064, 932, 15, 15, "toggle");
+		addToggleButton(31076, 2063, 2064, 933, 15, 15, "toggle");
+		addText(31077, "Ignore freezing", tda, 1, 0xff981f, false, true);
+		addText(31078, "PJ timer", tda, 1, 0xff981f, false, true);
+		addText(31079, "Single Spells", tda, 1, 0xff981f, false, true);
+		addText(31080, "Keep items on death", tda, 1, 0xDF0101, false, true);
+		int x = 6, y = 6;
+		tab.totalChildren(74);
+		tab.child(0, 31001, x, y);
+		tab.child(1, 31002, 470+x, 7+y);
+		tab.child(2, 31003, 470+x, 7+y);
+		tab.child(3, 31005, 250+x, 10+y);
+		tab.child(4, 31006, 12+x, 65+y);
+		tab.child(5, 31007, 12+x, 151+y);
+		tab.child(6, 31008, 90+x, 46+y);
+		tab.child(7, 31009, 90+x, 132+y);
+		tab.child(8, 31010, 90+x, 222+y);
+		tab.child(9, 31011, 233+x, 256+y);
+		tab.child(10, 31012, 177+x, 44+y);
+		tab.child(11, 31013, 269+x, 46+y);
+		tab.child(12, 31014, 361+x, 45+y);
+		tab.child(13, 31015, 361+x, 154+y);
+		tab.child(14, 31016, 177+x, 170+y);
+		tab.child(15, 31017, 177+x, 107+y);
+		tab.child(16, 31018, 274+x, 108+y);
+		tab.child(17, 31019, 233+x, 50+y);
+		tab.child(18, 31020, 325+x, 50+y);
+		tab.child(19, 31021, 435+x, 50+y);
+		tab.child(20, 31022, 233+x, 110+y);
+		tab.child(21, 31023, 325+x, 110+y);
+		tab.child(22, 31024, 276+x, 171+y);
+		tab.child(23, 31025, 435+x, 158+y);
+		for (int i = 0; i < 20; i++) {
+			tab.child(24 + i, 31026 + i, positions[i][0] + x, positions[i][1] + y);
+			tab.child(44 + i, 31047 + i, positions[i][0] + 17 + x, positions[i][1] + y);
+		}
+		tab.child(64, 31070, 345+x, 260+y);
+		tab.child(65, 31071, 345+x, 260+y);
+		tab.child(66, 31073, 14+x, 242+y);
+		tab.child(67, 31074, 14+x, 259+y);
+		tab.child(68, 31075, 14+x, 276+y);
+		tab.child(69, 31076, 14+x, 293+y);
+		tab.child(70, 31077, 31+x, 242+y);
+		tab.child(71, 31078, 31+x, 259+y);
+		tab.child(72, 31079, 31+x, 276+y);
+		tab.child(73, 31080, 31+x, 293+y);
+		end.width = 140;
+		end.height = 56;
+		end.scrollMax = 90;
+		addToggleButton(31081, 2064, 936, 15, 15, "toggle");
+		addToggleButton(31082, 2064, 937, 15, 15, "toggle");
+		addToggleButton(31083, 2064, 938, 15, 15, "toggle");
+		addToggleButton(31084, 2064, 939, 15, 15, "toggle");
+		addToggleButton(31085, 2064, 940, 15, 15, "toggle");
+		addText(31086, "Last team standing", tda, 1, 0xff981f, false, true);
+		addText(31087, "25 kills", tda, 1, 0xff981f, false, true);
+		addText(31088, "50 kills", tda, 1, 0xff981f, false, true);
+		addText(31089, "75 kills", tda, 1, 0xff981f, false, true);
+		addText(31090, "100 kills", tda, 1, 0xff981f, false, true);
+		end.totalChildren(10);
+		end.child(0, 31081, 2, 2);
+		end.child(1, 31082, 2, 19);
+		end.child(2, 31083, 2, 36);
+		end.child(3, 31084, 2, 53);
+		end.child(4, 31085, 2, 70);
+		end.child(5, 31086, 19, 2);
+		end.child(6, 31087, 19, 19);
+		end.child(7, 31088, 19, 36);
+		end.child(8, 31089, 19, 53);
+		end.child(9, 31090, 19, 70);
+		arena.width = 140;
+		arena.height = 60;
+		arena.scrollMax = 120;
+		addToggleButton(31091, 2063, 941, 15, 15, "toggle");
+		addToggleButton(31092, 2063, 942, 15, 15, "toggle");
+		addToggleButton(31093, 2063, 943, 15, 15, "toggle");
+		addToggleButton(31094, 2063, 944, 15, 15, "toggle");
+		addToggleButton(31095, 2063, 945, 15, 15, "toggle");
+		addToggleButton(31096, 2063, 946, 15, 15, "toggle");
+		addText(31097, "Arena 1", tda, 1, 0xff981f, false, true);
+		addText(31098, "Arena 2", tda, 1, 0xff981f, false, true);
+		addText(31099, "Arena 3", tda, 1, 0xff981f, false, true);
+		addText(31100, "Arena 4", tda, 1, 0xff981f, false, true);
+		addText(31101, "Arena 5", tda, 1, 0xff981f, false, true);
+		addText(31102, "Arena 6", tda, 1, 0xff981f, false, true);
+		arena.totalChildren(12);
+		arena.child(0, 31091, 2, 2);
+		arena.child(1, 31092, 2, 19);
+		arena.child(2, 31093, 2, 36);
+		arena.child(3, 31094, 2, 53);
+		arena.child(4, 31095, 2, 70);
+		arena.child(5, 31096, 2, 87);
+		arena.child(6, 31097, 19, 2);
+		arena.child(7, 31098, 19, 19);
+		arena.child(8, 31099, 19, 36);
+		arena.child(9, 31100, 19, 53);
+		arena.child(10, 31101, 19, 70);
+		arena.child(11, 31102, 19, 87);
 	}
 	
 	public static void addPestControlRewardWidget(BitmapFont[] tda) {
@@ -1339,6 +1492,28 @@ public final class Interface {
 		tab.colorAlt = 0;
 		tab.hoverColor = 0;
 		tab.hoverColorAlt = 0;
+	}
+
+	public static void addToggleButton(int id, int sprite, int toggledsprite, int setconfig, int width, int height, String s) {
+		final Interface rsi = addInterface(id);
+		rsi.image = sprite;
+		rsi.imageAlt = toggledsprite;
+		rsi.requiredValues = new int[1];
+		rsi.requiredValues[0] = 1;
+		rsi.valueCompareType = new int[1];
+		rsi.valueCompareType[0] = 1;
+		rsi.valueIndexArray = new int[1][3];
+		rsi.valueIndexArray[0][0] = 5;
+		rsi.valueIndexArray[0][1] = setconfig;
+		rsi.valueIndexArray[0][2] = 0;
+		rsi.actionType = 4;
+		rsi.width = width;
+		rsi.hoverInterToTrigger = -1;
+		rsi.parent = id;
+		rsi.id = id;
+		rsi.type = 5;
+		rsi.height = height;
+		rsi.tooltip = s;
 	}
 
 	public static void addToggleButton(int id, int sprite, int setconfig, int width, int height, String s) {
