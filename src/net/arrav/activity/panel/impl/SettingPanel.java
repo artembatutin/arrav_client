@@ -159,7 +159,7 @@ public class SettingPanel extends Panel {
 			}
 		} else if(client.leftClickInRegion(x + 280, y + 185, x + 430, y + 208)) {
 			Config.def.panelStyle = Config.def.panelStyle + 1;
-			if(Config.def.panelStyle > 2) {
+			if(Config.def.panelStyle > 1) {
 				Config.def.panelStyle = 0;
 			}
 		} else if(client.leftClickInRegion(x + 391, y + 279, x + 432, y + 293)) {
@@ -201,7 +201,7 @@ public class SettingPanel extends Panel {
 		if(bindings) {
 			drawSection(x + 20, y + 20, 310, 480, "Hot keys and bindings");
 			boldFont.drawCenteredString("To bind hot keys:", x + 435, y + 150, 0xffffff);
-			smallFont.drawLeftAlignedString("1. Select the F key", x + 385, y + 190, 0xffffff);
+			smallFont.drawLeftAlignedString("1. <- Select shortcut", x + 385, y + 190, 0xffffff);
 			smallFont.drawLeftAlignedString("2. Click on the tab ->", x + 385, y + 210, 0xffffff);
 			int xOff = 0;
 			int yOff = 0;
@@ -235,26 +235,26 @@ public class SettingPanel extends Panel {
 		}
 		
 		/* Details */
-		drawSection(x + 20, y + 20, 307, 180, "Details");
+		drawSection(x + 25, y + 20, 307, 180, "Details");
 		for(int button = 0; button < 12; button++) {
-			Rasterizer2D.drawHorizontalLine(x + 20, y + 59 + (button * 24), 130, 0xDBB047, 90);
-			drawTitleButton("Switch", x + 150, y + 45 + (button * 24), 0xDBB047);
+			Rasterizer2D.drawHorizontalLine(x + 25, y + 59 + (button * 24), 135, 0xDBB047, 90);
+			drawTitleButton("Switch", x + 160, y + 45 + (button * 24), 0xDBB047);
 		}
 		
-		plainFont.drawLeftAlignedEffectString((Config.def.lowMem() ? "@gre@" : "@red@") + "Low memory mode", x + 20, y + 55, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.tween() ? "@gre@" : "@red@") + "Animation tweening", x + 20, y + 77, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.enchanceMap() ? "@gre@" : "@red@") + "Enhanced Minimap", x + 20, y + 99, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.modelPrecision() ? "@gre@" : "@red@") + "Model precision", x + 20, y + 123, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.lowMem() ? "@gre@" : "@red@") + "Low memory mode", x + 30, y + 57, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.tween() ? "@gre@" : "@red@") + "Animation tweening", x + 30, y + 80, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.enchanceMap() ? "@gre@" : "@red@") + "Enhanced Minimap", x + 30, y + 104, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.modelPrecision() ? "@gre@" : "@red@") + "Model precision", x + 30, y + 128, 0, true);
 
-		plainFont.drawLeftAlignedEffectString((Config.def.groundDec() ? "@gre@" : "@red@") + "Ground decorations", x + 20, y + 147, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.groundMat() ? "@gre@" : "@red@") + "Ground materials", x + 20, y + 171, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.fog() ? "@gre@" : "@red@") + "Smooth fog", x + 20, y + 195, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.names() ? "@gre@" : "@red@") + "Display names", x + 20, y + 219, 0, true);
-		plainFont.drawLeftAlignedEffectString((!Config.def.roof() ? "@red@" : "@gre@") + "Visible roofs", x + 20, y + 243, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.groundDec() ? "@gre@" : "@red@") + "Ground decorations", x + 30, y + 152, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.groundMat() ? "@gre@" : "@red@") + "Ground textures", x + 30, y + 176, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.fog() ? "@gre@" : "@red@") + "Smooth fog", x + 30, y + 199, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.names() ? "@gre@" : "@red@") + "Display names", x + 30, y + 223, 0, true);
+		plainFont.drawLeftAlignedEffectString((!Config.def.roof() ? "@red@" : "@gre@") + "Visible roofs", x + 30, y + 248, 0, true);
 
-		plainFont.drawLeftAlignedEffectString((Config.def.orbs() ? "@gre@" : "@red@") + "Display orbs", x + 20, y + 267, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.skillOrbs() ? "@gre@" : "@red@") + "Display skill orbs", x + 20, y + 291, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.hits() ? "@gre@" : "@red@") + "10x hits", x + 20, y + 315, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.orbs() ? "@gre@" : "@red@") + "Display orbs", x + 30, y + 271, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.skillOrbs() ? "@gre@" : "@red@") + "Display skill orbs", x + 30, y + 295, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.hits() ? "@gre@" : "@red@") + "10x hits", x + 30, y + 319, 0, true);
 	
 		/* Screen Mode */
 		drawSection(x + 215, y + 20, 82, 285, "Screen Mode");

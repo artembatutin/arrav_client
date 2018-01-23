@@ -131,10 +131,8 @@ public class CacheUnpacker {
 		if(SignLink.sunJava) {
 			client.minDelay = 5;
 		}
-		if(SignLink.cacheDat != null) {
-			for(int i = 0; i < Constants.CACHE_INDEX_COUNT; i++) {
-				client.cacheIdx[i] = new CacheIndex(SignLink.cacheDat, SignLink.cacheIdx[i], i + 1);
-			}
+		for(int i = 0; i < Constants.CACHE_INDEX_COUNT; i++) {
+			client.cacheIdx[i] = SignLink.getIndex(client, i);
 		}
 		if(Constants.JAGGRAB_ENABLED) {
 			// Initializing executor

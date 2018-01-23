@@ -234,6 +234,9 @@ public class TitleActivity extends Activity {
 		ImageCache.get(861).drawImage(centerX - 433, centerY);
 		ImageCache.get(862).drawImage(centerX, centerY);
 		
+		int alpha = (int) (((110 - scrollValue) / 110D) * 255);
+		ImageCache.get(2059).drawImage(centerX - 120, centerY - 245 - scrollValue, alpha);
+		
 		//clouds drawing
 		if(Config.def.clouds) {
 			for(int i = 0; i < clouds.length; i++) {
@@ -299,6 +302,7 @@ public class TitleActivity extends Activity {
 				if(client.mouseInRegion(centerX - 25, centerY + 87 - scrollValue, centerX + 25, centerY + 105 - scrollValue)) {
 					Rasterizer2D.fillRoundedRectangle(centerX - 25, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 40);
 				}
+				
 				smallFont.drawCenteredString("Clouds", centerX, centerY + 100- scrollValue, 0xffffff);
 			}
 

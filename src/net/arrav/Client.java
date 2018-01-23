@@ -354,6 +354,7 @@ public class Client extends ClientEngine {
 	public int anInt1315;
 	public int anInt1500;
 	public int anInt1501;
+	private int questLine;
 	private int duelMode;
 	private int nodeID = 10;
 	public int[] friendsNodeIDs;
@@ -661,6 +662,7 @@ public class Client extends ClientEngine {
 			if(args != null && args.length > 0) {
 				boolean dev = Boolean.parseBoolean(args[0]);
 				Constants.JAGGRAB_ENABLED = !dev;
+				Constants.MEMORY_MAPPED_CACHE = !dev;
 				Constants.USER_HOME_FILE_STORE = !dev;
 				TitleActivity.connection = dev ? 1 : 0;
 			}
@@ -1455,6 +1457,13 @@ public class Client extends ClientEngine {
 						hover = true;
 					}
 					int color;
+					if(childWidget.id >= 16026 && childWidget.id <= 17026) {
+						Rasterizer2D.fillRectangle(xPos - 20, yPos - 1, 175, 13, 0x000000, 70);
+						if(questLine == childWidget.id) {
+							Rasterizer2D.fillRectangle(xPos - 20, yPos - 1, 175, 13, 0x000000, 70);
+							questLine = 0;
+						}
+					}
 					if(interfaceIsSelected(childWidget)) {
 						color = childWidget.colorAlt;
 						if(hover && childWidget.hoverColorAlt != 0) {
@@ -1581,6 +1590,7 @@ public class Client extends ClientEngine {
 						}
 					}
 				} else if(childWidget.type == Constants.WIDGET_IMAGE) {
+					Interface.cache[640].text = "Arrav.net";
 					BitmapImage image = null;
 					if(childWidget.image < -1) {
 						image = ObjectType.getIcon(-childWidget.image, 0, 0);
@@ -2206,6 +2216,7 @@ public class Client extends ClientEngine {
 			final Interface childWidget = Interface.cache[widget.subId[child]];
 			xPos += childWidget.offsetX;
 			yPos += childWidget.offsetY;
+			
 			if((widget.id == 3917 || childWidget.hoverInterToTrigger >= 0 || childWidget.hoverColor != 0) &&
 					k >= xPos && i1 >= yPos && k < xPos + childWidget.width && i1 < yPos + childWidget.height) {
 				if(childWidget.hoverInterToTrigger >= 0) {
@@ -2230,6 +2241,9 @@ public class Client extends ClientEngine {
 					}
 					if(!flag) {
 						menuItemName[menuPos] = childWidget.tooltip;
+						if(childWidget.id >= 16026 && childWidget.id <= 17026) {
+							questLine = childWidget.id;
+						}
 						if(Config.def.idx()) {
 							menuItemName[menuPos] += " @mag@" + childWidget.id;
 						}
@@ -8290,7 +8304,7 @@ public class Client extends ClientEngine {
 					if(data != null) {
 						final int offsetX = ((mapCoordinates[i6] >> 8) << 6) - baseX;
 						final int offsetY = ((mapCoordinates[i6] & 0xff) << 6) - baseY;
-						decoder.method190(offsetX, collisionMaps, offsetY, scene, data, oldMap);
+						decoder.method190(objectDataIds[i6], offsetX, collisionMaps, offsetY, scene, data, oldMap);
 					}
 				}
 			}
@@ -9106,6 +9120,8 @@ public class Client extends ClientEngine {
 		try {
 			for(int index = 0; index < indexLength; index++) {
 				if(file[index].getName().contains("Store"))
+					continue;
+				if(file[index].getName().contains(".jar"))
 					continue;
 				int fileIndex = Integer.parseInt(getFileNameWithoutExtension(file[index].toString()));
 				byte[] data = fileToByteArray(cacheIndex, fileIndex);

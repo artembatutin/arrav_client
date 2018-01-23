@@ -2,6 +2,9 @@ package net.arrav.sign;
 
 import net.arrav.Constants;
 import net.arrav.Client;
+import net.arrav.cache.CacheIndex;
+import net.arrav.cache.CacheIndexDefault;
+import net.arrav.cache.CacheIndexMapped;
 
 import java.applet.Applet;
 import java.io.DataInputStream;
@@ -17,10 +20,16 @@ import java.nio.channels.FileChannel;
 public final class SignLink implements Runnable {
 
 	public static int storeId = 32;
-	public static MappedByteBuffer cacheDat = null;
-	public static final MappedByteBuffer[] cacheIdx = new MappedByteBuffer[Constants.CACHE_INDEX_COUNT];
 	public static boolean sunJava;
 	public static Applet mainApp = null;
+	public static String dns = null;
+	public static boolean reportError = true;
+	public static String errorName = "";
+	
+	private static RandomAccessFile cacheDatFile = null;
+	private static MappedByteBuffer cacheDat = null;
+	private static final RandomAccessFile[] cacheIdxFile = new RandomAccessFile[Constants.CACHE_INDEX_COUNT];
+	private static final MappedByteBuffer[] cacheIdx = new MappedByteBuffer[Constants.CACHE_INDEX_COUNT];
 	private static boolean active;
 	private static int threadLiveId;
 	private static InetAddress socketIp;
@@ -29,11 +38,8 @@ public final class SignLink implements Runnable {
 	private static int threadReqPri = 1;
 	private static Runnable threadReq = null;
 	private static String dnsReq = null;
-	public static String dns = null;
 	private static String urlReq = null;
 	private static DataInputStream urlStream = null;
-	public static boolean reportError = true;
-	public static String errorName = "";
 
 	/**
 	 * Can't initiate this class.
@@ -163,21 +169,25 @@ public final class SignLink implements Runnable {
 		active = true;
 		final String cacheDir = getCacheDir();
 		try {
-			RandomAccessFile cacheDatFile = new RandomAccessFile(cacheDir + "main_file_cache.dat", "rw");
-			cacheDat = cacheDatFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, cacheDatFile.length());
+			cacheDatFile = new RandomAccessFile(cacheDir + "main_file_cache.dat", "rw");
+			if(Constants.MEMORY_MAPPED_CACHE)
+				cacheDat = cacheDatFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, cacheDatFile.length());
 			for(int j = 0; j < Constants.CACHE_INDEX_COUNT; j++) {
-				RandomAccessFile cacheIdxFile = new RandomAccessFile(cacheDir + "main_file_cache.idx" + j, "rw");
-				cacheIdx[j] = cacheIdxFile.getChannel().map(FileChannel.MapMode.READ_WRITE, 0, cacheIdxFile.length());
+				cacheIdxFile[j] = new RandomAccessFile(cacheDir + "main_file_cache.idx" + j, "rw");
+				if(Constants.MEMORY_MAPPED_CACHE)
+					cacheIdx[j] = cacheIdxFile[j].getChannel().map(FileChannel.MapMode.READ_WRITE, 0, cacheIdxFile[j].length());
 			}
 			
-			boolean loaded = false;
-			while(!loaded) {
-				loaded = cacheDat.isLoaded();
-				for(int j = 0; j < Constants.CACHE_INDEX_COUNT; j++) {
-					if(!cacheIdx[j].isLoaded())
-						loaded = false;
+			if(Constants.MEMORY_MAPPED_CACHE) {
+				boolean loaded = false;
+				while(!loaded) {
+					loaded = cacheDat.isLoaded();
+					for(int j = 0; j < Constants.CACHE_INDEX_COUNT; j++) {
+						if(!cacheIdx[j].isLoaded())
+							loaded = false;
+					}
+					Thread.sleep(100l);
 				}
-				Thread.sleep(100l);
 			}
 		} catch(final Exception e) {
 			e.printStackTrace();
@@ -218,6 +228,13 @@ public final class SignLink implements Runnable {
 				//empty
 			}
 		}
+	}
+	
+	public static CacheIndex getIndex(Client client, int i) {
+		if(Constants.MEMORY_MAPPED_CACHE)
+			return client.cacheIdx[i] = new CacheIndexMapped(cacheDat, cacheIdx[i], i + 1);
+		else
+			return client.cacheIdx[i] = new CacheIndexDefault(cacheDatFile, cacheIdxFile[i], i + 1);
 	}
 
 }

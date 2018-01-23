@@ -439,14 +439,10 @@ public class FixedUI_562 extends FixedUI {
 		}
 		final short[][] tabClickPositions562 = {{521, 550, 168, 205}, {552, 581, 168, 205}, {582, 611, 168, 205}, {612, 641, 168, 205}, {642, 671, 168, 205}, {672, 701, 168, 205}, {702, 731, 168, 205}, {732, 761, 169, 205}, {522, 551, 466, 503}, {552, 581, 466, 503}, {582, 611, 466, 503}, {612, 641, 466, 503}, {642, 671, 466, 503}, {672, 701, 466, 503}, {702, 731, 466, 503}, {732, 761, 466, 503},};
 		for(int i = 0; i < 16; i++) {
-			if(client.clickX >= tabClickPositions562[i][0] && client.clickX <= tabClickPositions562[i][1] && client.clickY >= tabClickPositions562[i][2] && client.clickY < tabClickPositions562[i][3] && (client.newerTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1 || i == 3)) {
+			if(client.clickX >= tabClickPositions562[i][0] && client.clickX <= tabClickPositions562[i][1] && client.clickY >= tabClickPositions562[i][2] && client.clickY < tabClickPositions562[i][3] && (client.newerTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1)) {
 				if(SettingPanel.selectedBinding != -1) {
 					SettingPanel.hotkeys[SettingPanel.selectedBinding] = i;
 					SettingPanel.selectedBinding = -1;
-					return;
-				}
-				if(i == 3) {
-					client.panelHandler.open(new PlayerPanel());
 					return;
 				}
 				client.invTab = i;
@@ -620,7 +616,7 @@ public class FixedUI_562 extends FixedUI {
 	 */
 	private void displaySideIcons() {
 		for(int i = 0; i < 16; i++) {
-			if(client.newerTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1 || i == 3) {
+			if(client.newerTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1) {
 				final int xOffset = 18 - ImageCache.get(i + 22).imageWidth / 2;
 				final int yOffset = 20 - ImageCache.get(i + 22).imageHeight / 2;
 				if(i < 8) {

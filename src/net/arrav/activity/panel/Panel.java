@@ -86,9 +86,10 @@ public abstract class Panel extends Activity {
 	protected void drawSection(int x, int y, int height, int width, String name) {
 		if(Config.def.panelStyle == 2)
 			Rasterizer2D.fillRectangle(x - 5, y - 5, width + 10, height + 5, 0xffffff, 30);
-		Rasterizer2D.fillRectangle(x - 2, y - 2, width + 4, height, 0x000000, 90);
-		int color = Config.def.panelStyle == 2 ? Config.def.panelStyle == 1 ? 0xb3afa8 : 0xDBB047 : 0x7f7365;
-		Rasterizer2D.fillRectangle(x, y, width, 23, color, 90);
+		int alpha = Config.def.panelStyle == 2 ? 90 : Config.def.panelStyle == 1 ? 70 : 50;
+		Rasterizer2D.fillRectangle(x - 2, y - 2, width + 4, height, Config.def.panelStyle == 2 ? 0x000000 : 0x000000, alpha);
+		int color = Config.def.panelStyle == 2 ? 0x7f7365 : Config.def.panelStyle == 1 ? 0x6a665d : 0x554b39;
+		Rasterizer2D.fillRectangle(x, y, width, 23, color, 170);
 		if(Config.def.panelStyle != 2) {
 			Rasterizer2D.drawRectangle(x - 2, y - 2, width + 4, height, 0x000000);
 		}
