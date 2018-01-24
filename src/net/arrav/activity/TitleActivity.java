@@ -233,9 +233,8 @@ public class TitleActivity extends Activity {
 		ImageCache.get(860).drawImage(centerX, centerY - 305);
 		ImageCache.get(861).drawImage(centerX - 433, centerY);
 		ImageCache.get(862).drawImage(centerX, centerY);
-		
-		int alpha = (int) (((110 - scrollValue) / 110D) * 255);
-		ImageCache.get(2059).drawImage(centerX - 120, centerY - 245 - scrollValue, alpha);
+
+		ImageCache.get(2059).drawImage(centerX - 120, centerY - 245);
 		
 		//clouds drawing
 		if(Config.def.clouds) {
