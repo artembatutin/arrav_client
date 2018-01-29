@@ -98,6 +98,13 @@ public final class LocationType {
 		loc.id = id;
 		loc.renew();
 		loc.read(data);
+
+		if(loc.id == 23990) {
+			loc.actions = new String[]{"Sit", null, null, null, null, null, null, null, null, null};
+			loc.walkable = true;
+			loc.hasActions = true;
+			loc.solid = true;
+		}
 		if(loc.id == id && loc.originalModelColors == null) {
 			loc.originalModelColors = new int[1];
 			loc.modifiedModelColors = new int[1];
