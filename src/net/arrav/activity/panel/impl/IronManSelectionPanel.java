@@ -53,7 +53,7 @@ public class IronManSelectionPanel extends Panel {
 		drawMain(beginX, beginY + 8, 500, 328, 0x000000, 0x63625e, 200);
 		//drawOver(beginX, beginY);
 		
-		fancyFont.drawLeftAlignedEffectString("Arrav mode selection", beginX + 180, beginY + 31, 0xF3B13F, true);
+		fancyFont.drawLeftAlignedEffectString("Arrav mode selection", beginX + 180, beginY + 31, 0xFF8A1F, true);
 		Rasterizer2D.fillRoundedRectangle(beginX + 20, beginY + 40, 470, 160, 5, Config.def.panelStyle == 2 ? 0xcf9d47 : 0x000000, Config.def.panelStyle == 2 ? 30 : 100);
 		if(client.mouseInRegion(beginX + 190, beginY + 230, beginX + 285, beginY + 260)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 190, beginY + 230, 100, 30, 2, Config.def.panelStyle == 2 ? 0xcf9d47 : 0x000000, Config.def.panelStyle == 2 ? 60 : 100);
@@ -87,16 +87,16 @@ public class IronManSelectionPanel extends Panel {
 			}
 		} else {
 			ImageCache.get(1929).drawImage(beginX + 45, beginY + 70);
-			boldFont.drawCenteredEffectString("Iron man", beginX + 85, beginY + 60, 0xF3B13F, true);
-			smallFont.drawLeftAlignedString("Tougher monsters statistics.", beginX + 145, beginY + 60, 0xF3B13F);
-			smallFont.drawLeftAlignedString("Lose 25% of experience on death.", beginX + 145, beginY + 75, 0xF3B13F);
-			smallFont.drawLeftAlignedString("Can only trade iron man members.", beginX + 145, beginY + 90, 0xF3B13F);
-			smallFont.drawLeftAlignedString("Can't search items in global market.", beginX + 145, beginY + 105, 0xF3B13F);
+			boldFont.drawCenteredEffectString("Iron man", beginX + 85, beginY + 60, 0xFF8A1F, true);
+			smallFont.drawLeftAlignedString("Tougher monsters statistics.", beginX + 145, beginY + 60, 0xFF8A1F);
+			smallFont.drawLeftAlignedString("Lose 25% of experience on death.", beginX + 145, beginY + 75, 0xFF8A1F);
+			smallFont.drawLeftAlignedString("Can only trade iron man members.", beginX + 145, beginY + 90, 0xFF8A1F);
+			smallFont.drawLeftAlignedString("Can't search items in global market.", beginX + 145, beginY + 105, 0xFF8A1F);
 			smallFont.drawLeftAlignedString("When maxed out:", beginX + 145, beginY + 125, 0x7ff33f);
-			smallFont.drawLeftAlignedString("Unlimited run outside of wilderness.", beginX + 145, beginY + 140, 0xF3B13F);
-			smallFont.drawLeftAlignedString("Restrictions removed, no dropping skills.", beginX + 145, beginY + 155, 0xF3B13F);
-			smallFont.drawLeftAlignedString("Exclusive upgraded max out cape.", beginX + 145, beginY + 170, 0xF3B13F);
-			smallFont.drawLeftAlignedString("10% higher rare drop.", beginX + 145, beginY + 185, 0xF3B13F);
+			smallFont.drawLeftAlignedString("Unlimited run outside of wilderness.", beginX + 145, beginY + 140, 0xFF8A1F);
+			smallFont.drawLeftAlignedString("Restrictions removed, no dropping skills.", beginX + 145, beginY + 155, 0xFF8A1F);
+			smallFont.drawLeftAlignedString("Exclusive upgraded max out cape.", beginX + 145, beginY + 170, 0xFF8A1F);
+			smallFont.drawLeftAlignedString("10% higher rare drop.", beginX + 145, beginY + 185, 0xFF8A1F);
 		}
 		smallFont.drawLeftAlignedString("Ironmen are marked by a", beginX + 365, beginY + 170, 0xFFFFFF);
 		smallFont.drawLeftAlignedString("black dot on the minimap.", beginX + 365, beginY + 188, 0xFFFFFF);
@@ -105,25 +105,25 @@ public class IronManSelectionPanel extends Panel {
 		if(client.mouseInRegion(beginX + 370, beginY + 120, beginX + 470, beginY + 150)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 370, beginY + 120, 100, 30, 2, 0xeec557, 60);
 		}
-		fancyFont.drawLeftAlignedString("View starter", beginX + 380, beginY + 100, 0xF3B13F);
-		fancyFont.drawLeftAlignedString("Select", beginX + 402, beginY + 140, 0xF3B13F);
+		fancyFont.drawLeftAlignedString("View starter", beginX + 380, beginY + 100, 0xFF8A1F);
+		fancyFont.drawLeftAlignedString("Select", beginX + 402, beginY + 140, 0xFF8A1F);
 		
 		//regular
 		Rasterizer2D.fillRoundedRectangle(beginX + 20, beginY + 210, 310, 110, 5, Config.def.panelStyle == 2 ? 0xcf9d47 : 0x000000, Config.def.panelStyle == 2 ? 30 : 100);
-		fancyFont.drawLeftAlignedString("Regular player:", beginX + 60, beginY + 268, 0xF3B13F);
+		fancyFont.drawLeftAlignedString("Regular player:", beginX + 60, beginY + 268, 0xFF8A1F);
 		
 		Rasterizer2D.fillRoundedRectangle(beginX + 190, beginY + 230, 100, 30, 2, 0xcf9d47, 60);
-		fancyFont.drawLeftAlignedString("View starter", beginX + 200, beginY + 250, 0xF3B13F);
+		fancyFont.drawLeftAlignedString("View starter", beginX + 200, beginY + 250, 0xFF8A1F);
 		Rasterizer2D.fillRoundedRectangle(beginX + 190, beginY + 270, 100, 30, 2, 0xeec557, 60);
-		fancyFont.drawLeftAlignedString("Select", beginX + 222, beginY + 290, 0xF3B13F);
+		fancyFont.drawLeftAlignedString("Select", beginX + 222, beginY + 290, 0xFF8A1F);
 		if(client.mouseInRegion(beginX + 190, beginY + 270, beginX + 290, beginY + 300)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 190, beginY + 270, 100, 30, 2, 0xcf9d47, 60);
 		}
 		
-		boldFont.drawLeftAlignedString("XP rates:", beginX + 390, beginY + 225, 0xF3B13F);
-		plainFont.drawLeftAlignedString("Combat: x1000", beginX + 370, beginY + 245, 0xF3B13F);
-		plainFont.drawLeftAlignedString("Prayer: x100", beginX + 379, beginY + 265, 0xF3B13F);
-		plainFont.drawLeftAlignedString("Skills: x25", beginX + 385, beginY + 285, 0xF3B13F);
+		boldFont.drawLeftAlignedString("XP rates:", beginX + 390, beginY + 225, 0xFF8A1F);
+		plainFont.drawLeftAlignedString("Combat: x1000", beginX + 370, beginY + 245, 0xFF8A1F);
+		plainFont.drawLeftAlignedString("Prayer: x100", beginX + 379, beginY + 265, 0xFF8A1F);
+		plainFont.drawLeftAlignedString("Skills: x25", beginX + 385, beginY + 285, 0xFF8A1F);
 		plainFont.drawLeftAlignedString("Combat rate becomes slower", beginX + 336, beginY + 305, 0xeec557);
 		plainFont.drawLeftAlignedString("after maxing skill out.", beginX + 355, beginY + 320, 0xeec557);
 	}

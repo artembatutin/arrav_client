@@ -141,22 +141,22 @@ public class PlayerPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 		if(type == -1)
-			fancyFont.drawLeftAlignedEffectString(client.localPlayer.name, beginX + 20, beginY + 31, 0xF3B13F, true);
+			plainFont.drawLeftAlignedEffectString(client.localPlayer.name, beginX + 20, beginY + 31, 0xFF8A1F, true);
 		else {
 			if(Config.def.panelStyle == 2) {
-				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 25, 2, 0xF3B13F, 60);
+				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 25, 2, 0xFF8A1F, 60);
 				if(client.mouseInRegion(beginX + 382, beginY + 22, beginX + 438, beginY + 47)) {
-					Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 25, 2, 0xF3B13F, 20);
+					Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 25, 2, 0xFF8A1F, 20);
 				}
-				fancyFont.drawCenteredString("Back", beginX + 407, beginY + 30, 0xF3B13F);
+				plainFont.drawCenteredString("Back", beginX + 407, beginY + 30, 0xFF8A1F);
 			} else {
 				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 17, 54, 20, 2, 0x000000, 60);
 				if(client.mouseInRegion(beginX + 382, beginY + 22, beginX + 438, beginY + 47)) {
 					Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 17, 54, 20, 2, 0x000000, 60);
 				}
-				fancyFont.drawCenteredString("Back", beginX + 407, beginY + 32, 0xF3B13F);
+				plainFont.drawCenteredString("Back", beginX + 407, beginY + 32, 0xFF8A1F);
 			}
-			fancyFont.drawLeftAlignedEffectString(client.localPlayer.name + " - " + typeNames[type], beginX + 20, beginY + 31, 0xF3B13F, true);
+			plainFont.drawLeftAlignedEffectString(client.localPlayer.name + " - " + typeNames[type], beginX + 20, beginY + 31, 0xFF8A1F, true);
 		}
 		if(type == -1) {
 			ResizableUI_CUS.drawFace(beginX + 235, beginY + 75);
@@ -165,7 +165,7 @@ public class PlayerPanel extends Panel {
 				if(client.mouseInRegion(beginX + 52 + i * 115, beginY + 150, beginX + 102 + i * 115, beginY + 200)) {
 					Rasterizer2D.fillRectangle(beginX + 52 + i * 115, beginY + 150, 50, 50, 0x000000, 40);
 				}
-				smallFont.drawCenteredEffectString(typeNames[i], beginX + 78 + i * 115, beginY + 220, 0xffffff, true);
+				smallFont.drawLeftAlignedEffectString(typeNames[i], beginX + 78 + i * 115, beginY + 220, 0xffffff, true);
 			}
 		} else if(type == 0) {
 			ResizableUI_CUS.drawFace(beginX + 38, beginY + 75);
@@ -191,8 +191,8 @@ public class PlayerPanel extends Panel {
 					offset = 52;
 				}
 			}
-			fancyFont.drawCenteredEffectString((int) (((float) total / complet) * 100) + "%", beginX + 55, beginY + 171, 0xF3B13F, true);
-			fancyFont.drawCenteredEffectString(total + " / " + complet, beginX + 55, beginY + 201, 0xF3B13F, true);
+			plainFont.drawCenteredEffectString((int) (((float) total / complet) * 100) + "%", beginX + 55, beginY + 171, 0xFF8A1F, true);
+			plainFont.drawCenteredEffectString(total + " / " + complet, beginX + 55, beginY + 201, 0xFF8A1F, true);
 		} else if(type == 1) {
 			ResizableUI_CUS.drawFace(beginX + 38, beginY + 75);
 			Rasterizer2D.fillRectangle(beginX + 100, beginY + 41, 190, 285, 0xffffff, 20);
@@ -200,13 +200,13 @@ public class PlayerPanel extends Panel {
 			if(client.mouseInRegion(beginX + 305, beginY + 55, beginX + 390, beginY + 80)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 305, beginY + 55, 85, 25, 4, 0x000000, 20);
 			}
-			fancyFont.drawLeftAlignedString("Scoreboard", beginX + 310, beginY + 71, 0xffffff);
+			plainFont.drawLeftAlignedString("Scoreboard", beginX + 310, beginY + 71, 0xffffff);
 			Rasterizer2D.fillRoundedRectangle(beginX + 400, beginY + 55, 85, 25, 4, 0x000000, 80);
 			if(client.mouseInRegion(beginX + 400, beginY + 55, beginX + 485, beginY + 80)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 400, beginY + 55, 85, 25, 4, 0x000000, 20);
 			}
-			fancyFont.drawLeftAlignedString("Wilderness", beginX + 405, beginY + 71, 0xffffff);
-			/*fancyFont.drawLeftAlignedString("Presets", beginX + 370, beginY + 101, 0xffffff);
+			plainFont.drawLeftAlignedString("Wilderness", beginX + 405, beginY + 71, 0xffffff);
+			/*plainFont.drawLeftAlignedString("Presets", beginX + 370, beginY + 101, 0xffffff);
 			Rasterizer2D.fillRoundedRectangle(beginX + 305, beginY + 110, 180, 185, 4, 0x000000, 80);
 			drawTitleButton("Set current", beginX + 310, beginY + 305, 0xdb8145);
 			drawTitleButton("I", beginX + 384, beginY + 305, 0xdb8145);
@@ -249,7 +249,7 @@ public class PlayerPanel extends Panel {
 				offset += 22;
 			}
 			
-			fancyFont.drawCenteredString("Completed: " + complet, beginX + 65, beginY + 181, 0xb3b4b3);
+			boldFont.drawCenteredEffectString("Completed: " + complet, beginX + 65, beginY + 181, 0xFF8A1F, true);
 			ImageCache.get(2043).drawImage(beginX + 18, beginY + 210);
 			smallFont.drawLeftAlignedString("Easy - 75k", beginX + 38, beginY + 221, 0xb3b4b3);
 			ImageCache.get(2044).drawImage(beginX + 18, beginY + 230);
@@ -271,7 +271,7 @@ public class PlayerPanel extends Panel {
 			Rasterizer2D.fillRectangle(477 + beginX, 56 + pos + beginY, 10, height, 0x222222, 120);
 			Rasterizer2D.removeClip();
 			if(task != null) {
-				fancyFont.drawLeftAlignedEffectString(task, beginX + 20, beginY + 318, 0xF3B13F, true);
+				plainFont.drawLeftAlignedEffectString(task, beginX + 20, beginY + 318, 0xFF8A1F, true);
 			}
 		}
 		

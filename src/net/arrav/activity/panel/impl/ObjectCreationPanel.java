@@ -76,7 +76,7 @@ public class ObjectCreationPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 		
-		fancyFont.drawLeftAlignedEffectString("Select a piece to build - Level: " + consLevel, beginX + 20, beginY + 33, 0xF3B13F, true);
+		fancyFont.drawLeftAlignedEffectString("Select a piece to build - Level: " + consLevel, beginX + 20, beginY + 33, 0xFF8A1F, true);
 		
 		int offset = 50;
 		int i = 0;
@@ -115,7 +115,7 @@ public class ObjectCreationPanel extends Panel {
 		if(tooltip != null) {
 			boolean off = (client.mouseX - beginX + 8 + smallFont.getStringWidth(tooltip)) > 490;
 			Rasterizer2D.fillRoundedRectangle(client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 18) : 8), client.mouseY - 3, smallFont.getStringWidth(tooltip) + 7, 15, 3, 0x000000, 200);
-			smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 14) : 12), client.mouseY + 9, 0xF3B13F, true);
+			smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 14) : 12), client.mouseY + 9, 0xFF8A1F, true);
 		}
 	}
 	

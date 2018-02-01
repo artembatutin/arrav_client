@@ -127,7 +127,7 @@ public class SummoningPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 
-		fancyFont.drawLeftAlignedEffectString("Summoning Pouch Creation - Level: " + summoningLevel, beginX + 20, beginY + 31, 0xF3B13F, true);
+		fancyFont.drawLeftAlignedEffectString("Summoning Pouch Creation - Level: " + summoningLevel, beginX + 20, beginY + 31, 0xFF8A1F, true);
 
 		/* Shop content */
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 327);
@@ -149,8 +149,8 @@ public class SummoningPanel extends Panel {
 			if(img != null) {
 				img.drawImage(beginX + 28 + x, beginY + offset + 2, summoningLevel < reqLvl ? 100 : 255);
 			}
-			//smallFont.drawLeftAlignedEffectString((summoningLevel >= reqLvl ? "@or1@" : "@red@") + reqLvl, beginX + 12 + x, beginY + offset + 14, 0xF3B13F, true);
-			smallFont.drawCenteredEffectString((summoningLevel >= reqLvl ? "@or1@Lvl " : "@red@Lvl ") + reqLvl, beginX + 44 + x, beginY + offset + 46, 0xF3B13F, true);
+			//smallFont.drawLeftAlignedEffectString((summoningLevel >= reqLvl ? "@or1@" : "@red@") + reqLvl, beginX + 12 + x, beginY + offset + 14, 0xFF8A1F, true);
+			smallFont.drawCenteredEffectString((summoningLevel >= reqLvl ? "@or1@Lvl " : "@red@Lvl ") + reqLvl, beginX + 44 + x, beginY + offset + 46, 0xFF8A1F, true);
 			offset += i % 6 == 5 ? 55 : 0;
 		}
 		if(!tooltip.isEmpty() && familiar != -1) {
@@ -162,7 +162,7 @@ public class SummoningPanel extends Panel {
 			int offsetY = offY ? - 70 : 0;
 			
 			Rasterizer2D.fillRoundedRectangle(client.mouseX + (off ? -(width + 18) : 8), client.mouseY - 3 + offsetY, width + 7, 60, 3, 0x000000, 200);
-			smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(width + 14) : 12), client.mouseY + 9 + offsetY, 0xF3B13F, true);
+			smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(width + 14) : 12), client.mouseY + 9 + offsetY, 0xFF8A1F, true);
 			for(Item item : familiars[familiar].getItems()) {
 				final BitmapImage img = ObjectType.getIcon(item.getId(), item.getAmount(), 0);
 				if(img != null) {

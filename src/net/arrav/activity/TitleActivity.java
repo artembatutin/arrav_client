@@ -320,7 +320,7 @@ public class TitleActivity extends Activity {
 				String[] msgs = client.titleMessage.split("\n");
 				int y = (client.windowHeight >> 1) - 7 * (msgs.length >> 1);
 				for(String msg : msgs) {
-					fancyFont.drawCenteredEffectString(msg, centerX, y += 15, 0xF3B13F, true);
+					fancyFont.drawCenteredEffectString(msg, centerX, y += 15, 0xFF8A1F, true);
 					smallFont.drawLeftAlignedString("Click anywhere on the screen to remove this error message.", 10, client.windowHeight - 10, 0xFFFFFF);
 				}
 			}

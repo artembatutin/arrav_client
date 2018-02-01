@@ -83,7 +83,7 @@ public class BossPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 
-		fancyFont.drawLeftAlignedEffectString("Bosses teleport", beginX + 20, beginY + 31, 0xF3B13F, true);
+		fancyFont.drawLeftAlignedEffectString("Bosses teleport", beginX + 20, beginY + 31, 0xFF8A1F, true);
 
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
 		int offset = 45;
@@ -93,7 +93,7 @@ public class BossPanel extends Panel {
 			if(client.mouseInRegion(beginX + 12 + x, beginY + offset, beginX + 82 + x, beginY + offset + 70)) {
 				Rasterizer2D.fillRectangle(beginX + 12 + x, beginY + offset, 70, 70, 0, 40);
 			}
-			smallFont.drawCenteredEffectString(bosses[i].name, beginX + 46 + x, beginY + offset + 82, 0xF3B13F, true);
+			smallFont.drawCenteredEffectString(bosses[i].name, beginX + 46 + x, beginY + offset + 82, 0xFF8A1F, true);
 			smallFont.drawCenteredEffectString(bosses[i].level == 0 ? "" : "lvl " + bosses[i].level, beginX + 46 + x, beginY + offset + 92, 0xf95454, true);
 			offset += i % 6 == 5 ? 95 : 0;
 		}

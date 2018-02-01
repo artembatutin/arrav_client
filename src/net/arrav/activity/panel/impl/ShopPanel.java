@@ -231,28 +231,28 @@ public class ShopPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 		if(client.localPrivilege == 11) {
-			fancyFont.drawCenteredString("Edit", beginX + 350, beginY + 27, 0xF3B13F);
-			Rasterizer2D.fillRoundedRectangle(beginX + 323, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
+			plainFont.drawCenteredString("Edit", beginX + 350, beginY + 27, 0xFF8A1F);
+			Rasterizer2D.fillRoundedRectangle(beginX + 323, beginY + 12, 54, 20, 2, 0xFF8A1F, 60);
 			if(client.mouseInRegion(beginX + 325, beginY + 12, beginX + 381, beginY + 42)) {
-				Rasterizer2D.fillRoundedRectangle(beginX + 323, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
+				Rasterizer2D.fillRoundedRectangle(beginX + 323, beginY + 12, 54, 20, 2, 0xFF8A1F, 20);
 			}
 		}
 		if(back) {
 			if(Config.def.panelStyle == 2) {
-				fancyFont.drawCenteredString("Back", beginX + 407, beginY + 27, 0xF3B13F);
-				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xF3B13F, 60);
+				plainFont.drawCenteredString("Back", beginX + 407, beginY + 27, 0xFF8A1F);
+				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xFF8A1F, 60);
 				if(client.mouseInRegion(beginX + 382, beginY + 22, beginX + 438, beginY + 42)) {
-					Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xF3B13F, 20);
+					Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 20, 2, 0xFF8A1F, 20);
 				}
 			} else {
-				fancyFont.drawCenteredString("Back", beginX + 407, beginY + 32, 0xF3B13F);
-				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 17, 54, 20, 2, 0xF3B13F, 60);
+				plainFont.drawCenteredString("Back", beginX + 407, beginY + 32, 0xFF8A1F);
+				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 17, 54, 20, 2, 0xFF8A1F, 60);
 				if(client.mouseInRegion(beginX + 382, beginY + 22, beginX + 438, beginY + 47)) {
-					Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 17, 54, 20, 2, 0xF3B13F, 20);
+					Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 17, 54, 20, 2, 0xFF8A1F, 20);
 				}
 			}
 		}
-		fancyFont.drawLeftAlignedEffectString(Interface.cache[3901].text, beginX + 20, beginY + 31, 0xF3B13F, true);
+		plainFont.drawLeftAlignedEffectString(Interface.cache[3901].text, beginX + 20, beginY + 31, 0xFF8A1F, true);
 		
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
 		int offset = -scrollPos + 45;
@@ -278,15 +278,15 @@ public class ShopPanel extends Panel {
 			if(am == 999999999) {
 				ImageCache.get(2030).drawImage(beginX + 12 + x, beginY + offset + 6);
 			} else {
-				smallFont.drawLeftAlignedEffectString(am + "", beginX + 12 + x, beginY + offset + 14, 0xF3B13F, true);
+				smallFont.drawLeftAlignedEffectString(am + "", beginX + 12 + x, beginY + offset + 14, 0xFF8A1F, true);
 			}
-			smallFont.drawCenteredString(client.currentShopInterfacePrices[i] == 0 ? "free" : formatPrice(client.currentShopInterfacePrices[i]), beginX + 44 + x, beginY + offset + 46, 0xF3B13F);
+			smallFont.drawCenteredString(client.currentShopInterfacePrices[i] == 0 ? "free" : formatPrice(client.currentShopInterfacePrices[i]), beginX + 44 + x, beginY + offset + 46, 0xFF8A1F);
 			offset += i % 6 == 5 ? 55 : 0;
 		}
 		if(tooltip != null) {
 			boolean off = (client.mouseX - beginX + 8 + smallFont.getStringWidth(tooltip)) > 490;
 			Rasterizer2D.fillRoundedRectangle(client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 18) : 8), client.mouseY - 3, smallFont.getStringWidth(tooltip) + 7, 15, 3, 0x000000, 200);
-			smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 14) : 12), client.mouseY + 9, 0xF3B13F, true);
+			smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 14) : 12), client.mouseY + 9, 0xFF8A1F, true);
 		}
 		Rasterizer2D.drawRectangle(476 + beginX, 45 + beginY, 12, 280, 0xffffff, 60);
 		int height = 278;

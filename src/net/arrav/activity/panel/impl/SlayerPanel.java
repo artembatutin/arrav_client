@@ -67,7 +67,7 @@ public class SlayerPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 		
-		fancyFont.drawLeftAlignedEffectString("Slayer - Points: " + Interface.cache[252].text, beginX + 20, beginY + 31, 0xF3B13F, true);
+		fancyFont.drawLeftAlignedEffectString("Slayer - Points: " + Interface.cache[252].text, beginX + 20, beginY + 31, 0xFF8A1F, true);
 		
 		fancyFont.drawCenteredEffectString("Current assignment: " + Interface.cache[253].text, beginX + 250, beginY + 55, 0xFFFFFF, true);
 		
@@ -96,15 +96,15 @@ public class SlayerPanel extends Panel {
 				}
 			}
 		}
-		Rasterizer2D.fillRoundedRectangle(beginX + 180, beginY + 65, 54, 20, 2, 0xF3B13F, 60);
+		Rasterizer2D.fillRoundedRectangle(beginX + 180, beginY + 65, 54, 20, 2, 0xFF8A1F, 60);
 		fancyFont.drawCenteredString("Block", beginX + 205, beginY + 80, 0xFFFFFF);
 		if(client.mouseInRegion(beginX + 180, beginY + 65, beginX + 234, beginY + 85)) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 180, beginY + 65, 54, 20, 2, 0xF3B13F, 20);
+			Rasterizer2D.fillRoundedRectangle(beginX + 180, beginY + 65, 54, 20, 2, 0xFF8A1F, 20);
 		}
-		Rasterizer2D.fillRoundedRectangle(beginX + 120, beginY + 65, 54, 20, 2, 0xF3B13F, 60);
+		Rasterizer2D.fillRoundedRectangle(beginX + 120, beginY + 65, 54, 20, 2, 0xFF8A1F, 60);
 		fancyFont.drawCenteredString("Skip", beginX + 145, beginY + 80, 0xFFFFFF);
 		if(client.mouseInRegion(beginX + 120, beginY + 65, beginX + 174, beginY + 85)) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 120, beginY + 65, 54, 20, 2, 0xF3B13F, 20);
+			Rasterizer2D.fillRoundedRectangle(beginX + 120, beginY + 65, 54, 20, 2, 0xFF8A1F, 20);
 		}
 		Rasterizer2D.fillRoundedRectangle(beginX + 40, beginY + 65, 74, 20, 2, 0xf3763f, 60);
 		fancyFont.drawCenteredString("Teleport", beginX + 75, beginY + 80, 0xFFFFFF);
@@ -122,9 +122,9 @@ public class SlayerPanel extends Panel {
 			smallFont.drawCenteredString(Interface.cache[254 + i].text, beginX + 252, beginY + 189 + off, 0xFFFFFF);
 			
 			if(!Objects.equals(Interface.cache[254 + i].text, "empty")) {
-				Rasterizer2D.fillRoundedRectangle(beginX + 422, beginY + 177 + off, 54, 15, 2, 0xF3B13F, 60);
+				Rasterizer2D.fillRoundedRectangle(beginX + 422, beginY + 177 + off, 54, 15, 2, 0xFF8A1F, 60);
 				if(client.mouseInRegion(beginX + 422, beginY + 177 + off, beginX + 476, beginY + 192 + off)) {
-					Rasterizer2D.fillRoundedRectangle(beginX + 422, beginY + 177 + off, 54, 15, 2, 0xF3B13F, 20);
+					Rasterizer2D.fillRoundedRectangle(beginX + 422, beginY + 177 + off, 54, 15, 2, 0xFF8A1F, 20);
 				}
 				smallFont.drawCenteredString("unblock", beginX + 447, beginY + 189 + off, 0xFFFFFF);
 			}

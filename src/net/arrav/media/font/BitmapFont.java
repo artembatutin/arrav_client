@@ -289,6 +289,9 @@ public final class BitmapFont extends Rasterizer2D {
 		if(code.equals("end")) {
 			strikethrought = false;
 		}
+		if(code.equals("lye")) {
+			return 0xFFFF64;
+		}
 		return -1;
 	}
 

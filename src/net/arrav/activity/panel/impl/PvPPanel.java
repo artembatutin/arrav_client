@@ -91,20 +91,20 @@ public class PvPPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 
-		fancyFont.drawLeftAlignedEffectString("Wilderness Activity", beginX + 20, beginY + 31, 0xF3B13F, true);
+		fancyFont.drawLeftAlignedEffectString("Wilderness Activity", beginX + 20, beginY + 31, 0xFF8A1F, true);
 		
 		if(Config.def.panelStyle == 2) {
-			Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 25, 2, 0xF3B13F, 60);
+			Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 25, 2, 0xFF8A1F, 60);
 			if(client.mouseInRegion(beginX + 382, beginY + 22, beginX + 438, beginY + 47)) {
-				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 25, 2, 0xF3B13F, 20);
+				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 25, 2, 0xFF8A1F, 20);
 			}
-			fancyFont.drawCenteredString("Presets", beginX + 407, beginY + 30, 0xF3B13F);
+			fancyFont.drawCenteredString("Presets", beginX + 407, beginY + 30, 0xFF8A1F);
 		} else {
 			Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 17, 54, 20, 2, 0x000000, 60);
 			if(client.mouseInRegion(beginX + 382, beginY + 22, beginX + 438, beginY + 47)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 17, 54, 20, 2, 0x000000, 60);
 			}
-			fancyFont.drawCenteredString("Stats", beginX + 407, beginY + 32, 0xF3B13F);
+			fancyFont.drawCenteredString("Stats", beginX + 407, beginY + 32, 0xFF8A1F);
 		}
 		smallFont.drawLeftAlignedString("Don't get fooled by certain hot spots.", beginX + 170, beginY + 33, 0xffffff);
 		plainFont.drawLeftAlignedEffectString(Interface.cache[16038].text, beginX + 10, beginY + 60, 0xffffff, true);
@@ -168,9 +168,9 @@ public class PvPPanel extends Panel {
 		int offset = 67;
 		for(int i = 0; i < client.killstreak.length - 10; i++) {
 			offset += 15;
-			smallFont.drawLeftAlignedEffectString("" + (i + 1), beginX + 22, beginY + offset + 19, 0xF3B13F, true);
+			smallFont.drawLeftAlignedEffectString("" + (i + 1), beginX + 22, beginY + offset + 19, 0xFF8A1F, true);
 			if(client.scoreNames[i] != null) {
-				smallFont.drawLeftAlignedEffectString(client.scoreNames[i], beginX + 50, beginY + offset + 19, 0xF3B13F, true);
+				smallFont.drawLeftAlignedEffectString(client.scoreNames[i], beginX + 50, beginY + offset + 19, 0xFF8A1F, true);
 			}
 		}
 	}

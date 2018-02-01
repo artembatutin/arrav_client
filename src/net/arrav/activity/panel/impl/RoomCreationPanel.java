@@ -128,7 +128,7 @@ public class RoomCreationPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 		
-		fancyFont.drawLeftAlignedEffectString("Build a room - Level: " + consLevel, beginX + 20, beginY + 33, 0xF3B13F, true);
+		fancyFont.drawLeftAlignedEffectString("Build a room - Level: " + consLevel, beginX + 20, beginY + 33, 0xFF8A1F, true);
 		
 		/* content */
 		int offset = 50;
