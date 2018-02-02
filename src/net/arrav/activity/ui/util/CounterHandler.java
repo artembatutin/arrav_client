@@ -46,9 +46,9 @@ public class CounterHandler {
 			SkillUpdate update = it.next();
 			/* Moving the xp drop up or down by 1 */
 			if(client.uiRenderer.getId() > 500) {
-				update.move += 2;
+				update.move += 1;
 			} else {
-				update.move -= 2;
+				update.move -= 1;
 			}
 			/* Increasing transparency of the xp drop */
 			if(movable < -20)
@@ -69,8 +69,9 @@ public class CounterHandler {
 				continue;
 			}
 			if(counterToggled) {
-				ImageCache.get(update.skill + (client.uiRenderer.getId() > 500 ? 1957 : 2053)).drawImage(x - 25 - update.width, 80 + update.move - yMove, update.alpha);
-				client.smallFont.drawRightAlignedEffectString("" + update.xp, x, 100 + update.move - yMove, 0xffffff, true);
+				//ImageCache.get(update.skill + (client.uiRenderer.getId() > 500 ? 1957 : 2053)).drawImage(x - 25 - update.width, 60 + update.move - yMove, update.alpha);
+				ImageCache.get(update.skill + 1957).drawImage(x - 25 - update.width, 60 + update.move - yMove, update.alpha);
+				client.smallFont.drawRightAlignedEffectString("" + update.xp, x, 80 + update.move - yMove, 0xffffff, true);
 			}
 		}
 		if(counterToggled) {
