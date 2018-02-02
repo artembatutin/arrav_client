@@ -87,7 +87,7 @@ public class CounterHandler {
 				Rasterizer2D.drawRectangle(x - width - 1 - 37, y - 1, width + 2 + 37, 19, 0xad7d3f); // orange outline
 				Rasterizer2D.drawRectangle(x - width - 1 - 37, y - 1, width + 2 + 37, 19, 0x91825c, 100); // yellow glowlike outline
 				//client.smallFont.drawRightAlignedEffectString("XP:", x - 20, y + 12, 0xffffff, true);
-				client.plainFont.drawRightAlignedEffectString("XP:         " + NumberFormat.getInstance().format(gainedXP), x - 5, y + 13, 0xffffff, true);
+				client.plainFont.drawRightAlignedEffectString("XP:      " + NumberFormat.getInstance().format(gainedXP), x - 5, y + 13, 0xffffff, true);
 			} else {
 				Rasterizer2D.fillRectangle(x - width, y, width, 28, client.uiRenderer.getId() == 1 ? 0x000000 : 0x413c34, 170);
 				Rasterizer2D.drawRectangle(x - width, y, width, 28, 0x5b5348);
