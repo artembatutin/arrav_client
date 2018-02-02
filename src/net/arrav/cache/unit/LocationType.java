@@ -6,8 +6,8 @@ import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.arrav.Config;
 import net.arrav.cache.CacheArchive;
-import net.arrav.game.model.Model;
-import net.arrav.od.OnDemandFetcher;
+import net.arrav.world.model.Model;
+import net.arrav.net.OnDemandFetcher;
 import net.arrav.util.io.Buffer;
 import net.arrav.Client;
 

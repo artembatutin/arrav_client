@@ -3,9 +3,9 @@ package net.arrav.cache.impl;
 import net.arrav.Client;
 import net.arrav.cache.CacheArchive;
 import net.arrav.cache.CacheLoader;
-import net.arrav.game.model.Model;
-import net.arrav.media.tex.Texture;
-import net.arrav.od.OnDemandFetcher;
+import net.arrav.world.model.Model;
+import net.arrav.graphic.tex.Texture;
+import net.arrav.net.OnDemandFetcher;
 
 import java.net.InetAddress;
 import java.net.NetworkInterface;

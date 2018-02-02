@@ -5,7 +5,7 @@ import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.arrav.Client;
 import net.arrav.Config;
 import net.arrav.cache.unit.ImageCache;
-import net.arrav.media.Rasterizer2D;
+import net.arrav.graphic.Rasterizer2D;
 
 import java.text.NumberFormat;
 import java.util.Iterator;

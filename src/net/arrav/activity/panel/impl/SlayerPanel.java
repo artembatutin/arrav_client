@@ -4,8 +4,8 @@ import net.arrav.Client;
 import net.arrav.activity.panel.Panel;
 import net.arrav.cache.unit.Interface;
 import net.arrav.cache.unit.ObjectType;
-import net.arrav.media.Rasterizer2D;
-import net.arrav.media.img.BitmapImage;
+import net.arrav.graphic.Rasterizer2D;
+import net.arrav.graphic.img.BitmapImage;
 
 import java.util.Objects;
 

@@ -2,12 +2,12 @@ package net.arrav.cache.unit;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.arrav.media.Viewport;
+import net.arrav.graphic.Viewport;
 import net.arrav.cache.CacheArchive;
-import net.arrav.game.model.Model;
-import net.arrav.media.Rasterizer2D;
-import net.arrav.media.Rasterizer3D;
-import net.arrav.media.img.BitmapImage;
+import net.arrav.world.model.Model;
+import net.arrav.graphic.Rasterizer2D;
+import net.arrav.graphic.Rasterizer3D;
+import net.arrav.graphic.img.BitmapImage;
 import net.arrav.util.io.Buffer;
 
 public final class ObjectType {
@@ -17,6 +17,7 @@ public final class ObjectType {
 	public static Int2ObjectArrayMap<ObjectType> defCache = new Int2ObjectArrayMap<>();
 	public static Int2ObjectOpenHashMap<BitmapImage> iconcache = new Int2ObjectOpenHashMap<>();
 	public static Int2ObjectOpenHashMap<Model> modelcache = new Int2ObjectOpenHashMap<>();
+	public static ObjectType nulled;
 	
 	public int id;
 	public int value;
@@ -82,7 +83,7 @@ public final class ObjectType {
 			return defCache.get(id);
 		final ObjectType obj = new ObjectType();
 		if(id > index.length)
-			return null;
+			return nulled;
 		data.pos = index[id];
 		obj.id = id;
 		obj.renew();
@@ -359,6 +360,7 @@ public final class ObjectType {
 			index[i] = pos;
 			pos += bufferidx.getUShort();
 		}
+		nulled = get(0);
 	}
 	
 	public boolean isDialogueModelCached(int gender) {

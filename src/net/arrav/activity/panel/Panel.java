@@ -3,8 +3,8 @@ package net.arrav.activity.panel;
 import net.arrav.Config;
 import net.arrav.activity.Activity;
 import net.arrav.cache.unit.ImageCache;
-import net.arrav.game.Scene;
-import net.arrav.media.Rasterizer2D;
+import net.arrav.world.Scene;
+import net.arrav.graphic.Rasterizer2D;
 
 public abstract class Panel extends Activity {
 

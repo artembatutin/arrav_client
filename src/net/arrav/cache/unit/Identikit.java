@@ -1,7 +1,7 @@
 package net.arrav.cache.unit;
 
 import net.arrav.cache.CacheArchive;
-import net.arrav.game.model.Model;
+import net.arrav.world.model.Model;
 import net.arrav.util.io.Buffer;
 
 public final class Identikit {

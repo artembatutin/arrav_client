@@ -4,9 +4,9 @@ import net.arrav.Config;
 import net.arrav.Constants;
 import net.arrav.activity.panel.Panel;
 import net.arrav.cache.unit.ImageCache;
-import net.arrav.game.Scene;
-import net.arrav.media.Rasterizer2D;
-import net.arrav.media.img.BitmapImage;
+import net.arrav.world.Scene;
+import net.arrav.graphic.Rasterizer2D;
+import net.arrav.graphic.img.BitmapImage;
 
 public class SettingPanel extends Panel {
 	

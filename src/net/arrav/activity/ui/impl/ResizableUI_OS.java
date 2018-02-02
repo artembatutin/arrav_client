@@ -9,11 +9,11 @@ import net.arrav.activity.ui.util.OrbHandler;
 import net.arrav.cache.unit.ImageCache;
 import net.arrav.cache.unit.Interface;
 import net.arrav.cache.unit.NPCType;
-import net.arrav.game.model.Model;
-import net.arrav.game.model.NPC;
-import net.arrav.game.model.Player;
-import net.arrav.media.Rasterizer2D;
-import net.arrav.media.img.BitmapImage;
+import net.arrav.world.model.Model;
+import net.arrav.world.model.NPC;
+import net.arrav.world.model.Player;
+import net.arrav.graphic.Rasterizer2D;
+import net.arrav.graphic.img.BitmapImage;
 import net.arrav.util.collect.LinkedDeque;
 import net.arrav.util.string.StringUtils;
 

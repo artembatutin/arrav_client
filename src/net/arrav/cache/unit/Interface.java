@@ -2,12 +2,12 @@ package net.arrav.cache.unit;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.arrav.Constants;
-import net.arrav.game.model.Model;
-import net.arrav.sign.SignLink;
+import net.arrav.world.model.Model;
+import net.arrav.net.SignLink;
 import net.arrav.util.io.Buffer;
 import net.arrav.Client;
 import net.arrav.cache.CacheArchive;
-import net.arrav.media.font.BitmapFont;
+import net.arrav.graphic.font.BitmapFont;
 import net.arrav.util.DataToolkit;
 
 import java.io.IOException;

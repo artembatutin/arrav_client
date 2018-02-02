@@ -2,7 +2,7 @@ package net.arrav.cache.unit;
 
 import net.arrav.Constants;
 import net.arrav.cache.CacheArchive;
-import net.arrav.sign.SignLink;
+import net.arrav.net.SignLink;
 import net.arrav.util.DataToolkit;
 import net.arrav.util.io.Buffer;
 

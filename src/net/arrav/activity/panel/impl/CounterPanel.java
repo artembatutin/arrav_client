@@ -2,8 +2,8 @@ package net.arrav.activity.panel.impl;
 
 import net.arrav.activity.panel.Panel;
 import net.arrav.cache.unit.ObjectType;
-import net.arrav.media.Rasterizer2D;
-import net.arrav.media.img.BitmapImage;
+import net.arrav.graphic.Rasterizer2D;
+import net.arrav.graphic.img.BitmapImage;
 
 public class CounterPanel extends Panel {
 	

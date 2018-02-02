@@ -1,6 +1,6 @@
 package net.arrav.util.string;
 
-import net.arrav.sign.SignLink;
+import net.arrav.net.SignLink;
 
 public final class StringUtils {
 

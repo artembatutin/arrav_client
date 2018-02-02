@@ -1,18 +1,18 @@
 package net.arrav.cache;
 
 import net.arrav.Constants;
-import net.arrav.media.img.PaletteImage;
+import net.arrav.graphic.img.PaletteImage;
 import net.arrav.Client;
 import net.arrav.Config;
-import net.arrav.Updater;
+import net.arrav.net.Updater;
 import net.arrav.activity.Activity;
 import net.arrav.activity.TitleActivity;
 import net.arrav.cache.impl.*;
 import net.arrav.cache.unit.ImageCache;
-import net.arrav.media.GraphicalComponent;
-import net.arrav.media.Rasterizer2D;
-import net.arrav.media.font.BitmapFont;
-import net.arrav.sign.SignLink;
+import net.arrav.graphic.GraphicalComponent;
+import net.arrav.graphic.Rasterizer2D;
+import net.arrav.graphic.font.BitmapFont;
+import net.arrav.net.SignLink;
 import net.arrav.util.ThreadUtils;
 import net.arrav.util.io.Buffer;
 

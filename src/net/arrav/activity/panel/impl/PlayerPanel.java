@@ -6,7 +6,7 @@ import net.arrav.activity.panel.Panel;
 import net.arrav.activity.ui.impl.ResizableUI_CUS;
 import net.arrav.cache.unit.ImageCache;
 import net.arrav.cache.unit.Interface;
-import net.arrav.media.Rasterizer2D;
+import net.arrav.graphic.Rasterizer2D;
 
 public class PlayerPanel extends Panel {
 	

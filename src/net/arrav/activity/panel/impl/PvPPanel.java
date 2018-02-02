@@ -4,7 +4,7 @@ import net.arrav.Config;
 import net.arrav.activity.panel.Panel;
 import net.arrav.cache.unit.ImageCache;
 import net.arrav.cache.unit.Interface;
-import net.arrav.media.Rasterizer2D;
+import net.arrav.graphic.Rasterizer2D;
 
 public class PvPPanel extends Panel {
 	

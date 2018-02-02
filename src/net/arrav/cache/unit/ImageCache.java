@@ -2,7 +2,7 @@ package net.arrav.cache.unit;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.arrav.Client;
-import net.arrav.media.img.BitmapImage;
+import net.arrav.graphic.img.BitmapImage;
 
 public final class ImageCache {
 

@@ -4,9 +4,9 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.arrav.activity.panel.Panel;
 import net.arrav.cache.unit.ObjectType;
-import net.arrav.game.model.Item;
-import net.arrav.media.Rasterizer2D;
-import net.arrav.media.img.BitmapImage;
+import net.arrav.world.model.Item;
+import net.arrav.graphic.Rasterizer2D;
+import net.arrav.graphic.img.BitmapImage;
 
 public class ObjectCreationPanel extends Panel {
 	

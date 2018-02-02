@@ -1,7 +1,7 @@
 package net.arrav.activity;
 
 import net.arrav.Client;
-import net.arrav.media.font.BitmapFont;
+import net.arrav.graphic.font.BitmapFont;
 
 /**
  * An <i>Activity</i> is a handler for a stage of the client.

@@ -6,12 +6,12 @@ import net.arrav.cache.CacheLoader;
 import net.arrav.cache.unit.AnimationFrame;
 import net.arrav.cache.unit.LocationType;
 import net.arrav.cache.unit.NPCType;
-import net.arrav.game.CollisionMap;
-import net.arrav.game.Scene;
-import net.arrav.game.model.Location;
-import net.arrav.media.Rasterizer3D;
-import net.arrav.media.Viewport;
-import net.arrav.media.tex.Texture;
+import net.arrav.world.CollisionMap;
+import net.arrav.world.Scene;
+import net.arrav.world.model.Location;
+import net.arrav.graphic.Rasterizer3D;
+import net.arrav.graphic.Viewport;
+import net.arrav.graphic.tex.Texture;
 
 public class SceneLoader implements CacheLoader {
 	

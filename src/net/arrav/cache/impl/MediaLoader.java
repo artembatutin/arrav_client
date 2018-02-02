@@ -3,12 +3,12 @@ package net.arrav.cache.impl;
 import net.arrav.Config;
 import net.arrav.cache.CacheLoader;
 import net.arrav.cache.unit.ImageCache;
-import net.arrav.media.img.PaletteImage;
+import net.arrav.graphic.img.PaletteImage;
 import net.arrav.Client;
 import net.arrav.activity.ui.UIRenderer;
 import net.arrav.cache.CacheArchive;
-import net.arrav.media.Rasterizer3D;
-import net.arrav.media.img.BitmapImage;
+import net.arrav.graphic.Rasterizer3D;
+import net.arrav.graphic.img.BitmapImage;
 
 public class MediaLoader implements CacheLoader {
 	

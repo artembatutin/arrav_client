@@ -1,7 +1,7 @@
 
 package net.arrav.activity.ui.util;
 
-import net.arrav.media.Rasterizer2D;
+import net.arrav.graphic.Rasterizer2D;
 import net.arrav.Client;
 
 public class TaskHandler {

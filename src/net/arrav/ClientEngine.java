@@ -2,7 +2,7 @@ package net.arrav;
 
 import net.arrav.activity.panel.impl.SettingPanel;
 import net.arrav.activity.ui.UIRenderer;
-import net.arrav.sign.SignLink;
+import net.arrav.net.SignLink;
 
 import javax.imageio.ImageIO;
 import javax.swing.JOptionPane;

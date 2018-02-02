@@ -4,7 +4,7 @@ import net.arrav.cache.CacheLoader;
 import net.arrav.Client;
 import net.arrav.cache.CacheArchive;
 import net.arrav.cache.unit.Interface;
-import net.arrav.media.font.BitmapFont;
+import net.arrav.graphic.font.BitmapFont;
 
 public class InterfaceLoader implements CacheLoader {
 	

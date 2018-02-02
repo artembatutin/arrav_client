@@ -1,6 +1,6 @@
 package net.arrav.util.io;
 
-import net.arrav.sign.SignLink;
+import net.arrav.net.SignLink;
 import net.arrav.util.collect.DoublyLinkableEntry;
 import net.arrav.util.collect.LinkedDeque;
 

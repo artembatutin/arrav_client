@@ -1,7 +1,7 @@
 package net.arrav.activity.ui.impl;
 
 import net.arrav.activity.ui.UI;
-import net.arrav.media.img.BitmapImage;
+import net.arrav.graphic.img.BitmapImage;
 
 import java.awt.*;
 

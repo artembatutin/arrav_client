@@ -3,7 +3,7 @@ package net.arrav.activity.panel.impl;
 import net.arrav.activity.panel.Panel;
 import net.arrav.cache.unit.ImageCache;
 import net.arrav.cache.unit.Interface;
-import net.arrav.media.Rasterizer2D;
+import net.arrav.graphic.Rasterizer2D;
 
 public class ClanSettingPanel extends Panel {
 

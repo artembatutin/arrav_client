@@ -1,8 +1,8 @@
 package net.arrav.activity.panel.impl;
 
 import net.arrav.activity.panel.Panel;
-import net.arrav.game.Scene;
-import net.arrav.media.Rasterizer2D;
+import net.arrav.world.Scene;
+import net.arrav.graphic.Rasterizer2D;
 import net.arrav.util.string.StringUtils;
 
 public class RoomCreationPanel extends Panel {

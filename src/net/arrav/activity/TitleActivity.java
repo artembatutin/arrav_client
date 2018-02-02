@@ -5,8 +5,8 @@ import net.arrav.Client;
 import net.arrav.Config;
 import net.arrav.activity.panel.impl.SettingPanel;
 import net.arrav.cache.unit.ImageCache;
-import net.arrav.media.GraphicalComponent;
-import net.arrav.media.Rasterizer2D;
+import net.arrav.graphic.GraphicalComponent;
+import net.arrav.graphic.Rasterizer2D;
 import net.arrav.util.string.StringUtils;
 
 import java.util.concurrent.ThreadLocalRandom;

@@ -3,9 +3,9 @@ package net.arrav.activity.ui.util;
 import net.arrav.Client;
 import net.arrav.Config;
 import net.arrav.cache.unit.ImageCache;
-import net.arrav.game.model.Mobile;
-import net.arrav.media.Rasterizer2D;
-import net.arrav.media.img.BitmapImage;
+import net.arrav.world.model.Mobile;
+import net.arrav.graphic.Rasterizer2D;
+import net.arrav.graphic.img.BitmapImage;
 
 public class AssetDrawer {
 

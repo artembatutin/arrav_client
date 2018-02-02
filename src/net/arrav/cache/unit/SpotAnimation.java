@@ -1,7 +1,7 @@
 package net.arrav.cache.unit;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
-import net.arrav.game.model.Model;
+import net.arrav.world.model.Model;
 import net.arrav.util.io.Buffer;
 import net.arrav.cache.CacheArchive;
 

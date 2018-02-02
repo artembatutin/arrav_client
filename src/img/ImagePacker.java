@@ -2,7 +2,7 @@ package img;
 
 import net.arrav.Client;
 import net.arrav.cache.unit.ImageCache;
-import net.arrav.sign.SignLink;
+import net.arrav.net.SignLink;
 import net.arrav.util.FileToolkit;
 import net.arrav.util.io.Buffer;
 

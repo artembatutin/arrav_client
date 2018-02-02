@@ -5,9 +5,9 @@ import net.arrav.activity.panel.Panel;
 import net.arrav.cache.unit.ImageCache;
 import net.arrav.cache.unit.Interface;
 import net.arrav.cache.unit.ObjectType;
-import net.arrav.media.Rasterizer2D;
+import net.arrav.graphic.Rasterizer2D;
 import net.arrav.Client;
-import net.arrav.media.img.BitmapImage;
+import net.arrav.graphic.img.BitmapImage;
 
 public class BankPanel extends Panel {
 
@@ -100,11 +100,10 @@ public class BankPanel extends Panel {
 		for(int i = 1; i < 11; i++) {
 			if(Interface.cache[270 + i - 1].invId == null)
 				continue;
-			int x = (i - 1) * 40;
+			int x = (i - 1) * 41;
 			/** bank tabs clicking range */
-			if(client.leftClickInRegion(beginX + 50 + x, beginY + 40, beginX + 50 + 39 + x, beginY + 78)) {
+			if (client.leftClickInRegion(beginX + 44 + x, beginY + 43, beginX + 84 + x, beginY + 88)) {
 				tab = (i - 1);
-
 				client.outBuffer.putOpcode(185);
 				client.outBuffer.putShort((i - 1) + 100);
 			}
@@ -225,25 +224,27 @@ public class BankPanel extends Panel {
 					itemDrag = false;
 					return true;
 				}
-				if(client.rightClickInRegion(beginX + 55 + x, beginY + offset, beginX + 91 + x, beginY + offset + 44)) {
-					String name = ObjectType.get(icon).name;
-					int[] ids = {53, 431, 867, 78, 632};
-					String[] actions = { "X", "All", "10", "5", "1"};
-					client.menuPos = 0;
-					for(int p = 0; p < ids.length; p++) {
-						client.menuItemName[p] = "Withdraw " + actions[p] + " @ban@" + name;
-						client.menuItemCode[p] = ids[p];
-						client.menuItemArg3[p] = tab;
-						client.menuItemArg2[p] = i;
-						client.menuItemArg1[p] = icon;
-						client.menuPos++;
+				if(client.mouseY > beginY + 82) {
+					if(client.rightClickInRegion(beginX + 55 + x, beginY + offset, beginX + 91 + x, beginY + offset + 44)) {
+						String name = ObjectType.get(icon).name;
+						int[] ids = {53, 431, 867, 78, 632};
+						String[] actions = {"X", "All", "10", "5", "1"};
+						client.menuPos = 0;
+						for(int p = 0; p < ids.length; p++) {
+							client.menuItemName[p] = "Withdraw " + actions[p] + " @ban@" + name;
+							client.menuItemCode[p] = ids[p];
+							client.menuItemArg3[p] = tab;
+							client.menuItemArg2[p] = i;
+							client.menuItemArg1[p] = icon;
+							client.menuPos++;
+						}
+						srcSlot = -1;
+						itemPressX = 0;
+						itemPressY = 0;
+						itemDrag = false;
+						client.activeInterfaceType = 5;
+						return true;
 					}
-					srcSlot = -1;
-					itemPressX = 0;
-					itemPressY = 0;
-					itemDrag = false;
-					client.activeInterfaceType = 5;
-					return true;
 				}
 				if(!client.menuOpened && client.leftClickInRegion(beginX + 55 + x, beginY + offset, beginX + 91 + x, beginY + offset + 44)) {
 					srcSlot = i;
@@ -284,7 +285,7 @@ public class BankPanel extends Panel {
 					continue;
 				int first = getFirst(Interface.cache[270 + i - 1]);
 				int icon = Interface.cache[270 + i - 1].invId[first];
-				int x = (i - 1) * 40;
+				int x = (i - 1) * 41;
 				if (Config.def.panelStyle == 2) {
 					Rasterizer2D.fillRoundedRectangle(beginX + 44 + x, beginY + 16, 44, 36, 3, 0xff981f, icon > 0 ? 50 + ((i - 1) == tab ? 100 : 0) : 25);
 					if (client.mouseInRegion(beginX + 44 + x, beginY + 16, beginX + 95 + x, beginY + 52)) {
@@ -295,15 +296,15 @@ public class BankPanel extends Panel {
 					/**
 					 * Tab positions
 					 */
-					ImageCache.get(2000).drawImage(beginX + 44 + x, beginY + 40); // bank tabs
+					ImageCache.get(icon > 1 ? 2001 : 2000).drawImage(beginX + 42 + x, beginY + 41); // bank tabs
 
 					if(icon == 0) {
-						ImageCache.get(2051).drawImage(beginX + 46 + x, beginY + 43); // bank tab + icon
+						//ImageCache.get(2051).drawImage(beginX + 46 + x, beginY + 43); // bank tab + icon
 					}
 					//ImageCache.get(Config.def.panelStyle == 0 ? (icon > 0 ? 2001 : 2000) : icon > 0 ? 2018 : 2019).drawImage(beginX + 44 + x, beginY + 40); // bank tabs
-					if (client.mouseInRegion(beginX + 44 + x, beginY + 40, beginX + 92 + x, beginY + 88)) {
+					if (client.mouseInRegion(beginX + 44 + x, beginY + 43, beginX + 84 + x, beginY + 82)) {
 						destSlot = -i;
-						Rasterizer2D.fillRoundedRectangle(beginX + 44 + x, beginY + 41, 37, 36, 3, Config.def.panelStyle == 1 ? 0x000000 : 0xaaaaaa, 20);
+						Rasterizer2D.fillRoundedRectangle(beginX + 44 + x, beginY + 44, 42, 36, 3, Config.def.panelStyle == 1 ? 0x000000 : 0xaaaaaa, 20);
 					}
 				}
 				if (icon > 0) {
@@ -313,8 +314,8 @@ public class BankPanel extends Panel {
 					}
 				}
 			}
-			ImageCache.get(2000).drawImage(beginX + 44, beginY + 40); // bank tabs
-			ImageCache.get(2052).drawImage(beginX + 46, beginY + 43); // bank tab + icon
+			//ImageCache.get(2000).drawImage(beginX + 42, beginY + 41); // bank tabs
+			//ImageCache.get(2052).drawImage(beginX + 46, beginY + 43); // bank tab + icon
 			if (client.mouseInRegion(beginX + 44, beginY + 40, beginX + 92, beginY + 88)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 44, beginY + 41, 37, 36, 3, Config.def.panelStyle == 1 ? 0x000000 : 0xaaaaaa, 20);
 			}
@@ -328,10 +329,10 @@ public class BankPanel extends Panel {
 			Rasterizer2D.drawHorizontalLine(beginX + 5 + 440, beginY + 79, 40, 0x000000, 55);
 		}
 		if (Config.def.panelStyle == 1) {
-			Rasterizer2D.fillRectangle(beginX + 5, beginY + 54, 488, 278, 0x000000, 30);
+			Rasterizer2D.fillRectangle(beginX + 5, beginY + 81, 488, 210, 0x000000, 30);
 		}
 
-		Rasterizer2D.setClip(beginX + 5, !client.bankSearching ? beginY + 78 : 43, beginX + 493, beginY + (Config.def.panelStyle == 2 ? 298 : 288));
+		Rasterizer2D.setClip(beginX + 5, !client.bankSearching ? beginY + 81 : 43, beginX + 493, beginY + (Config.def.panelStyle == 2 ? 298 : 288));
 
 		int offset = -scrollPos + (client.bankSearching ? 45 : 80);
 		int xSelected = 0;
@@ -384,8 +385,10 @@ public class BankPanel extends Panel {
 				}
 				itemsCount++;
 				/** Slots item tooltip */
-				if(client.mouseInRegion(beginX + 52 + x, beginY + offset, beginX + 87 + x, beginY + offset + 44)) {
-					tooltip = ObjectType.get(icon).name;
+				if(client.mouseY > beginY + 82) {
+					if(client.mouseInRegion(beginX + 52 + x, beginY + offset, beginX + 87 + x, beginY + offset + 44)) {
+						tooltip = ObjectType.get(icon).name;
+					}
 				}
 				/* Icons */
 				final BitmapImage img = ObjectType.getIcon(icon, Interface.cache[270 + tab].invAmt[i], 0);
