@@ -1990,7 +1990,7 @@ public final class Scene {
 			if(tile == null) {
 				return;
 			}
-			final QuadGround class43 = tile.quadGround;//open this class
+			final QuadGround class43 = tile.quadGround;
 			if(class43 != null) {
 				if (class43.color1 != 12345678 && class43.color3 != 12345678) {
 					if (class43.mapcolor == 0) {

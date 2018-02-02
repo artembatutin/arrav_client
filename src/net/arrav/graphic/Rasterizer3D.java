@@ -3407,7 +3407,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 					b1 += b2;
 					offset++;
 				}
-			}//wanna login real quick
+			}
 		}
 	}
 	
