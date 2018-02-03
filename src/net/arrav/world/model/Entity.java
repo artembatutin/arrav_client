@@ -2,6 +2,7 @@ package net.arrav.world.model;
 
 import net.arrav.graphic.Rasterizer3D;
 import net.arrav.util.collect.DoublyLinkableEntry;
+import net.arrav.world.tile.EntityUnit;
 
 public class Entity extends DoublyLinkableEntry {
 	
@@ -9,8 +10,8 @@ public class Entity extends DoublyLinkableEntry {
 	public int[] vectorY = null;
 	public int[] vectorZ = null;
 	public int[] vectorMagnitude = null;
-	
 	public int maxVerticalDistUp;
+	public EntityUnit unit;
 
 	public Entity() {
 		maxVerticalDistUp = 1000;

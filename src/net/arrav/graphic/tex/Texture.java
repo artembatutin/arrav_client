@@ -1,12 +1,12 @@
 package net.arrav.graphic.tex;
 
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import net.arrav.net.OnDemandFetcher;
 import net.arrav.util.io.Buffer;
 
 public final class Texture {
 
-	private static Int2ObjectArrayMap<Texture> cache = new Int2ObjectArrayMap<>();
+	private static int TEX_SIZE = 1500;
+	private static Texture[] cache = new Texture[TEX_SIZE];
 	private static OnDemandFetcher resourceManager;
 	private static float brightness = 1;
 
@@ -22,15 +22,15 @@ public final class Texture {
 	}
 
 	public static Texture get(int index) {
-		if(!cache.containsKey(index)) {
+		if(cache[index] == null) {
 			resourceManager.addRequest(4, index);
 			return null;
 		}
-		return cache.get(index);
+		return cache[index];
 	}
 
 	public static void clear() {
-		cache.clear();
+		cache = new Texture[TEX_SIZE];
 	}
 
 	public static void init(OnDemandFetcher updateManager_) {
@@ -84,7 +84,7 @@ public final class Texture {
 					texels[i] = argb;
 				}
 			}
-			cache.put(index, new Texture(width, height, texels));
+			cache[index] = new Texture(width, height, texels);
 		}
 	}
 

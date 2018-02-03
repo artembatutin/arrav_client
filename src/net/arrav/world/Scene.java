@@ -1831,14 +1831,14 @@ public final class Scene {
 				}
 			}
 		}
-		final EntityUnit spawn = new EntityUnit();
+		final EntityUnit spawn = entity.unit == null ? new EntityUnit() : entity.unit;
 		spawn.hash = hash;
+		spawn.model = entity;
 		spawn.config = config;
 		spawn.plane = plane;
 		spawn.x = baseX;
 		spawn.z = baseY;
 		spawn.y = l1;
-		spawn.model = entity;
 		spawn.yaw = yaw;
 		spawn.tileX = x;
 		spawn.tileY = y;
@@ -1873,6 +1873,9 @@ public final class Scene {
 			}
 		}
 		if(flag) {
+			if(entity.unit == null) {
+				entity.unit = spawn;
+			}
 			entities1[entity1Count++] = spawn;
 		}
 		return true;

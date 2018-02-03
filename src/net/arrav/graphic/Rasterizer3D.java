@@ -2642,15 +2642,19 @@ public final class Rasterizer3D extends Rasterizer2D {
 		if(tex >= 0 && tex < MaterialType.textures.length) {
 			
 			MaterialType def = MaterialType.textures[tex];
-			Texture texture = Texture.get(tex);
 			
-			if(def != null && !def.aBoolean1223 && !force && texture != null) {
+			if(def != null && !def.aBoolean1223 && !force) {
 				drawGouraudTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, hsl1, hsl2, hsl3);
 				//drawGouraudTriangle317(y1, y2, y3, x1, x2, x3, hsl1, hsl2, hsl3);
 				return;
 			}
 			
-			if(texture != null) {
+			Texture texture = Texture.get(tex);
+			if(texture == null) {
+				drawGouraudTriangle(y1, y2, y3, x1, x2, x3, z1, z2, z3, hsl1, hsl2, hsl3);
+				//drawGouraudTriangle317(y1, y2, y3, x1, x2, x3, hsl1, hsl2, hsl3);
+				return;
+			} else {
 				textureMissing = false;
 				if(mipmap) {
 					int area = (x2 - x1) * (y3 - y1) - (x3 - x1) * (y2 - y1) >> 1;
