@@ -131,7 +131,7 @@ public class CounterPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 		
-		fancyFont.drawLeftAlignedEffectString("Shop Counter", beginX + 20, beginY + 33, 0xFF8A1F, true);
+		boldFont.drawLeftAlignedEffectString("Shop Counter", beginX + 20, beginY + 33, 0xFF8A1F, true);
 		boldFont.drawCenteredEffectString("Quick shops:", beginX + 240, beginY + 100, 0xFF8A1F, true);
 		
 		if(true) {

@@ -67,18 +67,18 @@ public class SlayerPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 		
-		fancyFont.drawLeftAlignedEffectString("Slayer - Points: " + Interface.cache[252].text, beginX + 20, beginY + 31, 0xFF8A1F, true);
+		boldFont.drawLeftAlignedEffectString("Slayer - Points: " + Interface.cache[252].text, beginX + 20, beginY + 31, 0xFF8A1F, true);
 		
-		fancyFont.drawCenteredEffectString("Current assignment: " + Interface.cache[253].text, beginX + 250, beginY + 55, 0xFFFFFF, true);
+		plainFont.drawCenteredEffectString("Current assignment: " + Interface.cache[253].text, beginX + 250, beginY + 55, 0xFFFFFF, true);
 		
-		smallFont.drawLeftAlignedString("You may spend points to cancel or block your current task.", beginX + 15, beginY + 105, 0xffffff);
-		smallFont.drawLeftAlignedString("Skip: you may be assigned that target again in the future. (30p)", beginX + 15, beginY + 120, 0xffffff);
-		smallFont.drawLeftAlignedString("Block: you will never get the assignment again. (100p)", beginX + 15, beginY + 135, 0xffffff);
+		smallFont.drawLeftAlignedString("You may spend points to cancel or block your current task.", beginX + 15, beginY + 105, 0xFF8A1F);
+		smallFont.drawLeftAlignedString("Skip: you may be assigned that target again in the future. (30p)", beginX + 15, beginY + 120, 0xFF8A1F);
+		smallFont.drawLeftAlignedString("Block: you will never get the assignment again. (100p)", beginX + 15, beginY + 135, 0xFF0000);
 		//smallFont.drawLeftAlignedString("Neither option will reset your current tally of completed Slayer tasks.", beginX + 15, beginY + 145, 0xffffff);
 		
 		Rasterizer2D.drawHorizontalLine(beginX + 250, beginY + 75, 12, 0xFFFFFF);
 		Rasterizer2D.fillRoundedRectangle(beginX + 280, beginY + 65, 62, 20, 2, 0xf3763f, 60);
-		fancyFont.drawCenteredString("Reward", beginX + 310, beginY + 80, 0xFFFFFF);
+		plainFont.drawCenteredEffectString("Reward", beginX + 310, beginY + 80, 0xFFFFFF, true);
 		if(client.mouseInRegion(beginX + 280, beginY + 65, beginX + 342, beginY + 85)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 280, beginY + 65, 62, 20, 2, 0xf3763f, 20);
 			Rasterizer2D.drawRectangle(beginX + 347, beginY + 60, 145, 70, 0x000000, 60);
@@ -97,17 +97,17 @@ public class SlayerPanel extends Panel {
 			}
 		}
 		Rasterizer2D.fillRoundedRectangle(beginX + 180, beginY + 65, 54, 20, 2, 0xFF8A1F, 60);
-		fancyFont.drawCenteredString("Block", beginX + 205, beginY + 80, 0xFFFFFF);
+		plainFont.drawCenteredEffectString("Block", beginX + 205, beginY + 80, 0xFF0000, true);
 		if(client.mouseInRegion(beginX + 180, beginY + 65, beginX + 234, beginY + 85)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 180, beginY + 65, 54, 20, 2, 0xFF8A1F, 20);
 		}
 		Rasterizer2D.fillRoundedRectangle(beginX + 120, beginY + 65, 54, 20, 2, 0xFF8A1F, 60);
-		fancyFont.drawCenteredString("Skip", beginX + 145, beginY + 80, 0xFFFFFF);
+		plainFont.drawCenteredEffectString("Skip", beginX + 145, beginY + 80, 0xFFFFFF, true);
 		if(client.mouseInRegion(beginX + 120, beginY + 65, beginX + 174, beginY + 85)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 120, beginY + 65, 54, 20, 2, 0xFF8A1F, 20);
 		}
 		Rasterizer2D.fillRoundedRectangle(beginX + 40, beginY + 65, 74, 20, 2, 0xf3763f, 60);
-		fancyFont.drawCenteredString("Teleport", beginX + 75, beginY + 80, 0xFFFFFF);
+		plainFont.drawCenteredEffectString("Teleport", beginX + 75, beginY + 80, 0xFFFFFF, true);
 		if(client.mouseInRegion(beginX + 50, beginY + 65, beginX + 114, beginY + 85)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 40, beginY + 65, 74, 20, 2, 0xf3763f, 20);
 		}

@@ -252,7 +252,7 @@ public class ShopPanel extends Panel {
 				}
 			}
 		}
-		plainFont.drawLeftAlignedEffectString(Interface.cache[3901].text, beginX + 20, beginY + 31, 0xFF8A1F, true);
+		boldFont.drawLeftAlignedEffectString(Interface.cache[3901].text, beginX + 20, beginY + 31, 0xFF8A1F, true);
 		
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 327);
 		int offset = -scrollPos + 45;
@@ -262,7 +262,7 @@ public class ShopPanel extends Panel {
 			if(icon == 0)
 				continue;
 			int x = i % 6 * 78;
-			Rasterizer2D.fillRoundedRectangle(beginX + 8 + x, beginY + offset, 72, 50, 3, 0x000000, 100);
+			Rasterizer2D.fillRoundedRectangle(beginX + 8 + x, beginY + offset, 72, 50, 3, 0x000000, 45);
 			if(!client.menuOpened && client.mouseInRegion(beginX + 8 + x, beginY + offset, beginX + 80 + x, beginY + offset + 50)) {
 				Rasterizer2D.fillRectangle(beginX + 8 + x, beginY + offset, 72, 50, 0, 40);
 				tooltip = ObjectType.get(icon).name;
