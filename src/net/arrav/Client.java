@@ -3146,10 +3146,8 @@ public class Client extends ClientEngine {
 			}
 			socketStream = new Session(this, openSocket(TitleActivity.CONNECTIONS[TitleActivity.connection].getPort()));
 			outBuffer.pos = 0;
-			outBuffer.putShort(Constants.BUILD);
-			outBuffer.putInt(mac);
-			outBuffer.putLong(StringUtils.encryptName(username));
-			socketStream.write(outBuffer.data, 14);
+			outBuffer.putByte(Constants.BUILD);
+			socketStream.write(outBuffer.data, 1);
 			int returnCode = socketStream.read();
 			final int i1 = returnCode;
 			if(returnCode == 0) {
@@ -3166,6 +3164,8 @@ public class Client extends ClientEngine {
 				outBuffer.putInt(ai[1]);
 				outBuffer.putInt(ai[2]);
 				outBuffer.putInt(ai[3]);
+				outBuffer.putInt(mac);
+				outBuffer.putLine(username);
 				outBuffer.putLine(password);
 				outBuffer.doKeys();
 				outStream.pos = 0;
@@ -3178,6 +3178,7 @@ public class Client extends ClientEngine {
 				encryption = new ISAACCipher(ai);
 				socketStream.write(outStream.data, outStream.pos);
 				returnCode = socketStream.read();
+				System.out.println(returnCode + " - code out");
 				titleMessage = "";
 			} else {
 				TitleActivity.scrollOpened = true;

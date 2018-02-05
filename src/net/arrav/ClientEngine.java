@@ -592,8 +592,7 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 	@Override
 	public final void windowClosing(WindowEvent windowevent) {
         String closeOptions[] = {"Yes", "No"};
-        int userPrompt = JOptionPane.showOptionDialog(windowevent.getComponent(), "Are you sure you want to exit Arrav?", "Arrav",
-        		JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, closeOptions , closeOptions[1]);
+        int userPrompt = JOptionPane.showOptionDialog(windowevent.getComponent(), "Are you sure you want to exit Arrav?", "Arrav", JOptionPane.DEFAULT_OPTION, JOptionPane.WARNING_MESSAGE, null, closeOptions , closeOptions[1]);
         if(userPrompt == JOptionPane.YES_OPTION) {
             destroy();
         }
