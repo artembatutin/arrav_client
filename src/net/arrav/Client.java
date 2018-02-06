@@ -657,10 +657,8 @@ public class Client extends ClientEngine {
 	 */
 	public static void main(String[] args) {
 		try {
-			//if(args != null && args.length > 0) {
-			if(true) {
-				//boolean dev = Boolean.parseBoolean(args[0]);
-				boolean dev = true;
+			if(args != null && args.length > 0) {
+				boolean dev = Boolean.parseBoolean(args[0]);
 				Constants.JAGGRAB_ENABLED = !dev;
 				Constants.MEMORY_MAPPED_CACHE = !dev;
 				Constants.USER_HOME_FILE_STORE = !dev;

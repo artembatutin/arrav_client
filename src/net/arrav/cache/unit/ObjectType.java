@@ -2,17 +2,30 @@ package net.arrav.cache.unit;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.arrav.Config;
+import net.arrav.Constants;
 import net.arrav.graphic.Viewport;
 import net.arrav.cache.CacheArchive;
+import net.arrav.net.SignLink;
+import net.arrav.util.DataToolkit;
 import net.arrav.world.model.Model;
 import net.arrav.graphic.Rasterizer2D;
 import net.arrav.graphic.Rasterizer3D;
 import net.arrav.graphic.img.BitmapImage;
 import net.arrav.util.io.Buffer;
 
+import java.io.DataOutputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.HashSet;
+import java.util.Set;
+
 public final class ObjectType {
 	
+	public static final boolean REPACK = false;
+	
 	public static Buffer data;
+	public static int length;
 	public static int[] index;
 	public static Int2ObjectArrayMap<ObjectType> defCache = new Int2ObjectArrayMap<>();
 	public static Int2ObjectOpenHashMap<BitmapImage> iconcache = new Int2ObjectOpenHashMap<>();
@@ -20,57 +33,65 @@ public final class ObjectType {
 	public static ObjectType nulled;
 	
 	public int id;
-	public int value;
-	private byte femaleEquipOffset;
-	private int[] modifiedModelColors;
-	private int[] originalModelColors;
-	private boolean membersObject;
-	private int anInt162;
-	private int noteTemplateId;
-	private int femaleEquipAlt;
-	private int maleEquip;
-	private int maleDialogueHatmodelId;
-	private int anInt167;
-	public String groundActions[];
-	private int iconHorizontalOffset;
-	public String name;
-	private int femaleDialogueHatmodelId;
+	private boolean osrs;
 	private int modelId;
-	private int maleDialoguemodelId;
-	public boolean stackable;
-	public String description;
-	private int noteId;
+	private int modelIdOSRS;
 	public int iconZoom;
-	private int anInt184;
-	private int anInt185;
-	private int maleEquipAlt;
-	public String actions[];
 	public int iconYaw;
-	private int anInt191;
-	private int anInt192;
-	private int[] stackableIds;
-	private int iconVerticalOffset;
-	private int anInt196;
-	private int femaleDialoguemodelId;
 	public int iconRoll;
+	public int iconZoomOSRS;
+	public int iconYawOSRS;
+	public int iconRollOSRS;
+	
+	private int maleEquip;
+	private int maleEquipAlt;
 	private int femaleEquip;
-	private int[] stackAmounts;
-	public int team;
-	public static int length;
-	private int anInt204;
-	private byte maleEquipOffset;
-	private int lendID;
-	private int lentItemID;
-	private byte[] recolorDstPalette;
+	private int femaleEquipAlt;
+	private int maleEquipOSRS;
+	private int maleEquipAltOSRS;
+	private int femaleEquipOSRS;
+	private int femaleEquipAltOSRS;
+	
+	private int groundScaleZ;
+	private int groundScaleY;
+	private int groundScaleX;
 	private short[] retextureDst;
 	private short[] retextureSrc;
+	private int[] modifiedModelColors;
+	private int[] originalModelColors;
+	private byte[] recolorDstPalette;
+	
+	public int value;
+	private boolean membersObject;
+	public String name;
+	public String description;
+	public String actions[];
+	public String groundActions[];
+	public boolean stackable;
+	private int noteId;
+	private int noteTemplateId;
+	private int[] stackableIds;
+	private int[] stackAmounts;
+	private int iconVerticalOffset;
+	private int iconHorizontalOffset;
+	private int maleDialogueHatmodelId;
+	private int femaleDialogueHatmodelId;
+	private int maleDialoguemodelId;
+	private int femaleDialoguemodelId;
+	private int tertiaryMaleModel;
+	private int tertiaryFemaleModel;
+	private int diffusion;
+	private int ambience;
+	public int team;
+	private int spriteCameraYaw;
 	private int womanEquipOffsetZ;
 	private int womanEquipOffsetY;
 	private int womanEquipOffsetX;
 	private int maleEquipOffsetZ;
 	private int maleEquipOffsetY;
 	private int maleEquipOffsetX;
-	private int[] campaigns;
+	private int lendID;
+	private int lentItemID;
 	private boolean fixPriority;
 	public String[] equipActions;
 	
@@ -87,37 +108,11 @@ public final class ObjectType {
 		data.pos = index[id];
 		obj.id = id;
 		obj.renew();
-		obj.read(data);
-		
-		obj.transform();
-
-		switch(id) {
-			case 2552:
-			case 2554:
-			case 2556:
-			case 2558:
-			case 2560:
-			case 2562:
-			case 2564:
-			case 2566: //Ring of duelling
-				obj.equipActions[3] = "Duel Arena";
-				obj.equipActions[2] = "Castle Wars";
-				obj.equipActions[1] = "Clan wars";
-				break;
-			case 11283:
-				obj.equipActions[1] = "Operate";
-				break;
-			case 1706:
-			case 1708:
-			case 1710:
-			case 1712:
-            case 10362:
-                obj.equipActions[4] = "Edgeville";
-                obj.equipActions[3] = "Karamja";
-                obj.equipActions[2] = "Draynor Village";
-                obj.equipActions[1] = "Al-Kharid";
-                break;
-
+		obj.decode(data);
+		obj.osrs();
+		System.out.println(id);
+		if(obj.id == 12907 || obj.id == 12921 || obj.id == 12924) {
+			obj.noteTemplateId = -1;
 		}
 		if(obj.noteTemplateId != -1) {
 			obj.toNote();
@@ -126,68 +121,8 @@ public final class ObjectType {
 			obj.toLend();
 		}
 		
-		if(obj.id == 692) {
-			obj.name = "Donator certificate";
-			obj.actions = new String[]{"Claim", null, null, null, null};
-		}
-		if(obj.id == 18741) {
-			obj.name = "Ironmen cape";
-		}
-		if(obj.id == 18740) {
-			obj.name = "Ironmen master cape";
-			System.out.println(obj.maleEquip);
-		}
-		if(obj.id == 693) {
-			obj.name = "Super donator certificate";
-			obj.actions = new String[]{"Claim", null, null, null, null};
-		}
-		if(obj.id == 691) {
-			obj.name = "Extreme donator certificate";
-			obj.actions = new String[]{"Claim", null, null, null, null};
-		}
-		if(obj.id == 6829) {
-			obj.name = "Vote box";
-			obj.actions = new String[]{"Open", null, null, null, null};
-		}
-		
-		if(obj.id == 21432) {
-			obj.name = "Book of diplomacy";
-			obj.actions = new String[]{"Open", null, null, null, "Drop"};
-		}
-		
-		if(id == 3904)
-			obj.pet("Trapped abyssal orphan");
-		if(id == 3906)
-			obj.pet("Trapped Jadiku");
-		if(id == 3908)
-			obj.pet("Trapped Toram");
-		if(id == 3910)
-			obj.pet("Trapped Wyrmy");
-		
-		if(id == 3912)
-			obj.pet("Trapped Kraa");//armadyl
-		if(id == 3914)
-			obj.pet("Trapped Grary");//bandos
-		if(id == 3916)
-			obj.pet("Trapped Tsutsy");//zamorak
-		if(id == 3918)
-			obj.pet("Trapped Zilzy");//saradomin
-		
 		defCache.put(id, obj);
 		return obj;
-	}
-	
-	private void pet(String name) {
-		ObjectType copied = get(10025);
-		this.modelId = copied.modelId;
-		this.modifiedModelColors = copied.modifiedModelColors;
-		this.originalModelColors = copied.originalModelColors;
-		this.iconRoll = copied.iconRoll;
-		this.iconYaw = copied.iconYaw;
-		this.iconZoom = copied.iconZoom;
-		this.stackable = false;
-		this.noteId = -1;
-		this.name = name;
 	}
 	
 	public static BitmapImage getIcon(int id, int itemAmount, int border) {
@@ -267,7 +202,7 @@ public final class ObjectType {
 		}
 		final int l3 = Rasterizer3D.angleSine[obj.iconYaw] * zoom >> 16;
 		final int i4 = Rasterizer3D.angleCosine[obj.iconYaw] * zoom >> 16;
-		model.drawModel(obj.iconRoll, obj.anInt204, obj.iconYaw, obj.iconHorizontalOffset, l3 + model.maxVerticalDistUp / 2 + obj.iconVerticalOffset, i4 + obj.iconVerticalOffset);
+		model.drawModel(obj.iconRoll, obj.spriteCameraYaw, obj.iconYaw, obj.iconHorizontalOffset, l3 + model.maxVerticalDistUp / 2 + obj.iconVerticalOffset, i4 + obj.iconVerticalOffset);
 		for(int _x = 31; _x >= 0; _x--) {
 			for(int _y = 31; _y >= 0; _y--) {
 				if(sprite2.imageRaster[_x + _y * 32] == 0) {
@@ -349,20 +284,6 @@ public final class ObjectType {
 		data = null;
 	}
 	
-	public static void unpack(CacheArchive archive) {
-		data = new Buffer(archive.getFile("obj.dat"));
-		final Buffer bufferidx = new Buffer(archive.getFile("obj.idx"));
-		length = bufferidx.getUShort();
-		System.out.println("[loading] obj size: " + length);
-		index = new int[length];
-		int pos = 0;
-		for(int i = 0; i < length; i++) {
-			index[i] = pos;
-			pos += bufferidx.getUShort();
-		}
-		nulled = get(0);
-	}
-	
 	public boolean isDialogueModelCached(int gender) {
 		int dialoguemodelId = maleDialoguemodelId;
 		int dialogueHatmodelId = maleDialogueHatmodelId;
@@ -415,11 +336,11 @@ public final class ObjectType {
 	public boolean method195(int j) {
 		int k = maleEquip;
 		int l = maleEquipAlt;
-		int i1 = anInt185;
+		int i1 = tertiaryMaleModel;
 		if(j == 1) {
 			k = femaleEquip;
 			l = femaleEquipAlt;
-			i1 = anInt162;
+			i1 = tertiaryFemaleModel;
 		}
 		if(k == -1) {
 			return true;
@@ -440,11 +361,11 @@ public final class ObjectType {
 	public Model method196(int i) {
 		int j = maleEquip;
 		int k = maleEquipAlt;
-		int l = anInt185;
+		int l = tertiaryMaleModel;
 		if(i == 1) {
 			j = femaleEquip;
 			k = femaleEquipAlt;
-			l = anInt162;
+			l = tertiaryFemaleModel;
 		}
 		if(j == -1) {
 			return null;
@@ -507,8 +428,8 @@ public final class ObjectType {
 		if(model == null) {
 			return null;
 		}
-		if(anInt167 != 128 || anInt192 != 128 || anInt191 != 128) {
-			model.scale(anInt167, anInt192, anInt191);
+		if(groundScaleX != 128 || groundScaleY != 128 || groundScaleZ != 128) {
+			model.scale(groundScaleX, groundScaleY, groundScaleZ);
 		}
 		if(originalModelColors != null) {
 			for(int l = 0; l < originalModelColors.length; l++) {
@@ -520,7 +441,7 @@ public final class ObjectType {
 				model.setTexture(retextureSrc[i1], retextureDst[i1]);
 			}
 		}
-		model.calculateLighting(64 + anInt196, 768 + anInt184, -50, -10, -50, true);
+		model.calculateLighting(64 + ambience, 768 + diffusion, -50, -10, -50, true);
 		model.hoverable = true;
 		if(fixPriority) {
 			if(model.triPri != null) {
@@ -545,7 +466,7 @@ public final class ObjectType {
 				return get(j).method202(1);
 			}
 		}
-		final Model model = Model.get(modelId);
+		final Model model = Model.get(modelId, osrs ? 7 : 0);
 		if(model == null) {
 			return null;
 		}
@@ -578,7 +499,126 @@ public final class ObjectType {
 		femaleEquipAlt = fE2;
 	}
 	
-	private void read(Buffer buffer) {
+	public static void unpack(CacheArchive archive) {
+		final Buffer buffer;
+		if(Constants.USER_HOME_FILE_STORE) {
+			data = new Buffer(archive.getFile("obj.dat"));
+			buffer = new Buffer(archive.getFile("obj.idx"));
+		} else {
+			data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/obj.dat"));
+			buffer = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/obj.idx"));
+		}
+		
+		length = buffer.getUShort();
+		System.out.println("[loading] obj size: " + length);
+		index = new int[length];
+		int pos = 2;
+		for(int i = 0; i < length; i++) {
+			index[i] = pos;
+			pos += buffer.getUShort();
+		}
+		nulled = get(0);
+		//Repacking with fixes.
+		if(REPACK) {
+			try {
+				repackOSRS();
+			} catch(IOException e) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void repackOSRS() throws IOException {
+		final Buffer osrs_data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/osrs_obj.dat"));
+		final Buffer osrs_idx = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/osrs_obj.idx"));
+		final int length = osrs_idx.getUShort();
+		System.out.println("for osrs 154: " + length);
+		ObjectType[] items = new ObjectType[length];
+		osrs_data.pos = 2;
+		int size = index.length;
+		DataOutputStream dat = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/item/obj2.dat"));
+		DataOutputStream idx = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/item/obj2.idx"));
+		idx.writeShort(size);
+		dat.writeShort(size);
+		for(int i = 0; i < size; i++) {
+			ObjectType obj;
+			try {
+				obj = get(i);
+				if(i < items.length) {
+					ObjectType osrs = new ObjectType();
+					osrs.decodeOSRS(osrs_data);
+					if(obj.name != null && osrs.name != null) {
+						if(obj.name.equalsIgnoreCase(osrs.name)) {
+							obj.modelIdOSRS = osrs.modelId;
+							obj.iconRollOSRS = osrs.iconRoll;
+							obj.iconZoomOSRS = osrs.iconZoom;
+							obj.iconYawOSRS = osrs.iconYaw;
+							obj.maleEquipOSRS = osrs.maleEquip;
+							obj.maleEquipAltOSRS = osrs.maleEquipAlt;
+							obj.femaleEquipOSRS = osrs.femaleEquip;
+							obj.femaleEquipAltOSRS = osrs.femaleEquipAlt;
+						}
+					}
+					if(i >= 12887 && i <= 12934 && i != 12921) {
+						System.out.println("set osrs for " + obj.name + " - " + obj.id);
+						obj.modelId = osrs.modelId;
+						obj.iconRoll = osrs.iconRoll;
+						obj.iconZoom = osrs.iconZoom;
+						obj.iconYaw = osrs.iconYaw;
+						obj.maleEquip = osrs.maleEquip;
+						obj.maleEquipAlt = osrs.maleEquipAlt;
+						obj.femaleEquip = osrs.femaleEquip;
+						obj.femaleEquipAlt = osrs.femaleEquipAlt;
+						obj.name = osrs.name;
+						obj.noteTemplateId = osrs.noteTemplateId;
+						obj.noteId = osrs.noteId;
+						obj.femaleDialogueHatmodelId = osrs.femaleDialogueHatmodelId;
+						obj.maleDialogueHatmodelId = osrs.maleDialogueHatmodelId;
+						obj.femaleDialoguemodelId = osrs.femaleDialoguemodelId;
+						obj.maleDialoguemodelId = osrs.maleDialoguemodelId;
+						obj.actions = osrs.actions;
+						obj.groundActions = osrs.groundActions;
+						if(obj.id % 2 == 1)
+							obj.noteTemplateId = -1;
+					}
+					if(i >= 12956 && i <= 12959) {
+						obj.modelId = osrs.modelId;
+						obj.iconRoll = osrs.iconRoll;
+						obj.iconZoom = osrs.iconZoom;
+						obj.iconYaw = osrs.iconYaw;
+						obj.maleEquip = osrs.maleEquip;
+						obj.maleEquipAlt = osrs.maleEquipAlt;
+						obj.femaleEquip = osrs.femaleEquip;
+						obj.femaleEquipAlt = osrs.femaleEquipAlt;
+						obj.name = osrs.name;
+						obj.noteTemplateId = osrs.noteTemplateId;
+						obj.noteId = osrs.noteId;
+						obj.femaleDialogueHatmodelId = osrs.femaleDialogueHatmodelId;
+						obj.maleDialogueHatmodelId = osrs.maleDialogueHatmodelId;
+						obj.femaleDialoguemodelId = osrs.femaleDialoguemodelId;
+						obj.maleDialoguemodelId = osrs.maleDialoguemodelId;
+						obj.actions = osrs.actions;
+						obj.groundActions = osrs.groundActions;
+						if(obj.id % 2 == 1)
+							obj.noteTemplateId = -1;
+					}
+				}
+				int offset1 = dat.size();
+				obj.encode(dat);
+				int offset2 = dat.size();
+				int writeOffset = offset2 - offset1;
+				idx.writeShort(writeOffset);
+			} catch(Exception e) {
+				e.printStackTrace();
+				break;
+			}
+			//System.out.println("writted: " + i + " - offset: " + writeOffset);
+		}
+		dat.close();
+		idx.close();
+	}
+	
+	private void decode(Buffer buffer) {
 		do {
 			int opcode = buffer.getUByte();
 			if(opcode == 0)
@@ -586,7 +626,9 @@ public final class ObjectType {
 			if(opcode == 1) {
 				modelId = buffer.getUShort();
 			} else if(opcode == 2) {
-				name = buffer.getString();
+				name = buffer.getLine();
+			}else if(opcode == 3) {
+				modelIdOSRS = buffer.getUShort();
 			} else if(opcode == 4) {
 				iconZoom = buffer.getUShort();
 			} else if(opcode == 5) {
@@ -607,10 +649,14 @@ public final class ObjectType {
 				stackable = true;
 			} else if(opcode == 12) {
 				value = buffer.getInt();
+			} else if(opcode == 13) {
+				iconZoomOSRS = buffer.getUShort();
+			} else if(opcode == 14) {
+				iconYawOSRS = buffer.getUShort();
+			} else if(opcode == 15) {
+				iconRollOSRS = buffer.getUShort();
 			} else if(opcode == 16) {
-				membersObject = true;
-			} else if(opcode == 18) {
-				buffer.getUShort();
+				osrs = true;
 			} else if(opcode == 23) {
 				maleEquip = buffer.getUShort();
 			} else if(opcode == 24) {
@@ -622,13 +668,13 @@ public final class ObjectType {
 			} else if(opcode >= 30 && opcode < 35) {
 				if(groundActions == null)
 					groundActions = new String[10];
-				groundActions[opcode - 30] = buffer.getString();
+				groundActions[opcode - 30] = buffer.getLine();
 				if(groundActions[opcode - 30].equalsIgnoreCase("hidden"))
 					groundActions[opcode - 30] = null;
 			} else if(opcode >= 35 && opcode < 40) {
 				if(actions == null)
 					actions = new String[10];
-				actions[opcode - 35] = buffer.getString();
+				actions[opcode - 35] = buffer.getLine();
 				if(actions[opcode - 35].equalsIgnoreCase("hidden"))
 					actions[opcode - 35] = null;
 			} else if(opcode == 40) {
@@ -653,12 +699,20 @@ public final class ObjectType {
 				for(int i_35_ = 0; index > i_35_; i_35_++) {
 					recolorDstPalette[i_35_] = buffer.getSByte();
 				}
+			} else if(opcode == 43) {
+				maleEquipOSRS = buffer.getUShort();
+			} else if(opcode == 44) {
+				maleEquipAltOSRS = buffer.getUShort();
+			} else if(opcode == 45) {
+				femaleEquipOSRS = buffer.getUShort();
+			} else if(opcode == 46) {
+				femaleEquipAltOSRS = buffer.getUShort();
 			} else if(opcode == 65) {
 				//stockmarket = true;
 			} else if(opcode == 78) {
-				anInt185 = buffer.getUShort();
+				tertiaryMaleModel = buffer.getUShort();
 			} else if(opcode == 79) {
-				anInt162 = buffer.getUShort();
+				tertiaryFemaleModel = buffer.getUShort();
 			} else if(opcode == 90) {
 				maleDialoguemodelId = buffer.getUShort();
 			} else if(opcode == 91) {
@@ -668,7 +722,7 @@ public final class ObjectType {
 			} else if(opcode == 93) {
 				femaleDialogueHatmodelId = buffer.getUShort();
 			} else if(opcode == 95) {
-				anInt204 = buffer.getUShort();
+				spriteCameraYaw = buffer.getUShort();
 			} else if(opcode == 96) {
 				buffer.getUByte();
 			} else if(opcode == 97) {
@@ -683,21 +737,21 @@ public final class ObjectType {
 				stackableIds[opcode - 100] = buffer.getUShort();
 				stackAmounts[opcode - 100] = buffer.getUShort();
 			} else if(opcode == 110) {
-				anInt167 = buffer.getUShort();
+				groundScaleX = buffer.getUShort();
 			} else if(opcode == 111) {
-				anInt192 = buffer.getUShort();
+				groundScaleY = buffer.getUShort();
 			} else if(opcode == 112) {
-				anInt191 = buffer.getUShort();
+				groundScaleZ = buffer.getUShort();
 			} else if(opcode == 113) {
-				anInt196 = buffer.getSByte();
+				ambience = buffer.getSByte();
 			} else if(opcode == 114) {
-				anInt184 = buffer.getSByte() * 5;
+				diffusion = buffer.getSByte();
 			} else if(opcode == 115) {
 				team = buffer.getUByte();
 			} else if(opcode == 121) {
-				lendID = buffer.getUShort();
+				lendID = buffer.getUByte();//should be UShort
 			} else if(opcode == 122) {
-				lentItemID = buffer.getUShort();
+				lentItemID = buffer.getUByte();//should be UShort
 			} else if(opcode == 125) {
 				maleEquipOffsetX = buffer.getSByte();
 				maleEquipOffsetY = buffer.getSByte();
@@ -706,47 +760,376 @@ public final class ObjectType {
 				womanEquipOffsetX = buffer.getSByte();
 				womanEquipOffsetY = buffer.getSByte();
 				womanEquipOffsetZ = buffer.getSByte();
-			} else if(opcode == 127) {
-				buffer.getUByte();
-				buffer.getUShort();
-			} else if(opcode == 128) {
-				buffer.getUByte();
-				buffer.getUShort();
-			} else if(opcode == 129) {
-				buffer.getUByte();
-				buffer.getUShort();
-			} else if(opcode == 130) {
-				buffer.getUByte();
-				buffer.getUShort();
-			} else if(opcode == 132) {
-				int i_40_ = buffer.getUByte();
-				campaigns = new int[i_40_];
-				for(int i_41_ = 0; i_41_ < i_40_; i_41_++) {
-					campaigns[i_41_] = buffer.getUShort();
-				}
-			} else if(opcode == 134) {
-				buffer.getUByte();
-			} else if(opcode == 139) {
-				buffer.getUShort();
-			} else if(opcode == 140) {
-				buffer.getUShort();
-			} else if(opcode == 249) {
-				int count = buffer.getUByte();
-				
-				for(int i2 = 0; i2 != count; ++i2) {
-					boolean string = buffer.getUByte() == 1;
-					int key = buffer.getUMedium();
-					if(string)
-						buffer.getString();
-					else
-						buffer.getInt();
-				}
-				
 			} else {
 				System.out.println("[ObjectType] Unknown opcode: " + opcode);
 				break;
 			}
 		} while(true);
+	}
+	
+	private void encode(DataOutputStream out) throws IOException {
+		boolean actionsd = false, actionsd2 = false, actionsd3 = false;
+		Set<Integer> written = new HashSet<>();
+		do {
+			if(modelId > 0 && !written.contains(1)) {
+				out.writeByte(1);
+				out.writeShort(modelId);
+				written.add(1);
+			} else if(name != null && !written.contains(2)) {
+				out.writeByte(2);
+				out.write(name.replaceAll("_", " ").getBytes());
+				out.writeByte(10);
+				written.add(2);
+			}else if(modelIdOSRS != 0 && !written.contains(3)) {
+				out.writeByte(3);
+				out.writeShort(modelIdOSRS);
+				written.add(3);
+			} else if(iconZoom != 2000 && !written.contains(4)) {
+				out.writeByte(4);
+				out.writeShort(iconZoom);
+				written.add(4);
+			} else if(iconYaw != 0 && !written.contains(5)) {
+				out.writeByte(5);
+				out.writeShort(iconYaw);
+				written.add(5);
+			} else if(iconRoll != 0 && !written.contains(6)) {
+				out.writeByte(6);
+				out.writeShort(iconRoll);
+				written.add(6);
+			} else if(iconHorizontalOffset != 0 && !written.contains(7)) {
+				out.writeByte(7);
+				out.writeShort(iconHorizontalOffset);
+				written.add(7);
+			} else if(iconVerticalOffset != 0 && !written.contains(8)) {
+				out.writeByte(8);
+				out.writeShort(iconVerticalOffset);
+				written.add(8);
+			} else if(stackable && !written.contains(11)) {
+				out.writeByte(11);
+				written.add(11);
+			} else if(value != 0 && !written.contains(12)) {
+				out.writeByte(12);
+				out.writeInt(value);
+				written.add(12);
+			} else if(iconZoomOSRS != 2000 && !written.contains(13)) {
+				out.writeByte(13);
+				out.writeShort(iconZoomOSRS);
+				written.add(13);
+			} else if(iconYawOSRS != 0 && !written.contains(14)) {
+				out.writeByte(14);
+				out.writeShort(iconYawOSRS);
+				written.add(14);
+			} else if(iconRollOSRS != 0 && !written.contains(15)) {
+				out.writeByte(15);
+				out.writeShort(iconRollOSRS);
+				written.add(15);
+			} else if(osrs && !written.contains(16)) {
+				out.writeByte(16);
+				written.add(16);
+			} else if(maleEquip != -1 && !written.contains(23)) {
+				out.writeByte(23);
+				out.writeShort(maleEquip);
+				written.add(23);
+			} else if(maleEquipAlt != -1 && !written.contains(24)) {
+				out.writeByte(24);
+				out.writeShort(maleEquipAlt);
+				written.add(24);
+			} else if(femaleEquip != -1 && !written.contains(25)) {
+				out.writeByte(25);
+				out.writeShort(femaleEquip);
+				written.add(25);
+			} else if(femaleEquipAlt != -1 && !written.contains(26)) {
+				out.writeByte(26);
+				out.writeShort(femaleEquipAlt);
+				written.add(26);
+			}else if(originalModelColors != null && modifiedModelColors != null && !written.contains(40)) {
+				out.writeByte(40);
+				out.writeByte(originalModelColors.length);
+				for(int i = 0; i < originalModelColors.length; i++) {
+					out.writeShort(originalModelColors[i]);
+					out.writeShort(modifiedModelColors[i]);
+				}
+				written.add(40);
+			} else if(retextureSrc != null && !written.contains(41)) {
+				out.writeByte(41);
+				out.writeByte(retextureSrc.length);
+				for(int i = 0; i < retextureSrc.length; i++) {
+					out.writeShort(retextureSrc[i]);
+					out.writeShort(retextureDst[i]);
+				}
+				written.add(41);
+			} else if(recolorDstPalette != null && !written.contains(42)) {
+				out.writeByte(42);
+				out.writeByte(recolorDstPalette.length);
+				for(int i = 0; i < retextureSrc.length; i++) {
+					out.writeByte(recolorDstPalette[i]);
+				}
+				written.add(42);
+			} else if(maleEquipOSRS != -1 && !written.contains(43)) {
+				out.writeByte(43);
+				out.writeShort(maleEquipOSRS);
+				written.add(43);
+			} else if(maleEquipAltOSRS != -1 && !written.contains(44)) {
+				out.writeByte(44);
+				out.writeShort(maleEquipAltOSRS);
+				written.add(44);
+			} else if(femaleEquipOSRS != -1 && !written.contains(45)) {
+				out.writeByte(45);
+				out.writeShort(femaleEquipOSRS);
+				written.add(45);
+			} else if(femaleEquipAltOSRS != -1 && !written.contains(46)) {
+				out.writeByte(46);
+				out.writeShort(femaleEquipAltOSRS);
+				written.add(46);
+			} else if(tertiaryMaleModel != -1 && !written.contains(78)) {
+				out.writeByte(78);
+				out.writeShort(tertiaryMaleModel);
+				written.add(78);
+			} else if(tertiaryFemaleModel != -1 && !written.contains(79)) {
+				out.writeByte(79);
+				out.writeShort(tertiaryFemaleModel);
+				written.add(79);
+			} else if(maleDialoguemodelId != -1 && !written.contains(90)) {
+				out.writeByte(90);
+				out.writeShort(maleDialoguemodelId);
+				written.add(90);
+			} else if(femaleDialoguemodelId != -1 && !written.contains(91)) {
+				out.writeByte(91);
+				out.writeShort(femaleDialoguemodelId);
+				written.add(91);
+			} else if(maleDialogueHatmodelId != -1 && !written.contains(92)) {
+				out.writeByte(92);
+				out.writeShort(maleDialogueHatmodelId);
+				written.add(92);
+			} else if(femaleDialogueHatmodelId != -1 && !written.contains(93)) {
+				out.writeByte(93);
+				out.writeShort(femaleDialogueHatmodelId);
+				written.add(93);
+			} else if(spriteCameraYaw != 0 && !written.contains(95)) {
+				out.writeByte(95);
+				out.writeShort(spriteCameraYaw);
+				written.add(95);
+			} else if(noteId != -1 && !written.contains(97)) {
+				out.writeByte(97);
+				out.writeShort(noteId);
+				written.add(97);
+			} else if(noteTemplateId != -1 && !written.contains(98)) {
+				out.writeByte(98);
+				out.writeShort(noteTemplateId);
+				written.add(98);
+			} else if(groundScaleX != 128 && !written.contains(110)) {
+				out.writeByte(110);
+				out.writeShort(groundScaleX);
+				written.add(110);
+			} else if(groundScaleY != 128 && !written.contains(111)) {
+				out.writeByte(111);
+				out.writeShort(groundScaleY);
+				written.add(111);
+			} else if(groundScaleZ != 128 && !written.contains(112)) {
+				out.writeByte(112);
+				out.writeShort(groundScaleZ);
+				written.add(112);
+			} else if(ambience != 0 && !written.contains(113)) {
+				out.writeByte(113);
+				out.write(ambience);
+				written.add(113);
+			} else if(diffusion != 0 && !written.contains(114)) {
+				out.writeByte(114);
+				out.write(diffusion);
+				written.add(114);
+			} else if(team != 0 && !written.contains(115)) {
+				out.writeByte(115);
+				out.write(team);
+				written.add(115);
+			} else if(lendID != -1 && !written.contains(121)) {
+				out.writeByte(121);
+				out.write(lendID);
+				written.add(121);
+			} else if(lentItemID != -1 && !written.contains(122)) {
+				out.writeByte(122);
+				out.write(lentItemID);
+				written.add(122);
+			} else if((maleEquipOffsetX != 0 || maleEquipOffsetY != 0 || maleEquipOffsetZ != 0) && !written.contains(125)) {
+				out.writeByte(125);
+				out.write(maleEquipOffsetX);
+				out.write(maleEquipOffsetY);
+				out.write(maleEquipOffsetZ);
+				written.add(125);
+			} else if((womanEquipOffsetX != 0 || womanEquipOffsetY != 0 || womanEquipOffsetZ != 0) && !written.contains(126)) {
+				out.writeByte(126);
+				out.write(womanEquipOffsetX);
+				out.write(womanEquipOffsetY);
+				out.write(womanEquipOffsetZ);
+				written.add(126);
+			} else if(actions != null && !actionsd) {
+				for(int i = 0; i < actions.length; i++) {
+					if(actions[i] != null && i < 5) {
+						out.writeByte(35 + i);
+						out.write(actions[i].getBytes());
+						out.writeByte(10);
+					}
+				}
+				actionsd = true;
+			} else if(groundActions != null && !actionsd2) {
+				for(int i = 0; i < groundActions.length; i++) {
+					if(groundActions[i] != null && i < 5) {
+						out.writeByte(30 + i);
+						out.write(groundActions[i].getBytes());
+						out.writeByte(10);
+					}
+				}
+				actionsd2 = true;
+			} else if(stackableIds != null && !actionsd3) {
+				for(int i = 0; i < stackableIds.length; i++) {
+					if(stackableIds[i] > 0) {
+						out.writeByte(100 + i);
+						out.writeShort(stackableIds[i]);
+						out.writeShort(stackAmounts[i]);
+					}
+				}
+				actionsd3 = true;
+			} else {
+				out.writeByte(0);
+				break;
+			}
+		} while(true);
+	}
+	
+	public void decodeOSRS(Buffer buffer) {
+		while(true) {
+			int opcode = buffer.getUByte();
+			if(opcode == 0)
+				return;
+			if(opcode == 1) {
+				modelId = buffer.getUShort();
+			} else if(opcode == 2) {
+				name = buffer.getLine();
+			} else if(opcode == 3) {
+				description = buffer.getLine();
+			} else if(opcode == 4) {
+				iconZoom = buffer.getUShort();
+			} else if(opcode == 5) {
+				iconYaw = buffer.getUShort();
+			} else if(opcode == 6) {
+				iconRoll = buffer.getUShort();
+			} else if(opcode == 7) {
+				iconHorizontalOffset = buffer.getUShort();
+				if(iconHorizontalOffset > 32767)
+					iconHorizontalOffset -= 0x10000;
+			} else if(opcode == 8) {
+				iconVerticalOffset = buffer.getUShort();
+				if(iconVerticalOffset > 32767)
+					iconVerticalOffset -= 0x10000;
+			} else if(opcode == 10) {
+				buffer.getUShort();
+			} else if(opcode == 11) {
+				stackable = true;
+			} else if(opcode == 12) {
+				value = buffer.getInt();
+			} else if(opcode == 16) {
+				membersObject = true;
+			} else if(opcode == 23) {
+				maleEquip = buffer.getUShort();
+				maleEquipOffsetY = buffer.getSByte();
+			} else if(opcode == 24) {
+				maleEquipAlt = buffer.getUShort();
+			} else if(opcode == 25) {
+				femaleEquip = buffer.getUShort();
+				buffer.getSByte();
+			} else if(opcode == 26) {
+				femaleEquipAlt = buffer.getUShort();
+			} else if(opcode >= 30 && opcode < 35) {
+				if(groundActions == null)
+					groundActions = new String[5];
+				groundActions[opcode - 30] = buffer.getLine();
+				if(groundActions[opcode - 30].equalsIgnoreCase("hidden"))
+					groundActions[opcode - 30] = null;
+			} else if(opcode >= 35 && opcode < 40) {
+				if(actions == null)
+					actions = new String[5];
+				actions[opcode - 35] = buffer.getLine();
+			} else if(opcode == 40) {
+				int colours = buffer.getUByte();
+				originalModelColors = new int[colours];
+				modifiedModelColors = new int[colours];
+				for(int i = 0; i < colours; i++) {
+					originalModelColors[i] = buffer.getUShort();
+					modifiedModelColors[i] = buffer.getUShort();
+				}
+			} else if(opcode == 41) {
+				int length = buffer.getUByte();
+				retextureSrc = new short[length];
+				retextureDst = new short[length];
+				for(int idx = 0; idx < length; ++idx) {
+					retextureSrc[idx] = (short) (buffer.getSShort() & 0xFFFF);
+					retextureDst[idx] = (short) (buffer.getSShort() & 0xFFFF);
+				}
+			} else if(opcode == 42) {
+				int anInt2173 = buffer.getUByte();
+			} else if(opcode == 65) {
+				//stockMarket = true;
+			} else if(opcode == 78) {
+				tertiaryMaleModel = buffer.getUShort();
+			} else if(opcode == 79) {
+				tertiaryFemaleModel = buffer.getUShort();
+			} else if(opcode == 90) {
+				maleDialoguemodelId = buffer.getUShort();
+			} else if(opcode == 91) {
+				femaleDialoguemodelId = buffer.getUShort();
+			} else if(opcode == 92) {
+				maleDialogueHatmodelId = buffer.getUShort();
+			} else if(opcode == 93) {
+				femaleDialogueHatmodelId = buffer.getUShort();
+			} else if(opcode == 95) {
+				spriteCameraYaw = buffer.getUShort();
+			} else if(opcode == 97) {
+				noteId = buffer.getUShort();
+			} else if(opcode == 98) {
+				noteTemplateId = buffer.getUShort();
+			} else if(opcode >= 100 && opcode < 110) {
+				if(stackableIds == null) {
+					stackableIds = new int[10];
+					stackAmounts = new int[10];
+					//stackRevisions = new Revision[10];
+				}
+				stackableIds[opcode - 100] = buffer.getUShort();
+				stackAmounts[opcode - 100] = buffer.getUShort();
+				//stackRevisions[opcode - 100] = Revision.OSRS;
+			} else if(opcode == 110) {
+				groundScaleX = buffer.getUShort();
+			} else if(opcode == 111) {
+				groundScaleY = buffer.getUShort();
+			} else if(opcode == 112) {
+				groundScaleZ = buffer.getUShort();
+			} else if(opcode == 113) {
+				ambience = buffer.getSByte();
+			} else if(opcode == 114) {
+				diffusion = buffer.getSByte() * 5;
+			} else if(opcode == 115) {
+				team = buffer.getUByte();
+			} else if(opcode == 139) {
+				int boughtLink = buffer.getSShort() & 0xFFFF;
+			} else if(opcode == 140) {
+				int boughtTemplate = buffer.getSShort() & 0xFFFF;
+			} else if(opcode == 148) {
+				int anInt1879 = buffer.getSShort() & 0xFFFF;
+			} else if(opcode == 149) {
+				int anInt1833 = buffer.getSShort() & 0xFFFF;
+			} else if(opcode == 249) {
+				int length = buffer.getUByte();
+				
+				//parameters = new HashMap(nextPowerOfTwo(length));
+				for(int i = 0; i < length; i++) {
+					boolean isString = (buffer.getUByte()) == 1;
+					int key = buffer.getUMedium();
+					Object value;
+					
+					value = isString ? buffer.getLine() : buffer.getInt();
+					
+					//parameters.put(key, value);
+				}
+			}
+		}
 	}
 	
 	private void renew() {
@@ -758,7 +1141,7 @@ public final class ObjectType {
 		iconZoom = 2000;
 		iconYaw = 0;
 		iconRoll = 0;
-		anInt204 = 0;
+		spriteCameraYaw = 0;
 		iconHorizontalOffset = 0;
 		iconVerticalOffset = 0;
 		stackable = false;
@@ -768,12 +1151,10 @@ public final class ObjectType {
 		actions = null;
 		maleEquip = -1;
 		maleEquipAlt = -1;
-		maleEquipOffset = 0;
 		femaleEquip = -1;
 		femaleEquipAlt = -1;
-		femaleEquipOffset = 0;
-		anInt185 = -1;
-		anInt162 = -1;
+		tertiaryMaleModel = -1;
+		tertiaryFemaleModel = -1;
 		maleDialoguemodelId = -1;
 		maleDialogueHatmodelId = -1;
 		femaleDialoguemodelId = -1;
@@ -782,11 +1163,11 @@ public final class ObjectType {
 		stackAmounts = null;
 		noteId = -1;
 		noteTemplateId = -1;
-		anInt167 = 128;
-		anInt192 = 128;
-		anInt191 = 128;
-		anInt196 = 0;
-		anInt184 = 0;
+		groundScaleX = 128;
+		groundScaleY = 128;
+		groundScaleZ = 128;
+		ambience = 0;
+		diffusion = 0;
 		team = 0;
 		lendID = -1;
 		lentItemID = -1;
@@ -809,12 +1190,12 @@ public final class ObjectType {
 		iconZoom = itemDef.iconZoom;
 		iconYaw = itemDef.iconYaw;
 		iconRoll = itemDef.iconRoll;
-		anInt204 = itemDef.anInt204;
+		spriteCameraYaw = itemDef.spriteCameraYaw;
 		value = 0;
 		final ObjectType obj = get(lendID);
 		maleDialogueHatmodelId = obj.maleDialogueHatmodelId;
 		originalModelColors = itemDef.originalModelColors;
-		anInt185 = obj.anInt185;
+		tertiaryMaleModel = obj.tertiaryMaleModel;
 		maleEquipAlt = obj.maleEquipAlt;
 		femaleDialogueHatmodelId = obj.femaleDialogueHatmodelId;
 		maleDialoguemodelId = obj.maleDialoguemodelId;
@@ -825,7 +1206,7 @@ public final class ObjectType {
 		membersObject = obj.membersObject;
 		femaleDialoguemodelId = obj.femaleDialoguemodelId;
 		femaleEquipAlt = obj.femaleEquipAlt;
-		anInt162 = obj.anInt162;
+		tertiaryFemaleModel = obj.tertiaryFemaleModel;
 		modifiedModelColors = obj.modifiedModelColors;
 		team = obj.team;
 		if(obj.actions != null) {
@@ -840,7 +1221,7 @@ public final class ObjectType {
 		iconZoom = itemDef.iconZoom;
 		iconYaw = itemDef.iconYaw;
 		iconRoll = itemDef.iconRoll;
-		anInt204 = itemDef.anInt204;
+		spriteCameraYaw = itemDef.spriteCameraYaw;
 		iconHorizontalOffset = itemDef.iconHorizontalOffset;
 		iconVerticalOffset = itemDef.iconVerticalOffset;
 		originalModelColors = itemDef.originalModelColors;
@@ -858,636 +1239,23 @@ public final class ObjectType {
 		stackable = true;
 	}
 	
-	public void totalColors(int total) {
-		originalModelColors = new int[total];
-		modifiedModelColors = new int[total];
-	}
-	
-	private void flask(String itemname, int color, int dose) {
-		name = itemname + " flask" + ((dose > 0) ? " (" + dose + ")" : "");
-		description = "It seems to be an enlarged vial of " + ((dose > 0) ? "" + itemname + " potion." : "nothing.");
-		iconZoom = 804;
-		iconYaw = 131;
-		iconRoll = 198;
-		iconVerticalOffset = 1;
-		iconHorizontalOffset = -1;
-		modifiedModelColors = new int[]{color};
-		originalModelColors = new int[]{33715};
-		groundActions = new String[]{null, null, "Take", null, null};
-		actions = new String[]{itemname.equalsIgnoreCase("empty") ? null : "Drink", null, null, null, "Drop"};
-		int model = 61741;
-		if(dose == 6)
-			model = 61732;
-		if(dose == 5)
-			model = 61729;
-		if(dose == 4)
-			model = 61764;
-		if(dose == 3)
-			model = 61727;
-		if(dose == 2)
-			model = 61731;
-		if(dose == 1)
-			model = 61812;
-		modelId = model;
-		anInt196 = 40;
-		anInt184 = 200;
-	}
-	
-	private void bloodMoney(int itemId) {
-		ObjectType coin1 = ObjectType.get(itemId);
-		this.actions = coin1.actions;
-		this.groundActions = coin1.groundActions;
-		this.name = "Blood money";
-		this.description = "It's Blood money";
-		this.originalModelColors = new int[1];
-		this.modifiedModelColors = new int[1];
-		this.originalModelColors[0] = 8128;
-		this.modifiedModelColors[0] = 947;
-		this.modelId = coin1.modelId;
-		this.iconZoom = coin1.iconZoom;
-		this.stackable = coin1.stackable;
-		this.iconHorizontalOffset = coin1.iconHorizontalOffset;
-		this.iconVerticalOffset = coin1.iconVerticalOffset;
-		this.iconRoll = coin1.iconRoll;
-		this.iconYaw = coin1.iconYaw;
-		this.stackableIds = new int[10];
-		this.stackAmounts = new int[10];
-		this.stackableIds[0] = 19001;
-		this.stackAmounts[0] = 2;
-		this.stackableIds[1] = 19002;
-		this.stackAmounts[1] = 3;
-		this.stackableIds[2] = 19003;
-		this.stackAmounts[2] = 4;
-		this.stackableIds[3] = 19004;
-		this.stackAmounts[3] = 5;
-		this.stackableIds[4] = 19005;
-		this.stackAmounts[4] = 25;
-		this.stackableIds[5] = 19006;
-		this.stackAmounts[5] = 100;
-		this.stackableIds[6] = 19007;
-		this.stackAmounts[6] = 250;
-		this.stackableIds[7] = 19008;
-		this.stackAmounts[7] = 1000;
-		this.stackableIds[8] = 19009;
-		this.stackAmounts[8] = 10000;
-		actions = new String[]{null, null, null, null, null};
-	}
-	
-	private void transform() {
-		switch(id) {
-			case 19000:
-				bloodMoney(995);
-				break;
-			case 19001:
-				bloodMoney(996);
-				break;
-			case 19002:
-				bloodMoney(997);
-				break;
-			case 19003:
-				bloodMoney(998);
-				break;
-			case 19004:
-				bloodMoney(999);
-				break;
-			case 19005:
-				bloodMoney(1000);
-				break;
-			case 19006:
-				bloodMoney(1001);
-				break;
-			case 19007:
-				bloodMoney(1002);
-				break;
-			case 19008:
-				bloodMoney(1003);
-				break;
-			case 19009:
-				bloodMoney(1004);
-				break;
-			case 15100:
-			case 15086:
-			case 15088:
-			case 15090:
-			case 15092:
-			case 15094:
-			case 15096:
-			case 15098:
-				actions = new String[]{"Private-roll", "Clanchat-roll", null, "Put-away", null};
-				break;
-			case 7478:
-				this.name = "Arrav Tokens";
-				this.description = "It's arrav tokens.";
-				this.stackable = true;
-				actions = new String[]{null, null, null, null, null};
-				break;
-			case 19010:
-				originalModelColors = new int[1];
-				modifiedModelColors = new int[1];
-				originalModelColors[0] = 933;
-				modifiedModelColors[0] = 6020;
-				ObjectType hat = ObjectType.get(1050);
-				actions = hat.actions;
-				modelId = hat.modelId;
-				iconZoom = hat.iconZoom;
-				iconHorizontalOffset = hat.iconHorizontalOffset;
-				iconVerticalOffset = hat.iconVerticalOffset;
-				iconRoll = hat.iconRoll;
-				iconYaw = hat.iconYaw;
-				femaleEquip = hat.femaleEquip;
-				femaleEquipAlt = hat.femaleEquipAlt;
-				femaleEquipOffset = hat.femaleEquipOffset;
-				womanEquipOffsetX = hat.womanEquipOffsetX;
-				womanEquipOffsetY = hat.womanEquipOffsetY;
-				womanEquipOffsetZ = hat.womanEquipOffsetZ;
-				maleEquip = hat.maleEquip;
-				maleEquipAlt = hat.maleEquipAlt;
-				maleEquipOffset = hat.maleEquipOffset;
-				maleEquipOffsetX = hat.maleEquipOffsetX;
-				maleEquipOffsetY = hat.maleEquipOffsetY;
-				maleEquipOffsetZ = hat.maleEquipOffsetZ;
-				name = "Black santa hat";
-				description = "It's a Black Santa hat.";
-				break;
-			case 19011:
-				actions = null;
-				noteTemplateId = 799;
-				noteId = 19010;
-				break;
-			case 19012:
-				originalModelColors = new int[1];
-				modifiedModelColors = new int[1];
-				originalModelColors[0] = 926;
-				modifiedModelColors[0] = 6020;
-				ObjectType party = ObjectType.get(1048);
-				actions = party.actions;
-				modelId = party.modelId;
-				iconZoom = party.iconZoom;
-				iconHorizontalOffset = party.iconHorizontalOffset;
-				iconVerticalOffset = party.iconVerticalOffset;
-				iconRoll = party.iconRoll;
-				iconYaw = party.iconYaw;
-				femaleEquip = party.femaleEquip;
-				femaleEquipAlt = party.femaleEquipAlt;
-				femaleEquipOffset = party.femaleEquipOffset;
-				womanEquipOffsetX = party.womanEquipOffsetX;
-				womanEquipOffsetY = party.womanEquipOffsetY;
-				womanEquipOffsetZ = party.womanEquipOffsetZ;
-				maleEquip = party.maleEquip;
-				maleEquipAlt = party.maleEquipAlt;
-				maleEquipOffset = party.maleEquipOffset;
-				maleEquipOffsetX = party.maleEquipOffsetX;
-				maleEquipOffsetY = party.maleEquipOffsetY;
-				maleEquipOffsetZ = party.maleEquipOffsetZ;
-				name = "Black Partyhat";
-				description = "It's a Black Partyhat.";
-				break;
-			case 19013:
-				actions = null;
-				this.noteTemplateId = 799;
-				this.noteId = 19012;
-				break;
-			case 19014:
-				originalModelColors = new int[1];
-				modifiedModelColors = new int[1];
-				originalModelColors[0] = 926;
-				modifiedModelColors[0] = 6020;
-				ObjectType hween = ObjectType.get(1053);
-				actions = hween.actions;
-				modelId = hween.modelId;
-				iconZoom = hween.iconZoom;
-				iconHorizontalOffset = hween.iconHorizontalOffset;
-				iconVerticalOffset = hween.iconVerticalOffset;
-				iconRoll = hween.iconRoll;
-				iconYaw = hween.iconYaw;
-				femaleEquip = hween.femaleEquip;
-				femaleEquipAlt = hween.femaleEquipAlt;
-				femaleEquipOffset = hween.femaleEquipOffset;
-				womanEquipOffsetX = hween.womanEquipOffsetX;
-				womanEquipOffsetY = hween.womanEquipOffsetY;
-				womanEquipOffsetZ = hween.womanEquipOffsetZ;
-				maleEquip = hween.maleEquip;
-				maleEquipAlt = hween.maleEquipAlt;
-				maleEquipOffset = hween.maleEquipOffset;
-				maleEquipOffsetX = hween.maleEquipOffsetX;
-				maleEquipOffsetY = hween.maleEquipOffsetY;
-				maleEquipOffsetZ = hween.maleEquipOffsetZ;
-				name = "Black h'ween mask";
-				description = "It's a Black h'ween mask.";
-				break;
-			case 19015:
-				actions = null;
-				noteTemplateId = 799;
-				noteId = 19014;
-				break;
-			case 20763:
-			case 21371:
-			case 21372:
-			case 21373:
-			case 21374:
-			case 21375:
-			case 20769:
-			case 10548:
-			case 6918:
-			case 4109:
-			case 4099:
-			case 7400:
-				
-				fixPriority = true;
-				//break;
-			case 21462:
-			case 21463:
-			case 21464:
-			case 21465:
-			case 21466:
-			case 21467:
-			case 21468:
-			case 21469:
-			case 21470:
-			case 21471:
-			case 21472:
-			case 21473:
-			case 21474:
-			case 21475:
-			case 21476:
-				actions = new String[5];
-				actions[1] = "Wear";
-				actions[4] = "Drop";
-				break;
-			case 7454:
-				name = "Bronze gloves";
-				break;
-			case 7455:
-				name = "Iron gloves";
-				break;
-			case 7456:
-				name = "Steel gloves";
-				break;
-			case 7457:
-				name = "Black gloves";
-				break;
-			case 7458:
-				name = "Mithril gloves";
-				break;
-			case 7459:
-				name = "Adamant gloves";
-				break;
-			case 7460:
-				name = "Rune gloves";
-				break;
-			case 7461:
-				name = "Dragon gloves";
-				break;
-			case 7462:
-				name = "Barrows gloves";
-				break;
-			case 19111:
-				name = "TokHaar-Kal";
-				value = 60000;
-				maleEquip = 62575;
-				femaleEquip = 62582;
-				groundActions = new String[5];
-				groundActions[2] = "Take";
-				iconHorizontalOffset = -4;
-				modelId = 62592;
-				stackable = false;
-				description = "A cape made of ancient, enchanted rocks.";
-				iconZoom = 2086;
-				actions = new String[5];
-				actions[1] = "Wear";
-				actions[4] = "Drop";
-				iconVerticalOffset = 0;
-				iconYaw = 533;
-				iconRoll = 333;
-				fixPriority = true;
-				break;
-			case 14207:
-				flask("Empty", -1, 0);
-				break;
-			case 14200:
-				flask("Prayer", 28488, 6);
-				break;
-			case 14198:
-				flask("Prayer", 28488, 5);
-				break;
-			case 14196:
-				flask("Prayer", 28488, 4);
-				break;
-			case 14194:
-				flask("Prayer", 28488, 3);
-				break;
-			case 14192:
-				flask("Prayer", 28488, 2);
-				break;
-			case 14190:
-				flask("Prayer", 28488, 1);
-				break;
-			case 14188:
-				flask("Super attack", 43848, 6);
-				break;
-			case 14186:
-				flask("Super attack", 43848, 5);
-				break;
-			case 14184:
-				flask("Super attack", 43848, 4);
-				break;
-			case 14182:
-				flask("Super attack", 43848, 3);
-				break;
-			case 14180:
-				flask("Super attack", 43848, 2);
-				break;
-			case 14178:
-				flask("Super attack", 43848, 1);
-				break;
-			case 14176:
-				flask("Super strength", 119, 6);
-				break;
-			case 14174:
-				flask("Super strength", 119, 5);
-				break;
-			case 14172:
-				flask("Super strength", 119, 4);
-				break;
-			case 14170:
-				flask("Super strength", 119, 3);
-				break;
-			case 14168:
-				flask("Super strength", 119, 2);
-				break;
-			case 14166:
-				flask("Super strength", 119, 1);
-				break;
-			case 14164:
-				flask("Super defence", 8008, 6);
-				break;
-			case 14162:
-				flask("Super defence", 8008, 5);
-				break;
-			case 14160:
-				flask("Super defence", 8008, 4);
-				break;
-			case 14158:
-				flask("Super defence", 8008, 3);
-				break;
-			case 14156:
-				flask("Super defence", 8008, 2);
-				break;
-			case 14154:
-				flask("Super defence", 8008, 1);
-				break;
-			case 14152:
-				flask("Ranging", 36680, 6);
-				break;
-			case 14150:
-				flask("Ranging", 36680, 5);
-				break;
-			case 14148:
-				flask("Ranging", 36680, 4);
-				break;
-			case 14146:
-				flask("Ranging", 36680, 3);
-				break;
-			case 14144:
-				flask("Ranging", 36680, 2);
-				break;
-			case 14142:
-				flask("Ranging", 36680, 1);
-				break;
-			case 14140:
-				flask("Super antipoison", 62404, 6);
-				break;
-			case 14138:
-				flask("Super antipoison", 62404, 5);
-				break;
-			case 14136:
-				flask("Super antipoison", 62404, 4);
-				break;
-			case 14134:
-				flask("Super antipoison", 62404, 3);
-				break;
-			case 14132:
-				flask("Super antipoison", 62404, 2);
-				break;
-			case 14130:
-				flask("Super antipoison", 62404, 1);
-				break;
-			case 14128:
-				flask("Saradomin brew", 10939, 6);
-				break;
-			case 14126:
-				flask("Saradomin brew", 10939, 5);
-				break;
-			case 14124:
-				flask("Saradomin brew", 10939, 4);
-				break;
-			case 14122:
-				flask("Saradomin brew", 10939, 3);
-				break;
-			case 14419:
-				flask("Saradomin brew", 10939, 2);
-				break;
-			case 14417:
-				flask("Saradomin brew", 10939, 1);
-				break;
-			case 14415:
-				flask("Super restore", 62135, 6);
-				break;
-			case 14413:
-				flask("Super restore", 62135, 5);
-				break;
-			case 14411:
-				flask("Super restore", 62135, 4);
-				break;
-			case 14409:
-				flask("Super restore", 62135, 3);
-				break;
-			case 14407:
-				flask("Super restore", 62135, 2);
-				break;
-			case 14405:
-				flask("Super restore", 62135, 1);
-				break;
-			case 14403:
-				flask("Magic", 37440, 6);
-				break;
-			case 14401:
-				flask("Magic", 37440, 5);
-				break;
-			case 14399:
-				flask("Magic", 37440, 4);
-				break;
-			case 14397:
-				flask("Magic", 37440, 3);
-				break;
-			case 14395:
-				flask("Magic", 37440, 2);
-				break;
-			case 14393:
-				flask("Magic", 37440, 1);
-				break;
-			case 14385:
-				flask("Recover special", 38222, 6);
-				break;
-			case 14383:
-				flask("Recover special", 38222, 5);
-				break;
-			case 14381:
-				flask("Recover special", 38222, 4);
-				break;
-			case 14379:
-				flask("Recover special", 38222, 3);
-				break;
-			case 14377:
-				flask("Recover special", 38222, 2);
-				break;
-			case 14375:
-				flask("Recover special", 38222, 1);
-				break;
-			case 14373:
-				flask("Extreme attack", 33112, 6);
-				break;
-			case 14371:
-				flask("Extreme attack", 33112, 5);
-				break;
-			case 14369:
-				flask("Extreme attack", 33112, 4);
-				break;
-			case 14367:
-				flask("Extreme attack", 33112, 3);
-				break;
-			case 14365:
-				flask("Extreme attack", 33112, 2);
-				break;
-			case 14363:
-				flask("Extreme attack", 33112, 1);
-				break;
-			case 14361:
-				flask("Extreme strength", 127, 6);
-				break;
-			case 14359:
-				flask("Extreme strength", 127, 5);
-				break;
-			case 14357:
-				flask("Extreme strength", 127, 4);
-				break;
-			case 14355:
-				flask("Extreme strength", 127, 3);
-				break;
-			case 14353:
-				flask("Extreme strength", 127, 2);
-				break;
-			case 14351:
-				flask("Extreme strength", 127, 1);
-				break;
-			case 14349:
-				flask("Extreme defence", 10198, 6);
-				break;
-			case 14347:
-				flask("Extreme defence", 10198, 5);
-				break;
-			case 14345:
-				flask("Extreme defence", 10198, 4);
-				break;
-			case 14343:
-				flask("Extreme defence", 10198, 3);
-				break;
-			case 14341:
-				flask("Extreme defence", 10198, 2);
-				break;
-			case 14339:
-				flask("Extreme defence", 10198, 1);
-				break;
-			case 14337:
-				flask("Extreme magic", 33490, 6);
-				break;
-			case 14335:
-				flask("Extreme magic", 33490, 5);
-				break;
-			case 14333:
-				flask("Extreme magic", 33490, 4);
-				break;
-			case 14331:
-				flask("Extreme magic", 33490, 3);
-				break;
-			case 14329:
-				flask("Extreme magic", 33490, 2);
-				break;
-			case 14327:
-				flask("Extreme magic", 33490, 1);
-				break;
-			case 14325:
-				flask("Extreme ranging", 13111, 6);
-				break;
-			case 14323:
-				flask("Extreme ranging", 13111, 5);
-				break;
-			case 14321:
-				flask("Extreme ranging", 13111, 4);
-				break;
-			case 14319:
-				flask("Extreme ranging", 13111, 3);
-				break;
-			case 14317:
-				flask("Extreme ranging", 13111, 2);
-				break;
-			case 14315:
-				flask("Extreme ranging", 13111, 1);
-				break;
-			case 14313:
-				flask("Super prayer", 3016, 6);
-				break;
-			case 14311:
-				flask("Super prayer", 3016, 5);
-				break;
-			case 14309:
-				flask("Super prayer", 3016, 4);
-				break;
-			case 14307:
-				flask("Super prayer", 3016, 3);
-				break;
-			case 14305:
-				flask("Super prayer", 3016, 2);
-				break;
-			case 14303:
-				flask("Super prayer", 3016, 1);
-				break;
-			case 14301:
-				flask("Overload", 0, 6);
-				break;
-			case 14299:
-				flask("Overload", 0, 5);
-				break;
-			case 14297:
-				flask("Overload", 0, 4);
-				break;
-			case 14295:
-				flask("Overload", 0, 3);
-				break;
-			case 14293:
-				flask("Overload", 0, 2);
-				break;
-			case 14291:
-				flask("Overload", 0, 1);
-				break;
-			case 14289:
-				flask("Prayer renewal", 926, 6);
-				break;
-			case 14287:
-				flask("Prayer renewal", 926, 5);
-				break;
-			case 15123:
-				flask("Prayer renewal", 926, 4);
-				break;
-			case 15121:
-				flask("Prayer renewal", 926, 3);
-				break;
-			case 15119:
-				flask("Prayer renewal", 926, 2);
-				break;
-			case 15115:
-				flask("Prayer renewal", 926, 1);
-				break;
+	private void osrs() {
+		if(Config.def.oldModels) {
+			if(modelIdOSRS > 0) {//sets icon
+				modelId = modelIdOSRS;
+				iconYaw = iconYawOSRS;
+				iconRoll = iconRollOSRS;
+				iconZoom = iconZoomOSRS;
+			}
+			if(maleEquipOSRS > 0)
+				maleEquip = maleEquipOSRS;
+			if(maleEquipAltOSRS > 0)
+				maleEquipAlt = maleEquipAltOSRS;
+			if(femaleEquipOSRS > 0)
+				femaleEquip = femaleEquipOSRS;
+			if(femaleEquipAltOSRS > 0)
+				femaleEquipAlt = femaleEquipAltOSRS;
+			osrs = true;
 		}
 	}
 	

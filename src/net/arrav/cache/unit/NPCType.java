@@ -21,37 +21,42 @@ public final class NPCType {
 	private static NPCType dummy;
 	public final static Int2ObjectArrayMap<NPCType> defCache = new Int2ObjectArrayMap<>();
 	public static Int2ObjectOpenHashMap<Model> modelcache = new Int2ObjectOpenHashMap<>();
+	public static Client client;
 	
-	public int turnLeftAnimationId;
-	private int varBitId;
-	public int turnAroundAnimationId;
-	private int settingId;
 	private static Buffer data;
-	public int combatLevel;
+	private static int[] index;
+	
+	public int id;
 	public String name;
+	public String description;
 	public String actions[];
+	public int combatLevel;
 	public int walkAnimationId;
+	public int standAnimationId;
+	public int turnRightAnimationId;
+	public int turnAroundAnimationId;
+	public int turnLeftAnimationId;
+	public int degreesToTurn;
 	public byte boundaryDimension;
 	private int[] modifiedModelColors;
-	private static int[] index;
-	private int[] additionalModelCount;
-	public int headIcon;
 	private int[] originalModelColors;
-	public int standAnimationId;
-	public int id;
-	public int degreesToTurn;
-	public static Client client;
-	public int turnRightAnimationId;
-	public boolean clickable;
-	private int brightness;
-	private int scaleZ;
 	public boolean visibleMinimap;
-	public int childrenIDs[];
-	public String description;
-	private int scaleXY;
-	private int contrast;
+	public boolean clickable;
 	public boolean visible;
+	public int headIcon;
+	private int settingId;
+	private int varBitId;
+	private int brightness;
+	private int contrast;
+	private int scaleZ;
+	private int scaleXY;
+	
 	private int[] modelId;
+	private int[] modelIdOSRS;
+	private int[] dialogueModels;
+	private int[] dialogueModelsOSRS;
+	public int childrenIDs[];
+	private boolean osrs;
 	private boolean nonTextured;
 	private boolean fixPriority;
 
@@ -86,6 +91,14 @@ public final class NPCType {
 		npc.id = id;
 		npc.decode(data);
 		
+		if(npc.modelId == null && npc.modelIdOSRS != null) {
+			npc.modelId = npc.modelIdOSRS;
+			npc.osrs = true;
+		} else if(Config.def.oldModels && npc.modelIdOSRS != null) {
+			npc.modelId = npc.modelIdOSRS;
+			npc.osrs = true;
+		}
+		
 		if(id == 8331) {
 			npc.name = "Guardian";
 		}
@@ -117,7 +130,7 @@ public final class NPCType {
 		this.modelId = copied.modelId;
 		this.modifiedModelColors = copied.modifiedModelColors;
 		this.originalModelColors = copied.originalModelColors;
-		this.additionalModelCount = copied.additionalModelCount;
+		this.dialogueModels = copied.dialogueModels;
 		this.turnAroundAnimationId = copied.turnAroundAnimationId;
 		this.turnLeftAnimationId = copied.turnLeftAnimationId;
 		this.turnRightAnimationId = copied.turnRightAnimationId;
@@ -155,7 +168,7 @@ public final class NPCType {
 		//Repacking with fixes.
 		if(REPACK) {
 			try {
-				repack();
+				repackOSRS();
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
@@ -164,40 +177,6 @@ public final class NPCType {
 	
 	public static int size() {
 		return index.length;
-	}
-
-	private static void repack() throws IOException {
-		final Buffer data634 = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/npc634.dat"));
-		final Buffer idx634 = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/npc634.idx"));
-		final int length = idx634.getUShort();
-		System.out.println("for 634: " + length);
-		NPCType[] npcs = new NPCType[length];
-		data634.pos = 2;
-		int size = index.length;
-		DataOutputStream dat = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/npc/npc2.dat"));
-		DataOutputStream idx = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/npc/npc2.idx"));
-		idx.writeShort(size);
-		dat.writeShort(size);
-		for(int i = 0; i < size; i++) {
-			NPCType obj;
-			obj = get(i);
-			if(i < npcs.length) {
-				npcs[i] = new NPCType();
-				npcs[i].decode(data634);
-				//condition and change.
-				if(i == 10702) {
-					obj = npcs[i];
-				}
-			}
-			int offset1 = dat.size();
-			obj.encode(dat);
-			int offset2 = dat.size();
-			int writeOffset = offset2 - offset1;
-			idx.writeShort(writeOffset);
-			System.out.println("writted: " + i + " - offset: " + writeOffset);
-		}
-		dat.close();
-		idx.close();
 	}
 
 	private void decode(Buffer stream) {
@@ -249,9 +228,9 @@ public final class NPCType {
 				}
 			} else if(i == 9) {
 				int l = stream.getUByte();
-				additionalModelCount = new int[l];
+				dialogueModels = new int[l];
 				for(int l1 = 0; l1 < l; l1++)
-					additionalModelCount[l1] = stream.getUShort();
+					dialogueModels[l1] = stream.getUShort();
 			} else if(i == 10)
 				visibleMinimap = false;
 			else if(i == 11)
@@ -284,11 +263,175 @@ public final class NPCType {
 					if(childrenIDs[i2] == 65535)
 						childrenIDs[i2] = -1;
 				}
+			} else if(i == 20) {
+				int j = stream.getUByte();
+				modelIdOSRS = new int[j];
+				for(int j1 = 0; j1 < j; j1++)
+					modelIdOSRS[j1] = stream.getUShort();
 			} else if(i == 30)
 				clickable = false;
 			else
 				System.out.println("wrong opcode: " + i);
 		} while(true);
+	}
+	
+	
+	private static void repack() throws IOException {
+		final Buffer data634 = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/npc634.dat"));
+		final Buffer idx634 = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/npc634.idx"));
+		final int length = idx634.getUShort();
+		System.out.println("for 634: " + length);
+		NPCType[] npcs = new NPCType[length];
+		data634.pos = 2;
+		int size = index.length;
+		DataOutputStream dat = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/npc/npc2.dat"));
+		DataOutputStream idx = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/npc/npc2.idx"));
+		idx.writeShort(size);
+		dat.writeShort(size);
+		for(int i = 0; i < size; i++) {
+			NPCType obj;
+			obj = get(i);
+			if(i < npcs.length) {
+				npcs[i] = new NPCType();
+				npcs[i].decode(data634);
+				//condition and change.
+				if(i == 10702) {
+					obj = npcs[i];
+				}
+			}
+			int offset1 = dat.size();
+			obj.encode(dat);
+			int offset2 = dat.size();
+			int writeOffset = offset2 - offset1;
+			idx.writeShort(writeOffset);
+			System.out.println("writted: " + i + " - offset: " + writeOffset);
+		}
+		dat.close();
+		idx.close();
+	}
+	
+	public static void repackOSRS() throws IOException {
+		final Buffer osrs_data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/osrs_npc.dat"));
+		final Buffer osrs_idx = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/osrs_npc.idx"));
+		final int length = osrs_idx.getUShort();
+		System.out.println("for osrs 154: " + length);
+		NPCType[] npcs = new NPCType[length];
+		osrs_data.pos = 2;
+		int size = index.length;
+		DataOutputStream dat = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/npc/npc2.dat"));
+		DataOutputStream idx = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/npc/npc2.idx"));
+		idx.writeShort(size);
+		dat.writeShort(size);
+		for(int i = 0; i < size; i++) {
+			NPCType obj;
+			obj = get(i);
+			if(i < npcs.length) {
+				NPCType osrs = new NPCType();
+				osrs.decodeOSRS(osrs_data);
+				if(obj.name != null && osrs.name != null) {
+					if(obj.name.equalsIgnoreCase(osrs.name)) {
+						System.out.println("set osrs for " + obj.name + " - " + obj.id);
+						obj.modelIdOSRS = osrs.modelId;//setting model ids.
+					}
+				}
+			}
+			int offset1 = dat.size();
+			obj.encode(dat);
+			int offset2 = dat.size();
+			int writeOffset = offset2 - offset1;
+			idx.writeShort(writeOffset);
+			//System.out.println("writted: " + i + " - offset: " + writeOffset);
+		}
+		dat.close();
+		idx.close();
+	}
+	
+	public void decodeOSRS(Buffer buffer) {
+		while(true) {
+			int opcode = buffer.getUByte();
+			if(opcode == 0)
+				return;
+			if(opcode == 1) {
+				int count = buffer.getUByte();
+				modelId = new int[count];
+				for(int j1 = 0; j1 < count; j1++)
+					modelId[j1] = buffer.getUShort();
+			} else if(opcode == 2) {
+				name = buffer.getLine();
+			} else if(opcode == 3) {
+				description = buffer.getLine();
+			} else if(opcode == 12) {
+				boundaryDimension = buffer.getSByte();
+			} else if(opcode == 13) {
+				standAnimationId = buffer.getUShort();
+			} else if(opcode == 14) {
+				walkAnimationId = buffer.getUShort();
+			} else if(opcode == 17) {
+				walkAnimationId = buffer.getUShort();
+				turnAroundAnimationId = buffer.getUShort();
+				turnRightAnimationId = buffer.getUShort();
+				turnLeftAnimationId = buffer.getUShort();
+			} else if(opcode >= 30 && opcode < 40) {
+				if(actions == null)
+					actions = new String[10];
+				actions[opcode - 30] = buffer.getLine();
+				if(actions[opcode - 30].equalsIgnoreCase("hidden"))
+					actions[opcode - 30] = null;
+			} else if(opcode == 40) {
+				int colours = buffer.getUByte();
+				originalModelColors = new int[colours];
+				modifiedModelColors = new int[colours];
+				for(int k1 = 0; k1 < colours; k1++) {
+					originalModelColors[k1] = buffer.getUShort();
+					modifiedModelColors[k1] = buffer.getUShort();
+				}
+			} else if(opcode == 60) {
+				int additionalModelLen = buffer.getUByte();
+				dialogueModels = new int[additionalModelLen];
+				for(int l1 = 0; l1 < additionalModelLen; l1++)
+					dialogueModels[l1] = buffer.getUShort();
+			} else if(opcode == 90) {
+				buffer.getUShort();
+			} else if(opcode == 91) {
+				buffer.getUShort();
+			} else if(opcode == 92) {
+				buffer.getUShort();
+			} else if(opcode == 93) {
+				visibleMinimap = false;
+			} else if(opcode == 95) {
+				combatLevel = buffer.getUShort();
+			} else if(opcode == 97) {
+				scaleXY = buffer.getUShort();
+			} else if(opcode == 98) {
+				scaleZ = buffer.getUShort();
+			} else if(opcode == 99) {
+				visible = true;
+			} else if(opcode == 100) {
+				brightness = buffer.getSByte();
+			} else if(opcode == 101) {
+				contrast = buffer.getSByte();
+			} else if(opcode == 102) {
+				headIcon = buffer.getUShort();
+			} else if(opcode == 103) {
+				degreesToTurn = buffer.getUShort();
+			} else if(opcode == 106) {
+				varBitId = buffer.getUShort();
+				if(varBitId == 65535)
+					varBitId = -1;
+				settingId = buffer.getUShort();
+				if(settingId == 65535)
+					settingId = -1;
+				int childCount = buffer.getUByte();
+				childrenIDs = new int[childCount + 1];
+				for(int i2 = 0; i2 <= childCount; i2++) {
+					childrenIDs[i2] = buffer.getUShort();
+					if(childrenIDs[i2] == 65535)
+						childrenIDs[i2] = -1;
+				}
+			} else if(opcode == 107) {
+				clickable = false;
+			}
+		}
 	}
 
 	private void encode(DataOutputStream out) throws IOException {
@@ -349,10 +492,10 @@ public final class NPCType {
 					out.writeShort(modifiedModelColors[i]);
 				}
 				written.add(8);
-			} else if(additionalModelCount != null && !written.contains(9)) {
+			} else if(dialogueModels != null && !written.contains(9)) {
 				out.writeByte(9);
-				out.writeByte(additionalModelCount.length);
-				for(int i : additionalModelCount) {
+				out.writeByte(dialogueModels.length);
+				for(int i : dialogueModels) {
 					out.writeShort(i);
 				}
 				written.add(9);
@@ -405,6 +548,15 @@ public final class NPCType {
 					out.writeShort(c);
 				}
 				written.add(19);
+			} else if(modelIdOSRS != null && !written.contains(20)) {
+				out.writeByte(20);
+				out.writeByte(modelIdOSRS.length);
+				if(modelIdOSRS.length > 0) {
+					for(int aModelId : modelIdOSRS) {
+						out.writeShort(aModelId);
+					}
+				}
+				written.add(20);
 			} else if(actions != null && !actionsd) {
 				for(int i = 0; i < actions.length; i++) {
 					if(actions[i] != null) {
@@ -433,21 +585,21 @@ public final class NPCType {
 				return sub.method160();
 			}
 		}
-		if(additionalModelCount == null) {
+		if(dialogueModels == null) {
 			return null;
 		}
 		boolean flag1 = false;
-		for(int anAdditionalModelCount : additionalModelCount) {
-			if(!Model.isCached(anAdditionalModelCount)) {
+		for(int anAdditionalModelCount : dialogueModels) {
+			if(!Model.isCached(anAdditionalModelCount, osrs ? 7 : 0)) {
 				flag1 = true;
 			}
 		}
 		if(flag1) {
 			return null;
 		}
-		final Model[] parts = new Model[additionalModelCount.length];
-		for(int j = 0; j < additionalModelCount.length; j++) {
-			parts[j] = Model.get(additionalModelCount[j]);
+		final Model[] parts = new Model[dialogueModels.length];
+		for(int j = 0; j < dialogueModels.length; j++) {
+			parts[j] = Model.get(dialogueModels[j], osrs ? 7 : 0);
 		}
 
 		Model model;
@@ -504,7 +656,7 @@ public final class NPCType {
 		if(model == null) {
 			boolean flag = false;
 			for(int aModelId : modelId) {
-				if(!Model.isCached(aModelId)) {
+				if(!Model.isCached(aModelId, osrs ? 7 : 0)) {
 					flag = true;
 				}
 			}
@@ -569,7 +721,7 @@ public final class NPCType {
 			boolean flag = false;
 			if(modelId != null) {
 				for(int aModelId : modelId) {
-					if(!Model.isCached(aModelId)) {
+					if(!Model.isCached(aModelId, osrs ? 7 : 0)) {
 						flag = true;
 					}
 				}
@@ -581,7 +733,7 @@ public final class NPCType {
 			}
 			final Model[] parts = new Model[modelId.length];
 			for(int j1 = 0; j1 < modelId.length; j1++) {
-				parts[j1] = Model.get(modelId[j1]);
+				parts[j1] = Model.get(modelId[j1], osrs ? 7 : 0);
 			}
 			if(parts.length == 1) {
 				cachedModel = parts[0];

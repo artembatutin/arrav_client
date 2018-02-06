@@ -38,7 +38,7 @@ public final class Model extends Entity {
 	private int[] textureSecondaryColor;
 	private static byte[][] newestModelHeader;
 	private static byte[][] newModelHeader;
-	private static byte[][] oldModelHeader;
+	private static byte[][] osrsModelHeader;
 	
 	public int vertexAmt;
 	public int[] vertexX;
@@ -135,16 +135,14 @@ public final class Model extends Entity {
 	public static void method459(int length, OnDemandFetcher odf) {
 		newModelHeader = new byte[length][];
 		newestModelHeader = new byte[length][];
-		oldModelHeader = new byte[length][];
+		osrsModelHeader = new byte[length][];
 		odFetcher = odf;
 	}
 	
 	public Model(int modelId, byte[] data, boolean osrs) {
 		try {
 			if(data != null && data.length > 1)
-				if(osrs) {
-					decodeOSRS(data);
-				} else if(usesNewHeader(data)) {
+				if(usesNewHeader(data)) {
 					decodeNew(data);
 				} else {
 					decodeOld(data);
@@ -1451,36 +1449,44 @@ public final class Model extends Entity {
 	public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
 	
 	public static void method460(byte[] data, int id, int type) {
-		if(type == 0)
-			newestModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
-		else if(type == 7)
-			oldModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
-		else
+		if(type == 6)
 			newModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
+		else if(type == 7)
+			osrsModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
+		else
+			newestModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
 	}
 	
 	
 	public static void remove(int index) {
 		newestModelHeader[index] = null;
 		newModelHeader[index] = null;
-		oldModelHeader[index] = null;
+		osrsModelHeader[index] = null;
+	}
+	
+	public static boolean isOSRS(int index, int type) {
+		if((type == 0 || type == 6) && Config.def.oldModels && index < 34026) {
+			return true;
+		}
+		return false;
 	}
 	
 	public static Model get(int index) {
-		return get(index, 0);
+		int type = 0;
+		if(isOSRS(index, type)) {
+			type = 7;
+		}
+		return get(index, type);
 	}
 	
 	public static Model get(int index, int type) {
 		byte[] data;
-		if((type == 0 || type == 6) && Config.def.oldModels && index < 32807) {
-			type = 7;
-		}
-		if(type == 0)
-			data = newestModelHeader[index];
-		else if(type == 7)
-			data = oldModelHeader[index];
-		else
+		if(type == 6)
 			data = newModelHeader[index];
+		else if(type == 7)
+			data = osrsModelHeader[index];
+		else
+			data = newestModelHeader[index];
 		if(data == null) {
 			odFetcher.addRequest(type, index);
 			return null;
@@ -1492,19 +1498,20 @@ public final class Model extends Entity {
 	}
 	
 	public static boolean isCached(int id) {
-		return isCached(id, 0);
+		int type = 0;
+		if(isOSRS(id, type)) {
+			type = 7;
+		}
+		return isCached(id, type);
 		
 	}
 	
 	public static boolean isCached(int id, int type) {
-		if((type == 0 || type == 6) && Config.def.oldModels && id < 32807) {
-			type = 7;
-		}
 		if(type == 0 && newestModelHeader[id] != null)
 			return true;
 		if(type == 6 && newModelHeader[id] != null)
 			return true;
-		if(type == 7 && oldModelHeader[id] != null)
+		if(type == 7 && osrsModelHeader[id] != null)
 			return true;
 		odFetcher.addRequest(type, id);
 		return false;

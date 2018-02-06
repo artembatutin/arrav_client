@@ -47,7 +47,7 @@ public class ProtocolLoader implements CacheLoader {
 			e.printStackTrace();
 		}
 		
-		//client.onDemandRequester.writeChecksumList(3);
+		//client.onDemandRequester.writeChecksumList(7);
 		//for(int i = 0; i < Constants.CACHE_INDEX_COUNT - 1; i++) {
 		//	client.onDemandRequester.writeChecksumList(i);
 		//	client.onDemandRequester.writeVersionList(i);
