@@ -3176,7 +3176,6 @@ public class Client extends ClientEngine {
 				encryption = new ISAACCipher(ai);
 				socketStream.write(outStream.data, outStream.pos);
 				returnCode = socketStream.read();
-				System.out.println(returnCode + " - code out");
 				titleMessage = "";
 			} else {
 				TitleActivity.scrollOpened = true;

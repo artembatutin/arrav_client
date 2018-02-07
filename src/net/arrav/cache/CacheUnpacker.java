@@ -246,7 +246,6 @@ public class CacheUnpacker {
 			}
 		}
 		if(buffer != null) {
-			System.out.println("give jaggrab " + fileName);
 			return new CacheArchive(index, fileName, buffer);
 		}
 
@@ -264,7 +263,6 @@ public class CacheUnpacker {
 				}
 				if(buffer != null) {
 					if(Constants.JAGGRAB_ENABLED) {
-						System.out.println("new jaggrab " + fileName);
 						client.getCrc().reset();
 						client.getCrc().update(buffer);
 						int crcValue = (int) client.getCrc().getValue();

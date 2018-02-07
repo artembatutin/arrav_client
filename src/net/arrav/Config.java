@@ -266,7 +266,6 @@ public class Config {
 	
 	public void fog(boolean fog) {
 		this.fog = fog;
-		Rasterizer3D.textured = fog;
 	}
 	
 	public boolean tween() {

@@ -149,8 +149,10 @@ public class TitleActivity extends Activity {
 					return true;
 				}
 				client.connect(client.localUsername, client.localPassword);
-			} else if(client.leftClickInRegion(centerX - 25, centerY + 87 - scrollValue, centerX + 25, centerY + 105 - scrollValue)) {
+			} else if(client.leftClickInRegion(centerX - 55, centerY + 87 - scrollValue, centerX - 5, centerY + 105 - scrollValue)) {
 				Config.def.clouds = !Config.def.clouds;
+			} else if(client.leftClickInRegion(centerX + 5, centerY + 87 - scrollValue, centerX + 50, centerY + 105 - scrollValue)) {
+				Config.def.oldModels = !Config.def.oldModels;
 			}
 
 			/* Login & keyboard key process */
@@ -297,12 +299,17 @@ public class TitleActivity extends Activity {
 				Rasterizer2D.fillRectangle(centerX - 127, centerY - 47, 254, 28, 0x000000, fadeValue + alphaOpacity[1]);
 				ImageCache.get(0).drawImage(centerX - 59, centerY + 45, fadeValue * 2 + alphaOpacity[2]);
 				
-				Rasterizer2D.fillRoundedRectangle(centerX - 25, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 100);
-				if(client.mouseInRegion(centerX - 25, centerY + 87 - scrollValue, centerX + 25, centerY + 105 - scrollValue)) {
-					Rasterizer2D.fillRoundedRectangle(centerX - 25, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 40);
+				Rasterizer2D.fillRoundedRectangle(centerX - 55, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 100);
+				if(Config.def.clouds || client.mouseInRegion(centerX - 55, centerY + 87 - scrollValue, centerX - 5, centerY + 105 - scrollValue)) {
+					Rasterizer2D.fillRoundedRectangle(centerX - 55, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 40);
 				}
-				
-				smallFont.drawCenteredString("Clouds", centerX, centerY + 100- scrollValue, 0xffffff);
+				smallFont.drawCenteredString("Clouds", centerX - 30, centerY + 101 - scrollValue, 0xffffff);
+
+				Rasterizer2D.fillRoundedRectangle(centerX + 5, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 100);
+				if(client.mouseInRegion(centerX + 5, centerY + 87 - scrollValue, centerX + 50, centerY + 105 - scrollValue)) {
+					Rasterizer2D.fillRoundedRectangle(centerX + 5, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 40);
+				}
+				smallFont.drawCenteredString(Config.def.oldModels ? "OSRS" : "HD", centerX + 30, centerY + 101- scrollValue, 0xffffff);
 			}
 
 			/* Text */

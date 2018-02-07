@@ -1464,7 +1464,7 @@ public final class Model extends Entity {
 		osrsModelHeader[index] = null;
 	}
 	
-	public static boolean isOSRS(int index, int type) {
+	private static boolean isOSRS(int index, int type) {
 		if((type == 0 || type == 6) && Config.def.oldModels && index < 34026) {
 			return true;
 		}

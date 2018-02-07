@@ -110,7 +110,6 @@ public final class ObjectType {
 		obj.renew();
 		obj.decode(data);
 		obj.osrs();
-		System.out.println(id);
 		if(obj.id == 12907 || obj.id == 12921 || obj.id == 12924) {
 			obj.noteTemplateId = -1;
 		}
@@ -1231,9 +1230,11 @@ public final class ObjectType {
 		membersObject = obj.membersObject;
 		value = obj.value;
 		String s = "a";
-		final char c = obj.name.charAt(0);
-		if(c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') {
-			s = "an";
+		if(obj.name != null) {
+			final char c = obj.name.charAt(0);
+			if(c == 'A' || c == 'E' || c == 'I' || c == 'O' || c == 'U') {
+				s = "an";
+			}
 		}
 		description = ("Swap this note at any bank for " + s + " " + obj.name + ".");
 		stackable = true;
