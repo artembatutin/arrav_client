@@ -22,14 +22,14 @@ import java.util.Set;
 
 public final class ObjectType {
 	
-	public static final boolean REPACK = true;
+	public static final boolean REPACK = false;
 	
 	public static Buffer data;
 	public static int length;
 	public static int[] index;
 	public static Int2ObjectArrayMap<ObjectType> defCache = new Int2ObjectArrayMap<>();
-	public static Int2ObjectOpenHashMap<BitmapImage> iconcache = new Int2ObjectOpenHashMap<>();
 	public static Int2ObjectOpenHashMap<Model> modelcache = new Int2ObjectOpenHashMap<>();
+	public static Int2ObjectOpenHashMap<BitmapImage> iconcache = new Int2ObjectOpenHashMap<>();
 	public static ObjectType nulled;
 	
 	public int id;
@@ -90,9 +90,14 @@ public final class ObjectType {
 	private int maleEquipOffsetZ;
 	private int maleEquipOffsetY;
 	private int maleEquipOffsetX;
+	private int womanEquipOffsetZOSRS;
+	private int womanEquipOffsetYOSRS;
+	private int womanEquipOffsetXOSRS;
+	private int maleEquipOffsetZOSRS;
+	private int maleEquipOffsetYOSRS;
+	private int maleEquipOffsetXOSRS;
 	private int lendID;
 	private int lentItemID;
-	private boolean fixPriority;
 	public String[] equipActions;
 	
 	public ObjectType() {
@@ -108,8 +113,7 @@ public final class ObjectType {
 		data.pos = index[id];
 		obj.id = id;
 		obj.renew();
-		obj.decode(data);
-		obj.osrs = false;
+		obj.decode(data, id);
 		obj.osrs();
 		if(obj.noteTemplateId != -1) {
 			obj.toNote();
@@ -117,7 +121,6 @@ public final class ObjectType {
 		if(obj.lentItemID != -1) {
 			obj.toLend();
 		}
-		
 		defCache.put(id, obj);
 		return obj;
 	}
@@ -396,12 +399,6 @@ public final class ObjectType {
 				model.setTexture(retextureSrc[i1], retextureDst[i1]);
 			}
 		}
-		if(fixPriority) {
-			if(model.triPri != null) {
-				for(int p = 0; p < model.triPri.length; p++)
-					model.triPri[p] = 10;
-			}
-		}
 		return model;
 	}
 	
@@ -440,12 +437,6 @@ public final class ObjectType {
 		}
 		model.calculateLighting(64 + ambience, 768 + diffusion, -50, -10, -50, true);
 		model.hoverable = true;
-		if(fixPriority) {
-			if(model.triPri != null) {
-				for(int p = 0; p < model.triPri.length; p++)
-					model.triPri[p] = 10;
-			}
-		}
 		if(!Rasterizer3D.textureMissing)
 			modelcache.put(id, model);
 		return model;
@@ -498,7 +489,7 @@ public final class ObjectType {
 	
 	public static void unpack(CacheArchive archive) {
 		final Buffer buffer;
-		if(Constants.USER_HOME_FILE_STORE) {
+		if(false) {
 			data = new Buffer(archive.getFile("obj.dat"));
 			buffer = new Buffer(archive.getFile("obj.idx"));
 		} else {
@@ -529,10 +520,10 @@ public final class ObjectType {
 		final Buffer osrs_data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/osrs_obj.dat"));
 		final Buffer osrs_idx = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/osrs_obj.idx"));
 		final int length = osrs_idx.getUShort();
-		System.out.println("for osrs 154: " + length);
+		System.out.println("OSRS 154: " + length);
 		ObjectType[] items = new ObjectType[length];
 		osrs_data.pos = 2;
-		int size = index.length;
+		int size = 22308;
 		DataOutputStream dat = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/item/obj2.dat"));
 		DataOutputStream idx = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/item/obj2.idx"));
 		idx.writeShort(size);
@@ -540,6 +531,7 @@ public final class ObjectType {
 		for(int i = 0; i < size; i++) {
 			ObjectType obj;
 			try {
+				System.out.println(i);
 				obj = get(i);
 				if(i < items.length) {
 					ObjectType osrs = new ObjectType();
@@ -572,7 +564,7 @@ public final class ObjectType {
 		idx.close();
 	}
 	
-	private void decode(Buffer buffer) {
+	private void decode(Buffer buffer, int id) {
 		do {
 			int opcode = buffer.getUByte();
 			if(opcode == 0)
@@ -581,7 +573,7 @@ public final class ObjectType {
 				modelId = buffer.getUShort();
 			} else if(opcode == 2) {
 				name = buffer.getLine();
-			}else if(opcode == 3) {
+			} else if(opcode == 3) {
 				modelIdOSRS = buffer.getUShort();
 			} else if(opcode == 4) {
 				iconZoom = buffer.getUShort();
@@ -610,7 +602,9 @@ public final class ObjectType {
 			} else if(opcode == 15) {
 				iconRollOSRS = buffer.getUShort();
 			} else if(opcode == 16) {
-				osrs = true;
+				//osrs = true;
+			} else if(opcode == 18) {
+				buffer.getUShort();
 			} else if(opcode == 23) {
 				maleEquip = buffer.getUShort();
 			} else if(opcode == 24) {
@@ -699,13 +693,13 @@ public final class ObjectType {
 			} else if(opcode == 113) {
 				ambience = buffer.getSByte();
 			} else if(opcode == 114) {
-				diffusion = buffer.getSByte();
+				diffusion = buffer.getSByte() * 5;
 			} else if(opcode == 115) {
 				team = buffer.getUByte();
 			} else if(opcode == 121) {
-				lendID = buffer.getUByte();//should be UShort
+				lendID = buffer.getUShort();
 			} else if(opcode == 122) {
-				lentItemID = buffer.getUByte();//should be UShort
+				lentItemID = buffer.getUShort();
 			} else if(opcode == 125) {
 				maleEquipOffsetX = buffer.getSByte();
 				maleEquipOffsetY = buffer.getSByte();
@@ -734,7 +728,7 @@ public final class ObjectType {
 				out.write(name.replaceAll("_", " ").getBytes());
 				out.writeByte(10);
 				written.add(2);
-			}else if(modelIdOSRS != 0 && !written.contains(3)) {
+			}else if(modelIdOSRS > 0 && !written.contains(3)) {
 				out.writeByte(3);
 				out.writeShort(modelIdOSRS);
 				written.add(3);
@@ -761,7 +755,7 @@ public final class ObjectType {
 			} else if(stackable && !written.contains(11)) {
 				out.writeByte(11);
 				written.add(11);
-			} else if(value != 0 && !written.contains(12)) {
+			} else if(value != 1 && !written.contains(12)) {
 				out.writeByte(12);
 				out.writeInt(value);
 				written.add(12);
@@ -897,11 +891,11 @@ public final class ObjectType {
 				written.add(115);
 			} else if(lendID != -1 && !written.contains(121)) {
 				out.writeByte(121);
-				out.write(lendID);
+				out.writeShort(lendID);
 				written.add(121);
 			} else if(lentItemID != -1 && !written.contains(122)) {
 				out.writeByte(122);
-				out.write(lentItemID);
+				out.writeShort(lentItemID);
 				written.add(122);
 			} else if((maleEquipOffsetX != 0 || maleEquipOffsetY != 0 || maleEquipOffsetZ != 0) && !written.contains(125)) {
 				out.writeByte(125);
@@ -935,7 +929,7 @@ public final class ObjectType {
 				actionsd2 = true;
 			} else if(stackableIds != null && !actionsd3) {
 				for(int i = 0; i < stackableIds.length; i++) {
-					if(stackableIds[i] > 0) {
+					if(stackableIds[i] > 0 && stackAmounts[i] > 0) {
 						out.writeByte(100 + i);
 						out.writeShort(stackableIds[i]);
 						out.writeShort(stackAmounts[i]);
@@ -1088,6 +1082,7 @@ public final class ObjectType {
 	
 	private void renew() {
 		modelId = 0;
+		modelIdOSRS = 0;
 		name = null;
 		description = null;
 		originalModelColors = null;
@@ -1107,6 +1102,10 @@ public final class ObjectType {
 		maleEquipAlt = -1;
 		femaleEquip = -1;
 		femaleEquipAlt = -1;
+		maleEquipOSRS = -1;
+		maleEquipAltOSRS = -1;
+		femaleEquipOSRS = -1;
+		femaleEquipAltOSRS = -1;
 		tertiaryMaleModel = -1;
 		tertiaryFemaleModel = -1;
 		maleDialoguemodelId = -1;
@@ -1201,21 +1200,25 @@ public final class ObjectType {
 	
 	private void osrs() {
 		if(Config.def.oldModels && !osrs) {
+			if(id == 18349) {
+				System.out.println("choat is " + modelIdOSRS);
+			}
 			if(modelIdOSRS > 0) {//sets icon
 				modelId = modelIdOSRS;
 				iconYaw = iconYawOSRS;
 				iconRoll = iconRollOSRS;
 				iconZoom = iconZoomOSRS;
+
+				if(maleEquipOSRS > 0)
+					maleEquip = maleEquipOSRS;
+				if(maleEquipAltOSRS > 0)
+					maleEquipAlt = maleEquipAltOSRS;
+				if(femaleEquipOSRS > 0)
+					femaleEquip = femaleEquipOSRS;
+				if(femaleEquipAltOSRS > 0)
+					femaleEquipAlt = femaleEquipAltOSRS;
+				osrs = true;
 			}
-			if(maleEquipOSRS > 0)
-				maleEquip = maleEquipOSRS;
-			if(maleEquipAltOSRS > 0)
-				maleEquipAlt = maleEquipAltOSRS;
-			if(femaleEquipOSRS > 0)
-				femaleEquip = femaleEquipOSRS;
-			if(femaleEquipAltOSRS > 0)
-				femaleEquipAlt = femaleEquipAltOSRS;
-			osrs = true;
 		}
 	}
 	
