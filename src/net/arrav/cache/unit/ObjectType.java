@@ -22,7 +22,7 @@ import java.util.Set;
 
 public final class ObjectType {
 	
-	public static final boolean REPACK = false;
+	public static final boolean REPACK = true;
 	
 	public static Buffer data;
 	public static int length;
@@ -109,10 +109,8 @@ public final class ObjectType {
 		obj.id = id;
 		obj.renew();
 		obj.decode(data);
+		obj.osrs = false;
 		obj.osrs();
-		if(obj.id == 12907 || obj.id == 12921 || obj.id == 12924) {
-			obj.noteTemplateId = -1;
-		}
 		if(obj.noteTemplateId != -1) {
 			obj.toNote();
 		}
@@ -423,7 +421,7 @@ public final class ObjectType {
 		if(model != null) {
 			return model;
 		}
-		model = Model.get(modelId);
+		model = Model.get(modelId, osrs ? 7 : 0);
 		if(model == null) {
 			return null;
 		}
@@ -557,49 +555,6 @@ public final class ObjectType {
 							obj.femaleEquipOSRS = osrs.femaleEquip;
 							obj.femaleEquipAltOSRS = osrs.femaleEquipAlt;
 						}
-					}
-					if(i >= 12887 && i <= 12934 && i != 12921) {
-						System.out.println("set osrs for " + obj.name + " - " + obj.id);
-						obj.modelId = osrs.modelId;
-						obj.iconRoll = osrs.iconRoll;
-						obj.iconZoom = osrs.iconZoom;
-						obj.iconYaw = osrs.iconYaw;
-						obj.maleEquip = osrs.maleEquip;
-						obj.maleEquipAlt = osrs.maleEquipAlt;
-						obj.femaleEquip = osrs.femaleEquip;
-						obj.femaleEquipAlt = osrs.femaleEquipAlt;
-						obj.name = osrs.name;
-						obj.noteTemplateId = osrs.noteTemplateId;
-						obj.noteId = osrs.noteId;
-						obj.femaleDialogueHatmodelId = osrs.femaleDialogueHatmodelId;
-						obj.maleDialogueHatmodelId = osrs.maleDialogueHatmodelId;
-						obj.femaleDialoguemodelId = osrs.femaleDialoguemodelId;
-						obj.maleDialoguemodelId = osrs.maleDialoguemodelId;
-						obj.actions = osrs.actions;
-						obj.groundActions = osrs.groundActions;
-						if(obj.id % 2 == 1)
-							obj.noteTemplateId = -1;
-					}
-					if(i >= 12956 && i <= 12959) {
-						obj.modelId = osrs.modelId;
-						obj.iconRoll = osrs.iconRoll;
-						obj.iconZoom = osrs.iconZoom;
-						obj.iconYaw = osrs.iconYaw;
-						obj.maleEquip = osrs.maleEquip;
-						obj.maleEquipAlt = osrs.maleEquipAlt;
-						obj.femaleEquip = osrs.femaleEquip;
-						obj.femaleEquipAlt = osrs.femaleEquipAlt;
-						obj.name = osrs.name;
-						obj.noteTemplateId = osrs.noteTemplateId;
-						obj.noteId = osrs.noteId;
-						obj.femaleDialogueHatmodelId = osrs.femaleDialogueHatmodelId;
-						obj.maleDialogueHatmodelId = osrs.maleDialogueHatmodelId;
-						obj.femaleDialoguemodelId = osrs.femaleDialoguemodelId;
-						obj.maleDialoguemodelId = osrs.maleDialoguemodelId;
-						obj.actions = osrs.actions;
-						obj.groundActions = osrs.groundActions;
-						if(obj.id % 2 == 1)
-							obj.noteTemplateId = -1;
 					}
 				}
 				int offset1 = dat.size();
@@ -1190,6 +1145,7 @@ public final class ObjectType {
 		iconYaw = itemDef.iconYaw;
 		iconRoll = itemDef.iconRoll;
 		spriteCameraYaw = itemDef.spriteCameraYaw;
+		osrs = itemDef.osrs;
 		value = 0;
 		final ObjectType obj = get(lendID);
 		maleDialogueHatmodelId = obj.maleDialogueHatmodelId;
@@ -1200,6 +1156,7 @@ public final class ObjectType {
 		maleDialoguemodelId = obj.maleDialoguemodelId;
 		groundActions = obj.groundActions;
 		maleEquip = obj.maleEquip;
+		osrs = obj.osrs;
 		name = obj.name;
 		femaleEquip = obj.femaleEquip;
 		membersObject = obj.membersObject;
@@ -1225,9 +1182,11 @@ public final class ObjectType {
 		iconVerticalOffset = itemDef.iconVerticalOffset;
 		originalModelColors = itemDef.originalModelColors;
 		modifiedModelColors = itemDef.modifiedModelColors;
+		osrs = itemDef.osrs;
 		final ObjectType obj = get(noteId);
 		name = obj.name;
 		membersObject = obj.membersObject;
+		osrs = obj.osrs;
 		value = obj.value;
 		String s = "a";
 		if(obj.name != null) {
@@ -1241,7 +1200,7 @@ public final class ObjectType {
 	}
 	
 	private void osrs() {
-		if(Config.def.oldModels) {
+		if(Config.def.oldModels && !osrs) {
 			if(modelIdOSRS > 0) {//sets icon
 				modelId = modelIdOSRS;
 				iconYaw = iconYawOSRS;
