@@ -1620,6 +1620,7 @@ public class Client extends ClientEngine {
 					final int l5 = Rasterizer3D.angleCosine[childWidget.modelYaw] * childWidget.modelZoom >> 16;
 					final boolean isSelected = interfaceIsSelected(childWidget);
 					int animationID;
+					Rasterizer3D.textured = false;
 					if(isSelected) {
 						animationID = childWidget.modelAnimAlt;
 					} else {
@@ -1630,10 +1631,12 @@ public class Client extends ClientEngine {
 						model = childWidget.getModel(-1, -1, isSelected);
 					} else {
 						if(animationID > DeformSequence.cache.length) {
+							Rasterizer3D.textured = true;
 							return;
 						}
 						final DeformSequence animation = DeformSequence.cache[animationID];
 						if(animation == null) {
+							Rasterizer3D.textured = true;
 							return;
 						}
 						model = childWidget.getModel(animation.anIntArray354[childWidget.modelAnimLength], animation.frameList[childWidget.modelAnimLength], isSelected);
@@ -1655,6 +1658,7 @@ public class Client extends ClientEngine {
 					Rasterizer2D.removeClip();
 					Rasterizer3D.viewport.centerX = centerX;
 					Rasterizer3D.viewport.centerY = centerY;
+					Rasterizer3D.textured = true;
 				} else if(childWidget.type == Constants.WIDGET_INVENTORY_2) {
 					final BitmapFont font = Interface.fonts[childWidget.fontId];
 					int item = 0;
@@ -2652,6 +2656,7 @@ public class Client extends ClientEngine {
 			final int k = (j - 300) / 2;
 			final int j1 = j & 1;
 			int i2 = anIntArray1065[k];
+			System.out.println(k);
 			if(i2 != -1) {
 				do {
 					if(j1 == 0 && --i2 < 0) {
@@ -3439,7 +3444,7 @@ public class Client extends ClientEngine {
 		return ((ip >> 24) & 0xFF) + "." + ((ip >> 16) & 0xFF) + "." + ((ip >> 8) & 0xFF) + "." + (ip & 0xFF);
 	}
 
-	public Socket openSocket(int port) throws IOException {
+	public synchronized Socket openSocket(int port) throws IOException {
 		long ip = TitleActivity.CONNECTIONS[TitleActivity.connection].getIp();
 		return new Socket(InetAddress.getByName(longToIp(ip)), port);
 	}

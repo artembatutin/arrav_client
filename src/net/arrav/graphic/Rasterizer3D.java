@@ -33,6 +33,7 @@ public final class Rasterizer3D extends Rasterizer2D {
 	private static int[][] texelArrayPool;
 	private static int[][] texelCache;
 	public static boolean textureMissing;
+	public static boolean textured = true;
 	
 	static {
 		shadowDecay = new int[512];
@@ -2708,10 +2709,10 @@ public final class Rasterizer3D extends Rasterizer2D {
 	}
 	
 	public static void drawGouraudTriangle(int y1, int y2, int y3, int x1, int x2, int x3, float z1, float z2, float z3, int hsl1, int hsl2, int hsl3) {
-		//if(!textured) {
-			//drawGouraudTriangle317(y1, y2, y3, x1, x2, x3, hsl1, hsl2, hsl3);
-			//return;
-		//}
+		if(!textured) {
+			drawGouraudTriangle317(y1, y2, y3, x1, x2, x3, hsl1, hsl2, hsl3);
+			return;
+		}
 		final int rgb1 = hslToRgbMap[hsl1];
 		final int rgb2 = hslToRgbMap[hsl2];
 		final int rgb3 = hslToRgbMap[hsl3];

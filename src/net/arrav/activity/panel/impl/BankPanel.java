@@ -42,9 +42,9 @@ public class BankPanel extends Panel {
 	@Override
 	public boolean process() {
 	    /* Initialization */
-		int beginX = 4;
+		int beginX = 10;
 		int beginY = 0;
-		if(client.uiRenderer.isResizableOrFull()) {
+		if (client.uiRenderer.isResizableOrFull()) {
 			beginX = client.windowWidth / 2 - 380;
 			beginY = client.windowHeight / 2 - 250;
 		}
@@ -100,9 +100,9 @@ public class BankPanel extends Panel {
 		for(int i = 1; i < 11; i++) {
 			if(Interface.cache[270 + i - 1].invId == null)
 				continue;
-			int x = (i - 1) * 41;
-			/** bank tabs clicking range */
-			if (client.leftClickInRegion(beginX + 44 + x, beginY + 43, beginX + 84 + x, beginY + 88)) {
+			int x = (i - 1) * 40;
+			/* bank tabs clicking range */
+			if (client.leftClickInRegion(beginX + 42 + x, beginY + 41, beginX + 81 + x, beginY + 81)) {
 				tab = (i - 1);
 				client.outBuffer.putOpcode(185);
 				client.outBuffer.putShort((i - 1) + 100);
@@ -116,7 +116,7 @@ public class BankPanel extends Panel {
 		}
 
 		/* Bank content */
-		int offset = -scrollPos + (!client.bankSearching ? 80 : 45);
+		int offset = -scrollPos + (client.bankSearching ? 45 : 80);
 		if(client.bankSearching) {
 			int shift = 0;
 			for(int t = 0; t < 10; t++) {
@@ -177,11 +177,11 @@ public class BankPanel extends Panel {
 				if(client.mouseInRegion(beginX + 55 + x, beginY + offset, beginX + 91 + x, beginY + offset + 44)) {
 					destSlot = i;
 				}
-				if(icon == 0) {
-					offset += i % 8 == 7 ? 45 : 0;
+				if(icon <= 0) {
+					offset += i % 8 == 7 ? 40 : 0;
 					continue;
 				}
-				if(offset > 250) {
+				if(offset > 260) {
 					break;
 				}
 				if(client.mouseDragButton == 0 && srcSlot != -1) {
@@ -225,7 +225,7 @@ public class BankPanel extends Panel {
 					return true;
 				}
 				if(client.mouseY > beginY + 82) {
-					if(client.rightClickInRegion(beginX + 55 + x, beginY + offset, beginX + 91 + x, beginY + offset + 44)) {
+					if(client.rightClickInRegion(beginX + 52 + x, beginY + offset + 2, beginX + 87 + x, beginY + offset + 41)) {
 						String name = ObjectType.get(icon).name;
 						int[] ids = {53, 431, 867, 78, 632};
 						String[] actions = {"X", "All", "10", "5", "1"};
@@ -246,14 +246,14 @@ public class BankPanel extends Panel {
 						return true;
 					}
 				}
-				if(!client.menuOpened && client.leftClickInRegion(beginX + 55 + x, beginY + offset, beginX + 91 + x, beginY + offset + 44)) {
+				if(!client.menuOpened && client.leftClickInRegion(beginX + 52 + x, beginY + offset + 2, beginX + 87 + x, beginY + offset + 41)) {
 					srcSlot = i;
 					srcIcon = icon;
 					itemPressX = client.mouseX;
 					itemPressY = client.mouseY;
 					return true;
 				}
-				offset += i % 8 == 7 ? 45 : 0;
+				offset += i % 8 == 7 ? 40 : 0;
 			}
 		}
 		return false;
@@ -285,7 +285,7 @@ public class BankPanel extends Panel {
 					continue;
 				int first = getFirst(Interface.cache[270 + i - 1]);
 				int icon = Interface.cache[270 + i - 1].invId[first];
-				int x = (i - 1) * 41;
+				int x = (i - 1) * 40;
 				if (Config.def.panelStyle == 2) {
 					Rasterizer2D.fillRoundedRectangle(beginX + 44 + x, beginY + 16, 44, 36, 3, 0xff981f, icon > 0 ? 50 + ((i - 1) == tab ? 100 : 0) : 25);
 					if (client.mouseInRegion(beginX + 44 + x, beginY + 16, beginX + 95 + x, beginY + 52)) {
@@ -293,18 +293,17 @@ public class BankPanel extends Panel {
 						Rasterizer2D.fillRoundedRectangle(beginX + 44 + x, beginY + 16, 44, 36, 3, 0xff981f, 20);
 					}
 				} else {
-					/**
+					/*
 					 * Tab positions
 					 */
-					ImageCache.get(icon > 1 ? 2001 : 2000).drawImage(beginX + 42 + x, beginY + 41); // bank tabs
-
-					if(icon == 0) {
-						//ImageCache.get(2051).drawImage(beginX + 46 + x, beginY + 43); // bank tab + icon
-					}
-					//ImageCache.get(Config.def.panelStyle == 0 ? (icon > 0 ? 2001 : 2000) : icon > 0 ? 2018 : 2019).drawImage(beginX + 44 + x, beginY + 40); // bank tabs
-					if (client.mouseInRegion(beginX + 44 + x, beginY + 43, beginX + 84 + x, beginY + 82)) {
+					ImageCache.get(i - 1 == tab ? 2019 : 2018).drawImage(beginX + 42 + x, beginY + 41); // bank tabs
+					
+					if (client.mouseInRegion(beginX + 42 + x, beginY + 41, beginX + 81 + x, beginY + 81)) {
 						destSlot = -i;
-						Rasterizer2D.fillRoundedRectangle(beginX + 44 + x, beginY + 44, 42, 36, 3, Config.def.panelStyle == 1 ? 0x000000 : 0xaaaaaa, 20);
+						Rasterizer2D.fillRectangle(beginX + 44 + x, beginY + 43, 38, 36, Config.def.panelStyle == 1 ? 0x000000 : 0xaaaaaa, 20);
+					}
+					if(icon <= 0) {
+						ImageCache.get(2060).drawImage(beginX + 45 + x, beginY + 43); // bank tab + icon
 					}
 				}
 				if (icon > 0) {
@@ -321,14 +320,14 @@ public class BankPanel extends Panel {
 			}
 
 		}
-		if (Config.def.panelStyle == 2) {
+		if (Config.def.panelStyle == 2 && !client.bankSearching) {
 			Rasterizer2D.drawRectangle(beginX + 4, beginY + 53, 490, 280, Config.def.panelStyle == 2 ? 0xffffff : 0x514a35, 80);
 			Rasterizer2D.fillRectangle(beginX + 5, beginY + 54, 488, 278, Config.def.panelStyle == 2 ? 0xffffff : 0x514a35, 60);
-		} else {
-			Rasterizer2D.drawHorizontalLine(beginX + 5, beginY + 79, 39, 0x000000, 55);
-			Rasterizer2D.drawHorizontalLine(beginX + 5 + 440, beginY + 79, 40, 0x000000, 55);
+		} else if(!client.bankSearching) {
+			Rasterizer2D.drawHorizontalLine(beginX + 5, beginY + 80, 37, 0x000000, 55);
+			Rasterizer2D.drawHorizontalLine(beginX + 440, beginY + 80, 38, 0x000000, 55);
 		}
-		if (Config.def.panelStyle == 1) {
+		if (Config.def.panelStyle == 1 && !client.bankSearching) {
 			Rasterizer2D.fillRectangle(beginX + 5, beginY + 81, 488, 210, 0x000000, 30);
 		}
 
@@ -380,13 +379,13 @@ public class BankPanel extends Panel {
 				int x = i % 8 * 50; // 57 is default, space between item models
 				int icon = Interface.cache[270 + tab].invId[i];
 				if(icon <= 0) {
-					offset += i % 8 == 7 ? 45 : 0;
+					offset += i % 8 == 7 ? 40 : 0;
 					continue;
 				}
 				itemsCount++;
-				/** Slots item tooltip */
+				/* Slots item tooltip */
 				if(client.mouseY > beginY + 82) {
-					if(client.mouseInRegion(beginX + 52 + x, beginY + offset, beginX + 87 + x, beginY + offset + 44)) {
+					if(client.mouseInRegion(beginX + 52 + x, beginY + offset + 2, beginX + 87 + x, beginY + offset + 41)) {
 						tooltip = ObjectType.get(icon).name;
 					}
 				}

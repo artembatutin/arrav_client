@@ -33,7 +33,8 @@ public final class ObjectType {
 	public static ObjectType nulled;
 	
 	public int id;
-	private boolean osrs;
+	private boolean inOSRS;
+	private boolean canOSRS;
 	private int modelId;
 	private int modelIdOSRS;
 	public int iconZoom;
@@ -62,7 +63,6 @@ public final class ObjectType {
 	private byte[] recolorDstPalette;
 	
 	public int value;
-	private boolean membersObject;
 	public String name;
 	public String description;
 	public String actions[];
@@ -80,6 +80,8 @@ public final class ObjectType {
 	private int femaleDialoguemodelId;
 	private int tertiaryMaleModel;
 	private int tertiaryFemaleModel;
+	private int tertiaryMaleModelOSRS;
+	private int tertiaryFemaleModelOSRS;
 	private int diffusion;
 	private int ambience;
 	public int team;
@@ -346,13 +348,13 @@ public final class ObjectType {
 			return true;
 		}
 		boolean flag = true;
-		if(!Model.isCached(k)) {
+		if(!Model.isCached(k, inOSRS ? 7 : 0)) {
 			flag = false;
 		}
-		if(l != -1 && !Model.isCached(l)) {
+		if(l != -1 && !Model.isCached(l, inOSRS ? 7 : 0)) {
 			flag = false;
 		}
-		if(i1 != -1 && !Model.isCached(i1)) {
+		if(i1 != -1 && !Model.isCached(i1, inOSRS ? 7 : 0)) {
 			flag = false;
 		}
 		return flag;
@@ -370,11 +372,11 @@ public final class ObjectType {
 		if(j == -1) {
 			return null;
 		}
-		Model model = Model.get(j);
+		Model model = Model.get(j, inOSRS ? 7 : 0);
 		if(k != -1) {
 			if(l != -1) {
-				final Model model_1 = Model.get(k);
-				final Model model_3 = Model.get(l);
+				final Model model_1 = Model.get(k, inOSRS ? 7 : 0);
+				final Model model_3 = Model.get(l, inOSRS ? 7 : 0);
 				final Model aclass30_sub2_sub4_sub6_1s[] = {model, model_1, model_3};
 				model = new Model(3, aclass30_sub2_sub4_sub6_1s);
 			} else {
@@ -418,7 +420,7 @@ public final class ObjectType {
 		if(model != null) {
 			return model;
 		}
-		model = Model.get(modelId, osrs ? 7 : 0);
+		model = Model.get(modelId, inOSRS ? 7 : 0);
 		if(model == null) {
 			return null;
 		}
@@ -454,7 +456,7 @@ public final class ObjectType {
 				return get(j).method202(1);
 			}
 		}
-		final Model model = Model.get(modelId, osrs ? 7 : 0);
+		final Model model = Model.get(modelId, inOSRS ? 7 : 0);
 		if(model == null) {
 			return null;
 		}
@@ -489,7 +491,7 @@ public final class ObjectType {
 	
 	public static void unpack(CacheArchive archive) {
 		final Buffer buffer;
-		if(false) {
+		if(Constants.USER_HOME_FILE_STORE) {
 			data = new Buffer(archive.getFile("obj.dat"));
 			buffer = new Buffer(archive.getFile("obj.idx"));
 		} else {
@@ -546,6 +548,15 @@ public final class ObjectType {
 							obj.maleEquipAltOSRS = osrs.maleEquipAlt;
 							obj.femaleEquipOSRS = osrs.femaleEquip;
 							obj.femaleEquipAltOSRS = osrs.femaleEquipAlt;
+							obj.maleEquipOffsetXOSRS = osrs.maleEquipOffsetX;
+							obj.maleEquipOffsetYOSRS = osrs.maleEquipOffsetY;
+							obj.maleEquipOffsetZOSRS = osrs.maleEquipOffsetZ;
+							obj.womanEquipOffsetXOSRS = osrs.womanEquipOffsetX;
+							obj.womanEquipOffsetYOSRS = osrs.womanEquipOffsetY;
+							obj.womanEquipOffsetZOSRS = osrs.womanEquipOffsetZ;
+							obj.tertiaryMaleModelOSRS = osrs.tertiaryMaleModel;
+							obj.tertiaryFemaleModelOSRS = osrs.tertiaryFemaleModel;
+							obj.canOSRS = true;
 						}
 					}
 				}
@@ -602,9 +613,7 @@ public final class ObjectType {
 			} else if(opcode == 15) {
 				iconRollOSRS = buffer.getUShort();
 			} else if(opcode == 16) {
-				//osrs = true;
-			} else if(opcode == 18) {
-				buffer.getUShort();
+				canOSRS = true;
 			} else if(opcode == 23) {
 				maleEquip = buffer.getUShort();
 			} else if(opcode == 24) {
@@ -661,6 +670,10 @@ public final class ObjectType {
 				tertiaryMaleModel = buffer.getUShort();
 			} else if(opcode == 79) {
 				tertiaryFemaleModel = buffer.getUShort();
+			} else if(opcode == 80) {
+				tertiaryMaleModelOSRS = buffer.getUShort();
+			} else if(opcode == 81) {
+				tertiaryFemaleModelOSRS = buffer.getUShort();
 			} else if(opcode == 90) {
 				maleDialoguemodelId = buffer.getUShort();
 			} else if(opcode == 91) {
@@ -671,8 +684,6 @@ public final class ObjectType {
 				femaleDialogueHatmodelId = buffer.getUShort();
 			} else if(opcode == 95) {
 				spriteCameraYaw = buffer.getUShort();
-			} else if(opcode == 96) {
-				buffer.getUByte();
 			} else if(opcode == 97) {
 				noteId = buffer.getUShort();
 			} else if(opcode == 98) {
@@ -708,6 +719,14 @@ public final class ObjectType {
 				womanEquipOffsetX = buffer.getSByte();
 				womanEquipOffsetY = buffer.getSByte();
 				womanEquipOffsetZ = buffer.getSByte();
+			} else if(opcode == 127) {
+				maleEquipOffsetXOSRS = buffer.getSByte();
+				maleEquipOffsetYOSRS = buffer.getSByte();
+				maleEquipOffsetZOSRS = buffer.getSByte();
+			} else if(opcode == 128) {
+				womanEquipOffsetXOSRS = buffer.getSByte();
+				womanEquipOffsetYOSRS = buffer.getSByte();
+				womanEquipOffsetZOSRS = buffer.getSByte();
 			} else {
 				System.out.println("[ObjectType] Unknown opcode: " + opcode);
 				break;
@@ -771,22 +790,22 @@ public final class ObjectType {
 				out.writeByte(15);
 				out.writeShort(iconRollOSRS);
 				written.add(15);
-			} else if(osrs && !written.contains(16)) {
+			} else if(canOSRS && !written.contains(16)) {
 				out.writeByte(16);
 				written.add(16);
-			} else if(maleEquip != -1 && !written.contains(23)) {
+			} else if(maleEquip > 0 && !written.contains(23)) {
 				out.writeByte(23);
 				out.writeShort(maleEquip);
 				written.add(23);
-			} else if(maleEquipAlt != -1 && !written.contains(24)) {
+			} else if(maleEquipAlt > 0 && !written.contains(24)) {
 				out.writeByte(24);
 				out.writeShort(maleEquipAlt);
 				written.add(24);
-			} else if(femaleEquip != -1 && !written.contains(25)) {
+			} else if(femaleEquip > 0 && !written.contains(25)) {
 				out.writeByte(25);
 				out.writeShort(femaleEquip);
 				written.add(25);
-			} else if(femaleEquipAlt != -1 && !written.contains(26)) {
+			} else if(femaleEquipAlt > 0 && !written.contains(26)) {
 				out.writeByte(26);
 				out.writeShort(femaleEquipAlt);
 				written.add(26);
@@ -813,31 +832,39 @@ public final class ObjectType {
 					out.writeByte(recolorDstPalette[i]);
 				}
 				written.add(42);
-			} else if(maleEquipOSRS != -1 && !written.contains(43)) {
+			} else if(maleEquipOSRS > 0 && !written.contains(43)) {
 				out.writeByte(43);
 				out.writeShort(maleEquipOSRS);
 				written.add(43);
-			} else if(maleEquipAltOSRS != -1 && !written.contains(44)) {
+			} else if(maleEquipAltOSRS > 0 && !written.contains(44)) {
 				out.writeByte(44);
 				out.writeShort(maleEquipAltOSRS);
 				written.add(44);
-			} else if(femaleEquipOSRS != -1 && !written.contains(45)) {
+			} else if(femaleEquipOSRS > 0 && !written.contains(45)) {
 				out.writeByte(45);
 				out.writeShort(femaleEquipOSRS);
 				written.add(45);
-			} else if(femaleEquipAltOSRS != -1 && !written.contains(46)) {
+			} else if(femaleEquipAltOSRS > 0 && !written.contains(46)) {
 				out.writeByte(46);
 				out.writeShort(femaleEquipAltOSRS);
 				written.add(46);
-			} else if(tertiaryMaleModel != -1 && !written.contains(78)) {
+			} else if(tertiaryMaleModel > 0 && !written.contains(78)) {
 				out.writeByte(78);
 				out.writeShort(tertiaryMaleModel);
 				written.add(78);
-			} else if(tertiaryFemaleModel != -1 && !written.contains(79)) {
+			} else if(tertiaryFemaleModel > 0 && !written.contains(79)) {
 				out.writeByte(79);
 				out.writeShort(tertiaryFemaleModel);
 				written.add(79);
-			} else if(maleDialoguemodelId != -1 && !written.contains(90)) {
+			} else if(tertiaryMaleModelOSRS > 0 && !written.contains(80)) {
+				out.writeByte(80);
+				out.writeShort(tertiaryMaleModelOSRS);
+				written.add(80);
+			} else if(tertiaryFemaleModelOSRS > 0 && !written.contains(81)) {
+				out.writeByte(81);
+				out.writeShort(tertiaryFemaleModelOSRS);
+				written.add(81);
+			} else if(maleDialoguemodelId > 0 && !written.contains(90)) {
 				out.writeByte(90);
 				out.writeShort(maleDialoguemodelId);
 				written.add(90);
@@ -909,6 +936,18 @@ public final class ObjectType {
 				out.write(womanEquipOffsetY);
 				out.write(womanEquipOffsetZ);
 				written.add(126);
+			} else if((maleEquipOffsetXOSRS != 0 || maleEquipOffsetYOSRS != 0 || maleEquipOffsetZOSRS != 0) && !written.contains(127)) {
+				out.writeByte(127);
+				out.write(maleEquipOffsetXOSRS);
+				out.write(maleEquipOffsetYOSRS);
+				out.write(maleEquipOffsetZOSRS);
+				written.add(127);
+			} else if((womanEquipOffsetXOSRS != 0 || womanEquipOffsetY != 0 || womanEquipOffsetZOSRS != 0) && !written.contains(128)) {
+				out.writeByte(128);
+				out.write(womanEquipOffsetXOSRS);
+				out.write(womanEquipOffsetYOSRS);
+				out.write(womanEquipOffsetZOSRS);
+				written.add(128);
 			} else if(actions != null && !actionsd) {
 				for(int i = 0; i < actions.length; i++) {
 					if(actions[i] != null && i < 5) {
@@ -975,7 +1014,6 @@ public final class ObjectType {
 			} else if(opcode == 12) {
 				value = buffer.getInt();
 			} else if(opcode == 16) {
-				membersObject = true;
 			} else if(opcode == 23) {
 				maleEquip = buffer.getUShort();
 				maleEquipOffsetY = buffer.getSByte();
@@ -1095,7 +1133,6 @@ public final class ObjectType {
 		iconVerticalOffset = 0;
 		stackable = false;
 		value = 1;
-		membersObject = false;
 		groundActions = null;
 		actions = null;
 		maleEquip = -1;
@@ -1108,6 +1145,8 @@ public final class ObjectType {
 		femaleEquipAltOSRS = -1;
 		tertiaryMaleModel = -1;
 		tertiaryFemaleModel = -1;
+		tertiaryMaleModelOSRS = -1;
+		tertiaryFemaleModelOSRS = -1;
 		maleDialoguemodelId = -1;
 		maleDialogueHatmodelId = -1;
 		femaleDialoguemodelId = -1;
@@ -1143,8 +1182,11 @@ public final class ObjectType {
 		iconZoom = itemDef.iconZoom;
 		iconYaw = itemDef.iconYaw;
 		iconRoll = itemDef.iconRoll;
+		iconZoomOSRS = itemDef.iconZoomOSRS;
+		iconYawOSRS = itemDef.iconYawOSRS;
+		iconRollOSRS = itemDef.iconRollOSRS;
 		spriteCameraYaw = itemDef.spriteCameraYaw;
-		osrs = itemDef.osrs;
+		inOSRS = itemDef.inOSRS;
 		value = 0;
 		final ObjectType obj = get(lendID);
 		maleDialogueHatmodelId = obj.maleDialogueHatmodelId;
@@ -1155,13 +1197,15 @@ public final class ObjectType {
 		maleDialoguemodelId = obj.maleDialoguemodelId;
 		groundActions = obj.groundActions;
 		maleEquip = obj.maleEquip;
-		osrs = obj.osrs;
+		inOSRS = obj.inOSRS;
 		name = obj.name;
-		femaleEquip = obj.femaleEquip;
-		membersObject = obj.membersObject;
 		femaleDialoguemodelId = obj.femaleDialoguemodelId;
+		femaleEquip = obj.femaleEquip;
+		femaleEquipOSRS = obj.femaleEquipOSRS;
 		femaleEquipAlt = obj.femaleEquipAlt;
+		femaleEquipAltOSRS = obj.femaleEquipAltOSRS;
 		tertiaryFemaleModel = obj.tertiaryFemaleModel;
+		tertiaryFemaleModelOSRS = obj.tertiaryFemaleModelOSRS;
 		modifiedModelColors = obj.modifiedModelColors;
 		team = obj.team;
 		if(obj.actions != null) {
@@ -1176,16 +1220,18 @@ public final class ObjectType {
 		iconZoom = itemDef.iconZoom;
 		iconYaw = itemDef.iconYaw;
 		iconRoll = itemDef.iconRoll;
+		iconZoomOSRS = itemDef.iconZoomOSRS;
+		iconYawOSRS = itemDef.iconYawOSRS;
+		iconRollOSRS = itemDef.iconRollOSRS;
 		spriteCameraYaw = itemDef.spriteCameraYaw;
 		iconHorizontalOffset = itemDef.iconHorizontalOffset;
 		iconVerticalOffset = itemDef.iconVerticalOffset;
 		originalModelColors = itemDef.originalModelColors;
 		modifiedModelColors = itemDef.modifiedModelColors;
-		osrs = itemDef.osrs;
+		inOSRS = itemDef.inOSRS;
 		final ObjectType obj = get(noteId);
 		name = obj.name;
-		membersObject = obj.membersObject;
-		osrs = obj.osrs;
+		inOSRS = obj.inOSRS;
 		value = obj.value;
 		String s = "a";
 		if(obj.name != null) {
@@ -1199,26 +1245,35 @@ public final class ObjectType {
 	}
 	
 	private void osrs() {
-		if(Config.def.oldModels && !osrs) {
-			if(id == 18349) {
-				System.out.println("choat is " + modelIdOSRS);
-			}
+		if(Config.def.oldModels && canOSRS) {
 			if(modelIdOSRS > 0) {//sets icon
 				modelId = modelIdOSRS;
 				iconYaw = iconYawOSRS;
 				iconRoll = iconRollOSRS;
 				iconZoom = iconZoomOSRS;
 
-				if(maleEquipOSRS > 0)
+				//if(maleEquipOSRS > 0)
 					maleEquip = maleEquipOSRS;
-				if(maleEquipAltOSRS > 0)
+				//if(maleEquipAltOSRS > 0)
 					maleEquipAlt = maleEquipAltOSRS;
-				if(femaleEquipOSRS > 0)
+				//if(femaleEquipOSRS > 0)
 					femaleEquip = femaleEquipOSRS;
-				if(femaleEquipAltOSRS > 0)
+				//if(femaleEquipAltOSRS > 0)
 					femaleEquipAlt = femaleEquipAltOSRS;
-				osrs = true;
+				
+				maleEquipOffsetX = maleEquipOffsetXOSRS;
+				maleEquipOffsetY = maleEquipOffsetYOSRS;
+				maleEquipOffsetZ = maleEquipOffsetZOSRS;
+				womanEquipOffsetX = womanEquipOffsetXOSRS;
+				womanEquipOffsetY = womanEquipOffsetYOSRS;
+				womanEquipOffsetZ = womanEquipOffsetZOSRS;
+				tertiaryMaleModel = tertiaryMaleModelOSRS;
+				tertiaryFemaleModel = tertiaryFemaleModelOSRS;
+				inOSRS = true;
 			}
+		} else if(Config.def.oldModels && !canOSRS) {
+			maleEquipOffsetZ += 2;
+			maleEquipOffsetY -= 8;
 		}
 	}
 	
