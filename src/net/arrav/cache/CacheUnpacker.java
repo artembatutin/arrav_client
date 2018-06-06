@@ -227,8 +227,6 @@ public class CacheUnpacker {
 
 	public CacheArchive getCacheArchive(int index, String fileName, int crc) {
 		byte[] buffer = null;
-		int timeToWait = 5;
-
 		try {
 			if(client.cacheIdx[0] != null) {
 				buffer = client.cacheIdx[0].readFile(index);
@@ -250,11 +248,11 @@ public class CacheUnpacker {
 			return new CacheArchive(index, fileName, buffer);
 		}
 
-		int errorCount = 0;
 		while(buffer == null) {
 			sideMessage = "Requesting " + fileName;
 			try(DataInputStream in = openJagGrabInputStream(fileName)) {
 				int size = in.readInt();
+				System.out.println("size found: " + size + " - " + fileName + " tru: " + in.available());
 				if(size <= 0) {
 					buffer = null;
 				} else {
@@ -269,7 +267,6 @@ public class CacheUnpacker {
 						int crcValue = (int) client.getCrc().getValue();
 						if(crcValue != crc) {
 							buffer = null;
-							errorCount++;
 						}
 					}
 				}
@@ -288,24 +285,10 @@ public class CacheUnpacker {
 				buffer = null;
 			}
 			if(buffer == null) {
-				for(int seconds = timeToWait; seconds > 0; seconds--) {
-					if(errorCount >= 3) {
-						sideMessage = "Game updated - please reload page";
-						seconds = 10;
-					} else {
-						throw new RuntimeException("Unable to find archive: " + fileName);
-					}
-
-					try {
-						Thread.sleep(1000L);
-					} catch(Exception _ex) {
-						_ex.printStackTrace();
-					}
-				}
-				timeToWait *= 2;
-				if(timeToWait > 60) {
-					timeToWait = 60;
-				}
+				//retry.
+				sideMessage = "Retrying to load " + fileName + ".";
+				System.out.println("he");
+				return getCacheArchive(index, fileName, crc);
 			}
 		}
 		return new CacheArchive(index, fileName, buffer);

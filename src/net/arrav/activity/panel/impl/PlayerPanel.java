@@ -165,7 +165,7 @@ public class PlayerPanel extends Panel {
 				if(client.mouseInRegion(beginX + 52 + i * 115, beginY + 150, beginX + 102 + i * 115, beginY + 200)) {
 					Rasterizer2D.fillRectangle(beginX + 52 + i * 115, beginY + 150, 50, 50, 0x000000, 40);
 				}
-				smallFont.drawLeftAlignedEffectString(typeNames[i], beginX + 78 + i * 115, beginY + 220, 0xffffff, true);
+				smallFont.drawLeftAlignedEffectString(typeNames[i], beginX + 38 + i * 120, beginY + 220, 0xffffff, true);
 			}
 		} else if(type == 0) {
 			ResizableUI_CUS.drawFace(beginX + 38, beginY + 75);

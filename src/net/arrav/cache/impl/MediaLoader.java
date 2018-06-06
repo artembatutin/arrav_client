@@ -57,52 +57,6 @@ public class MediaLoader implements CacheLoader {
 		client.scrollBarTop = new BitmapImage(archive, "scrollbar", 0);
 		client.scrollBarDown = new BitmapImage(archive, "scrollbar", 1);
 		client.minimapImage = new BitmapImage(512, 512);
-		boolean loaded = false;
-		while(!loaded) {
-			if(ImageCache.get(69, true).imageHeight > 3) {
-				loaded = true;
-			} else {
-				continue;
-			}
-			for(int y = 0; y < 33; y++) {
-				int k6 = 999;
-				int i7 = 0;
-				for(int x = 0; x < 34; x++) {
-					if(ImageCache.get(69, true).imageRaster[x + y * ImageCache.get(69, true).imageWidth] == 0) {
-						if(k6 == 999) {
-							k6 = x;
-						}
-						continue;
-					}
-					if(k6 == 999) {
-						continue;
-					}
-					i7 = x;
-					break;
-				}
-				client.compassClipStarts[y] = k6;
-				client.compassLineLengths[y] = i7 - k6;
-			}
-			for(int l6 = 5; l6 < 156; l6++) {
-				int j7 = 999;
-				int l7 = 0;
-				for(int j8 = 25; j8 < 172; j8++) {
-					if(ImageCache.get(69, true).imageRaster[j8 + l6 * ImageCache.get(69, true).imageWidth] == 0 && (j8 > 34 || l6 > 34)) {
-						if(j7 == 999) {
-							j7 = j8;
-						}
-						continue;
-					}
-					if(j7 == 999) {
-						continue;
-					}
-					l7 = j8;
-					break;
-				}
-				client.minimapLineStarts[l6 - 5] = j7 - 25;
-				client.minimapLineLengths[l6 - 5] = l7 - j7;
-			}
-		}
 		Rasterizer3D.setBrightness(0.80000000000000004F);
 	}
 }

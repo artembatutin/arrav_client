@@ -660,7 +660,7 @@ public class Client extends ClientEngine {
 			if(args != null && args.length > 0) {
 				boolean dev = Boolean.parseBoolean(args[0]);
 				Constants.JAGGRAB_ENABLED = !dev;
-				Constants.MEMORY_MAPPED_CACHE = !dev;
+				//Constants.MEMORY_MAPPED_CACHE = !dev;
 				Constants.USER_HOME_FILE_STORE = !dev;
 				TitleActivity.connection = dev ? 1 : 0;
 			}
