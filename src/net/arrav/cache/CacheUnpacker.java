@@ -16,6 +16,7 @@ import net.arrav.net.SignLink;
 import net.arrav.util.ThreadUtils;
 import net.arrav.util.io.Buffer;
 
+import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
 import java.io.IOException;
 import java.io.OutputStream;
@@ -387,6 +388,9 @@ public class CacheUnpacker {
 	 * @throws IOException
 	 */
 	private DataInputStream openJagGrabInputStream(String file) throws IOException {
+		if(!Constants.JAGGRAB_ENABLED) {
+			return new DataInputStream(new ByteArrayInputStream(file.getBytes()));
+		}
 		if(loadingSocket != null) {
 			try {
 				loadingSocket.close();
