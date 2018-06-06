@@ -474,7 +474,7 @@ public final class OnDemandFetcher implements Runnable {
 		for(OnDemandEntry entry = (OnDemandEntry) requested.getFirst(); entry != null; entry = (OnDemandEntry) requested.getNext()) {
 			if(entry.incomplete) {
 				uncompletedCount++;
-				//System.out.println("Error: model is incomplete or missing  [ type = " + entry.type + "]  [nodeId = " + entry.id + "]");
+				System.out.println("Error: model is incomplete or missing  [ type = " + entry.type + "]  [nodeId = " + entry.id + "]");
 			}
 		}
 		while(uncompletedCount < 10) {
@@ -483,14 +483,14 @@ public final class OnDemandFetcher implements Runnable {
 				if(entry == null)
 					break;
 				requested.addLast(entry);
-				//missingFile(entry);
+				missingFile(entry);
 				uncompletedCount++;
 				closeRequest(entry);
 				waiting = true;
 			} catch(Exception e) {
 				final OnDemandEntry entry = (OnDemandEntry) aClass19_1368.removeFirst();
 				e.printStackTrace();
-				//System.out.println("missing: type: "+entry.type+" ID"+entry.id);
+				System.out.println("missing: type: "+entry.type+" ID"+entry.id);
 			}
 		}
 	}
@@ -509,10 +509,10 @@ public final class OnDemandFetcher implements Runnable {
 		while(entry != null) {
 			waiting = true;
 			byte[] data = null;
-			if(client.cacheIdx[0] != null) {
-				if(entry.id != -1)
-					data = client.cacheIdx[entry.type + 1].readFile(entry.id);
-			}
+			//if(client.cacheIdx[0] != null) {
+			if(entry.id != -1)
+				data = client.cacheIdx[entry.type + 1].readFile(entry.id);
+			//}
 			if(Constants.JAGGRAB_ENABLED) {
 				if(entry.type <= fileChecksums.length && entry.id <= fileChecksums[entry.type].length) {
 					if(!crcMatches(fileChecksums[entry.type][entry.id], data)) {
