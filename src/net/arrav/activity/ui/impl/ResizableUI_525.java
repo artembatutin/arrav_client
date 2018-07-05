@@ -20,7 +20,9 @@ import net.arrav.util.string.StringUtils;
 import java.awt.*;
 
 public class ResizableUI_525 extends ResizableUI {
-
+	
+	private String myName;
+	private int typingCrownOffset;
 	private int chatboxHeight = 114;
 	private int chatboxResizeClickY = -1;
 	private int chatboxResizeFromY = -1;
@@ -241,16 +243,23 @@ public class ResizableUI_525 extends ResizableUI {
 				client.chatContentHeight = 114;
 			}
 			client.gameActivity.drawWhiteScrollbar(496, yoff + 7, 114, client.chatContentHeight, client.chatContentHeight - client.chatScrollPos - 113);
-			String myName;
-			if(client.localPlayer != null && client.localPlayer.name != null) {
-				myName = client.localPlayer.name;
-			} else {
-				myName = StringUtils.formatName(client.localUsername);
+			if(myName == null) {
+				if(client.localPlayer != null && client.localPlayer.name != null) {
+					myName = client.localPlayer.name;
+				} else {
+					myName = StringUtils.formatName(client.localUsername);
+				}
 			}
-			client.plainFont.drawLeftAlignedString(myName + ":", 12, yoff + 134, 0);
-			client.plainFont.drawLeftAlignedString(myName + ":", 11, yoff + 133, 0xffffff);
-			client.plainFont.drawLeftAlignedString(client.chatInput + "*", 13 + client.plainFont.getStringWidth(myName + ": "), yoff + 134, 0);
-			client.plainFont.drawLeftAlignedString(client.chatInput + "*", 12 + client.plainFont.getStringWidth(myName + ": "), yoff + 133, 0x7fa9ff);
+			typingCrownOffset = 0;
+			if(client.localPrivilege >= 1) {
+				ImageCache.get(1984 + client.localPrivilege - 1).drawImage(11, yoff + 123);
+				typingCrownOffset = 15;
+			}
+			client.plainFont.drawLeftAlignedString(myName + ":", 12 + typingCrownOffset, yoff + 134, 0);
+			client.plainFont.drawLeftAlignedString(myName + ":", 11+ typingCrownOffset, yoff + 133, 0xffffff);
+			int width = client.plainFont.getStringWidth(myName + ": ");
+			client.plainFont.drawLeftAlignedString(client.chatInput + "*", 13 + width + typingCrownOffset, yoff + 134, 0);
+			client.plainFont.drawLeftAlignedString(client.chatInput + "*", 12 + width + typingCrownOffset, yoff + 133, 0x7fa9ff);
 			for(int i = 0; i < 505; i++) {
 				int opacity = 100 - (int) (i / 5.05);
 				Rasterizer2D.drawHorizontalLine(7 + i, yoff + 6, 1, 0xffffff, opacity);

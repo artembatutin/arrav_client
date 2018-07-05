@@ -8,7 +8,6 @@ public abstract class UI {
 	 * Game Instance.
 	 */
 	public static Client client;
-
 	/**
 	 * Builds the menus of the buttons and actions of the scroll bar for the chat.
 	 */

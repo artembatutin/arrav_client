@@ -20,6 +20,9 @@ import net.arrav.util.string.StringUtils;
 
 public class FixedUI_OS extends FixedUI {
 	
+	private String myName;
+	private int typingCrownOffset;
+	
 	@Override
 	public void buildChat() {
 		final String[] modes = {"View", "On", "Friends", "Off", "Hide"};
@@ -204,14 +207,20 @@ public class FixedUI_OS extends FixedUI {
 				client.chatContentHeight = 114;
 			}
 			client.gameActivity.drawScrollbar(496, 7, 114, client.chatContentHeight, client.chatContentHeight - client.chatScrollPos - 114);
-			String myName;
-			if(client.localPlayer != null && client.localPlayer.name != null) {
-				myName = client.localPlayer.name;
-			} else {
-				myName = StringUtils.formatName(client.localUsername);
+			if(myName == null) {
+				if(client.localPlayer != null && client.localPlayer.name != null) {
+					myName = client.localPlayer.name;
+				} else {
+					myName = StringUtils.formatName(client.localUsername);
+				}
 			}
-			client.plainFont.drawLeftAlignedString(myName + ":", 11, 133, 0);
-			client.plainFont.drawLeftAlignedString(client.chatInput + "*", 12 + client.plainFont.getStringWidth(myName + ": "), 133, 255);
+			typingCrownOffset = 0;
+			if(client.localPrivilege >= 1) {
+				ImageCache.get(1984 + client.localPrivilege - 1).drawImage(11, 123);
+				typingCrownOffset = 14;
+			}
+			client.plainFont.drawLeftAlignedString(myName + ":", 11 + typingCrownOffset, 133, 0);
+			client.plainFont.drawLeftAlignedString(client.chatInput + "*", 12 + client.plainFont.getStringWidth(myName + ": ") + typingCrownOffset, 133, 255);
 			Rasterizer2D.drawHorizontalLine(7, 121, 506, 0x807660);
 		}
 		if(client.menuOpened) {

@@ -19,6 +19,14 @@ import net.arrav.util.collect.LinkedDeque;
 import net.arrav.util.string.StringUtils;
 
 public class FixedUI_317 extends FixedUI {
+	
+	private String myName;
+	private int typingCrownOffset;
+	private static final int basicFontColor = 0;
+	private static final int blueFontColor = 255;
+	private static final int redFontColor = 0x800000;
+	private static final int purpleFontColor = 0x800080;
+	private static final int orangeFontColor = 0x7e3200;
 
 	@Override
 	public void buildChat() {
@@ -113,11 +121,6 @@ public class FixedUI_317 extends FixedUI {
 		} else {
 			int msgpos = 0;
 			Rasterizer2D.setClip(0, 20, 463, 96);
-			final int basicFontColor = 0;
-			final int blueFontColor = 255;
-			final int redFontColor = 0x800000;
-			final int purpleFontColor = 0x800080;
-			final int orangeFontColor = 0x7e3200;
 			final int view = client.chatTypeView;
 			for(int i = 0; i < 100; i++) {
 				if(client.chatMessage[i] != null) {
@@ -128,10 +131,9 @@ public class FixedUI_317 extends FixedUI {
 						continue;
 					}
 					final int type = client.chatType[i];
-					String author = client.chatAuthor[i];
 					final String message = client.chatMessage[i];
 					int rights = client.chatPriv[i];
-					if(!client.uiRenderer.canSeeMessage(type, view, rights, author)) {
+					if(!client.uiRenderer.canSeeMessage(type, view, rights, client.chatAuthor[i])) {
 						continue;
 					}
 					if(type == 0) {
@@ -141,8 +143,8 @@ public class FixedUI_317 extends FixedUI {
 							ImageCache.get(1984 + rights - 1).drawImage(x + 1, yPos - 12);
 							x += 14;
 						}
-						client.plainFont.drawLeftAlignedString(author + ":", x, yPos, basicFontColor);
-						x += client.plainFont.getStringWidth(author + ": ");
+						client.plainFont.drawLeftAlignedString(client.chatAuthor[i] + ":", x, yPos, basicFontColor);
+						x += client.plainFont.getStringWidth(client.chatAuthor[i] + ": ");
 						client.plainFont.drawLeftAlignedString(message, x, yPos, blueFontColor);
 					} else if(type == 2) {
 						client.plainFont.drawLeftAlignedString("From", x, yPos, redFontColor);
@@ -151,19 +153,19 @@ public class FixedUI_317 extends FixedUI {
 							ImageCache.get(1984 + rights - 1).drawImage(x, yPos - 12);
 							x += 12;
 						}
-						client.plainFont.drawLeftAlignedString(author + ":", x, yPos, redFontColor);
-						x += client.plainFont.getStringWidth(author) + 8;
+						client.plainFont.drawLeftAlignedString(client.chatAuthor[i] + ":", x, yPos, redFontColor);
+						x += client.plainFont.getStringWidth(client.chatAuthor[i]) + 8;
 						client.plainFont.drawLeftAlignedString(client.chatMessage[i], x, yPos, redFontColor);
 					} else if(type == 4) {
-						client.plainFont.drawLeftAlignedString(author + " " + message, x, yPos, purpleFontColor);
+						client.plainFont.drawLeftAlignedString(client.chatAuthor[i] + " " + message, x, yPos, purpleFontColor);
 					} else if(type == 5) {
 						client.plainFont.drawLeftAlignedString(message, x, yPos, redFontColor);
 					} else if(type == 6) {
-						client.plainFont.drawLeftAlignedString("To " + author + ": " + message, x, yPos, redFontColor);
+						client.plainFont.drawLeftAlignedString("To " + client.chatAuthor[i] + ": " + message, x, yPos, redFontColor);
 					} else if(type == 7) {
-						final int split = author.indexOf(":");
-						final String clan = author.substring(0, split);
-						author = author.substring(split + 1);
+						final int split = client.chatAuthor[i].indexOf(":");
+						final String clan = client.chatAuthor[i].substring(0, split);
+						client.chatAuthor[i] = client.chatAuthor[i].substring(split + 1);
 						client.plainFont.drawLeftAlignedString("[", x, yPos, 0);
 						x += 5;
 						client.plainFont.drawLeftAlignedString(clan, x, yPos, 255);
@@ -174,20 +176,20 @@ public class FixedUI_317 extends FixedUI {
 							ImageCache.get(1984 + rights - 1).drawImage(x, yPos - 12);
 							x += 13;
 						}
-						client.plainFont.drawLeftAlignedString(author + ":", x, yPos, 0);
-						x += client.plainFont.getStringWidth(author) + 6;
+						client.plainFont.drawLeftAlignedString(client.chatAuthor[i] + ":", x, yPos, 0);
+						x += client.plainFont.getStringWidth(client.chatAuthor[i]) + 6;
 						client.plainFont.drawLeftAlignedString(message, x, yPos, 0x800000);
 					} else if(type == 8) {
-						client.plainFont.drawLeftAlignedString(author + " " + message, x, yPos, orangeFontColor);
+						client.plainFont.drawLeftAlignedString(client.chatAuthor[i] + " " + message, x, yPos, orangeFontColor);
 					} else if(type == 9) {
-						final int split = author.indexOf(":");
-						author = author.substring(split + 1);
+						final int split = client.chatAuthor[i].indexOf(":");
+						client.chatAuthor[i] = client.chatAuthor[i].substring(split + 1);
 						if(rights >= 1) {
 							ImageCache.get(1984 + rights - 1).drawImage(x, yPos - 12);
 							x += 13;
 						}
-						client.plainFont.drawLeftAlignedString(author + ":", x, yPos, 0);
-						x += client.plainFont.getStringWidth(author) + 6;
+						client.plainFont.drawLeftAlignedString(client.chatAuthor[i] + ":", x, yPos, 0);
+						x += client.plainFont.getStringWidth(client.chatAuthor[i]) + 6;
 						client.plainFont.drawLeftAlignedString(message, x, yPos, 0x235148);
 					}
 					msgpos++;
@@ -199,14 +201,20 @@ public class FixedUI_317 extends FixedUI {
 				client.chatContentHeight = 78;
 			}
 			client.gameActivity.drawOldScrollbar(480, 19, 77, client.chatContentHeight, client.chatContentHeight - client.chatScrollPos - 77);
-			String myName;
-			if(client.localPlayer != null && client.localPlayer.name != null) {
-				myName = client.localPlayer.name;
-			} else {
-				myName = StringUtils.formatName(client.localUsername);
+			if(myName == null) {
+				if(client.localPlayer != null && client.localPlayer.name != null) {
+					myName = client.localPlayer.name;
+				} else {
+					myName = StringUtils.formatName(client.localUsername);
+				}
 			}
-			client.plainFont.drawLeftAlignedString(myName + ":", 19, 110, 0);
-			client.plainFont.drawLeftAlignedString(client.chatInput + "*", 20 + client.plainFont.getStringWidth(myName + ": "), 110, 255);
+			typingCrownOffset = 0;
+			if(client.localPrivilege >= 1) {
+				ImageCache.get(1984 + client.localPrivilege - 1).drawImage(19, 99);
+				typingCrownOffset = 14;
+			}
+			client.plainFont.drawLeftAlignedString(myName + ":", 19 + typingCrownOffset, 110, 0);
+			client.plainFont.drawLeftAlignedString(client.chatInput + "*", 17 + client.plainFont.getStringWidth(myName + ": ") + typingCrownOffset, 110, 255);
 			Rasterizer2D.drawHorizontalLine(17, 96, 479, 0x000000);
 		}
 		if(client.menuOpened) {

@@ -19,6 +19,14 @@ import net.arrav.util.collect.LinkedDeque;
 import net.arrav.util.string.StringUtils;
 
 public class FixedUI_562 extends FixedUI {
+	
+	private String myName;
+	private int typingCrownOffset;
+	private static final int basicFontColor = 0;
+	private static final int blueFontColor = 255;
+	private static final int redFontColor = 0x800000;
+	private static final int purpleFontColor = 0x800080;
+	private static final int orangeFontColor = 0x7e3200;
 
 	@Override
 	public void buildChat() {
@@ -123,11 +131,6 @@ public class FixedUI_562 extends FixedUI {
 		} else {
 			int line = 0;
 			Rasterizer2D.setClip(8, 7, 497, 122);
-			final int basicFontColor = 0;
-			final int blueFontColor = 255;
-			final int redFontColor = 0x800000;
-			final int purpleFontColor = 0x800080;
-			final int orangeFontColor = 0x7e3200;
 			final int view = client.chatTypeView;
 			for(int i = 0; i < 500; i++) {
 				if(client.chatMessage[i] != null) {
@@ -209,14 +212,20 @@ public class FixedUI_562 extends FixedUI {
 				client.chatContentHeight = 114;
 			}
 			client.gameActivity.drawScrollbar(496, 7, 114, client.chatContentHeight, client.chatContentHeight - client.chatScrollPos - 114);
-			String myName;
-			if(client.localPlayer != null && client.localPlayer.name != null) {
-				myName = client.localPlayer.name;
-			} else {
-				myName = StringUtils.formatName(client.localUsername);
+			if(myName == null) {
+				if(client.localPlayer != null && client.localPlayer.name != null) {
+					myName = client.localPlayer.name;
+				} else {
+					myName = StringUtils.formatName(client.localUsername);
+				}
 			}
-			client.plainFont.drawLeftAlignedString(myName + ":", 9, 133, 0);
-			client.plainFont.drawLeftAlignedString(client.chatInput + "*", 10 + client.plainFont.getStringWidth(myName + ": "), 133, 255);
+			typingCrownOffset = 0;
+			if(client.localPrivilege >= 1) {
+				ImageCache.get(1984 + client.localPrivilege - 1).drawImage(10, 123);
+				typingCrownOffset = 14;
+			}
+			client.plainFont.drawLeftAlignedString(myName + ":", 9 + typingCrownOffset, 133, 0);
+			client.plainFont.drawLeftAlignedString(client.chatInput + "*", 10 + client.plainFont.getStringWidth(myName + ": ")+ typingCrownOffset, 133, 255);
 			Rasterizer2D.drawHorizontalLine(7, 121, 506, 0x807660);
 		}
 		if(client.menuOpened) {
