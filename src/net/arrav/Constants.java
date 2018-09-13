@@ -5,9 +5,9 @@ public final class Constants {
 	private Constants() {
 	}
 	
-	public static boolean MEMORY_MAPPED_CACHE = true;
+	public static boolean MEMORY_MAPPED_CACHE = false;
 	public static boolean JAGGRAB_ENABLED = false;
-	public static boolean USER_HOME_FILE_STORE = true;
+	public static boolean USER_HOME_FILE_STORE = false;
 
 	/*
 	 * Miscellaneous constants

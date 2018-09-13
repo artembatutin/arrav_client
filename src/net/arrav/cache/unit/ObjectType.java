@@ -34,7 +34,7 @@ public final class ObjectType {
 	
 	public int id;
 	private boolean inOSRS;
-	private boolean canOSRS;
+	public boolean canOSRS;
 	private int modelId;
 	private int modelIdOSRS;
 	public int iconZoom;
@@ -522,7 +522,7 @@ public final class ObjectType {
 		final Buffer osrs_data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/osrs_obj.dat"));
 		final Buffer osrs_idx = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/osrs_obj.idx"));
 		final int length = osrs_idx.getUShort();
-		System.out.println("OSRS 154: " + length);
+		System.out.println("OSRS 174: " + length);
 		ObjectType[] items = new ObjectType[length];
 		osrs_data.pos = 2;
 		int size = 22308;
@@ -532,14 +532,15 @@ public final class ObjectType {
 		dat.writeShort(size);
 		for(int i = 0; i < size; i++) {
 			ObjectType obj;
+			ObjectType osrs = new ObjectType();
+			osrs.decodeOSRS(osrs_data);
 			try {
-				System.out.println(i);
+				//System.out.println(i);
 				obj = get(i);
 				if(i < items.length) {
-					ObjectType osrs = new ObjectType();
-					osrs.decodeOSRS(osrs_data);
 					if(obj.name != null && osrs.name != null) {
 						if(obj.name.equalsIgnoreCase(osrs.name)) {
+							System.out.println("OSRS COMPATIBLE ITEM: " + obj.id);
 							obj.modelIdOSRS = osrs.modelId;
 							obj.iconRollOSRS = osrs.iconRoll;
 							obj.iconZoomOSRS = osrs.iconZoom;
@@ -1128,6 +1129,9 @@ public final class ObjectType {
 		iconZoom = 2000;
 		iconYaw = 0;
 		iconRoll = 0;
+		iconZoomOSRS = 2000;
+		iconYawOSRS = 0;
+		iconRollOSRS = 0;
 		spriteCameraYaw = 0;
 		iconHorizontalOffset = 0;
 		iconVerticalOffset = 0;
@@ -1272,8 +1276,8 @@ public final class ObjectType {
 				inOSRS = true;
 			}
 		} else if(Config.def.oldModels && !canOSRS) {
-			maleEquipOffsetZ += 2;
-			maleEquipOffsetY -= 8;
+			//maleEquipOffsetZ += 2;
+			//maleEquipOffsetY -= 8;
 		}
 	}
 	

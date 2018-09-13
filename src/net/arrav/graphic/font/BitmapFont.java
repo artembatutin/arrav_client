@@ -460,6 +460,16 @@ public final class BitmapFont extends Rasterizer2D {
 			} else {
 				final char c = s.charAt(index);
 				if(c != ' ') {
+					if(c >= typefaceMask.length)
+						return;
+					if(c >= typefaceHorizontalOffset.length)
+						return;
+					if(c >= typefaceVerticalOffset.length)
+						return;
+					if(c >= typefaceWidth.length)
+						return;
+					if(c >= typefaceHeight.length)
+						return;
 					drawTypeface(typefaceMask[c], x + typefaceHorizontalOffset[c] + 1, y + typefaceVerticalOffset[c] + 1, typefaceWidth[c], typefaceHeight[c], 0, 192);
 					drawTypeface(typefaceMask[c], x + typefaceHorizontalOffset[c], y + typefaceVerticalOffset[c], typefaceWidth[c], typefaceHeight[c], color, alpha);
 				}
