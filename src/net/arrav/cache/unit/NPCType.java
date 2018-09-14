@@ -54,7 +54,6 @@ public final class NPCType {
 	private int[] modelId;
 	private int[] modelIdOSRS;
 	private int[] dialogueModels;
-	private int[] dialogueModelsOSRS;
 	public int childrenIDs[];
 	private boolean osrs;
 	private boolean nonTextured;
@@ -90,14 +89,7 @@ public final class NPCType {
 		data.pos = index[id];
 		npc.id = id;
 		npc.decode(data);
-		
-		if(npc.modelId == null && npc.modelIdOSRS != null) {
-			npc.modelId = npc.modelIdOSRS;
-			npc.osrs = true;
-		} else if(Config.def.oldModels && npc.modelIdOSRS != null) {
-			npc.modelId = npc.modelIdOSRS;
-			npc.osrs = true;
-		}
+		npc.osrs();
 		
 		if(id == 8331) {
 			npc.name = "Guardian";
@@ -263,7 +255,7 @@ public final class NPCType {
 					if(childrenIDs[i2] == 65535)
 						childrenIDs[i2] = -1;
 				}
-			} else if(i == 20) {
+			} else if(i == 31) {
 				int j = stream.getUByte();
 				modelIdOSRS = new int[j];
 				for(int j1 = 0; j1 < j; j1++)
@@ -311,8 +303,8 @@ public final class NPCType {
 	}
 	
 	public static void repackOSRS() throws IOException {
-		final Buffer osrs_data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/osrs_npc.dat"));
-		final Buffer osrs_idx = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/osrs_npc.idx"));
+		final Buffer osrs_data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/npc_osrs.dat"));
+		final Buffer osrs_idx = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/npc_osrs.idx"));
 		final int length = osrs_idx.getUShort();
 		System.out.println("for osrs 154: " + length);
 		NPCType[] npcs = new NPCType[length];
@@ -328,6 +320,9 @@ public final class NPCType {
 			if(i < npcs.length) {
 				NPCType osrs = new NPCType();
 				osrs.decodeOSRS(osrs_data);
+				if(i == 1265) {
+					System.out.println("rock crabs: " + obj.name + " - " + osrs.name);
+				}
 				if(obj.name != null && osrs.name != null) {
 					if(obj.name.equalsIgnoreCase(osrs.name)) {
 						System.out.println("set osrs for " + obj.name + " - " + obj.id);
@@ -366,6 +361,10 @@ public final class NPCType {
 				standAnimationId = buffer.getUShort();
 			} else if(opcode == 14) {
 				walkAnimationId = buffer.getUShort();
+			} else if(opcode == 15) {
+				buffer.getUShort();
+			} else if(opcode == 16) {
+				buffer.getUShort();
 			} else if(opcode == 17) {
 				walkAnimationId = buffer.getUShort();
 				turnAroundAnimationId = buffer.getUShort();
@@ -385,17 +384,17 @@ public final class NPCType {
 					originalModelColors[k1] = buffer.getUShort();
 					modifiedModelColors[k1] = buffer.getUShort();
 				}
-			} else if(opcode == 60) {
+			} else if(opcode == 41) {
+				int colours = buffer.getUByte();
+				for(int k1 = 0; k1 < colours; k1++) {
+					buffer.getUShort();
+					buffer.getUShort();
+				}
+			}else if(opcode == 60) {
 				int additionalModelLen = buffer.getUByte();
 				dialogueModels = new int[additionalModelLen];
 				for(int l1 = 0; l1 < additionalModelLen; l1++)
 					dialogueModels[l1] = buffer.getUShort();
-			} else if(opcode == 90) {
-				buffer.getUShort();
-			} else if(opcode == 91) {
-				buffer.getUShort();
-			} else if(opcode == 92) {
-				buffer.getUShort();
 			} else if(opcode == 93) {
 				visibleMinimap = false;
 			} else if(opcode == 95) {
@@ -548,15 +547,15 @@ public final class NPCType {
 					out.writeShort(c);
 				}
 				written.add(19);
-			} else if(modelIdOSRS != null && !written.contains(20)) {
-				out.writeByte(20);
+			} else if(modelIdOSRS != null && !written.contains(31)) {
+				out.writeByte(31);
 				out.writeByte(modelIdOSRS.length);
 				if(modelIdOSRS.length > 0) {
 					for(int aModelId : modelIdOSRS) {
 						out.writeShort(aModelId);
 					}
 				}
-				written.add(20);
+				written.add(31);
 			} else if(actions != null && !actionsd) {
 				for(int i = 0; i < actions.length; i++) {
 					if(actions[i] != null) {
@@ -782,5 +781,14 @@ public final class NPCType {
 		return model;
 	}
 	
+	private void osrs() {
+		if(modelId == null && modelIdOSRS != null) {
+			modelId = modelIdOSRS;
+			osrs = true;
+		} else if(Config.def.oldModels && modelIdOSRS != null) {
+			modelId = modelIdOSRS;
+			osrs = true;
+		}
+	}
 	
 }

@@ -103,6 +103,8 @@ public final class Constants {
 	public static final byte ORB_RUN = 2;
 	public static final byte ORB_SUMMONING = 3;
 	
+	public static final boolean OSRS_OBJECTS = false;
+	
 	
 
 }

@@ -5,6 +5,7 @@ import net.arrav.Config;
 import net.arrav.cache.unit.DeformSequence;
 import net.arrav.cache.unit.LocationType;
 import net.arrav.cache.unit.VaryingBit;
+import net.arrav.graphic.Rasterizer3D;
 
 public final class Location extends Entity {
 
@@ -113,5 +114,9 @@ public final class Location extends Entity {
 		} else {
 			return LocationType.getPrecise(childs[i]);
 		}
+	}
+	
+	public double getType() {
+		return Rasterizer3D.TYPES[3];
 	}
 }

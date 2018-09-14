@@ -63,7 +63,7 @@ public final class OnDemandFetcher implements Runnable {
 	}
 
 	public void missingFile(OnDemandEntry entry) {
-		String[] archives = {"Model", "Animation", "Music", "Map", "Texture"};
+		String[] archives = {"Model", "Animation", "Music", "Map", "Texture", "Images", "Objects", "OSRS Models"};
 		System.out.println("Couldn't find file: " + entry.id + " in " + archives[entry.type - 1] + " archive.");
 	}
 
