@@ -1748,8 +1748,7 @@ public final class Interface {
 		if(anim1 != -1) {
 			model_1.applyAnimation(anim1);
 		}
-		model_1.calculateLighting(64, 850, -30, -50, -30, true);
-		//model_1.shadeModels(104/*64*/, 1280/*768*/, -50, -10, -50, true);
+		model_1.calculateLighting(74, 850, -30, -50, -30, true);
 		return model_1;
 	}
 

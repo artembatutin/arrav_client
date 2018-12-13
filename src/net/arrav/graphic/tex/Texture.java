@@ -22,6 +22,9 @@ public final class Texture {
 	}
 
 	public static Texture get(int index) {
+		if(index == 15)
+			index = 40;
+		
 		if(cache[index] == null) {
 			resourceManager.addRequest(4, index);
 			return null;

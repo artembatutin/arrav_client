@@ -27,7 +27,7 @@ public final class Model extends Entity {
 	private static byte[] anIntArray1625 = new byte[2000];
 	private byte triPriGlobal;
 	private byte[] texType;
-	private int version;
+	private int size;
 	private int[] particleDirectionX;
 	private int[] particleDirectionY;
 	private int[] particleDirectionZ;
@@ -207,8 +207,8 @@ public final class Model extends Entity {
 			System.out.println("Invalid model identifier: " + identifier);
 		else {
 			buffers[0].getSByte();
-			version = buffers[0].getUByte();
-			upscaled = version > 13;
+			size = buffers[0].getUByte();
+			upscaled = size > 13;
 			buffers[0].pos = is.length - 26;
 			vertexAmt = buffers[0].getUShort();
 			triAmt = buffers[0].getUShort();
@@ -299,9 +299,9 @@ public final class Model extends Entity {
 			int texturedTriangleOffset = pos;
 			pos += particleAmount * 6;
 			int particleVersion = 6;
-			if(version == 14)
+			if(size == 14)
 				particleVersion = 7;
-			else if(version >= 15)
+			else if(size >= 15)
 				particleVersion = 9;
 			int particleDirectionOffset = pos;
 			pos += particleAmount * particleVersion;
@@ -452,7 +452,7 @@ public final class Model extends Entity {
 					triTex[tri] = (short) ((buffers[5].getUShort()) - 1);
 				if(triTexCoord != null) {
 					if(triTex[tri] != -1) {
-						if(version >= 16)
+						if(size >= 16)
 							triTexCoord[tri] = (short) (buffers[6].getUSmart() - 1);
 						else
 							triTexCoord[tri] = (short) ((buffers[6].getUByte()) - 1);
@@ -1072,16 +1072,16 @@ public final class Model extends Entity {
 			texAmt = buffers[0].getUByte();
 			int i_50_ = buffers[0].getUByte();
 			boolean have_mode = (i_50_ & 0x1) == 1;
-			boolean bool_51_ = (0x2 & i_50_) == 2;
-			boolean bool_52_ = (0x4 & i_50_) == 4;
+			boolean has_surface_fx = (0x2 & i_50_) == 2;
+			boolean has_vertex_normals = (0x4 & i_50_) == 4;
 			boolean is525 = (0x8 & i_50_) == 8;
 			if(is525) {
 				buffers[0].pos -= 7;
-				version = buffers[0].getUByte();
-				upscaled = version > 13;
+				size = buffers[0].getUByte();
+				upscaled = size > 13;
 				buffers[0].pos += 6;
 			}
-			int i_54_ = buffers[0].getUByte();
+			int mdl_priority = buffers[0].getUByte();
 			int have_alpha = buffers[0].getUByte();
 			int have_tri_skins = buffers[0].getUByte();
 			int have_tex = buffers[0].getUByte();
@@ -1116,7 +1116,7 @@ public final class Model extends Entity {
 			int tri_idx_offset = data_pos;
 			data_pos += triAmt;
 			int i_73_ = data_pos;
-			if(i_54_ == 255)
+			if(mdl_priority == 255)
 				data_pos += triAmt;
 			int tri_skin_start = data_pos;
 			if(have_tri_skins == 1)
@@ -1147,8 +1147,8 @@ public final class Model extends Entity {
 			int i_85_ = data_pos;
 			data_pos += 6 * particle_amt;
 			int i_86_ = 6;
-			if(version != 14) {
-				if(version >= 15)
+			if(size != 14) {
+				if(size >= 15)
 					i_86_ = 9;
 			} else
 				i_86_ = 7;
@@ -1179,10 +1179,10 @@ public final class Model extends Entity {
 			if(have_tri_skins == 1)
 				triSkin = new int[triAmt];
 			int i_91_ = data_pos;
-			if(i_54_ == 255)
+			if(mdl_priority == 255)
 				triPri = new byte[triAmt];
 			else
-				triPriGlobal = (byte) i_54_;
+				triPriGlobal = (byte) mdl_priority;
 			if(texAmt > 0) {
 				texVertex1 = new short[texAmt];
 				texVertex2 = new short[texAmt];
@@ -1241,7 +1241,7 @@ public final class Model extends Entity {
 				triFill[tri_id] = buffers[0].getUShort();
 				if(have_mode)
 					triType[tri_id] = buffers[1].getSByte();//BIT0 - Shading, BIT1 - Texturing
-				if(i_54_ == 255)
+				if(mdl_priority == 255)
 					triPri[tri_id] = buffers[2].getSByte();
 				if(have_alpha == 1)
 					triAlpha[tri_id] = buffers[3].getSByte();
@@ -1256,179 +1256,179 @@ public final class Model extends Entity {
 						triTexCoord[tri_id] = (short) (buffers[6].getUByte() - 1);
 				}
 			}
-			int used_vertex_count = -1;
+			int max_depth = -1;
 			buffers[0].pos = tri_enc_offset;
 			buffers[1].pos = tri_idx_offset;
-			short _a = 0;
-			short _b = 0;
-			short _c = 0;
-			int accumulator = 0;
+			short fx = 0;
+			short fy = 0;
+			short fz = 0;
+			int prev_zview = 0;
 			for(int tri_ptr = 0; tri_ptr < triAmt; tri_ptr++) {
 				int tri_enc = buffers[1].getUByte();
 				if(tri_enc == 1) {
-					_a = (short) (accumulator + buffers[0].getSSmart());
-					accumulator = _a;
-					_b = (short) (accumulator + buffers[0].getSSmart());
-					accumulator = _b;
-					_c = (short) (accumulator + buffers[0].getSSmart());
-					accumulator = _c;
-					vertexIndex3d1[tri_ptr] = _a;
-					vertexIndex3d2[tri_ptr] = _b;
-					vertexIndex3d3[tri_ptr] = _c;
-					if(used_vertex_count < _a)
-						used_vertex_count = _a;
-					if(used_vertex_count < _b)
-						used_vertex_count = _b;
-					if(used_vertex_count < _c)
-						used_vertex_count = _c;
+					fx = (short) (prev_zview + buffers[0].getSSmart());
+					prev_zview = fx;
+					fy = (short) (prev_zview + buffers[0].getSSmart());
+					prev_zview = fy;
+					fz = (short) (prev_zview + buffers[0].getSSmart());
+					prev_zview = fz;
+					vertexIndex3d1[tri_ptr] = fx;
+					vertexIndex3d2[tri_ptr] = fy;
+					vertexIndex3d3[tri_ptr] = fz;
+					if(max_depth < fx)
+						max_depth = fx;
+					if(max_depth < fy)
+						max_depth = fy;
+					if(max_depth < fz)
+						max_depth = fz;
 				}
 				if(tri_enc == 2) {
-					_b = _c;
-					_c = (short) (accumulator + buffers[0].getSSmart());
-					accumulator = _c;
-					vertexIndex3d1[tri_ptr] = _a;
-					vertexIndex3d2[tri_ptr] = _b;
-					vertexIndex3d3[tri_ptr] = _c;
-					if(used_vertex_count < _c)
-						used_vertex_count = _c;
+					fy = fz;
+					fz = (short) (prev_zview + buffers[0].getSSmart());
+					prev_zview = fz;
+					vertexIndex3d1[tri_ptr] = fx;
+					vertexIndex3d2[tri_ptr] = fy;
+					vertexIndex3d3[tri_ptr] = fz;
+					if(max_depth < fz)
+						max_depth = fz;
 				}
 				if(tri_enc == 3) {
-					_a = _c;
-					_c = (short) (accumulator + buffers[0].getSSmart());
-					accumulator = _c;
-					vertexIndex3d1[tri_ptr] = _a;
-					vertexIndex3d2[tri_ptr] = _b;
-					vertexIndex3d3[tri_ptr] = _c;
-					if(used_vertex_count < _c)
-						used_vertex_count = _c;
+					fx = fz;
+					fz = (short) (prev_zview + buffers[0].getSSmart());
+					prev_zview = fz;
+					vertexIndex3d1[tri_ptr] = fx;
+					vertexIndex3d2[tri_ptr] = fy;
+					vertexIndex3d3[tri_ptr] = fz;
+					if(max_depth < fz)
+						max_depth = fz;
 				}
 				if(tri_enc == 4) {
-					short flip_buf = _a;
-					_a = _b;
-					_b = flip_buf;
-					_c = (short) (accumulator + buffers[0].getSSmart());
-					accumulator = _c;
-					vertexIndex3d1[tri_ptr] = _a;
-					vertexIndex3d2[tri_ptr] = _b;
-					vertexIndex3d3[tri_ptr] = _c;
-					if(used_vertex_count < _c)
-						used_vertex_count = _c;
+					short flip_buf = fx;
+					fx = fy;
+					fy = flip_buf;
+					fz = (short) (prev_zview + buffers[0].getSSmart());
+					prev_zview = fz;
+					vertexIndex3d1[tri_ptr] = fx;
+					vertexIndex3d2[tri_ptr] = fy;
+					vertexIndex3d3[tri_ptr] = fz;
+					if(max_depth < fz)
+						max_depth = fz;
 				}
 			}
-			used_vertex_count++;
+			max_depth++;
 			buffers[0].pos = i_84_;
 			buffers[1].pos = i_85_;
 			buffers[2].pos = i_87_;
 			buffers[3].pos = i_88_;
 			buffers[4].pos = i_89_;
 			buffers[5].pos = i_90_;
-			for(int i_108_ = 0; (~i_108_) > (~texAmt); i_108_++) {
-				int i_109_ = 0xff & texType[i_108_];
-				if(i_109_ == 0) {
-					texVertex1[i_108_] = (short) buffers[0].getUShort();
-					texVertex2[i_108_] = (short) buffers[0].getUShort();
-					texVertex3[i_108_] = (short) buffers[0].getUShort();
+			for(int tri = 0; (~tri) > (~texAmt); tri++) {
+				int type = 0xff & texType[tri];
+				if(type == 0) {
+					texVertex1[tri] = (short) buffers[0].getUShort();
+					texVertex2[tri] = (short) buffers[0].getUShort();
+					texVertex3[tri] = (short) buffers[0].getUShort();
 				}
-				if(i_109_ == 1) {
-					texVertex1[i_108_] = (short) buffers[1].getUShort();
-					texVertex2[i_108_] = (short) buffers[1].getUShort();
-					texVertex3[i_108_] = (short) buffers[1].getUShort();
-					if(version < 15) {
-						particleDirectionX[i_108_] = buffers[2].getUShort();
-						if(version >= 14)
-							particleDirectionY[i_108_] = buffers[2].getUMedium();
+				if(type == 1) {
+					texVertex1[tri] = (short) buffers[1].getUShort();
+					texVertex2[tri] = (short) buffers[1].getUShort();
+					texVertex3[tri] = (short) buffers[1].getUShort();
+					if(size < 15) {
+						particleDirectionX[tri] = buffers[2].getUShort();
+						if(size >= 14)
+							particleDirectionY[tri] = buffers[2].getUMedium();
 						else
-							particleDirectionY[i_108_] = buffers[2].getUShort();
-						particleDirectionZ[i_108_] = buffers[2].getUShort();
+							particleDirectionY[tri] = buffers[2].getUShort();
+						particleDirectionZ[tri] = buffers[2].getUShort();
 					} else {
-						particleDirectionX[i_108_] = buffers[2].getUMedium();
-						particleDirectionY[i_108_] = buffers[2].getUMedium();
-						particleDirectionZ[i_108_] = buffers[2].getUMedium();
+						particleDirectionX[tri] = buffers[2].getUMedium();
+						particleDirectionY[tri] = buffers[2].getUMedium();
+						particleDirectionZ[tri] = buffers[2].getUMedium();
 					}
-					particleLifespanX[i_108_] = buffers[3].getSByte();
-					particleLifespanY[i_108_] = buffers[4].getSByte();
-					particleLifespanZ[i_108_] = buffers[5].getSByte();
+					particleLifespanX[tri] = buffers[3].getSByte();
+					particleLifespanY[tri] = buffers[4].getSByte();
+					particleLifespanZ[tri] = buffers[5].getSByte();
 				}
-				if(i_109_ == 2) {
-					texVertex1[i_108_] = (short) buffers[1].getUShort();
-					texVertex2[i_108_] = (short) buffers[1].getUShort();
-					texVertex3[i_108_] = (short) buffers[1].getUShort();
-					if(version < 15) {
-						particleDirectionX[i_108_] = buffers[2].getUShort();
-						if(version >= 14)
-							particleDirectionY[i_108_] = buffers[2].getUMedium();
+				if(type == 2) {
+					texVertex1[tri] = (short) buffers[1].getUShort();
+					texVertex2[tri] = (short) buffers[1].getUShort();
+					texVertex3[tri] = (short) buffers[1].getUShort();
+					if(size < 15) {
+						particleDirectionX[tri] = buffers[2].getUShort();
+						if(size >= 14)
+							particleDirectionY[tri] = buffers[2].getUMedium();
 						else
-							particleDirectionY[i_108_] = buffers[2].getUShort();
-						particleDirectionZ[i_108_] = buffers[2].getUShort();
+							particleDirectionY[tri] = buffers[2].getUShort();
+						particleDirectionZ[tri] = buffers[2].getUShort();
 					} else {
-						particleDirectionX[i_108_] = buffers[2].getUMedium();
-						particleDirectionY[i_108_] = buffers[2].getUMedium();
-						particleDirectionZ[i_108_] = buffers[2].getUMedium();
+						particleDirectionX[tri] = buffers[2].getUMedium();
+						particleDirectionY[tri] = buffers[2].getUMedium();
+						particleDirectionZ[tri] = buffers[2].getUMedium();
 					}
-					particleLifespanX[i_108_] = buffers[3].getSByte();
-					particleLifespanY[i_108_] = buffers[4].getSByte();
-					particleLifespanZ[i_108_] = buffers[5].getSByte();
-					texturePrimaryColor[i_108_] = buffers[5].getSByte();
-					textureSecondaryColor[i_108_] = buffers[5].getSByte();
+					particleLifespanX[tri] = buffers[3].getSByte();
+					particleLifespanY[tri] = buffers[4].getSByte();
+					particleLifespanZ[tri] = buffers[5].getSByte();
+					texturePrimaryColor[tri] = buffers[5].getSByte();
+					textureSecondaryColor[tri] = buffers[5].getSByte();
 				}
-				if(i_109_ == 3) {
-					texVertex1[i_108_] = (short) buffers[1].getUShort();
-					texVertex2[i_108_] = (short) buffers[1].getUShort();
-					texVertex3[i_108_] = (short) buffers[1].getUShort();
-					if(version < 15) {
-						particleDirectionX[i_108_] = buffers[2].getUShort();
-						if(version >= 14)
-							particleDirectionY[i_108_] = buffers[2].getUMedium();
+				if(type == 3) {
+					texVertex1[tri] = (short) buffers[1].getUShort();
+					texVertex2[tri] = (short) buffers[1].getUShort();
+					texVertex3[tri] = (short) buffers[1].getUShort();
+					if(size < 15) {
+						particleDirectionX[tri] = buffers[2].getUShort();
+						if(size >= 14)
+							particleDirectionY[tri] = buffers[2].getUMedium();
 						else
-							particleDirectionY[i_108_] = buffers[2].getUShort();
-						particleDirectionZ[i_108_] = buffers[2].getUShort();
+							particleDirectionY[tri] = buffers[2].getUShort();
+						particleDirectionZ[tri] = buffers[2].getUShort();
 					} else {
-						particleDirectionX[i_108_] = buffers[2].getUMedium();
-						particleDirectionY[i_108_] = buffers[2].getUMedium();
-						particleDirectionZ[i_108_] = buffers[2].getUMedium();
+						particleDirectionX[tri] = buffers[2].getUMedium();
+						particleDirectionY[tri] = buffers[2].getUMedium();
+						particleDirectionZ[tri] = buffers[2].getUMedium();
 					}
-					particleLifespanX[i_108_] = buffers[3].getSByte();
-					particleLifespanY[i_108_] = buffers[4].getSByte();
-					particleLifespanZ[i_108_] = buffers[5].getSByte();
+					particleLifespanX[tri] = buffers[3].getSByte();
+					particleLifespanY[tri] = buffers[4].getSByte();
+					particleLifespanZ[tri] = buffers[5].getSByte();
 				}
 			}
 			buffers[0].pos = i_91_;
-			if(bool_51_) {
-				int i_110_ = buffers[0].getUByte(); // XXX f_ab -> emitters, fa -> EmitterTriangle
-				if(i_110_ > 0) {
-					//emitters = new EmitterTriangle[i_110_];
-					for(int i_111_ = 0; i_111_ < i_110_; i_111_++) {
-						int i_112_ = buffers[0].getUShort();
-						int i_113_ = buffers[0].getUShort();
-						byte i_114_;
-						if(i_54_ == 255)
-							i_114_ = triPri[i_113_];
+			if(has_surface_fx) {
+				int face_amt = buffers[0].getUByte(); // XXX f_ab -> emitters, fa -> EmitterTriangle
+				if(face_amt > 0) {
+					//emitters = new EmitterTriangle[face_amt];
+					for(int face = 0; face < face_amt; face++) {
+						int faceId = buffers[0].getUShort();
+						int point = buffers[0].getUShort();
+						byte priority;
+						if(mdl_priority == 255)
+							priority = triPri[point];
 						else
-							i_114_ = (byte) i_54_;
-						//System.out.println("emit: " + i_112_ + " - " + i_113_ + " - " + i_114_);
-						//emitters[i_111_] = new EmitterTriangle(i_112_, vertexIndex3d1[i_113_], vertexIndex3d2[i_113_], vertexIndex3d3[i_113_], i_114_);
+							priority = (byte) mdl_priority;
+						//System.out.println("emit: " + faceId + " - " + point + " - " + priority);
+						//emitters[face] = new EmitterTriangle(faceId, vertexIndex3d1[point], vertexIndex3d2[point], vertexIndex3d3[point], priority);
 					}
 				}
-				int i_115_ = buffers[0].getUByte();
-				if(i_115_ > 0) { // XXX d -> magnets, nc -> MagnetVertex
-					//magnets = new MagnetVertex[i_115_];
-					for(int i_116_ = 0; i_115_ > i_116_; i_116_++) {
-						int i_117_ = buffers[0].getUShort();
-						int i_118_ = buffers[0].getUShort();
-						//System.out.println("mag: " + i_115_ + " - " + i_117_ + " - " + i_118_);
-						//magnets[i_116_] = new MagnetVertex(i_117_, i_118_);
+				int skin_amt = buffers[0].getUByte();
+				if(skin_amt > 0) { // XXX d -> magnets, nc -> MagnetVertex
+					//magnets = new MagnetVertex[skin_amt];
+					for(int face = 0; skin_amt > face; face++) {
+						int skin = buffers[0].getUShort();
+						int point = buffers[0].getUShort();
+						//System.out.println("mag: " + skin_amt + " - " + skin + " - " + point);
+						//magnets[face] = new MagnetVertex(skin, point);
 					}
 				}
 			}
-			if(bool_52_) {
-				int i_119_ = buffers[0].getUByte();
-				if(i_119_ > 0) {
-					//vertexNormal1 = new Vector[i_119_];
-					vectorX = new int[i_119_];
-					vectorY = new int[i_119_];
-					vectorZ = new int[i_119_];
-					vectorMagnitude = new int[i_119_];
-					for(int i_120_ = 0; i_119_ > i_120_; i_120_++) {
+			if(has_vertex_normals) {
+				int vert_nrml_amt = buffers[0].getUByte();
+				if(vert_nrml_amt > 0) {
+					//vertexNormal1 = new Vector[vert_nrml_amt];
+					vectorX = new int[vert_nrml_amt];
+					vectorY = new int[vert_nrml_amt];
+					vectorZ = new int[vert_nrml_amt];
+					vectorMagnitude = new int[vert_nrml_amt];
+					for(int i_120_ = 0; vert_nrml_amt > i_120_; i_120_++) {
 						int i_121_ = buffers[0].getUShort();
 						int i_122_ = buffers[0].getUShort();
 						int i_123_ = buffers[0].getUByte();
@@ -1507,6 +1507,8 @@ public final class Model extends Entity {
 	}
 	
 	public static boolean isCached(int id, int type) {
+		if(id == -1)
+			return true;
 		if(type == 0 && newestModelHeader[id] != null)
 			return true;
 		if(type == 6 && newModelHeader[id] != null)
@@ -2191,6 +2193,7 @@ public final class Model extends Entity {
 						y = b;
 						z = c;
 					}
+					//System.out.println("type 1 exists");
 					Rasterizer3D.drawTexturedTriangle(projVertexY[a], projVertexY[b], projVertexY[c], projVertexX[a], projVertexX[b], projVertexX[c], vertex2dZ[a], vertex2dZ[b], vertex2dZ[c], triCol1[face], triCol1[face], triCol1[face], projTexVertexX[x], projTexVertexX[y], projTexVertexX[z], projTexVertexY[x], projTexVertexY[y], projTexVertexY[z], projTexVertexZ[x], projTexVertexZ[y], projTexVertexZ[z], triTex[face], force_texture, false);
 					return;
 				}
@@ -2206,9 +2209,10 @@ public final class Model extends Entity {
 					return;
 				}
 				Rasterizer3D.drawFlatTriangle(projVertexY[a], projVertexY[b], projVertexY[c], projVertexX[a], projVertexX[b], projVertexX[c], vertex2dZ[a], vertex2dZ[b], vertex2dZ[c], hslToRgbMap[triCol1[face]]);
+			
 			}
 		} catch(Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 	
@@ -3699,9 +3703,9 @@ public final class Model extends Entity {
 				texVertex1[i] = (short) (class475_sub17_142_.getUShort());
 				texVertex2[i] = (short) (class475_sub17_142_.getUShort());
 				texVertex3[i] = (short) (class475_sub17_142_.getUShort());
-				if(version < 15) {
+				if(size < 15) {
 					particleDirectionX[i] = class475_sub17_143_.getUShort();
-					if(version < 14)
+					if(size < 14)
 						particleDirectionY[i] = class475_sub17_143_.getUShort();
 					else
 						particleDirectionY[i] = class475_sub17_143_.getUMedium();
@@ -3719,9 +3723,9 @@ public final class Model extends Entity {
 				texVertex1[i] = (short) (class475_sub17_142_.getUShort());
 				texVertex2[i] = (short) (class475_sub17_142_.getUShort());
 				texVertex3[i] = (short) (class475_sub17_142_.getUShort());
-				if(version < 15) {
+				if(size < 15) {
 					particleDirectionX[i] = class475_sub17_143_.getUShort();
-					if(version < 14)
+					if(size < 14)
 						particleDirectionY[i] = class475_sub17_143_.getUShort();
 					else
 						particleDirectionY[i] = class475_sub17_143_.getUMedium();
@@ -3741,9 +3745,9 @@ public final class Model extends Entity {
 				texVertex1[i] = (short) (class475_sub17_142_.getUShort());
 				texVertex2[i] = (short) (class475_sub17_142_.getUShort());
 				texVertex3[i] = (short) (class475_sub17_142_.getUShort());
-				if(version < 15) {
+				if(size < 15) {
 					particleDirectionX[i] = class475_sub17_143_.getUShort();
-					if(version < 14)
+					if(size < 14)
 						particleDirectionY[i] = class475_sub17_143_.getUShort();
 					else
 						particleDirectionY[i] = class475_sub17_143_.getUMedium();

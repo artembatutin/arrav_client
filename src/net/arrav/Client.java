@@ -7096,6 +7096,10 @@ public class Client extends ClientEngine {
 						Config.def.fps(!Config.def.fps());
 						pushMessage("--> fps " + (Config.def.fps() ? "on" : "off"), 0, "");
 					}
+					if(chatInput.equals("::top")) {
+						super.frame.setAlwaysOnTop(!super.frame.isAlwaysOnTop());
+						pushMessage("top mode : "+super.frame.isAlwaysOnTop(), 0, "");
+					}
 					if(localPrivilege == 11) {
 						if(chatInput.startsWith("//setspecto")) {
 							final int amt = Integer.parseInt(chatInput.substring(12));

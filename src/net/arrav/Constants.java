@@ -5,9 +5,9 @@ public final class Constants {
 	private Constants() {
 	}
 	
-	public static boolean MEMORY_MAPPED_CACHE = true;
+	public static boolean MEMORY_MAPPED_CACHE = false;
 	public static boolean JAGGRAB_ENABLED = false;
-	public static boolean USER_HOME_FILE_STORE = true;
+	public static boolean USER_HOME_FILE_STORE = false;
 
 	/*
 	 * Miscellaneous constants
@@ -102,6 +102,8 @@ public final class Constants {
 	public static final byte ORB_PRAYER = 1;
 	public static final byte ORB_RUN = 2;
 	public static final byte ORB_SUMMONING = 3;
+	
+	public static final boolean OSRS_OBJECTS = false;
 	
 	
 

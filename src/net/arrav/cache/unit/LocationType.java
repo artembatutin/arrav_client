@@ -5,7 +5,10 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.ints.IntArrayList;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import net.arrav.Config;
+import net.arrav.Constants;
 import net.arrav.cache.CacheArchive;
+import net.arrav.net.SignLink;
+import net.arrav.util.DataToolkit;
 import net.arrav.world.model.Model;
 import net.arrav.net.OnDemandFetcher;
 import net.arrav.util.io.Buffer;
@@ -49,9 +52,11 @@ public final class LocationType {
 	private boolean delayShading;
 	private int scaleY;
 	public int[] modelIds;
+	public int[] modelIdsOSRS;
+	private int[] modelTypes;
+	private int[] modelTypesOSRS;
 	public int varBitId;
 	public int offsetAmplifier;
-	private int[] modelTypes;
 	public String description;
 	public boolean hasActions;
 	public boolean castsShadow;
@@ -63,6 +68,7 @@ public final class LocationType {
 	private short[] modifiedModelTextures;
 	private short[] originalModelTextures;
 	private boolean old;
+	private boolean canOSRS;
 
 	private LocationType() {
 		id = -1;
@@ -98,19 +104,12 @@ public final class LocationType {
 		loc.id = id;
 		loc.renew();
 		loc.read(data);
-		if(loc.id == 28139) {
-			for(int i = 0; i < loc.modifiedModelColors.length; i++) {
-				loc.modifiedModelColors[i] += 6000;
-				//+6000 dark green
-				//-6000 yellow
-			}
-		}
-		if(loc.id == 4656) {
-			loc.name = "Chair";
-			loc.actions = new String[]{"Sit", null, null, null, null, null, null, null, null, null};
-			loc.walkable = true;
-			loc.hasActions = true;
-			loc.solid = true;
+		
+		if(loc.id == 4875 || loc.id == 4874 || loc.id == 4876 || loc.id == 4877 || loc.id == 4878) {
+			loc.translateZ -= 15;
+			
+			loc.originalModelColors = new int[] { 6585, 5673, 5797 };
+			loc.modifiedModelColors = new int[] { 4275, 5152, 4145 };
 		}
 		if(loc.id == id && loc.originalModelColors == null) {
 			loc.originalModelColors = new int[1];
@@ -118,6 +117,7 @@ public final class LocationType {
 			loc.originalModelColors[0] = 0;
 			loc.modifiedModelColors[0] = 1;
 		}
+		loc.osrs();
 		defCache.put(id, loc);
 		return loc;
 	}
@@ -131,9 +131,15 @@ public final class LocationType {
 	}
 
 	public static void unpack(CacheArchive archive) {
-		data = new Buffer(archive.getFile("loc.dat"));
-		final Buffer idx = new Buffer(archive.getFile("loc.idx"));
-
+		
+		final Buffer idx;
+		if(Constants.USER_HOME_FILE_STORE) {
+			data = new Buffer(archive.getFile("loc.dat"));
+			idx = new Buffer(archive.getFile("loc.idx"));
+		} else {
+			data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/loc/loc.dat"));
+			idx = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/loc/loc.idx"));
+		}
 		final int length = idx.getInt();
 		System.out.println("[loading] loc size: " + length);
 		index = new int[length];
@@ -146,19 +152,41 @@ public final class LocationType {
 	}
 
 	public static void pack() throws IOException {
+		final Buffer osrs_data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/loc/loc_osrs.dat"));
+		final Buffer osrs_idx = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/loc/loc_osrs.idx"));
+		final int length = osrs_idx.getUShort();
+		System.out.println("OSRS LOC 174: " + length);
+		LocationType[] objects = new LocationType[length];
+		osrs_data.pos = 2;
+		
 		int size = index.length;
-		DataOutputStream dat = new DataOutputStream(new FileOutputStream("loc.dat"));
-		DataOutputStream idx = new DataOutputStream(new FileOutputStream("loc.idx"));
+		DataOutputStream dat = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/loc/loc.dat"));
+		DataOutputStream idx = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/loc/loc.idx"));
 		idx.writeInt(size);
 		dat.writeInt(size);
 		for(int i = 0; i < size; i++) {
 			LocationType obj = getPrecise(i);
 			int offset1 = dat.size();
+			
+			if(i < length) {
+				LocationType osrs = new LocationType();
+				osrs.id = i;
+				osrs.renew();
+				osrs.readOSRS(osrs_data);
+				
+				if(obj.name != null && osrs.name != null) {
+					if(obj.name.equals(osrs.name)) {
+						obj.modelIdsOSRS = osrs.modelIds;
+						obj.canOSRS = true;
+						obj.modelTypesOSRS = osrs.modelTypes;
+					}
+				}
+			}
+			
 			obj.write(dat);
 			int offset2 = dat.size();
 			int writeOffset = offset2 - offset1;
 			idx.writeShort(writeOffset);
-			//System.out.println("writted old: " + i + " - offset: " + writeOffset);
 		}
 		dat.close();
 		idx.close();
@@ -290,8 +318,158 @@ public final class LocationType {
 						this.childIds[c] = -1;
 					}
 				}
+			} else if(opcode == 52) {
+				int k = buffer.getUByte();
+				canOSRS = true;
+				if(k > 0)
+					if(modelIdsOSRS == null) {
+						modelTypesOSRS = new int[k];
+						modelIdsOSRS = new int[k];
+						for(int k1 = 0; k1 < k; k1++) {
+							modelIdsOSRS[k1] = buffer.getUShort();
+							modelTypesOSRS[k1] = buffer.getUByte();
+						}
+					}
+			} else if(opcode == 53) {
+				int l = buffer.getUByte();
+				canOSRS = true;
+				if(l > 0)
+					if(modelIdsOSRS == null) {
+						modelTypesOSRS = null;
+						modelIdsOSRS = new int[l];
+						for(int l1 = 0; l1 < l; l1++)
+							modelIdsOSRS[l1] = buffer.getUShort();
+					}
 			} else {
 				System.out.println("[ObjectDef " + id + "] Unknown opcode: " + opcode + ".");
+				break;
+			}
+		} while(true);
+		if(i == -1) {
+			hasActions = modelIds != null && (modelTypes == null || modelTypes[0] == 10);
+			if(actions != null)
+				hasActions = true;
+		}
+		if(unwalkableSolid) {
+			solid = false;
+			walkable = false;
+		}
+		if(_solid == -1)
+			_solid = solid ? 1 : 0;
+	}
+	
+	private void readOSRS(Buffer buffer) {
+		int i = -1;
+		int opcode;
+		do {
+			opcode = buffer.getUByte();
+			if(opcode == 0)
+				return;
+			if(opcode == 1) {
+				int k = buffer.getUByte();
+				if(k > 0)
+					if(modelIds == null) {
+						modelTypes = new int[k];
+						modelIds = new int[k];
+						for(int k1 = 0; k1 < k; k1++) {
+							modelIds[k1] = buffer.getUShort();
+							modelTypes[k1] = buffer.getUByte();
+						}
+					}
+			} else if(opcode == 2)
+				name = buffer.getLine();
+			else if(opcode == 3)
+				description = buffer.getLine();
+			else if(opcode == 5) {
+				int l = buffer.getUByte();
+				if(l > 0)
+					if(modelIds == null) {
+						modelTypes = null;
+						modelIds = new int[l];
+						for(int l1 = 0; l1 < l; l1++)
+							modelIds[l1] = buffer.getUShort();
+					}
+			} else if(opcode == 14)
+				sizeX = buffer.getUByte();
+			else if(opcode == 15)
+				sizeY = buffer.getUByte();
+			else if(opcode == 17)
+				solid = false;
+			else if(opcode == 18)
+				walkable = false;
+			else if(opcode == 19) {
+				i = buffer.getUByte();
+				if(i == 1)
+					hasActions = true;
+			} else if(opcode == 21)
+				adjustToTerrain = true;
+			else if(opcode == 22)
+				delayShading = false;
+			else if(opcode == 23)
+				wall = true;
+			else if(opcode == 24) {
+				animationId = buffer.getUShort();
+				if(animationId == 65535)
+					animationId = -1;
+			} else if(opcode == 27) {
+				//empty
+			} else if(opcode == 28)
+				offsetAmplifier = buffer.getUByte();
+			else if(opcode == 29)
+				ambient = buffer.getUByte();
+			else if(opcode == 39)
+				diffuse = buffer.getUByte() * 25;
+			else if(opcode >= 30 && opcode < 40) {
+				if(actions == null)
+					actions = new String[10];
+				actions[opcode - 30] = buffer.getLine();
+				if(actions[opcode - 30].equalsIgnoreCase("hidden"))
+					actions[opcode - 30] = null;
+			} else if(opcode == 40) {
+				final int len = buffer.getUByte();
+				originalModelColors = new int[len];
+				modifiedModelColors = new int[len];
+				for(int i2 = 0; i2 < len; i2++) {
+					originalModelColors[i2] = buffer.getUShort();
+					modifiedModelColors[i2] = buffer.getUShort();
+				}
+			} else if(opcode == 41) {
+				final int len = buffer.getUByte();
+				originalModelTextures = new short[len];
+				modifiedModelTextures = new short[len];
+				for(int i3 = 0; i3 < len; i3++) {
+					originalModelTextures[i3] = (short) buffer.getUShort();
+					modifiedModelTextures[i3] = (short) buffer.getUShort();
+				}
+			}
+			else if(opcode == 62)
+				rotated = true;
+			else if(opcode == 64)
+				castsShadow = false;
+			else if(opcode == 65)
+				scaleX = buffer.getUShort();
+			else if(opcode == 66)
+				scaleY = buffer.getUShort();
+			else if(opcode == 67)
+				scaleZ = buffer.getUShort();
+			else if(opcode == 68)
+				mapScene = buffer.getUShort();
+			else if(opcode == 69)
+				face = buffer.getUByte();
+			else if(opcode == 70)
+				translateX = buffer.getUShort();
+			else if(opcode == 71)
+				translateY = buffer.getUShort();
+			else if(opcode == 72)
+				translateZ = buffer.getUShort();
+			else if(opcode == 73)
+				aBoolean736 = true;
+			else if(opcode == 74)
+				unwalkableSolid = true;
+			else if(opcode == 75) {
+				_solid = buffer.getUByte();
+			} else {
+				System.out.println("[ObjectDef OSRS " + id + "] Unknown opcode: " + opcode + ".");
 				break;
 			}
 		} while(true);
@@ -478,6 +656,25 @@ public final class LocationType {
 					}
 				}
 				actionsd = true;
+			} else if(modelIdsOSRS != null && modelTypesOSRS != null && !written.contains(52)) {
+				out.writeByte(52);
+				out.writeByte(modelIdsOSRS.length);
+				if(modelIdsOSRS.length > 0) {
+					for(int k1 = 0; k1 < modelIdsOSRS.length; k1++) {
+						out.writeShort(modelIdsOSRS[k1]);
+						out.writeByte(modelTypesOSRS[k1]);
+					}
+				}
+				written.add(52);
+			} else if(modelIdsOSRS != null && modelTypesOSRS == null && !written.contains(53)) {
+				out.writeByte(53);
+				out.writeByte(modelIdsOSRS.length);
+				if(modelIdsOSRS.length > 0) {
+					for(int anAnIntArray773 : modelIdsOSRS) {
+						out.writeShort(anAnIntArray773);
+					}
+				}
+				written.add(53);
 			} else {
 				out.writeByte(0);
 				break;
@@ -489,7 +686,7 @@ public final class LocationType {
 		if(modelIds == null)
 			return;
 		for(final int model : modelIds) {
-			fetcher.passiveRequest(model & 0xffff, loc.id > 42003 ? 0 : 6);
+			fetcher.passiveRequest(model & 0xffff, isOsrs() ? 7 : loc.id > 42003 ? 0 : 6);
 		}
 	}
 
@@ -503,13 +700,13 @@ public final class LocationType {
 			}
 			boolean cached = true;
 			for(final int element : modelIds) {
-				cached &= Model.isCached(element & 0xffff, id > 42003 ? 0 : 6);
+				cached &= Model.isCached(element & 0xffff, isOsrs() ? 7 : id > 42003 ? 0 : 6);
 			}
 			return cached;
 		}
 		for(int type = 0; type < modelTypes.length; type++) {
 			if(modelTypes[type] == modelType) {
-				return Model.isCached(modelIds[type] & 0xffff, id > 42003 ? 0 : 6);
+				return Model.isCached(modelIds[type] & 0xffff, isOsrs() ? 7 : id > 42003 ? 0 : 6);
 			}
 		}
 		return true;
@@ -543,7 +740,7 @@ public final class LocationType {
 			return true;
 		boolean cached = true;
 		for(final int element : modelIds) {
-			cached &= Model.isCached(element & 0xffff, id > 42003 ? 0 : 6);
+			cached &= Model.isCached(element & 0xffff, isOsrs() ? 7 : id > 42003 ? 0 : 6);
 		}
 		return cached;
 	}
@@ -592,7 +789,7 @@ public final class LocationType {
 				}
 				model = modelCache.get(l2);
 				if(model == null) {
-					model = Model.get(l2 & 0xffff, id > 42003 ? 0 : 6);
+					model = Model.get(l2 & 0xffff, isOsrs() ? 7 : id > 42003 ? 0 : 6);
 					if(model == null) {
 						return null;
 					}
@@ -634,7 +831,7 @@ public final class LocationType {
 			}
 			model = modelCache.get(modelId);
 			if(model == null) {
-				model = Model.get(modelId & 0xffff, id > 42003 ? 0 : 6);
+				model = Model.get(modelId & 0xffff, isOsrs() ? 7 : id > 42003 ? 0 : 6);
 				if(model == null) {
 					return null;
 				}
@@ -685,6 +882,21 @@ public final class LocationType {
 		}
 		animatedModelCache.put(hash, animatedModel);
 		return animatedModel;
+	}
+	
+	private void osrs() {
+		if(!Constants.OSRS_OBJECTS)
+			return;
+		if(canOSRS && Config.def.oldModels) {
+			modelIds = modelIdsOSRS;
+			modelTypes = modelTypesOSRS;
+		}
+	}
+	
+	private boolean isOsrs() {
+		if(!Constants.OSRS_OBJECTS)
+			return false;
+		return canOSRS && Config.def.oldModels;
 	}
 
 	private void renew() {
