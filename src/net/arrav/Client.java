@@ -458,7 +458,7 @@ public class Client extends ClientEngine {
 	private int anInt1283;
 	private int anInt1284;
 	private int anInt1285;
-	private int unknownInt10;
+	private int localPlayerSlot;
 	private int[] bigX;
 	private int[] bigY;
 	private int[] anIntArray840;
@@ -507,7 +507,7 @@ public class Client extends ClientEngine {
 		anIntArray873 = new int[5];
 		aBooleanArray876 = new boolean[5];
 		reportAbuseInput = "";
-		unknownInt10 = -1;
+		localPlayerSlot = -1;
 		menuOpened = false;
 		chatInput = "";
 		maxPlayers = 2048;
@@ -6005,7 +6005,9 @@ public class Client extends ClientEngine {
 
 				case 249:
 					anInt1046 = inBuffer.getReversedOppositeUByte();
-					unknownInt10 = inBuffer.getLitEndUShortMinus128();
+					localPlayerSlot = inBuffer.getLitEndUShortMinus128();
+					
+					System.out.println("slot: " + localPlayerSlot);
 					pktType = -1;
 					return true;
 
@@ -6837,7 +6839,7 @@ public class Client extends ClientEngine {
 				if(projectile.lockon < 0) {
 					final int j = -projectile.lockon - 1;
 					Player player;
-					if(j == unknownInt10) {
+					if(j == localPlayerSlot) {
 						player = localPlayer;
 					} else {
 						player = playerList[j];
@@ -7472,7 +7474,7 @@ public class Client extends ClientEngine {
 		}
 		if(entity.interactingEntity >= 32768) {
 			int j = entity.interactingEntity - 32768;
-			if(j == unknownInt10) {
+			if(j == localPlayerSlot) {
 				j = localPlayerIndex;
 			}
 			final Player player = playerList[j];
@@ -7914,7 +7916,7 @@ public class Client extends ClientEngine {
 			final int j9 = anInt1269 + (l3 & 7);
 			final int i12 = stream.getUShortMinus128();
 			final int j14 = stream.getUShort();
-			if(k6 >= 0 && j9 >= 0 && k6 < 104 && j9 < 104 && i12 != unknownInt10) {
+			if(k6 >= 0 && j9 >= 0 && k6 < 104 && j9 < 104 && i12 != localPlayerSlot) {
 				final ObjectStack class30_sub2_sub4_sub2_2 = new ObjectStack();
 				class30_sub2_sub4_sub2_2.id = i1;
 				class30_sub2_sub4_sub2_2.amount = j14;
@@ -8017,7 +8019,7 @@ public class Client extends ClientEngine {
 			final int l21 = stream.getUShort();
 			byte byte3 = stream.getOppositeSByte();
 			Player player;
-			if(i10 == unknownInt10) {
+			if(i10 == localPlayerSlot) {
 				player = localPlayer;
 			} else {
 				player = playerList[i10];
