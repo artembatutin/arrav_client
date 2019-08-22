@@ -2062,7 +2062,8 @@ public class Client extends ClientEngine {
 				}
 				final int staticFrame = localPlayer.anInt1511;
 				characterDisplay.applyEffects();
-				characterDisplay.applyAnimation(DeformSequence.cache[staticFrame].frameList[0]);
+				if(staticFrame > 0 && DeformSequence.cache.length > staticFrame)
+					characterDisplay.applyAnimation(DeformSequence.cache[staticFrame].frameList[0]);
 				// characterDisplay.method479(64, 850, -30, -50, -30, true);
 				class9.modelType = 5;
 				class9.modelId = 0;
@@ -4902,7 +4903,7 @@ public class Client extends ClientEngine {
 			anInt843 = anInt842;
 			anInt842 = anInt841;
 			anInt841 = pktType;
-			//System.out.println("reading packet " + pktType);
+			System.out.println("reading packet " + pktType);
 			switch(pktType) {
 
 				case 82:

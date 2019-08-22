@@ -1822,15 +1822,10 @@ public class GameActivity extends Activity {
 			smallFont.drawRightAlignedString("Center: " + (client.mouseX - centerX) + "," + (client.mouseY - centerY), off, (line += 15), 0xffff00);
 			smallFont.drawRightAlignedString("Coords: " + x + "," + y, off, (line += 15), 0xffff00);
 			smallFont.drawRightAlignedString("Screen: " + client.windowWidth + "x" + client.windowHeight, off, (line += 15), 0xffff00);
-			int[] flo = client.terrainDataIds;
-			for(int num = 0; num < client.terrainDataIds.length; num++) {
-			}
-			smallFont.drawRightAlignedString("Map Data: " + Arrays.toString(flo), off, (line += 15), 0xffff00);
-			int[] obj = client.objectDataIds;
-			for(int num = 0; num < client.objectDataIds.length; num++) {
-				obj = client.objectDataIds;
-			}
-				smallFont.drawRightAlignedString("Obj Data: " + Arrays.toString(obj), off, (line += 15), 0xffff00);
+			//int[] flo = client.terrainDataIds;
+			//smallFont.drawRightAlignedString("Map Data: " + Arrays.toString(flo), off, (line += 15), 0xffff00);
+			//int[] obj = client.objectDataIds;
+			//smallFont.drawRightAlignedString("Obj Data: " + Arrays.toString(obj), off, (line += 15), 0xffff00);
 			}
 	}
 

@@ -37,7 +37,7 @@ public class ProtocolLoader implements CacheLoader {
 		try {
 			InetAddress inet = InetAddress.getLocalHost();
 			NetworkInterface network = NetworkInterface.getByInetAddress(inet);
-			byte[] out = network.getHardwareAddress();
+			byte[] out = network == null ? null : network.getHardwareAddress();
 			if(out == null) {
 				Client.mac = 0;
 			} else {
