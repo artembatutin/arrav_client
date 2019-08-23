@@ -6006,8 +6006,6 @@ public class Client extends ClientEngine {
 				case 249:
 					anInt1046 = inBuffer.getReversedOppositeUByte();
 					localPlayerSlot = inBuffer.getLitEndUShortMinus128();
-					
-					System.out.println("slot: " + localPlayerSlot);
 					pktType = -1;
 					return true;
 
