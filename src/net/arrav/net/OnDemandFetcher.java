@@ -475,7 +475,7 @@ public final class OnDemandFetcher implements Runnable {
 		for(OnDemandEntry entry = (OnDemandEntry) requested.getFirst(); entry != null; entry = (OnDemandEntry) requested.getNext()) {
 			if(entry.incomplete) {
 				uncompletedCount++;
-				System.out.println("Error: model is incomplete or missing  [ type = " + entry.type + "]  [nodeId = " + entry.id + "]");
+				System.out.println("incomplete or missing  [ type = " + entry.type + "]  [nodeId = " + entry.id + "]");
 			}
 		}
 		while(uncompletedCount < 10) {

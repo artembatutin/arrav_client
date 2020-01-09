@@ -4863,8 +4863,8 @@ public class Client extends ClientEngine {
 			return false;
 		}
 		try {
-			int i = socketStream.available();
-			if(i == 0) {
+			int available = socketStream.available();
+			if(available == 0) {
 				return false;
 			}
 			if(pktType == -1) {
@@ -4874,28 +4874,28 @@ public class Client extends ClientEngine {
 					pktType = pktType - encryption.nextInt() & 0xff;
 				}
 				pktSize = Constants.PACKET_SIZE[pktType];
-				i--;
+				available--;
 			}
 			if(pktSize == -1) {
-				if(i > 0) {
+				if(available > 0) {
 					socketStream.read(inBuffer.data, 1);
 					pktSize = inBuffer.data[0] & 0xff;
-					i--;
+					available--;
 				} else {
 					return false;
 				}
 			}
 			if(pktSize == -2) {
-				if(i > 1) {
+				if(available > 1) {
 					socketStream.read(inBuffer.data, 2);
 					inBuffer.pos = 0;
 					pktSize = inBuffer.getUShort();
-					i -= 2;
+					available -= 2;
 				} else {
 					return false;
 				}
 			}
-			if(i < pktSize) {
+			if(available < pktSize) {
 				return false;
 			}
 			inBuffer.pos = 0;
