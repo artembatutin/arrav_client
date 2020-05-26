@@ -134,13 +134,13 @@ public final class ObjectType {
 	
 	public static void unpack(CacheArchive archive) {
 		final Buffer buffer;
-		if(Constants.USER_HOME_FILE_STORE) {
+		/*if(Constants.USER_HOME_FILE_STORE) {
 			data = new Buffer(archive.getFile("obj.dat"));
 			buffer = new Buffer(archive.getFile("obj.idx"));
-		} else {
+		} else {*/
 			data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/obj.dat"));
 			buffer = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/obj.idx"));
-		}
+		//}
 		
 		length = buffer.getUShort();
 		System.out.println("[loading] obj size: " + length);

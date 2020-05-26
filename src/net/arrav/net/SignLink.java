@@ -58,7 +58,7 @@ public final class SignLink implements Runnable {
 	 * Gets the set file path for the cache directory.
 	 */
 	public static String getCacheDir() {
-		if(Constants.USER_HOME_FILE_STORE) {
+		/*if(Constants.USER_HOME_FILE_STORE) {
 			final String home = System.getProperty("user.home");
 			final String separator = System.getProperty("file.separator");
 			StringBuilder sb = new StringBuilder();
@@ -77,7 +77,8 @@ public final class SignLink implements Runnable {
 			return dir;
 		} else {
 			return "./cache/";
-		}
+		}*/
+		return "./cache/";
 	}
 
 	/**

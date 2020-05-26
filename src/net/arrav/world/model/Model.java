@@ -2,6 +2,7 @@ package net.arrav.world.model;
 
 import net.arrav.Client;
 import net.arrav.Constants;
+import net.arrav.util.ReflectionUtil;
 import net.arrav.world.emitter.Particle;
 import net.arrav.world.emitter.ParticleAttachment;
 import net.arrav.world.emitter.ParticleDefinition;
@@ -26,7 +27,7 @@ public final class Model extends Entity {
 	private static int[] anIntArray1624 = new int[2000];
 	private static byte[] anIntArray1625 = new byte[2000];
 	private byte triPriGlobal;
-	private byte[] texType;
+	public byte[] texType;
 	private int size;
 	private int[] particleDirectionX;
 	private int[] particleDirectionY;
@@ -48,9 +49,9 @@ public final class Model extends Entity {
 	public short[] vertexIndex3d1;
 	public short[] vertexIndex3d2;
 	public short[] vertexIndex3d3;
-	private int[] triCol1;
-	private int[] triCol2;
-	private int[] triCol3;
+	public int[] triCol1;
+	public int[] triCol2;
+	public int[] triCol3;
 	public byte[] triType;
 	public int[] triTex;
 	private short[] triTexCoord;
@@ -58,10 +59,10 @@ public final class Model extends Entity {
 	private byte[] triAlpha;
 	public int[] triFill;
 	private int priAmt;
-	private int texAmt;
-	private short[] texVertex1;
-	private short[] texVertex2;
-	private short[] texVertex3;
+	public int texAmt;
+	public short[] texVertex1;
+	public short[] texVertex2;
+	public short[] texVertex3;
 	public int minVertexX;
 	public int maxVertexX;
 	public int maxVertexZ;
@@ -3612,8 +3613,8 @@ public final class Model extends Entity {
 					final int i10 = texVertex1[i9];
 					final int i11 = texVertex2[i9];
 					final int i12 = texVertex3[i9];
-					Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, 0, 0, 0, triReqCol[0], triReqCol[1], triReqCol[2], projTexVertexX[i10], projTexVertexX[i11], projTexVertexX[i12], projTexVertexY[i10], projTexVertexY[i11], projTexVertexY[i12], projTexVertexZ[i10], projTexVertexZ[i11], projTexVertexZ[i12], triFill[idx], false, false);
-					Rasterizer3D.drawTexturedTriangle(y1, y3, triReqY[3], x1, x3, triReqX[3], 0, 0, 0, triReqCol[0], triReqCol[2], triReqCol[3], projTexVertexX[i10], projTexVertexX[i11], projTexVertexX[i12], projTexVertexY[i10], projTexVertexY[i11], projTexVertexY[i12], projTexVertexZ[i10], projTexVertexZ[i11], projTexVertexZ[i12], triFill[idx], false, false);
+						Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, 0, 0, 0, triReqCol[0], triReqCol[1], triReqCol[2], projTexVertexX[i10], projTexVertexX[i11], projTexVertexX[i12], projTexVertexY[i10], projTexVertexY[i11], projTexVertexY[i12], projTexVertexZ[i10], projTexVertexZ[i11], projTexVertexZ[i12], triFill[idx], false, false);
+						Rasterizer3D.drawTexturedTriangle(y1, y3, triReqY[3], x1, x3, triReqX[3], 0, 0, 0, triReqCol[0], triReqCol[2], triReqCol[3], projTexVertexX[i10], projTexVertexX[i11], projTexVertexX[i12], projTexVertexY[i10], projTexVertexY[i11], projTexVertexY[i12], projTexVertexZ[i10], projTexVertexZ[i11], projTexVertexZ[i12], triFill[idx], false, false);
 					return;
 				}
 				if(i8 == 3) {

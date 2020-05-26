@@ -9,12 +9,14 @@ import net.arrav.Constants;
 import net.arrav.cache.CacheArchive;
 import net.arrav.net.SignLink;
 import net.arrav.util.DataToolkit;
+import net.arrav.util.ReflectionUtil;
 import net.arrav.world.model.Model;
 import net.arrav.net.OnDemandFetcher;
 import net.arrav.util.io.Buffer;
 import net.arrav.Client;
 
 import java.io.*;
+import java.util.Arrays;
 
 public final class LocationType {
 
