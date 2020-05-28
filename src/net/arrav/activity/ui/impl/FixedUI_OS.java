@@ -398,15 +398,15 @@ public class FixedUI_OS extends FixedUI {
 	public void buildInventory() {
 		if(client.mouseWheelAmt != 0 && client.olderTabInterfaces[client.invTab] != -1) {
 			final Interface tab = Interface.cache[client.olderTabInterfaces[client.invTab]];
-			if(tab.subId != null) {
+			if(tab.children != null) {
 				int posX = 0;
 				int posY = 0;
 				Interface widget = null;
-				for(int index = 0; index < tab.subId.length; index++) {
-					if(Interface.cache[tab.subId[index]].scrollMax > 0) {
-						posX = tab.subX[index] + 547;
-						posY = tab.subY[index] + 205;
-						widget = Interface.cache[tab.subId[index]];
+				for(int index = 0; index < tab.children.length; index++) {
+					if(Interface.cache[tab.children[index]].scrollMax > 0) {
+						posX = tab.childX[index] + 547;
+						posY = tab.childY[index] + 205;
+						widget = Interface.cache[tab.children[index]];
 						break;
 					}
 				}
@@ -464,15 +464,15 @@ public class FixedUI_OS extends FixedUI {
 	public void buildSceneOverlay() {
 		if(client.mouseWheelAmt != 0 && client.openInterfaceID != -1) {
 			final Interface tab = Interface.cache[client.openInterfaceID];
-			if(tab.subId != null) {
+			if(tab.children != null) {
 				int posX = 0;
 				int posY = 0;
 				Interface widget = null;
-				for(int index = 0; index < tab.subId.length; index++) {
-					if(Interface.cache[tab.subId[index]].scrollMax > 0) {
-						posX = tab.subX[index];
-						posY = tab.subY[index] + 8;
-						widget = Interface.cache[tab.subId[index]];
+				for(int index = 0; index < tab.children.length; index++) {
+					if(Interface.cache[tab.children[index]].scrollMax > 0) {
+						posX = tab.childX[index];
+						posY = tab.childY[index] + 8;
+						widget = Interface.cache[tab.children[index]];
 						break;
 					}
 				}

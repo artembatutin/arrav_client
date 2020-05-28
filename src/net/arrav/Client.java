@@ -1299,7 +1299,7 @@ public class Client extends ClientEngine {
 	}
 
 	public void drawWidget(Interface widget, int xPosition, int yPosition, int activeScroll, UIComponent component) {
-		if(widget.type != 0 || widget.subId == null) {
+		if(widget.type != 0 || widget.children == null) {
 			return;
 		}
 		if(widget.hoverTriggered && anInt1026 != widget.id && anInt1048 != widget.id && anInt1039 != widget.id) {
@@ -1307,16 +1307,16 @@ public class Client extends ClientEngine {
 		}
 		final int[] saveClip = Rasterizer2D.getClip();
 		Rasterizer2D.setClip(xPosition, yPosition, xPosition + widget.width, yPosition + widget.height);
-		for(int child = 0; child < widget.subId.length; child++) {
-			int xPos = widget.subX[child] + xPosition;
-			int yPos = widget.subY[child] + yPosition - activeScroll;
-			final Interface childWidget = Interface.cache[widget.subId[child]];
+		for(int child = 0; child < widget.children.length; child++) {
+			int xPos = widget.childX[child] + xPosition;
+			int yPos = widget.childY[child] + yPosition - activeScroll;
+			final Interface childWidget = Interface.cache[widget.children[child]];
 			xPos += childWidget.offsetX;
 			yPos += childWidget.offsetY;
 			if(childWidget.contentType > 0) {
 				drawFriendsListOrWelcomeScreen(childWidget);
 			}
-			if(childWidget.type == Constants.WIDGET_MAIN) {
+			if(childWidget.type == Constants.TYPE_CONTAINER) {
 				if(childWidget.scrollPos > childWidget.scrollMax - childWidget.height) {
 					childWidget.scrollPos = childWidget.scrollMax - childWidget.height;
 				}
@@ -1331,7 +1331,7 @@ public class Client extends ClientEngine {
 						gameActivity.drawScrollbar(xPos + childWidget.width, yPos, childWidget.height, childWidget.scrollMax, childWidget.scrollPos);
 					}
 				}
-			} else if(childWidget.type != Constants.WIDGET_STRING_2) {
+			} else if(childWidget.type != Constants.WIDGET_MODEL_LIST) {
 				if(childWidget.type == Constants.WIDGET_INVENTORY) {
 					int item = 0;
 					for(int i = 0; i < childWidget.height; i++) {
@@ -1659,7 +1659,7 @@ public class Client extends ClientEngine {
 					Rasterizer3D.viewport.centerX = centerX;
 					Rasterizer3D.viewport.centerY = centerY;
 					Rasterizer3D.textured = true;
-				} else if(childWidget.type == Constants.WIDGET_INVENTORY_2) {
+				} else if(childWidget.type == Constants.WIDGET_ITEM_LIST) {
 					final BitmapFont font = Interface.fonts[childWidget.fontId];
 					int item = 0;
 					for(int yColumn = 0; yColumn < childWidget.height; yColumn++) {
@@ -1780,11 +1780,11 @@ public class Client extends ClientEngine {
 					}
 					if(component == UIComponent.INVENTORY) {//Boundaries
 						if(widget.id == 3917) {//fixing skill menus
-							if(widget.subX[child] + boxWidth > 205) {
-								x -= (widget.subX[child] + boxWidth) - 190;
+							if(widget.childX[child] + boxWidth > 205) {
+								x -= (widget.childX[child] + boxWidth) - 190;
 							}
-							if(widget.subY[child] + boxHeight > 220) {
-								y -= (boxHeight + widget.subY[child]) - 160;
+							if(widget.childY[child] + boxHeight > 220) {
+								y -= (boxHeight + widget.childY[child]) - 160;
 							}
 						}
 					}
@@ -2207,16 +2207,16 @@ public class Client extends ClientEngine {
 	}
 
 	public void buildWidgetMenu(int i, Interface widget, int k, int l, int i1, int j1) {
-		if(widget.type != 0 || widget.subId == null || widget.hoverTriggered) {
+		if(widget.type != 0 || widget.children == null || widget.hoverTriggered) {
 			return;
 		}
 		if(k < i || i1 < l || k > i + widget.width || i1 > l + widget.height) {
 			return;
 		}
-		for(int child = 0; child < widget.subId.length; child++) {
-			int xPos = widget.subX[child] + i;
-			int yPos = widget.subY[child] + l - j1;
-			final Interface childWidget = Interface.cache[widget.subId[child]];
+		for(int child = 0; child < widget.children.length; child++) {
+			int xPos = widget.childX[child] + i;
+			int yPos = widget.childY[child] + l - j1;
+			final Interface childWidget = Interface.cache[widget.children[child]];
 			xPos += childWidget.offsetX;
 			yPos += childWidget.offsetY;
 			
@@ -5925,7 +5925,8 @@ public class Client extends ClientEngine {
 								i25 = inBuffer.getMidEndInt();
 							}
 						}
-						group.invId[index] = inBuffer.getLitEndUShortMinus128();
+						int id1 = inBuffer.getLitEndUShortMinus128();
+						group.invId[index] = id1;
 						group.invAmt[index] = i25;
 						if(group.invId[index] != 0)
 							found++;
@@ -6495,9 +6496,9 @@ public class Client extends ClientEngine {
 		final Interface class9 = Interface.cache[j];
 		if(class9 == null)
 			return false;
-		if(class9.subId == null)
+		if(class9.children == null)
 			return false;
-		for(final int element : class9.subId) {
+		for(final int element : class9.children) {
 			if(element == -1) {
 				continue;
 			}
@@ -8679,8 +8680,8 @@ public class Client extends ClientEngine {
 
 	private void method60(int i) {
 		final Interface class9 = Interface.cache[i];
-		if(class9.subId != null) {
-			for(final int element : class9.subId) {
+		if(class9.children != null) {
+			for(final int element : class9.children) {
 				if(element == -1) {
 					break;
 				}

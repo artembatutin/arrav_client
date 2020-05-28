@@ -23,9 +23,9 @@ public final class Interface {
 	public int type;
 	public int id;
 	public int parent;
-	public int[] subId;
-	public int[] subX;
-	public int[] subY;
+	public int[] children;
+	public int[] childX;
+	public int[] childY;
 	public int width;
 	public int height;
 	public int scrollMax;
@@ -86,9 +86,9 @@ public final class Interface {
 	public static void unpack(CacheArchive widgetArchive, BitmapFont[] fonts) {
 		Interface.fonts = fonts;
 		final Buffer buffer;
-		if(Constants.USER_HOME_FILE_STORE)
-			buffer = new Buffer(widgetArchive.getFile("data"));
-		else
+		//if(Constants.USER_HOME_FILE_STORE)
+	//		buffer = new Buffer(widgetArchive.getFile("data"));
+	//	else
 			buffer = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "util/int/data.dat"));
 		final int length = buffer.getInt();
 		System.out.println("[loading] widget size: " + length);
@@ -137,7 +137,7 @@ public final class Interface {
 		cache[34000].child(2, 34001, 463, 303);
 		cache[34000].child(1, 34002, 455, 280);
 		cache[34000].child(0, 34003, 420, 260);
-		//pack();
+		pack();
 		Pestpanel2(fonts);
 		Pestpanel(fonts);
 		clanWars(fonts);
@@ -420,9 +420,9 @@ public final class Interface {
 		addText(21122, "(Need minimum 5 players)", 0xFFcc33, false, true, 52, tda, 1);
 		addText(21123, "Points", 0x33ccff, false, true, 52, tda, 1);
 		int last = 4;
-		RSinterface.subId = new int[last];
-		RSinterface.subX = new int[last];
-		RSinterface.subY = new int[last];
+		RSinterface.children = new int[last];
+		RSinterface.childX = new int[last];
+		RSinterface.childY = new int[last];
 		setBounds(21120, 15, 12, 0, RSinterface);
 		setBounds(21121, 15, 30, 1, RSinterface);
 		setBounds(21122, 15, 48, 2, RSinterface);
@@ -450,9 +450,9 @@ public final class Interface {
 		addText(21117, "Time Remaining:", 0xffffff, false, true, 52, tda, 0);
 		addText(21118, "", 0xffffff, false, true, 52, tda, 0);
 		int last = 18;
-		RSinterface.subId = new int[last];
-		RSinterface.subX = new int[last];
-		RSinterface.subY = new int[last];
+		RSinterface.children = new int[last];
+		RSinterface.childX = new int[last];
+		RSinterface.childY = new int[last];
 		setBounds(21101, 361, 26, 0, RSinterface);
 		setBounds(21102, 396, 26, 1, RSinterface);
 		setBounds(21103, 436, 26, 2, RSinterface);
@@ -671,6 +671,8 @@ public final class Interface {
 			parent = buffer.getInt();
 		}
 		final int id = buffer.getInt();
+
+
 		final Interface inter = cache[id] = new Interface();
 
 		inter.id = id;
@@ -682,47 +684,44 @@ public final class Interface {
 		inter.height = buffer.getUShort();
 		inter.alpha = (byte) buffer.getUByte();
 		boolean hover = buffer.getBoolean();
-		if(hover) {
-			inter.hoverInterToTrigger = buffer.getInt();
-		} else {
-			inter.hoverInterToTrigger = -1;
-		}
+		inter.hoverInterToTrigger = hover ? buffer.getInt() : -1;
 		inter.hoverTriggered = buffer.getUByte() == 1;
-		final int i1 = buffer.getUByte();
-		if(i1 > 0) {
-			inter.valueCompareType = new int[i1];
-			inter.requiredValues = new int[i1];
-			for(int j1 = 0; j1 < i1; j1++) {
-				inter.valueCompareType[j1] = buffer.getUByte();
-				inter.requiredValues[j1] = buffer.getUShort();
+
+		final int operators = buffer.getUByte();
+		if(operators > 0) {
+			inter.valueCompareType = new int[operators];
+			inter.requiredValues = new int[operators];
+			for(int scriptIndex = 0; scriptIndex < operators; scriptIndex++) {
+				inter.valueCompareType[scriptIndex] = buffer.getUByte();
+				inter.requiredValues[scriptIndex] = buffer.getUShort();
 			}
 		}
-		final int k1 = buffer.getUByte();
-		if(k1 > 0) {
-			inter.valueIndexArray = new int[k1][];
-			for(int l1 = 0; l1 < k1; l1++) {
-				final int i3 = buffer.getUShort();
-				inter.valueIndexArray[l1] = new int[i3];
-				for(int l4 = 0; l4 < i3; l4++) {
-					inter.valueIndexArray[l1][l4] = buffer.getUShort();
+		final int scripts = buffer.getUByte();
+		if(scripts > 0) {
+			inter.valueIndexArray = new int[scripts][];
+			for(int script = 0; script < scripts; script++) {
+				final int length = buffer.getUShort();
+				inter.valueIndexArray[script] = new int[length];
+				for(int instruction = 0; instruction < length; instruction++) {
+					inter.valueIndexArray[script][instruction] = buffer.getUShort();
 				}
 			}
 		}
-		if(inter.type == Constants.WIDGET_MAIN) {
+		if(inter.type == Constants.TYPE_CONTAINER) {
 			inter.imageTransp = false;
 			inter.scrollMax = buffer.getUShort();
-			final int i2 = buffer.getUShort();
-			inter.subId = new int[i2];
-			inter.subX = new int[i2];
-			inter.subY = new int[i2];
-			for(int j3 = 0; j3 < i2; j3++) {
-				inter.subId[j3] = buffer.getUShort();
-				inter.subX[j3] = buffer.getSShort();
-				inter.subY[j3] = buffer.getSShort();
+			final int count = buffer.getUShort();
+			inter.children = new int[count];
+			inter.childX = new int[count];
+			inter.childY = new int[count];
+			for(int j3 = 0; j3 < count; j3++) {
+				inter.children[j3] = buffer.getUShort();
+				inter.childX[j3] = buffer.getSShort();
+				inter.childY[j3] = buffer.getSShort();
 			}
 
 		}
-		if(inter.type == Constants.WIDGET_STRING_2) {
+		if(inter.type == Constants.WIDGET_MODEL_LIST) {
 			buffer.getUShort();
 			buffer.getUByte();
 		}
@@ -766,7 +765,7 @@ public final class Interface {
 		if(inter.type == Constants.WIDGET_RECTANGLE) {
 			inter.rectFilled = buffer.getUByte() == 1;
 		}
-		if(inter.type == Constants.WIDGET_STRING || inter.type == Constants.WIDGET_STRING_2) {
+		if(inter.type == Constants.WIDGET_STRING || inter.type == Constants.WIDGET_MODEL_LIST) {
 			inter.textCenter = buffer.getUByte() == 1;
 			inter.fontId = buffer.getUByte();
 			inter.textShadow = buffer.getUByte() == 1;
@@ -777,7 +776,7 @@ public final class Interface {
 			inter.textAlt = buffer.getLine().replace("Edgeville", "Arrav");
 			inter.textAlign = buffer.getUByte();
 		}
-		if(inter.type == Constants.WIDGET_STRING_2 || inter.type == Constants.WIDGET_RECTANGLE || inter.type == Constants.WIDGET_STRING) {
+		if(inter.type == Constants.WIDGET_MODEL_LIST || inter.type == Constants.WIDGET_RECTANGLE || inter.type == Constants.WIDGET_STRING) {
 			inter.color = buffer.getInt();
 		}
 		if(inter.type == Constants.WIDGET_RECTANGLE || inter.type == Constants.WIDGET_STRING) {
@@ -791,33 +790,25 @@ public final class Interface {
 			inter.imageAlt = buffer.getSShort();
 		}
 		if(inter.type == Constants.WIDGET_MODEL) {
-			int l = buffer.getUByte();
-			if(l != 0) {
+			int media = buffer.getUByte();
+			if(media != 0) {
 				inter.modelType = 1;
-				inter.modelId = (l - 1 << 8) + buffer.getUByte();
+				inter.modelId = (media - 1 << 8) + buffer.getUByte();
 			}
-			l = buffer.getUByte();
-			if(l != 0) {
+			media = buffer.getUByte();
+			if(media != 0) {
 				inter.modelTypeAlt = 1;
-				inter.modelIdAlt = (l - 1 << 8) + buffer.getUByte();
+				inter.modelIdAlt = (media - 1 << 8) + buffer.getUByte();
 			}
-			l = buffer.getUByte();
-			if(l != 0) {
-				inter.modelAnim = (l - 1 << 8) + buffer.getUByte();
-			} else {
-				inter.modelAnim = -1;
-			}
-			l = buffer.getUByte();
-			if(l != 0) {
-				inter.modelAnimAlt = (l - 1 << 8) + buffer.getUByte();
-			} else {
-				inter.modelAnimAlt = -1;
-			}
+			media = buffer.getUByte();
+			inter.modelAnim = media != 0 ? (media - 1 << 8) + buffer.getUByte() : -1;
+			media = buffer.getUByte();
+			inter.modelAnimAlt = media != 0 ? (media - 1 << 8) + buffer.getUByte() : -1;
 			inter.modelZoom = buffer.getUShort();
 			inter.modelYaw = buffer.getUShort();
 			inter.modelRoll = buffer.getUShort();
 		}
-		if(inter.type == Constants.WIDGET_INVENTORY_2) {
+		if(inter.type == Constants.WIDGET_ITEM_LIST) {
 			inter.invId = new int[inter.width * inter.height];
 			inter.invAmt = new int[inter.width * inter.height];
 			inter.textCenter = buffer.getUByte() == 1;
@@ -836,6 +827,7 @@ public final class Interface {
 			}
 
 		}
+
 		if(inter.actionType == 2 || inter.type == Constants.WIDGET_INVENTORY) {
 			inter.selectedActionName = buffer.getLine();
 			inter.spellName = buffer.getLine();
@@ -844,6 +836,7 @@ public final class Interface {
 		if(inter.type == Constants.WIDGET_TOOLTIP) {
 			inter.text = buffer.getLine();
 		}
+
 		if(inter.actionType == 1 || inter.actionType == 4 || inter.actionType == 5 || inter.actionType == 6) {
 			inter.tooltip = buffer.getLine();
 			if(inter.tooltip.length() == 0) {
@@ -932,12 +925,11 @@ public final class Interface {
 				}
 				if(screen.type == 0) {
 					byteV.putShort(screen.scrollMax);
-					System.out.println(screen.id);
-					byteV.putShort(screen.subId.length);
-					for(int i = 0; i < screen.subId.length; i++) {
-						byteV.putShort(screen.subId[i]);
-						byteV.putShort(screen.subX[i]);
-						byteV.putShort(screen.subY[i]);
+					byteV.putShort(screen.children.length);
+					for(int i = 0; i < screen.children.length; i++) {
+						byteV.putShort(screen.children[i]);
+						byteV.putShort(screen.childX[i]);
+						byteV.putShort(screen.childY[i]);
 					}
 				} else if(screen.type == 1) {
 					byteV.putShort(0);
@@ -1579,15 +1571,15 @@ public final class Interface {
 	}
 
 	private static void setBounds(int ID, int X, int Y, int frame, Interface widget) {
-		widget.subId[frame] = ID;
-		widget.subX[frame] = X;
-		widget.subY[frame] = Y;
+		widget.children[frame] = ID;
+		widget.childX[frame] = X;
+		widget.childY[frame] = Y;
 	}
 
 	private static void setChildren(int total, Interface i) {
-		i.subId = new int[total];
-		i.subX = new int[total];
-		i.subY = new int[total];
+		i.children = new int[total];
+		i.childX = new int[total];
+		i.childY = new int[total];
 	}
 
 	private static void color(int id, int color) {
@@ -1720,9 +1712,9 @@ public final class Interface {
 	}
 
 	public void child(int id, int interID, int x, int y) {
-		subId[id] = interID;
-		subX[id] = x;
-		subY[id] = y;
+		children[id] = interID;
+		childX[id] = x;
+		childY[id] = y;
 	}
 
 	public Model getModel(int anim1, int anim2, boolean selected) {
@@ -1788,9 +1780,9 @@ public final class Interface {
 	}
 
 	public void totalChildren(int t) {
-		subId = new int[t];
-		subX = new int[t];
-		subY = new int[t];
+		children = new int[t];
+		childX = new int[t];
+		childY = new int[t];
 	}
 
 	public static void addItemIcon(int id, int icon) {

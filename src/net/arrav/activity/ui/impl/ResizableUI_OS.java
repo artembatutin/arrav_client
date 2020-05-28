@@ -423,18 +423,18 @@ public class ResizableUI_OS extends ResizableUI {
 	public void buildInventory() {
 		if(client.mouseWheelAmt != 0 && client.olderTabInterfaces[client.invTab] != -1) {
 			Interface tab = Interface.cache[client.olderTabInterfaces[client.invTab]];
-			if(tab.subId != null) {
+			if(tab.children != null) {
 				int posX = client.windowWidth - 197;
 				int posY = client.windowHeight - 303;
 				if(client.windowWidth < 980) {
 					posY -= 36;
 				}
 				Interface widget = null;
-				for(int index = 0; index < tab.subId.length; index++) {
-					if(Interface.cache[tab.subId[index]].scrollMax > 0) {
-						posX += tab.subX[index];
-						posY += tab.subY[index];
-						widget = Interface.cache[tab.subId[index]];
+				for(int index = 0; index < tab.children.length; index++) {
+					if(Interface.cache[tab.children[index]].scrollMax > 0) {
+						posX += tab.childX[index];
+						posY += tab.childY[index];
+						widget = Interface.cache[tab.children[index]];
 						break;
 					}
 				}

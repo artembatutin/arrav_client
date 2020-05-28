@@ -54,14 +54,14 @@ public final class Constants {
 	/*
 	 * Widget constants
 	 */
-	public static final byte WIDGET_MAIN = 0;
-	public static final byte WIDGET_STRING_2 = 1;
+	public static final byte TYPE_CONTAINER = 0;
+	public static final byte WIDGET_MODEL_LIST = 1;
 	public static final byte WIDGET_INVENTORY = 2;
 	public static final byte WIDGET_RECTANGLE = 3;
 	public static final byte WIDGET_STRING = 4;
 	public static final byte WIDGET_IMAGE = 5;
 	public static final byte WIDGET_MODEL = 6;
-	public static final byte WIDGET_INVENTORY_2 = 7;
+	public static final byte WIDGET_ITEM_LIST = 7;
 	public static final byte WIDGET_TOOLTIP = 8;
 
 	/*
