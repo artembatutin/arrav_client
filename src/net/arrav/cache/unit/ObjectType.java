@@ -3,7 +3,6 @@ package net.arrav.cache.unit;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.arrav.Config;
-import net.arrav.Constants;
 import net.arrav.graphic.Viewport;
 import net.arrav.cache.CacheArchive;
 import net.arrav.net.SignLink;
@@ -207,7 +206,7 @@ public final class ObjectType {
 					}
 				}
 				int offset1 = dat.size();
-				obj.encode(dat);
+				obj.encodeOSRS(dat);
 				int offset2 = dat.size();
 				int writeOffset = offset2 - offset1;
 				idx.writeShort(writeOffset);
@@ -520,7 +519,7 @@ public final class ObjectType {
 		}
 	}
 	
-	private void encode(DataOutputStream out) throws IOException {
+	private void encodeOSRS(DataOutputStream out) throws IOException {
 		boolean actionsd = false, actionsd2 = false, actionsd3 = false;
 		Set<Integer> written = new HashSet<>();
 		do {
@@ -775,7 +774,200 @@ public final class ObjectType {
 			}
 		} while(true);
 	}
-	
+
+	private void encode(DataOutputStream out) throws IOException {
+		boolean actionsd = false, actionsd2 = false, actionsd3 = false;
+		Set<Integer> written = new HashSet<>();
+		do {
+			if(modelId > 0 && !written.contains(1)) {
+				out.writeByte(1);
+				out.writeShort(modelId);
+				written.add(1);
+			} else if(name != null && !written.contains(2)) {
+				out.writeByte(2);
+				out.write(name.replaceAll("_", " ").getBytes());
+				out.writeByte(10);
+				written.add(2);
+			} else if(iconZoom != 2000 && !written.contains(4)) {
+				out.writeByte(4);
+				out.writeShort(iconZoom);
+				written.add(4);
+			} else if(iconYaw != 0 && !written.contains(5)) {
+				out.writeByte(5);
+				out.writeShort(iconYaw);
+				written.add(5);
+			} else if(iconRoll != 0 && !written.contains(6)) {
+				out.writeByte(6);
+				out.writeShort(iconRoll);
+				written.add(6);
+			} else if(iconHorizontalOffset != 0 && !written.contains(7)) {
+				out.writeByte(7);
+				out.writeShort(iconHorizontalOffset);
+				written.add(7);
+			} else if(iconVerticalOffset != 0 && !written.contains(8)) {
+				out.writeByte(8);
+				out.writeShort(iconVerticalOffset);
+				written.add(8);
+			} else if(stackable && !written.contains(11)) {
+				out.writeByte(11);
+				written.add(11);
+			} else if(value != 1 && !written.contains(12)) {
+				out.writeByte(12);
+				out.writeInt(value);
+				written.add(12);
+			} else if(maleEquip > 0 && !written.contains(23)) {
+				out.writeByte(23);
+				out.writeShort(maleEquip);
+				written.add(23);
+			} else if(maleEquipAlt > 0 && !written.contains(24)) {
+				out.writeByte(24);
+				out.writeShort(maleEquipAlt);
+				written.add(24);
+			}   else if(femaleEquip > 0 && !written.contains(25)) {
+				out.writeByte(25);
+				out.writeShort(femaleEquip);
+				written.add(25);
+			} else if(femaleEquipAlt > 0 && !written.contains(26)) {
+				out.writeByte(26);
+				out.writeShort(femaleEquipAlt);
+				written.add(26);
+			} else if(groundActions != null && !actionsd2) {
+				for(int i = 0; i < groundActions.length; i++) {
+					if(groundActions[i] != null && i < 5) {
+						out.writeByte(30 + i);
+						out.write(groundActions[i].getBytes());
+						out.writeByte(10);
+					}
+				}
+				actionsd2 = true;
+			} else if(actions != null && !actionsd) {
+				for(int i = 0; i < actions.length; i++) {
+					if(actions[i] != null && i < 5) {
+						out.writeByte(35 + i);
+						out.write(actions[i].getBytes());
+						out.writeByte(10);
+					}
+				}
+				actionsd = true;
+			} else if(originalModelColors != null && modifiedModelColors != null && !written.contains(40)) {
+				out.writeByte(40);
+				out.writeByte(originalModelColors.length);
+				for(int i = 0; i < originalModelColors.length; i++) {
+					out.writeShort(originalModelColors[i]);
+					out.writeShort(modifiedModelColors[i]);
+				}
+				written.add(40);
+			} else if(retextureSrc != null && !written.contains(41)) {
+				out.writeByte(41);
+				out.writeByte(retextureSrc.length);
+				for(int i = 0; i < retextureSrc.length; i++) {
+					out.writeShort(retextureSrc[i]);
+					out.writeShort(retextureDst[i]);
+				}
+				written.add(41);
+			} else if(recolorDstPalette != null && !written.contains(42)) {
+				out.writeByte(42);
+				out.writeByte(recolorDstPalette.length);
+				for(int i = 0; i < retextureSrc.length; i++) {
+					out.writeByte(recolorDstPalette[i]);
+				}
+				written.add(42);
+			} else if(tertiaryMaleModel > 0 && !written.contains(78)) {
+				out.writeByte(78);
+				out.writeShort(tertiaryMaleModel);
+				written.add(78);
+			} else if(tertiaryFemaleModel > 0 && !written.contains(79)) {
+				out.writeByte(79);
+				out.writeShort(tertiaryFemaleModel);
+				written.add(79);
+			} else if(maleDialoguemodelId > 0 && !written.contains(90)) {
+				out.writeByte(90);
+				out.writeShort(maleDialoguemodelId);
+				written.add(90);
+			} else if(femaleDialoguemodelId != -1 && !written.contains(91)) {
+				out.writeByte(91);
+				out.writeShort(femaleDialoguemodelId);
+				written.add(91);
+			} else if(maleDialogueHatmodelId != -1 && !written.contains(92)) {
+				out.writeByte(92);
+				out.writeShort(maleDialogueHatmodelId);
+				written.add(92);
+			} else if(femaleDialogueHatmodelId != -1 && !written.contains(93)) {
+				out.writeByte(93);
+				out.writeShort(femaleDialogueHatmodelId);
+				written.add(93);
+			} else if(spriteCameraYaw != 0 && !written.contains(95)) {
+				out.writeByte(95);
+				out.writeShort(spriteCameraYaw);
+				written.add(95);
+			} else if(noteId != -1 && !written.contains(97)) {
+				out.writeByte(97);
+				out.writeShort(noteId);
+				written.add(97);
+			} else if(noteTemplateId != -1 && !written.contains(98)) {
+				out.writeByte(98);
+				out.writeShort(noteTemplateId);
+				written.add(98);
+			} else if(stackableIds != null && !actionsd3) {
+				for(int i = 0; i < stackableIds.length; i++) {
+					if(stackableIds[i] > 0 && stackAmounts[i] > 0) {
+						out.writeByte(100 + i);
+						out.writeShort(stackableIds[i]);
+						out.writeShort(stackAmounts[i]);
+					}
+				}
+				actionsd3 = true;
+			} else if(groundScaleX != 128 && !written.contains(110)) {
+				out.writeByte(110);
+				out.writeShort(groundScaleX);
+				written.add(110);
+			} else if(groundScaleY != 128 && !written.contains(111)) {
+				out.writeByte(111);
+				out.writeShort(groundScaleY);
+				written.add(111);
+			} else if(groundScaleZ != 128 && !written.contains(112)) {
+				out.writeByte(112);
+				out.writeShort(groundScaleZ);
+				written.add(112);
+			} else if(ambience != 0 && !written.contains(113)) {
+				out.writeByte(113);
+				out.write(ambience);
+				written.add(113);
+			} else if(diffusion != 0 && !written.contains(114)) {
+				out.writeByte(114);
+				out.write(diffusion);
+				written.add(114);
+			} else if(team != 0 && !written.contains(115)) {
+				out.writeByte(115);
+				out.write(team);
+				written.add(115);
+			} else if(lendID != -1 && !written.contains(121)) {
+				out.writeByte(121);
+				out.writeShort(lendID);
+				written.add(121);
+			} else if(lentItemID != -1 && !written.contains(122)) {
+				out.writeByte(122);
+				out.writeShort(lentItemID);
+				written.add(122);
+			} else if((maleEquipOffsetX != 0 || maleEquipOffsetY != 0 || maleEquipOffsetZ != 0) && !written.contains(125)) {
+				out.writeByte(125);
+				out.write(maleEquipOffsetX);
+				out.write(maleEquipOffsetY);
+				out.write(maleEquipOffsetZ);
+				written.add(125);
+			} else if((womanEquipOffsetX != 0 || womanEquipOffsetY != 0 || womanEquipOffsetZ != 0) && !written.contains(126)) {
+				out.writeByte(126);
+				out.write(womanEquipOffsetX);
+				out.write(womanEquipOffsetY);
+				out.write(womanEquipOffsetZ);
+				written.add(126);
+			} else {
+				out.writeByte(0);
+				break;
+			}
+		} while(true);
+	}
+
 	public static BitmapImage getIcon(int id, int itemAmount, int border) {
 		int hash = (border << 16) + id;
 		if(iconcache.containsKey(hash)) {
