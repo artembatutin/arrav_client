@@ -1,5 +1,6 @@
 package net.arrav.activity.ui.impl;
 
+import net.arrav.Client;
 import net.arrav.Config;
 import net.arrav.Constants;
 import net.arrav.activity.panel.impl.SettingPanel;
@@ -7,7 +8,6 @@ import net.arrav.activity.ui.UIComponent;
 import net.arrav.activity.ui.util.CounterHandler;
 import net.arrav.activity.ui.util.OrbHandler;
 import net.arrav.world.model.Player;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.cache.unit.Interface;
 import net.arrav.cache.unit.NPCType;
 import net.arrav.world.model.Model;
@@ -97,7 +97,7 @@ public class FixedUI_317 extends FixedUI {
 	public void updateChat() {
 		client.chatGraphics.setCanvas();
 		Rasterizer3D.viewport = client.chatAreaViewport;
-		ImageCache.get(189).drawImage(0, 0);
+		Client.spriteCache.get(189).drawImage(0, 0);
 		displayChannelButtons();
 		if(client.messagePromptRaised) {
 			client.boldFont.drawCenteredString(client.promptInputTitle, 259, 60, 0);
@@ -140,7 +140,7 @@ public class FixedUI_317 extends FixedUI {
 						client.plainFont.drawLeftAlignedEffectString(message, x, yPos, basicFontColor, false);
 					} else if(type == 1) {
 						if(rights >= 1) {
-							ImageCache.get(1984 + rights - 1).drawImage(x + 1, yPos - 12);
+							Client.spriteCache.get(1984 + rights - 1).drawImage(x + 1, yPos - 12);
 							x += 14;
 						}
 						client.plainFont.drawLeftAlignedString(client.chatAuthor[i] + ":", x, yPos, basicFontColor);
@@ -150,7 +150,7 @@ public class FixedUI_317 extends FixedUI {
 						client.plainFont.drawLeftAlignedString("From", x, yPos, redFontColor);
 						x += client.plainFont.getStringWidth("From ");
 						if(rights >= 1) {
-							ImageCache.get(1984 + rights - 1).drawImage(x, yPos - 12);
+							Client.spriteCache.get(1984 + rights - 1).drawImage(x, yPos - 12);
 							x += 12;
 						}
 						client.plainFont.drawLeftAlignedString(client.chatAuthor[i] + ":", x, yPos, redFontColor);
@@ -173,7 +173,7 @@ public class FixedUI_317 extends FixedUI {
 						client.plainFont.drawLeftAlignedString("]", x, yPos, 0);
 						x += 7;
 						if(rights >= 1) {
-							ImageCache.get(1984 + rights - 1).drawImage(x, yPos - 12);
+							Client.spriteCache.get(1984 + rights - 1).drawImage(x, yPos - 12);
 							x += 13;
 						}
 						client.plainFont.drawLeftAlignedString(client.chatAuthor[i] + ":", x, yPos, 0);
@@ -185,7 +185,7 @@ public class FixedUI_317 extends FixedUI {
 						final int split = client.chatAuthor[i].indexOf(":");
 						client.chatAuthor[i] = client.chatAuthor[i].substring(split + 1);
 						if(rights >= 1) {
-							ImageCache.get(1984 + rights - 1).drawImage(x, yPos - 12);
+							Client.spriteCache.get(1984 + rights - 1).drawImage(x, yPos - 12);
 							x += 13;
 						}
 						client.plainFont.drawLeftAlignedString(client.chatAuthor[i] + ":", x, yPos, 0);
@@ -210,7 +210,7 @@ public class FixedUI_317 extends FixedUI {
 			}
 			typingCrownOffset = 0;
 			if(client.localPrivilege >= 1) {
-				ImageCache.get(1984 + client.localPrivilege - 1).drawImage(19, 99);
+				Client.spriteCache.get(1984 + client.localPrivilege - 1).drawImage(19, 99);
 				typingCrownOffset = 14;
 			}
 			client.plainFont.drawLeftAlignedString(myName + ":", 19 + typingCrownOffset, 110, 0);
@@ -257,19 +257,19 @@ public class FixedUI_317 extends FixedUI {
 		client.mapGraphics.setCanvas();
 		if(client.minimapOverlay == 2) {
 			Rasterizer2D.fillRectangle(0, 0, 246, 168, 0);
-			ImageCache.get(70).drawImage(0, 0);
-			ImageCache.get(69).drawImage(26, 4);
-			ImageCache.get(40).drawImage(0, 4);
-			ImageCache.get(1700).drawAffineTransformedImage(26, 0, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
+			Client.spriteCache.get(70).drawImage(0, 0);
+			Client.spriteCache.get(69).drawImage(26, 4);
+			Client.spriteCache.get(40).drawImage(0, 4);
+			Client.spriteCache.get(1700).drawAffineTransformedImage(26, 0, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
 			if(Config.def.orbs()) {
 				displayOrb(-2, 42, Constants.ORB_HEALTH, false);
 				displayOrb(-2, 87, Constants.ORB_PRAYER, true);
 				displayOrb(24, 122, Constants.ORB_RUN, true);
 				displaySpecialOrb(178, 117, Constants.ORB_SUMMONING, true);
 			}
-			ImageCache.get(1955).drawImage(-2, 22);
+			Client.spriteCache.get(1955).drawImage(-2, 22);
 			if(client.mouseInRegion(519, 26, 544, 52)) {
-				ImageCache.get(1956).drawImage(-2, 22);
+				Client.spriteCache.get(1956).drawImage(-2, 22);
 			}
 			client.mapGraphics.drawGraphics(519, 0, client.graphics);
 			client.gameGraphics.setCanvas();
@@ -279,7 +279,7 @@ public class FixedUI_317 extends FixedUI {
 		final int middleX = 48 + client.localPlayer.x / 32;
 		final int middleY = 464 - client.localPlayer.y / 32;
 		client.minimapImage.drawAffineTransformedImage(51, 9, 146, 151, middleX, middleY, client.minimapLineStarts, client.minimapLineLengths, rotation, 256 + client.minimapZoom);
-		ImageCache.get(192).drawAffineTransformedImage(26, 4, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
+		Client.spriteCache.get(192).drawAffineTransformedImage(26, 4, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
 		for(int j5 = 0; j5 < client.mapFunctionCount; j5++) {
 			final int x = client.mapFunctionX[j5] * 4 + 2 - client.localPlayer.x / 32;
 			final int y = client.mapFunctionY[j5] * 4 + 2 - client.localPlayer.y / 32;
@@ -368,18 +368,18 @@ public class FixedUI_317 extends FixedUI {
 		}
 		Rasterizer2D.removeClip();
 		Rasterizer2D.fillRectangle(123, 78, 3, 3, 0xffffff);
-		ImageCache.get(70).drawImage(0, 0);
-		ImageCache.get(69).drawImage(26, 4);
-		ImageCache.get(40).drawImage(0, 4);
+		Client.spriteCache.get(70).drawImage(0, 0);
+		Client.spriteCache.get(69).drawImage(26, 4);
+		Client.spriteCache.get(40).drawImage(0, 4);
 		if(Config.def.orbs()) {
 			displayOrb(-2, 42, Constants.ORB_HEALTH, false);
 			displayOrb(-2, 87, Constants.ORB_PRAYER, true);
 			displayOrb(24, 122, Constants.ORB_RUN, true);
 			displaySpecialOrb(178, 117, Constants.ORB_SUMMONING, true);
 		}
-		ImageCache.get(1955).drawImage(-2, 22);
+		Client.spriteCache.get(1955).drawImage(-2, 22);
 		if(client.mouseInRegion(519, 26, 544, 52)) {
-			ImageCache.get(1956).drawImage(-2, 22);
+			Client.spriteCache.get(1956).drawImage(-2, 22);
 		}
 		if(client.menuOpened) {
 			client.gameActivity.drawer.drawMenu(-519, 0, false);
@@ -436,7 +436,7 @@ public class FixedUI_317 extends FixedUI {
 	public void updateInventory() {
 		client.inventoryGraphics.setCanvas();
 		Rasterizer3D.viewport = client.tabAreaViewport;
-		ImageCache.get(190).drawImage(0, 0);
+		Client.spriteCache.get(190).drawImage(0, 0);
 		if(client.invOverlayInterfaceID == -1) {
 			displaySelectedTab();
 			displaySideIcons();
@@ -460,7 +460,7 @@ public class FixedUI_317 extends FixedUI {
 
 	@Override
 	public void updateSceneOverlay() {
-		ImageCache.get(55).drawImage(0, 0);
+		Client.spriteCache.get(55).drawImage(0, 0);
 	}
 
 	public void markMinimap(BitmapImage icon, int x, int y) {
@@ -504,14 +504,14 @@ public class FixedUI_317 extends FixedUI {
 	 * Displays orbs components.
 	 */
 	private void displayOrb(int x, int y, int orb, boolean hover) {
-		ImageCache.get(hover && client.mouseInRegion(x + 519, y + 4, x + 576, y + 37) ? 1922 : 1921).drawImage(x, y);
+		Client.spriteCache.get(hover && client.mouseInRegion(x + 519, y + 4, x + 576, y + 37) ? 1922 : 1921).drawImage(x, y);
 		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 15, y + 26, OrbHandler.getColor(orb), true);
-		ImageCache.get(OrbHandler.getOrb(orb)).drawImage(x + 27, y + 3);
+		Client.spriteCache.get(OrbHandler.getOrb(orb)).drawImage(x + 27, y + 3);
 		Rasterizer2D.setClip(x + 27, y + 3, x + 54, y + 3 + OrbHandler.getFill(orb, 27));
-		ImageCache.get(60).drawImage(x + 27, y + 3);
+		Client.spriteCache.get(60).drawImage(x + 27, y + 3);
 		Rasterizer2D.removeClip();
 		if(orb != Constants.ORB_HEALTH || OrbHandler.getPercent(orb) > 20 || OrbHandler.getPercent(orb) < 1 || client.loopCycle % 20 > 10) {
-			ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).drawImage(x + 41 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageWidth / 2, y + 17 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageHeight / 2);
+			Client.spriteCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).drawImage(x + 41 - Client.spriteCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageWidth / 2, y + 17 - Client.spriteCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageHeight / 2);
 		}
 	}
 	
@@ -519,14 +519,14 @@ public class FixedUI_317 extends FixedUI {
 	 * Displays special orb component.
 	 */
 	private void displaySpecialOrb(int x, int y, int orb, boolean hover) {
-		ImageCache.get(hover && client.mouseInRegion(x + 519, y + 4, x + 576, y + 37) ? 1924 : 1923).drawImage(x, y);
+		Client.spriteCache.get(hover && client.mouseInRegion(x + 519, y + 4, x + 576, y + 37) ? 1924 : 1923).drawImage(x, y);
 		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 43, y + 26, OrbHandler.getColor(orb), true);
-		ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 73 : orb == Constants.ORB_HEALTH && OrbHandler.poisoned ? 78 : 56 + orb).drawImage(x + 4, y + 4);
+		Client.spriteCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 73 : orb == Constants.ORB_HEALTH && OrbHandler.poisoned ? 78 : 56 + orb).drawImage(x + 4, y + 4);
 		Rasterizer2D.setClip(x + 3, y + 3, x + 30, y + 3 + OrbHandler.getFill(orb, 27));
-		ImageCache.get(60).drawImage(x + 3, y + 3);
+		Client.spriteCache.get(60).drawImage(x + 3, y + 3);
 		Rasterizer2D.removeClip();
 		if(orb != Constants.ORB_HEALTH || OrbHandler.getPercent(orb) > 20 || OrbHandler.getPercent(orb) < 1 || client.loopCycle % 20 > 10) {
-			ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).drawImage(x + 17 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageWidth / 2, y + 17 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageHeight / 2);
+			Client.spriteCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).drawImage(x + 17 - Client.spriteCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageWidth / 2, y + 17 - Client.spriteCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageHeight / 2);
 		}
 	}
 
@@ -543,25 +543,25 @@ public class FixedUI_317 extends FixedUI {
 		if(client.invTab == 13) // Removed music redstone.
 			return;
 		final short[][] data = {{0, 20, 1}, {1, 51, 1}, {1, 78, 0}, {2, 107, 0}, {1, 148, 1}, {1, 176, 1}, {3, 206, 1}, {2, 3, 298}, {1, 50, 297}, {1, 78, 298}, {2, 107, 300}, {1, 149, 297}, {1, 176, 298}, {3, 206, 298}};
-		ImageCache.get(206 + data[client.invTab][0]).drawImage(data[client.invTab][1], data[client.invTab][2]);
+		Client.spriteCache.get(206 + data[client.invTab][0]).drawImage(data[client.invTab][1], data[client.invTab][2]);
 	}
 
 	/**
 	 * Displays the side icons.
 	 */
 	private void displaySideIcons() {
-		ImageCache.get(193).drawImage(30, 11);
-		ImageCache.get(194).drawImage(54, 7);
-		ImageCache.get(195).drawImage(83, 7);
-		ImageCache.get(196).drawImage(113, 5);
-		ImageCache.get(197).drawImage(153, 6);
-		ImageCache.get(198).drawImage(181, 6);
-		ImageCache.get(199).drawImage(208, 10);
-		ImageCache.get(200).drawImage(54, 304);
-		ImageCache.get(201).drawImage(82, 304);
-		ImageCache.get(202).drawImage(116, 306);
-		ImageCache.get(203).drawImage(153, 304);
-		ImageCache.get(204).drawImage(185, 304);
-		ImageCache.get(205).drawImage(210, 304);
+		Client.spriteCache.get(193).drawImage(30, 11);
+		Client.spriteCache.get(194).drawImage(54, 7);
+		Client.spriteCache.get(195).drawImage(83, 7);
+		Client.spriteCache.get(196).drawImage(113, 5);
+		Client.spriteCache.get(197).drawImage(153, 6);
+		Client.spriteCache.get(198).drawImage(181, 6);
+		Client.spriteCache.get(199).drawImage(208, 10);
+		Client.spriteCache.get(200).drawImage(54, 304);
+		Client.spriteCache.get(201).drawImage(82, 304);
+		Client.spriteCache.get(202).drawImage(116, 306);
+		Client.spriteCache.get(203).drawImage(153, 304);
+		Client.spriteCache.get(204).drawImage(185, 304);
+		Client.spriteCache.get(205).drawImage(210, 304);
 	}
 }

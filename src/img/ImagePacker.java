@@ -1,7 +1,6 @@
 package img;
 
 import net.arrav.Client;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.net.SignLink;
 import net.arrav.util.FileToolkit;
 import net.arrav.util.io.Buffer;
@@ -137,7 +136,6 @@ public class ImagePacker {
 				byte[] pack = packRaw(data.data);
 				client.cacheIdx[6].writeFile(pack.length, pack, index);
 				//Setting images to null(for them to be reloaded).
-				ImageCache.clear();
 			}
 		}
 	}

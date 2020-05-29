@@ -1,12 +1,12 @@
 package net.arrav.activity.ui.impl;
 
+import net.arrav.Client;
 import net.arrav.Config;
 import net.arrav.Constants;
 import net.arrav.activity.panel.impl.SettingPanel;
 import net.arrav.activity.ui.UIComponent;
 import net.arrav.activity.ui.util.CounterHandler;
 import net.arrav.activity.ui.util.OrbHandler;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.world.model.Model;
 import net.arrav.world.model.Player;
 import net.arrav.graphic.Rasterizer2D;
@@ -109,12 +109,12 @@ public class ResizableUI_562 extends ResizableUI {
 	public void updateChat() {
 		int yoff = client.windowHeight - 165;
 		if(client.messagePromptRaised || client.bankSearching || client.inputDialogState > 0 || client.chatBoxStatement != null || client.forcedChatWidgetId != -1 || client.chatWidgetId != -1) {
-			ImageCache.get(67).drawImage(0, client.windowHeight - 166);
+			Client.spriteCache.get(67).drawImage(0, client.windowHeight - 166);
 			Rasterizer2D.fillRectangle(7, client.windowHeight - 159, 506, 129, 0xccbb9a, 150);
 		} else {
 			yoff -= 3;
 			if(client.showChat) {
-				ImageCache.get(213).drawImage(256, client.windowHeight - chatboxHeight - 59, 64);
+				Client.spriteCache.get(213).drawImage(256, client.windowHeight - chatboxHeight - 59, 64);
 				int alpha;
 				for(int i = 0; i < chatboxHeight; i++) {
 					alpha = (int) (64 * i / (float) chatboxHeight);
@@ -172,7 +172,7 @@ public class ResizableUI_562 extends ResizableUI {
 						client.plainFont.drawLeftAlignedEffectString(msg, x, y, basicFontColor, fontShadow);
 					} else if(type == 1) {
 						if(rights >= 1) {
-							ImageCache.get(1984 + rights - 1).drawImage(x + 1, y - 12);
+							Client.spriteCache.get(1984 + rights - 1).drawImage(x + 1, y - 12);
 							x += 14;
 						}
 						client.plainFont.drawLeftAlignedString(author + ":", x + 1, y + 1, 0);
@@ -185,7 +185,7 @@ public class ResizableUI_562 extends ResizableUI {
 						client.plainFont.drawLeftAlignedString("From", x, y, redFontColor);
 						x += client.plainFont.getStringWidth("From ") + 12;
 						if(rights >= 1) {
-							ImageCache.get(1984 + rights - 1).drawImage(x, y - 12);
+							Client.spriteCache.get(1984 + rights - 1).drawImage(x, y - 12);
 						} else {
 							x -= 12;
 						}
@@ -214,7 +214,7 @@ public class ResizableUI_562 extends ResizableUI {
 						client.plainFont.drawLeftAlignedString("]", x, y, 0xffffff);
 						x += 7;
 						if(rights >= 1) {
-							ImageCache.get(1984 + rights - 1).drawImage(x, y - 12);
+							Client.spriteCache.get(1984 + rights - 1).drawImage(x, y - 12);
 							x += 13;
 						}
 						client.plainFont.drawLeftAlignedString(author + ":", x + 1, y + 1, 0);
@@ -229,7 +229,7 @@ public class ResizableUI_562 extends ResizableUI {
 						final int split = author.indexOf(":");
 						author = author.substring(split + 1);
 						if(rights >= 1) {
-							ImageCache.get(1984 + rights - 1).drawImage(x, y - 12);
+							Client.spriteCache.get(1984 + rights - 1).drawImage(x, y - 12);
 							x += 13;
 						}
 						client.plainFont.drawLeftAlignedString(author + ":", x + 1, y + 1, 0);
@@ -256,7 +256,7 @@ public class ResizableUI_562 extends ResizableUI {
 			}
 			typingCrownOffset = 0;
 			if(client.localPrivilege >= 1) {
-				ImageCache.get(1984 + client.localPrivilege - 1).drawImage(11, yoff + 123);
+				Client.spriteCache.get(1984 + client.localPrivilege - 1).drawImage(11, yoff + 123);
 				typingCrownOffset = 15;
 			}
 			client.plainFont.drawLeftAlignedString(myName + ":", 11 + typingCrownOffset, yoff + 134, 0);
@@ -322,16 +322,16 @@ public class ResizableUI_562 extends ResizableUI {
 		int xOffset = client.windowWidth - 182;
 		displayLogout(xOffset + 160, 2);
 		if(client.minimapOverlay == 2) {
-			ImageCache.get(84).drawImage(xOffset + 18, 0);
-			ImageCache.get(85).drawImage(xOffset + 23, 5);
-			ImageCache.get(83).drawImage(xOffset + 13, 0);
+			Client.spriteCache.get(84).drawImage(xOffset + 18, 0);
+			Client.spriteCache.get(85).drawImage(xOffset + 23, 5);
+			Client.spriteCache.get(83).drawImage(xOffset + 13, 0);
 			if(Config.def.orbs()) {
 				displayOrb(client.windowWidth - 209, 38, Constants.ORB_HEALTH, false);
 				displayOrb(client.windowWidth - 212, 72, Constants.ORB_PRAYER, true);
 				displayOrb(client.windowWidth - 200, 106, Constants.ORB_RUN, true);
 				displayOrb(client.windowWidth - 177, 140, Constants.ORB_SUMMONING, true);
 			}
-			ImageCache.get(1700).drawAffineTransformedImage(xOffset + 19, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
+			Client.spriteCache.get(1700).drawAffineTransformedImage(xOffset + 19, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
 			return;
 		}
 		int rotation = client.cameraAngleX + client.minimapAngle & 0x7ff;
@@ -425,9 +425,9 @@ public class ResizableUI_562 extends ResizableUI {
 			markMinimap(client.mapFlag, x, y);
 		}
 		Rasterizer2D.removeClip();
-		ImageCache.get(84).drawImage(xOffset + 18, 0);
-		ImageCache.get(83).drawImage(xOffset + 13, 0);
-		ImageCache.get(1700).drawAffineTransformedImage(xOffset + 18, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
+		Client.spriteCache.get(84).drawImage(xOffset + 18, 0);
+		Client.spriteCache.get(83).drawImage(xOffset + 13, 0);
+		Client.spriteCache.get(1700).drawAffineTransformedImage(xOffset + 18, 5, 33, 33, 25, 25, client.compassClipStarts, client.compassLineLengths, client.cameraAngleX, 256);
 		Rasterizer2D.fillRectangle(xOffset + 97, 78, 3, 3, 0xffffff);
 		if(Config.def.orbs()) {
 			displayOrb(client.windowWidth - 209, 38, Constants.ORB_HEALTH, false);
@@ -435,14 +435,14 @@ public class ResizableUI_562 extends ResizableUI {
 			displayOrb(client.windowWidth - 200, 106, Constants.ORB_RUN, true);
 			displayOrb(client.windowWidth - 177, 140, Constants.ORB_SUMMONING, true);
 		}
-		ImageCache.get(1950).drawImage(client.windowWidth - 212, 5);
+		Client.spriteCache.get(1950).drawImage(client.windowWidth - 212, 5);
 		if(client.mouseInRegion(client.windowWidth - 212, 5, client.windowWidth - 183, 32)) {
-			ImageCache.get(1951).drawImage(client.windowWidth - 212, 5);
+			Client.spriteCache.get(1951).drawImage(client.windowWidth - 212, 5);
 		}
-		ImageCache.get(83).drawImage(xOffset + 135, 125);
-		ImageCache.get(238).drawImage(xOffset + 140, 130);
+		Client.spriteCache.get(83).drawImage(xOffset + 135, 125);
+		Client.spriteCache.get(238).drawImage(xOffset + 140, 130);
 		if(client.mouseInRegion(client.windowWidth - 44, 132, client.windowWidth - 9, 167)) {
-			ImageCache.get(239).drawImage(xOffset + 140, 130);
+			Client.spriteCache.get(239).drawImage(xOffset + 140, 130);
 		}
 		client.gameGraphics.setCanvas();
 	}
@@ -519,11 +519,11 @@ public class ResizableUI_562 extends ResizableUI {
 		int xOffset = client.windowWidth - 197;
 		int yOffset = client.windowHeight - 303;
 		if(client.windowWidth < 1000) {
-			ImageCache.get(39).drawImage(xOffset - 43, yOffset + 231);
-			ImageCache.get(39).drawImage(xOffset - 43, yOffset + 267);
+			Client.spriteCache.get(39).drawImage(xOffset - 43, yOffset + 231);
+			Client.spriteCache.get(39).drawImage(xOffset - 43, yOffset + 267);
 		} else {
-			ImageCache.get(39).drawImage(xOffset - 43, yOffset + 267);
-			ImageCache.get(39).drawImage(xOffset - 283, yOffset + 267);
+			Client.spriteCache.get(39).drawImage(xOffset - 43, yOffset + 267);
+			Client.spriteCache.get(39).drawImage(xOffset - 283, yOffset + 267);
 		}
 		if(client.invOverlayInterfaceID == -1) {
 			displayHoveredTab();
@@ -533,10 +533,10 @@ public class ResizableUI_562 extends ResizableUI {
 		if(client.showTab) {
 			if(client.windowWidth < 1000) {
 				Rasterizer2D.fillRectangle(xOffset, yOffset - 36, 190, 269, 0x50463C, 100);
-				ImageCache.get(47).drawImage(xOffset - 7, yOffset - 43);
+				Client.spriteCache.get(47).drawImage(xOffset - 7, yOffset - 43);
 			} else {
 				Rasterizer2D.fillRectangle(xOffset, yOffset, 190, 269, 0x50463C, 100);
-				ImageCache.get(47).drawImage(xOffset - 7, yOffset - 7);
+				Client.spriteCache.get(47).drawImage(xOffset - 7, yOffset - 7);
 			}
 			if(client.invOverlayInterfaceID != -1) {
 				client.drawWidget(Interface.cache[client.invOverlayInterfaceID], xOffset, yOffset - (client.windowWidth < 1000 ? 36 : 0), 0, UIComponent.INVENTORY);
@@ -553,7 +553,7 @@ public class ResizableUI_562 extends ResizableUI {
 	
 	@Override
 	public BitmapImage getSide(int index) {
-		return index < 0 || index >= 16 ? null : ImageCache.get(index + 22);
+		return index < 0 || index >= 16 ? null : Client.spriteCache.get(index + 22);
 	}
 	
 	@Override
@@ -622,7 +622,7 @@ public class ResizableUI_562 extends ResizableUI {
 			final double d = Math.atan2(l1, i2);
 			final int j2 = (int) (Math.sin(d) * 63D);
 			final int k2 = (int) (Math.cos(d) * 57D);
-			ImageCache.get(85).method353(94 + j2 + 4, 83 - k2 - 20, d);
+			Client.spriteCache.get(85).method353(94 + j2 + 4, 83 - k2 - 20, d);
 		} else {
 			int xOffset = client.windowWidth - 182;
 			markMinimap(icon, xOffset + x, y);
@@ -657,7 +657,7 @@ public class ResizableUI_562 extends ResizableUI {
 				for(int i = 8; i >= 1; i--) {
 					if(client.windowWidth - 270 < client.mouseX - (i * 30)) {
 						if(client.newerTabInterfaces[i - 1] != -1) {
-							ImageCache.get(19).drawImage(i * 30 + (client.windowWidth - 270), client.windowHeight - 72);
+							Client.spriteCache.get(19).drawImage(i * 30 + (client.windowWidth - 270), client.windowHeight - 72);
 						}
 						return;
 					}
@@ -666,7 +666,7 @@ public class ResizableUI_562 extends ResizableUI {
 				for(int i = 8; i >= 1; i--) {
 					if(client.windowWidth - 270 < client.mouseX - (i * 30)) {
 						if(client.newerTabInterfaces[i + 7] != -1) {
-							ImageCache.get(19).drawImage(i * 30 + (client.windowWidth - 270), client.windowHeight - 36);
+							Client.spriteCache.get(19).drawImage(i * 30 + (client.windowWidth - 270), client.windowHeight - 36);
 						}
 						return;
 					}
@@ -677,7 +677,7 @@ public class ResizableUI_562 extends ResizableUI {
 				for(int i = 16; i >= 1; i--) {
 					if(client.windowWidth - 510 < client.mouseX - (i * 30)) {
 						if(client.newerTabInterfaces[i - 1] != -1) {
-							ImageCache.get(19).drawImage(i * 30 + (client.windowWidth - 510), client.windowHeight - 36);
+							Client.spriteCache.get(19).drawImage(i * 30 + (client.windowWidth - 510), client.windowHeight - 36);
 						}
 						return;
 					}
@@ -697,12 +697,12 @@ public class ResizableUI_562 extends ResizableUI {
 			if(client.invTab == i && client.showTab) {
 				if(client.windowWidth < 1000) {
 					if(i < 8) {
-						ImageCache.get(21).drawImage((client.windowWidth - 245) + 30 * i, client.windowHeight - 71);
+						Client.spriteCache.get(21).drawImage((client.windowWidth - 245) + 30 * i, client.windowHeight - 71);
 					} else {
-						ImageCache.get(21).drawImage((client.windowWidth - 245) + 30 * (i - 8), client.windowHeight - 35);
+						Client.spriteCache.get(21).drawImage((client.windowWidth - 245) + 30 * (i - 8), client.windowHeight - 35);
 					}
 				} else {
-					ImageCache.get(21).drawImage((client.windowWidth - 485) + 30 * i, client.windowHeight - 35);
+					Client.spriteCache.get(21).drawImage((client.windowWidth - 485) + 30 * i, client.windowHeight - 35);
 				}
 			}
 		}
@@ -715,21 +715,21 @@ public class ResizableUI_562 extends ResizableUI {
 		if(client.windowWidth < 1000) {
 			for(int i = 0; i < 16; i++) {
 				if(client.newerTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1) {
-					int xOffset = 16 - ImageCache.get(i + 22).imageWidth / 2;
-					int yOffset = 18 - ImageCache.get(i + 22).imageHeight / 2;
+					int xOffset = 16 - Client.spriteCache.get(i + 22).imageWidth / 2;
+					int yOffset = 18 - Client.spriteCache.get(i + 22).imageHeight / 2;
 					if(i < 8) {
-						ImageCache.get(22 + i).drawImage(xOffset + client.windowWidth - 242 + 30 * i, yOffset + client.windowHeight - 71);
+						Client.spriteCache.get(22 + i).drawImage(xOffset + client.windowWidth - 242 + 30 * i, yOffset + client.windowHeight - 71);
 					} else {
-						ImageCache.get(22 + i).drawImage(xOffset + client.windowWidth - 242 + 30 * (i - 8), yOffset + client.windowHeight - 35);
+						Client.spriteCache.get(22 + i).drawImage(xOffset + client.windowWidth - 242 + 30 * (i - 8), yOffset + client.windowHeight - 35);
 					}
 				}
 			}
 		} else {
 			for(int i = 0; i < 16; i++) {
-				int xOffset = 16 - ImageCache.get(i + 22).imageWidth / 2;
-				int yOffset = 18 - ImageCache.get(i + 22).imageHeight / 2;
+				int xOffset = 16 - Client.spriteCache.get(i + 22).imageWidth / 2;
+				int yOffset = 18 - Client.spriteCache.get(i + 22).imageHeight / 2;
 				if(client.newerTabInterfaces[i] != -1 || SettingPanel.selectedBinding != -1) {
-					ImageCache.get(22 + i).drawImage(xOffset + client.windowWidth - 482 + 30 * i, yOffset + client.windowHeight - 34);
+					Client.spriteCache.get(22 + i).drawImage(xOffset + client.windowWidth - 482 + 30 * i, yOffset + client.windowHeight - 34);
 				}
 			}
 		}
@@ -740,7 +740,7 @@ public class ResizableUI_562 extends ResizableUI {
 	 */
 	private void displayChannelButtons() {
 		int y = client.windowHeight - 165;
-		ImageCache.get(65).drawImage(5, y + 142);
+		Client.spriteCache.get(65).drawImage(5, y + 142);
 		String text[] = {"On", "Friends", "Off", "Hide"};
 		int textColor[] = {65280, 0xffff00, 0xff0000, 65535};
 		for(int i = 0; i <= 6; i++) {
@@ -776,25 +776,25 @@ public class ResizableUI_562 extends ResizableUI {
 
 	private void displayLogout(int x, int y) {
 		if(client.invTab == 16)
-			ImageCache.get(1009).drawImage(x, y);
+			Client.spriteCache.get(1009).drawImage(x, y);
 		else if(client.mouseInRegion(x, y, x + 21, y + 21))
-			ImageCache.get(1008).drawImage(x, y);
+			Client.spriteCache.get(1008).drawImage(x, y);
 		else
-			ImageCache.get(1007).drawImage(x, y);
+			Client.spriteCache.get(1007).drawImage(x, y);
 	}
 
 	/**
 	 * Displays the orb.
 	 */
 	private void displayOrb(int x, int y, int orb, boolean hover) {
-		ImageCache.get(hover && client.mouseInRegion(x, y, x + 57, y + 33) ? 51 : 50).drawImage(x, y);
+		Client.spriteCache.get(hover && client.mouseInRegion(x, y, x + 57, y + 33) ? 51 : 50).drawImage(x, y);
 		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 15, y + 26, OrbHandler.getColor(orb), true);
-		ImageCache.get(OrbHandler.getOrb(orb)).drawImage(x + 27, y + 3);
+		Client.spriteCache.get(OrbHandler.getOrb(orb)).drawImage(x + 27, y + 3);
 		Rasterizer2D.setClip(x + 27, y + 3, x + 58, y + 3 + OrbHandler.getFill(orb, 27));
-		ImageCache.get(60).drawImage(x + 27, y + 3);
+		Client.spriteCache.get(60).drawImage(x + 27, y + 3);
 		Rasterizer2D.removeClip();
 		if(orb != Constants.ORB_HEALTH || OrbHandler.getPercent(orb) > 20 || OrbHandler.getPercent(orb) < 1 || client.loopCycle % 20 > 10) {
-			ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).drawImage(x + 41 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageWidth / 2, y + 17 - ImageCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageHeight / 2);
+			Client.spriteCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).drawImage(x + 41 - Client.spriteCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageWidth / 2, y + 17 - Client.spriteCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 74 : 61 + orb).imageHeight / 2);
 		}
 	}
 }

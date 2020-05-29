@@ -1,7 +1,7 @@
 package net.arrav.activity.panel.impl;
 
+import net.arrav.Client;
 import net.arrav.activity.panel.Panel;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.cache.unit.Interface;
 import net.arrav.graphic.Rasterizer2D;
 
@@ -263,7 +263,7 @@ public class ClanSettingPanel extends Panel {
 			if(client.mouseInRegion(beginX + 8, beginY + offset, beginX + 158, beginY + offset + 30)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 8, beginY + offset, 150, 30, 3, 0x000000, 40);
 			}
-			ImageCache.get(1626 + name.getRank()).drawImage(beginX + 18, beginY + offset + 11);
+			Client.spriteCache.get(1626 + name.getRank()).drawImage(beginX + 18, beginY + offset + 11);
 			Rasterizer2D.fillRoundedRectangle(beginX + 8, beginY + offset, 30, 30, 3, 0xFF8A1F, 20);
 			if(plainFont.getEffectStringWidth(name.getName()) < 130) {
 				plainFont.drawCenteredEffectString(name.getName(), beginX + 90, beginY + offset + 19, 0xFFFFFF, true);

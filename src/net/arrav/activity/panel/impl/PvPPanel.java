@@ -1,8 +1,8 @@
 package net.arrav.activity.panel.impl;
 
+import net.arrav.Client;
 import net.arrav.Config;
 import net.arrav.activity.panel.Panel;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.cache.unit.Interface;
 import net.arrav.graphic.Rasterizer2D;
 
@@ -124,7 +124,7 @@ public class PvPPanel extends Panel {
 		smallFont.drawLeftAlignedString("Multi area combat", beginX + 30, beginY + 325, 0xffffff);
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
 		
-		ImageCache.get(1949).drawImage(beginX + 200, beginY + 37);
+		Client.spriteCache.get(1949).drawImage(beginX + 200, beginY + 37);
 		if(xCoords != null) {
 			for(int i = 0; i < xCoords.length; i++) {
 				for(int x = 0; x < 12; x++) {

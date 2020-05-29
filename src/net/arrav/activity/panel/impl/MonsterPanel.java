@@ -1,7 +1,7 @@
 package net.arrav.activity.panel.impl;
 
+import net.arrav.Client;
 import net.arrav.activity.panel.Panel;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.graphic.Rasterizer2D;
 
 public class MonsterPanel extends Panel {
@@ -69,7 +69,7 @@ public class MonsterPanel extends Panel {
 		for(int i = 0; i < DUNGEONS.length; i++) {
 			int x = i % 6 * 81;
 			if(!DISABLED[i]) {
-				ImageCache.get(IMAGES[i]).drawImage(beginX + 8 + x, beginY + offset);
+				Client.spriteCache.get(IMAGES[i]).drawImage(beginX + 8 + x, beginY + offset);
 				if(client.mouseInRegion(beginX + 8 + x, beginY + offset, beginX + 85 + x, beginY + offset + 50))
 					Rasterizer2D.fillRectangle(beginX + 8 + x, beginY + offset, 77, 50, 0, 40);
 			}

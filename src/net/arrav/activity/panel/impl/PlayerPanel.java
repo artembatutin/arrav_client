@@ -1,10 +1,10 @@
 package net.arrav.activity.panel.impl;
 
+import net.arrav.Client;
 import net.arrav.Config;
 import net.arrav.Constants;
 import net.arrav.activity.panel.Panel;
 import net.arrav.activity.ui.impl.ResizableUI_CUS;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.cache.unit.Interface;
 import net.arrav.graphic.Rasterizer2D;
 
@@ -161,7 +161,7 @@ public class PlayerPanel extends Panel {
 		if(type == -1) {
 			ResizableUI_CUS.drawFace(beginX + 235, beginY + 75);
 			for(int i = 0; i < 4; i++) {
-				ImageCache.get(2047 + i).drawImage(beginX + 52 + i * 115, beginY + 150);
+				Client.spriteCache.get(2047 + i).drawImage(beginX + 52 + i * 115, beginY + 150);
 				if(client.mouseInRegion(beginX + 52 + i * 115, beginY + 150, beginX + 102 + i * 115, beginY + 200)) {
 					Rasterizer2D.fillRectangle(beginX + 52 + i * 115, beginY + 150, 50, 50, 0x000000, 40);
 				}
@@ -182,7 +182,7 @@ public class PlayerPanel extends Panel {
 				total += cur;
 				Rasterizer2D.fillRectangle(beginX + 110 + x, beginY + offset - 10, 100, 25, 0x9e2b18, 200);
 				Rasterizer2D.fillRectangle(beginX + 110 + x, beginY + offset - 10, (int) (100 * (cur / (max * 1f))), 25, 0x3a9e18, 200);
-				ImageCache.get(1957 + i).drawImage(beginX + 180 + x, beginY + offset - 10);
+				Client.spriteCache.get(1957 + i).drawImage(beginX + 180 + x, beginY + offset - 10);
 				Rasterizer2D.drawRectangle(beginX + 110 + x, beginY + offset - 10, 100, 25, 0x000000);
 				smallFont.drawLeftAlignedString(Constants.SKILL_NAMES_UNORDERED[i] + ": " + cur, beginX + 113 + x, beginY + offset + 8, 0xffffff);
 				offset += 32;
@@ -238,7 +238,7 @@ public class PlayerPanel extends Panel {
 					task = Interface.cache[26100 + u].text;
 				}
 				if(tiers[u] != -1) {
-					ImageCache.get(2043 + tiers[u]).drawImage(beginX + 132, beginY + offset + 3);
+					Client.spriteCache.get(2043 + tiers[u]).drawImage(beginX + 132, beginY + offset + 3);
 					if(tex.length() > 0) {
 						smallFont.drawLeftAlignedEffectString(tex, beginX + 152, beginY + offset + 14, difColors[tiers[u]], true);
 						if(tex.charAt(0) == '@') {
@@ -250,13 +250,13 @@ public class PlayerPanel extends Panel {
 			}
 			
 			boldFont.drawCenteredEffectString("Completed: " + complet, beginX + 65, beginY + 181, 0xFF8A1F, true);
-			ImageCache.get(2043).drawImage(beginX + 18, beginY + 210);
+			Client.spriteCache.get(2043).drawImage(beginX + 18, beginY + 210);
 			smallFont.drawLeftAlignedString("Easy - 75k", beginX + 38, beginY + 221, 0xb3b4b3);
-			ImageCache.get(2044).drawImage(beginX + 18, beginY + 230);
+			Client.spriteCache.get(2044).drawImage(beginX + 18, beginY + 230);
 			smallFont.drawLeftAlignedString("Medium - 225k", beginX + 38, beginY + 241, 0xD9750B);
-			ImageCache.get(2045).drawImage(beginX + 18, beginY + 250);
+			Client.spriteCache.get(2045).drawImage(beginX + 18, beginY + 250);
 			smallFont.drawLeftAlignedString("Hard - 750k", beginX + 38, beginY + 261, 0xbe7056);
-			ImageCache.get(2046).drawImage(beginX + 18, beginY + 270);
+			Client.spriteCache.get(2046).drawImage(beginX + 18, beginY + 270);
 			smallFont.drawLeftAlignedString("Elite - 1.5m", beginX + 38, beginY + 281, 0xC41414);
 			/* Scroll bar */
 			Rasterizer2D.drawRectangle(476 + beginX, 55 + beginY, 12, 220, 0xffffff, 60);

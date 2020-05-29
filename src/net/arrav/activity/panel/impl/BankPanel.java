@@ -2,7 +2,6 @@ package net.arrav.activity.panel.impl;
 
 import net.arrav.Config;
 import net.arrav.activity.panel.Panel;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.cache.unit.Interface;
 import net.arrav.cache.unit.ObjectType;
 import net.arrav.graphic.Rasterizer2D;
@@ -296,14 +295,14 @@ public class BankPanel extends Panel {
 					/*
 					 * Tab positions
 					 */
-					ImageCache.get(i - 1 == tab ? 2019 : 2018).drawImage(beginX + 42 + x, beginY + 41); // bank tabs
+					Client.spriteCache.get(i - 1 == tab ? 2019 : 2018).drawImage(beginX + 42 + x, beginY + 41); // bank tabs
 					
 					if (client.mouseInRegion(beginX + 42 + x, beginY + 41, beginX + 81 + x, beginY + 81)) {
 						destSlot = -i;
 						Rasterizer2D.fillRectangle(beginX + 44 + x, beginY + 43, 38, 36, Config.def.panelStyle == 1 ? 0x000000 : 0xaaaaaa, 20);
 					}
 					if(icon <= 0) {
-						ImageCache.get(2060).drawImage(beginX + 45 + x, beginY + 43); // bank tab + icon
+						Client.spriteCache.get(2060).drawImage(beginX + 45 + x, beginY + 43); // bank tab + icon
 					}
 				}
 				if (icon > 0) {
@@ -313,8 +312,8 @@ public class BankPanel extends Panel {
 					}
 				}
 			}
-			//ImageCache.get(2000).drawImage(beginX + 42, beginY + 41); // bank tabs
-			//ImageCache.get(2052).drawImage(beginX + 46, beginY + 43); // bank tab + icon
+			//Client.spriteCache.get(2000).drawImage(beginX + 42, beginY + 41); // bank tabs
+			//Client.spriteCache.get(2052).drawImage(beginX + 46, beginY + 43); // bank tab + icon
 			if (client.mouseInRegion(beginX + 44, beginY + 40, beginX + 92, beginY + 88)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 44, beginY + 41, 37, 36, 3, Config.def.panelStyle == 1 ? 0x000000 : 0xaaaaaa, 20);
 			}
@@ -534,67 +533,67 @@ public class BankPanel extends Panel {
 					Rasterizer2D.fillRectangle(beginX - 70 + x, beginY + 298, 30, 30, 0xff981f, 20);
 				}
 				if(i == 6)
-					ImageCache.get(client.anIntArray1045[116] == 0 ? 729 : 726).drawImage(beginX - 66 + x, beginY + 303);
+					Client.spriteCache.get(client.anIntArray1045[116] == 0 ? 729 : 726).drawImage(beginX - 66 + x, beginY + 303);
 				if(i == 7) {
 					if(client.anIntArray1045[115] != 0)
 						Rasterizer2D.fillRectangle(beginX - 70 + x, beginY + 298, 30, 30, 0xff981f, 60);
-					ImageCache.get(732).drawImage(beginX - 65 + x, beginY + 304);
+					Client.spriteCache.get(732).drawImage(beginX - 65 + x, beginY + 304);
 				}
 				if(i == 8) {
 					if(client.bankSearching)
 						Rasterizer2D.fillRectangle(beginX - 70 + x, beginY + 298, 30, 30, 0xff981f, 60);
-					ImageCache.get(733).drawImage(beginX - 65 + x, beginY + 304);
+					Client.spriteCache.get(733).drawImage(beginX - 65 + x, beginY + 304);
 				}
 				if(i == 9)
-					ImageCache.get(731).drawImage(beginX - 68 + x, beginY + 304);
+					Client.spriteCache.get(731).drawImage(beginX - 68 + x, beginY + 304);
 				if(i == 10)
-					ImageCache.get(730).drawImage(beginX - 68 + x, beginY + 304);
+					Client.spriteCache.get(730).drawImage(beginX - 68 + x, beginY + 304);
 				if(i == 11)
-					ImageCache.get(734).drawImage(beginX - 68 + x, beginY + 304);
+					Client.spriteCache.get(734).drawImage(beginX - 68 + x, beginY + 304);
 			}
 		} else {
 			if(Config.def.panelStyle == 1)
 				Rasterizer2D.fillRectangle(beginX + 6, beginY + 290, 488, 36, 0x000000, 120);
-			ImageCache.get(Config.def.panelStyle == 0 ? 2010 : 2025).drawImage(beginX + 442, beginY + 293);
-			ImageCache.get(Config.def.panelStyle == 0 ? 2008 : 2023).drawImage(beginX + 409, beginY + 293);
-			ImageCache.get(Config.def.panelStyle == 0 ? 2014 : 2027).drawImage(beginX + 376, beginY + 293);
-			ImageCache.get(Config.def.panelStyle == 0 ? 2006 : 2021).drawImage(beginX + 343, beginY + 293);
+			Client.spriteCache.get(Config.def.panelStyle == 0 ? 2010 : 2025).drawImage(beginX + 442, beginY + 293);
+			Client.spriteCache.get(Config.def.panelStyle == 0 ? 2008 : 2023).drawImage(beginX + 409, beginY + 293);
+			Client.spriteCache.get(Config.def.panelStyle == 0 ? 2014 : 2027).drawImage(beginX + 376, beginY + 293);
+			Client.spriteCache.get(Config.def.panelStyle == 0 ? 2006 : 2021).drawImage(beginX + 343, beginY + 293);
 			if(client.bankSearching) {
-				ImageCache.get(Config.def.panelStyle == 0 ? 2007 : 2022).drawImage(beginX + 343, beginY + 293);
+				Client.spriteCache.get(Config.def.panelStyle == 0 ? 2007 : 2022).drawImage(beginX + 343, beginY + 293);
 			}
 			if(Config.def.panelStyle == 0) {
 				plainFont.drawCenteredEffectString("Rearrange mode:", beginX + 93, beginY + 300, 0xff981f, true);
-				ImageCache.get(2016).drawImage(beginX + 4, beginY + 304);
+				Client.spriteCache.get(2016).drawImage(beginX + 4, beginY + 304);
 				if(client.anIntArray1045[116] == 0) {
-					ImageCache.get(2017).drawImage(beginX + 4, beginY + 304);
+					Client.spriteCache.get(2017).drawImage(beginX + 4, beginY + 304);
 				}
 				plainFont.drawCenteredEffectString("Swap", beginX + 45, beginY + 319, 0xff981f, true);
-				ImageCache.get(2016).drawImage(beginX + 86, beginY + 304);
+				Client.spriteCache.get(2016).drawImage(beginX + 86, beginY + 304);
 				if(client.anIntArray1045[116] != 0) {
-					ImageCache.get(2017).drawImage(beginX + 86, beginY + 304);
+					Client.spriteCache.get(2017).drawImage(beginX + 86, beginY + 304);
 				}
 				plainFont.drawCenteredEffectString("Insert", beginX + 127, beginY + 319, 0xff981f, true);
 				plainFont.drawCenteredEffectString("Withdraw as:", beginX + 263, beginY + 300, 0xff981f, true);
-				ImageCache.get(2016).drawImage(beginX + 173, beginY + 304);
+				Client.spriteCache.get(2016).drawImage(beginX + 173, beginY + 304);
 				if(client.anIntArray1045[115] == 0) {
-					ImageCache.get(2017).drawImage(beginX + 173, beginY + 304);
+					Client.spriteCache.get(2017).drawImage(beginX + 173, beginY + 304);
 				}
 				plainFont.drawCenteredEffectString("Item", beginX + 214, beginY + 319, 0xff981f, true);
-				ImageCache.get(2016).drawImage(beginX + 258, beginY + 304);
+				Client.spriteCache.get(2016).drawImage(beginX + 258, beginY + 304);
 				if(client.anIntArray1045[115] != 0) {
-					ImageCache.get(2017).drawImage(beginX + 258, beginY + 304);
+					Client.spriteCache.get(2017).drawImage(beginX + 258, beginY + 304);
 				}
 				plainFont.drawCenteredEffectString("Noted", beginX + 299, beginY + 319, 0xff981f, true);
 			} else {
-				ImageCache.get(client.anIntArray1045[115] == 0 ? 2004 : 2005).drawImage(beginX + 104, beginY + 296);
+				Client.spriteCache.get(client.anIntArray1045[115] == 0 ? 2004 : 2005).drawImage(beginX + 104, beginY + 296);
 				if(client.mouseInRegion(beginX + 104, beginY + 296, beginX + 139, beginY + 321)) {
 					Rasterizer2D.fillRectangle(beginX + 104, beginY + 296, 35, 25, 0x000000, 30);
 				}
-				ImageCache.get(client.anIntArray1045[116] != 0 ? 2012 : 2013).drawImage(beginX + 64, beginY + 296);
+				Client.spriteCache.get(client.anIntArray1045[116] != 0 ? 2012 : 2013).drawImage(beginX + 64, beginY + 296);
 				if(client.mouseInRegion(beginX + 64, beginY + 296, beginX + 99, beginY + 321)) {
 					Rasterizer2D.fillRectangle(beginX + 64, beginY + 296, 35, 25, 0x000000, 30);
 				}
-				ImageCache.get(2020).drawImage(beginX + 9, beginY + 293);
+				Client.spriteCache.get(2020).drawImage(beginX + 9, beginY + 293);
 				smallFont.drawCenteredEffectString("" + itemCount, beginX + 29, beginY + 305, 0xff981f, true);
 				smallFont.drawCenteredEffectString("" + max, beginX + 29, beginY + 320, 0xff981f, true);
 			}

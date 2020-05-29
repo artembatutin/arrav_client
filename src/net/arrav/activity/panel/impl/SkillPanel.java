@@ -1,7 +1,7 @@
 package net.arrav.activity.panel.impl;
 
+import net.arrav.Client;
 import net.arrav.activity.panel.Panel;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.graphic.Rasterizer2D;
 
 public class SkillPanel extends Panel {
@@ -87,7 +87,7 @@ public class SkillPanel extends Panel {
 			if(!disabled && client.mouseInRegion(beginX + 8 + x, beginY + offset, beginX + 125 + x, beginY + offset + 50)) {
 				Rasterizer2D.fillRectangle(beginX + 8 + x, beginY + offset, 117, 50, 0, 40);
 			}
-			ImageCache.get(124 + image + 5).drawImage(beginX + 49 + x, beginY + offset);
+			Client.spriteCache.get(124 + image + 5).drawImage(beginX + 49 + x, beginY + offset);
 			smallFont.drawCenteredEffectString(SKILL_NAME[i], beginX + 66 + x, beginY + offset + 46, 0xFF8A1F, true);
 			offset += i % 4 == 3 ? 55 : 0;
 		}

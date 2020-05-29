@@ -2,7 +2,6 @@ package net.arrav.cache.impl;
 
 import net.arrav.Config;
 import net.arrav.cache.CacheLoader;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.graphic.img.PaletteImage;
 import net.arrav.Client;
 import net.arrav.activity.ui.UIRenderer;
@@ -24,7 +23,9 @@ public class MediaLoader implements CacheLoader {
 	}
 	
 	public void run(Client client) {
-		ImageCache.get(69, true);//Requesting before it's too late.
+		client.mapback = Client.spriteCache.get(69);
+		client.initMapBack(client.mapback);
+
 		client.uiRenderer = new UIRenderer(client, Config.def.gameframe());
 		if(Config.def.gameframe() == 1)
 			client.setMode(1);

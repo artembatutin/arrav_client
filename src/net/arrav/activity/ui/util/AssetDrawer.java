@@ -2,7 +2,6 @@ package net.arrav.activity.ui.util;
 
 import net.arrav.Client;
 import net.arrav.Config;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.world.model.Mobile;
 import net.arrav.graphic.Rasterizer2D;
 import net.arrav.graphic.img.BitmapImage;
@@ -45,16 +44,16 @@ public class AssetDrawer {
 					if(obj.maxHealth < 2000) {
 						int size2 = 46;
 						int fill2 = hitBarFill(obj.special, 100, size2);
-						ImageCache.get(1656).drawImage(client.spriteDrawX - 28, client.spriteDrawY - 5 + offset);
+						Client.spriteCache.get(1656).drawImage(client.spriteDrawX - 28, client.spriteDrawY - 5 + offset);
 						Rasterizer2D.setClip(client.spriteDrawX - 28, client.spriteDrawY - 5, client.spriteDrawX - 28 + fill2, client.spriteDrawY + 2 + offset);
-						ImageCache.get(1655).drawImage(client.spriteDrawX - 28, client.spriteDrawY - 5 + offset);
+						Client.spriteCache.get(1655).drawImage(client.spriteDrawX - 28, client.spriteDrawY - 5 + offset);
 						Rasterizer2D.removeClip();
 					} else {
 						int size2 = 80;
 						int fill2 = hitBarFill(obj.special, 100, size2);
-						ImageCache.get(1658).drawImage(client.spriteDrawX - 45, client.spriteDrawY - 5 + offset);
+						Client.spriteCache.get(1658).drawImage(client.spriteDrawX - 45, client.spriteDrawY - 5 + offset);
 						Rasterizer2D.setClip(client.spriteDrawX - 45, client.spriteDrawY - 5, client.spriteDrawX - 45 + fill2, client.spriteDrawY + 2 + offset);
-						ImageCache.get(1657).drawImage(client.spriteDrawX - 45, client.spriteDrawY - 5 + offset);
+						Client.spriteCache.get(1657).drawImage(client.spriteDrawX - 45, client.spriteDrawY - 5 + offset);
 						Rasterizer2D.removeClip();
 					}
 					break;
@@ -77,15 +76,15 @@ public class AssetDrawer {
 			case 1:
 				if(obj.maxHealth < 2000) {
 					int fill2 = hitBarFill(obj.currentHealth, obj.maxHealth, 56);
-					ImageCache.get(1656).drawImage(client.spriteDrawX - 28, client.spriteDrawY - 5);
+					Client.spriteCache.get(1656).drawImage(client.spriteDrawX - 28, client.spriteDrawY - 5);
 					Rasterizer2D.setClip(client.spriteDrawX - 28, client.spriteDrawY - 5, client.spriteDrawX - 28 + fill2, client.spriteDrawY + 2);
-					ImageCache.get(1655).drawImage(client.spriteDrawX - 28, client.spriteDrawY - 5);
+					Client.spriteCache.get(1655).drawImage(client.spriteDrawX - 28, client.spriteDrawY - 5);
 					Rasterizer2D.removeClip();
 				} else {
 					int fill2 = hitBarFill(obj.currentHealth, obj.maxHealth, 90);
-					ImageCache.get(1658).drawImage(client.spriteDrawX - 45, client.spriteDrawY - 5);
+					Client.spriteCache.get(1658).drawImage(client.spriteDrawX - 45, client.spriteDrawY - 5);
 					Rasterizer2D.setClip(client.spriteDrawX - 45, client.spriteDrawY - 5, client.spriteDrawX - 45 + fill2, client.spriteDrawY + 2);
-					ImageCache.get(1657).drawImage(client.spriteDrawX - 45, client.spriteDrawY - 5);
+					Client.spriteCache.get(1657).drawImage(client.spriteDrawX - 45, client.spriteDrawY - 5);
 					Rasterizer2D.removeClip();
 				}
 				break;
@@ -119,9 +118,9 @@ public class AssetDrawer {
 						client.spriteDrawY -= 10;
 					}
 					if(Config.def.hitsplat() == 0)
-						ImageCache.get(988 + obj.oldHitMarkTypes[id]).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 12);
+						Client.spriteCache.get(988 + obj.oldHitMarkTypes[id]).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 12);
 					else
-						ImageCache.get(997 + obj.oldHitMarkTypes[id]).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 12);
+						Client.spriteCache.get(997 + obj.oldHitMarkTypes[id]).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 12);
 					client.smallFont.drawCenteredString(obj.hitArray[id] + "", client.spriteDrawX, client.spriteDrawY + 4, 0);
 					client.smallFont.drawCenteredString(obj.hitArray[id] + "", client.spriteDrawX - 1, client.spriteDrawY + 3, 0xffffff);
 				}
@@ -187,13 +186,13 @@ public class AssetDrawer {
 					icon = 5;
 			}
 			if(icon != 255) {
-				ImageCache.get(icon + (config == 3 ? 1659 : 183)).drawImage(client.spriteDrawX - 34 + x + (config == 3 ? 5 : 0), drawPos - 29, opacity);
+				Client.spriteCache.get(icon + (config == 3 ? 1659 : 183)).drawImage(client.spriteDrawX - 34 + x + (config == 3 ? 5 : 0), drawPos - 29, opacity);
 			}
 
 			if(config == 2) {
-				end1 = ImageCache.get((type * 3) + 150);
-				middle = ImageCache.get((type * 3) + 151);
-				end2 = ImageCache.get((type * 3) + 152);
+				end1 = Client.spriteCache.get((type * 3) + 150);
+				middle = Client.spriteCache.get((type * 3) + 151);
+				end2 = Client.spriteCache.get((type * 3) + 152);
 				end1.drawImage(client.spriteDrawX - 12 + x, drawPos - 27, opacity);
 				x += 4;
 				for(int i = 0; i < hitLength * 2; i++) {
@@ -212,7 +211,7 @@ public class AssetDrawer {
 				client.drawSoak(soak, opacity, drawPos - 15, x);
 			}
 		} else {
-			ImageCache.get(149).drawImage(client.spriteDrawX - 12, drawPos - 29, opacity);
+			Client.spriteCache.get(149).drawImage(client.spriteDrawX - 12, drawPos - 29, opacity);
 		}
 	}
 

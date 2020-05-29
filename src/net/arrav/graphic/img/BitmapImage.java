@@ -30,6 +30,16 @@ public final class BitmapImage extends Rasterizer2D {
 	public int imageOriginalHeight;
 	private String location = SignLink.getCacheDir() + "images/";
 
+	public BitmapImage(int width, int height, int offsetX, int offsetY, int[] pixels) {
+		this.imageWidth = width;
+		this.imageHeight = height;
+		this.xOffset = offsetX;
+		this.yOffset = offsetY;
+		this.imageRaster = pixels;
+
+		Color color = Color.MAGENTA;
+		setTransparency(color.getRed(), color.getGreen(), color.getBlue());
+	}
 	public void dump(int newId) {
 		BufferedImage img = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
 		int[] dest = ((DataBufferInt) img.getRaster().getDataBuffer()).getData();
@@ -54,7 +64,6 @@ public final class BitmapImage extends Rasterizer2D {
 			e.printStackTrace();
 		}
 	}
-
 	public BitmapImage(byte data[]) {
 		try {
 			Buffer buf = new Buffer(data);

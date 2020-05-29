@@ -1,7 +1,7 @@
 package net.arrav.activity.panel.impl;
 
+import net.arrav.Client;
 import net.arrav.activity.panel.Panel;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.graphic.Rasterizer2D;
 import net.arrav.util.string.StringUtils;
 
@@ -89,7 +89,7 @@ public class BossPanel extends Panel {
 		int offset = 45;
 		for(int i = 0; i < bosses.length; i++) {
 			int x = i % 6 * 81;
-			ImageCache.get(bosses[i].img).drawImage(beginX + 12 + x, beginY + offset);
+			Client.spriteCache.get(bosses[i].img).drawImage(beginX + 12 + x, beginY + offset);
 			if(client.mouseInRegion(beginX + 12 + x, beginY + offset, beginX + 82 + x, beginY + offset + 70)) {
 				Rasterizer2D.fillRectangle(beginX + 12 + x, beginY + offset, 70, 70, 0, 40);
 			}

@@ -71,7 +71,7 @@ public final class Interface {
 	public int modelAnimAlt;
 	public int modelAnimLength;
 	public int modelAnimDelay;
-	public boolean imageTransp;
+	public boolean drawsAlpha;
 	public int[] requiredValues;
 	public String spellName;
 	public String selectedActionName;
@@ -80,8 +80,8 @@ public final class Interface {
 	public int spellUsableOn;
 	public int valueCompareType[];
 	public boolean hoverTriggered;
-	public int image;
-	public int imageAlt;
+	public int spriteID;
+	public int secondarySpriteID;
 
 	public static void unpack(CacheArchive widgetArchive, BitmapFont[] fonts) {
 		Interface.fonts = fonts;
@@ -708,7 +708,7 @@ public final class Interface {
 			}
 		}
 		if(inter.type == Constants.TYPE_CONTAINER) {
-			inter.imageTransp = false;
+			inter.drawsAlpha = false;
 			inter.scrollMax = buffer.getUShort();
 			final int count = buffer.getUShort();
 			inter.children = new int[count];
@@ -784,10 +784,10 @@ public final class Interface {
 			inter.hoverColor = buffer.getInt();
 			inter.hoverColorAlt = buffer.getInt();
 		}
-		if(inter.type == Constants.WIDGET_IMAGE) {
-			inter.imageTransp = buffer.getUByte() == 1;
-			inter.image = buffer.getSShort();
-			inter.imageAlt = buffer.getSShort();
+		if(inter.type == Constants.WIDGET_SPRITE) {
+			inter.drawsAlpha = buffer.getUByte() == 1;
+			inter.spriteID = buffer.getSShort();
+			inter.secondarySpriteID = buffer.getSShort();
 		}
 		if(inter.type == Constants.WIDGET_MODEL) {
 			int media = buffer.getUByte();
@@ -979,9 +979,9 @@ public final class Interface {
 					byteV.putInt(screen.hoverColorAlt);
 				}
 				if(screen.type == 5) {
-					byteV.putByte(screen.imageTransp ? 1 : 0);
-					byteV.putShort(screen.image);
-					byteV.putShort(screen.imageAlt);
+					byteV.putByte(screen.drawsAlpha ? 1 : 0);
+					byteV.putShort(screen.spriteID);
+					byteV.putShort(screen.secondarySpriteID);
 				} else if(screen.type == 6) {
 					if(screen.modelType != -1 && screen.modelId > 0) {
 						byteV.putShortSpaceSaver(screen.modelId);
@@ -1061,11 +1061,11 @@ public final class Interface {
 
 	public static void addActionButton(int id, int sprite, int sprite2, int width, int height, String s) {
 		final Interface rsi = cache[id] = new Interface();
-		rsi.image = sprite;
+		rsi.spriteID = sprite;
 		if(sprite2 == sprite) {
-			rsi.imageAlt = sprite;
+			rsi.secondarySpriteID = sprite;
 		} else {
-			rsi.imageAlt = sprite2;
+			rsi.secondarySpriteID = sprite2;
 		}
 		rsi.tooltip = s;
 		rsi.contentType = 0;
@@ -1087,8 +1087,8 @@ public final class Interface {
 		rsi.contentType = 0;
 		rsi.alpha = (byte) 0;
 		rsi.hoverInterToTrigger = 52;
-		rsi.image = spriteId;
-		rsi.imageAlt = spriteId;
+		rsi.spriteID = spriteId;
+		rsi.secondarySpriteID = spriteId;
 		//rsi.width = rsi.image.imageWidth;
 		//rsi.height = rsi.imageAlt.imageHeight;
 		rsi.tooltip = tooltip;
@@ -1096,8 +1096,8 @@ public final class Interface {
 
 	public static void addCacheSprite(int id, int sprite1, int sprite2) {
 		final Interface rsi = cache[id] = new Interface();
-		rsi.image = sprite1;
-		rsi.imageAlt = sprite2;
+		rsi.spriteID = sprite1;
+		rsi.secondarySpriteID = sprite2;
 		rsi.parent = id;
 		rsi.id = id;
 		rsi.type = 5;
@@ -1135,8 +1135,8 @@ public final class Interface {
 		hover.actionType = aT;
 		hover.contentType = cT;
 		hover.hoverInterToTrigger = hoverid;
-		hover.image = sId;
-		hover.imageAlt = sId;
+		hover.spriteID = sId;
+		hover.secondarySpriteID = sId;
 		hover.width = W;
 		hover.height = H;
 		hover.tooltip = tip;
@@ -1168,8 +1168,8 @@ public final class Interface {
 		tab.contentType = contentType;
 		tab.alpha = 0;
 		tab.hoverInterToTrigger = hoverOver;
-		tab.image = imgId;
-		tab.imageAlt = imgId;
+		tab.spriteID = imgId;
+		tab.secondarySpriteID = imgId;
 		tab.width = width;
 		tab.height = height;
 		tab.tooltip = tooltipText;
@@ -1218,8 +1218,8 @@ public final class Interface {
 		tab.height = 334;
 		tab.alpha = 0;
 		tab.hoverInterToTrigger = 52;
-		tab.image = sprite1;
-		tab.imageAlt = sprite2;
+		tab.spriteID = sprite1;
+		tab.secondarySpriteID = sprite2;
 	}
 
 	public static Interface addInterface(int id) {
@@ -1245,8 +1245,8 @@ public final class Interface {
 		tab.contentType = 0;
 		tab.alpha = 0;
 		tab.hoverInterToTrigger = -1;
-		tab.image = -1;
-		tab.imageAlt = 282;
+		tab.spriteID = -1;
+		tab.secondarySpriteID = 282;
 		tab.width = 34;
 		tab.height = 34;
 		tab.valueCompareType = new int[1];
@@ -1267,8 +1267,8 @@ public final class Interface {
 		tab2.contentType = 0;
 		tab2.alpha = 0;
 		tab2.hoverInterToTrigger = -1;
-		tab2.image = spriteID;
-		tab2.imageAlt = spriteID + 1;
+		tab2.spriteID = spriteID;
+		tab2.secondarySpriteID = spriteID + 1;
 		tab2.width = 34;
 		tab2.height = 34;
 		tab2.valueCompareType = new int[1];
@@ -1291,8 +1291,8 @@ public final class Interface {
 		Interface.contentType = 0;
 		Interface.alpha = 0;
 		Interface.hoverInterToTrigger = Hover;
-		Interface.image = 282;
-		Interface.imageAlt = -1;
+		Interface.spriteID = 282;
+		Interface.secondarySpriteID = -1;
 		Interface.width = 34;
 		Interface.height = 34;
 		Interface.valueCompareType = new int[1];
@@ -1311,8 +1311,8 @@ public final class Interface {
 		Interface.actionType = 0;
 		Interface.contentType = 0;
 		Interface.alpha = 0;
-		Interface.image = prayerSpriteID;
-		Interface.imageAlt = prayerSpriteID + 1;
+		Interface.spriteID = prayerSpriteID;
+		Interface.secondarySpriteID = prayerSpriteID + 1;
 		Interface.width = 34;
 		Interface.height = 34;
 		Interface.valueCompareType = new int[1];
@@ -1373,8 +1373,8 @@ public final class Interface {
 		Tab.valueIndexArray[0][0] = 5;
 		Tab.valueIndexArray[0][1] = configFrame;
 		Tab.valueIndexArray[0][2] = 0;
-		Tab.image = i;
-		Tab.imageAlt = i2;
+		Tab.spriteID = i;
+		Tab.secondarySpriteID = i2;
 	}
 
 	private static void addSprite(int id, int spriteId) {
@@ -1386,8 +1386,8 @@ public final class Interface {
 		tab.contentType = 0;
 		tab.alpha = (byte) 0;
 		tab.hoverInterToTrigger = 52;
-		tab.image = spriteId;
-		tab.imageAlt = spriteId;
+		tab.spriteID = spriteId;
+		tab.secondarySpriteID = spriteId;
 		tab.width = 512;
 		tab.height = 334;
 	}
@@ -1488,8 +1488,8 @@ public final class Interface {
 
 	public static void addToggleButton(int id, int sprite, int toggledsprite, int setconfig, int width, int height, String s) {
 		final Interface rsi = addInterface(id);
-		rsi.image = sprite;
-		rsi.imageAlt = toggledsprite;
+		rsi.spriteID = sprite;
+		rsi.secondarySpriteID = toggledsprite;
 		rsi.requiredValues = new int[1];
 		rsi.requiredValues[0] = 1;
 		rsi.valueCompareType = new int[1];
@@ -1510,8 +1510,8 @@ public final class Interface {
 
 	public static void addToggleButton(int id, int sprite, int setconfig, int width, int height, String s) {
 		final Interface rsi = addInterface(id);
-		rsi.image = sprite;
-		rsi.imageAlt = sprite + 1;
+		rsi.spriteID = sprite;
+		rsi.secondarySpriteID = sprite + 1;
 		rsi.requiredValues = new int[1];
 		rsi.requiredValues[0] = 1;
 		rsi.valueCompareType = new int[1];
@@ -1539,11 +1539,11 @@ public final class Interface {
 		tab.contentType = 0;
 		tab.alpha = (byte) transparency;
 		tab.hoverInterToTrigger = 52;
-		tab.image = spriteId;
-		tab.imageAlt = spriteId;
+		tab.spriteID = spriteId;
+		tab.secondarySpriteID = spriteId;
 		tab.width = 512;
 		tab.height = 334;
-		tab.imageTransp = true;
+		tab.drawsAlpha = true;
 	}
 
 	private static void drawTooltip(int id, String text) {
@@ -1658,8 +1658,8 @@ public final class Interface {
 		Interface.contentType = 0;
 		Interface.alpha = 0;
 		Interface.hoverInterToTrigger = 52;
-		Interface.image = j;
-		Interface.imageAlt = j;
+		Interface.spriteID = j;
+		Interface.secondarySpriteID = j;
 		Interface.width = W;
 		Interface.height = H;
 		Interface.tooltip = S;
@@ -1684,8 +1684,8 @@ public final class Interface {
 		Tab.valueIndexArray[0][0] = 5;
 		Tab.valueIndexArray[0][1] = configFrame;
 		Tab.valueIndexArray[0][2] = 0;
-		Tab.image = bID;
-		Tab.imageAlt = bID2;
+		Tab.spriteID = bID;
+		Tab.secondarySpriteID = bID2;
 		Tab.tooltip = tT;
 	}
 
@@ -1793,7 +1793,7 @@ public final class Interface {
 		tab.actionType = 0;
 		tab.width = 32;
 		tab.height = 32;
-		tab.image = -icon;
+		tab.spriteID = -icon;
 		tab.alpha = 0;
 		tab.hoverInterToTrigger = -1;
 		tab.textAlt = "";

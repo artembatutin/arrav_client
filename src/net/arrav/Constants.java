@@ -59,7 +59,7 @@ public final class Constants {
 	public static final byte WIDGET_INVENTORY = 2;
 	public static final byte WIDGET_RECTANGLE = 3;
 	public static final byte WIDGET_STRING = 4;
-	public static final byte WIDGET_IMAGE = 5;
+	public static final byte WIDGET_SPRITE = 5;
 	public static final byte WIDGET_MODEL = 6;
 	public static final byte WIDGET_ITEM_LIST = 7;
 	public static final byte WIDGET_TOOLTIP = 8;

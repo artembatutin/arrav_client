@@ -1,8 +1,8 @@
 package net.arrav.activity.panel;
 
+import net.arrav.Client;
 import net.arrav.Config;
 import net.arrav.activity.Activity;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.world.Scene;
 import net.arrav.graphic.Rasterizer2D;
 
@@ -55,9 +55,9 @@ public abstract class Panel extends Activity {
 				Rasterizer2D.fillRoundedRectangle(beginX + 440, beginY + 12, 54, 25, 2, 0xFF8A1F, 20);
 			}
 		} else {
-			ImageCache.get(1998).drawImage(beginX + 467, beginY + 16);
+			Client.spriteCache.get(1998).drawImage(beginX + 467, beginY + 16);
 			if(client.mouseInRegion(beginX + 467, beginY + 16, beginX + 488, beginY + 37)) {
-				ImageCache.get(1999).drawImage(beginX + 467, beginY + 16);
+				Client.spriteCache.get(1999).drawImage(beginX + 467, beginY + 16);
 			}
 		}
 	}
@@ -67,9 +67,9 @@ public abstract class Panel extends Activity {
 			Rasterizer2D.fillRectangle(x, y, width, height, color1, alpha);
 			Rasterizer2D.drawRectangle(x, y, width, height, color2);
 		} else if(Config.def.panelStyle == 0) {
-			ImageCache.get(1996, true).drawImage(x, y);
+			Client.spriteCache.get(1996).drawImage(x, y);
 		} else if(Config.def.panelStyle == 1) {
-			ImageCache.get(1997, true).drawImage(x, y);
+			Client.spriteCache.get(1997).drawImage(x, y);
 		}
 	}
 	

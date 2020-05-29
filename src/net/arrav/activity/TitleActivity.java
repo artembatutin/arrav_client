@@ -4,7 +4,6 @@ import net.arrav.Constants;
 import net.arrav.Client;
 import net.arrav.Config;
 import net.arrav.activity.panel.impl.SettingPanel;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.graphic.GraphicalComponent;
 import net.arrav.graphic.Rasterizer2D;
 import net.arrav.util.string.StringUtils;
@@ -129,7 +128,7 @@ public class TitleActivity extends Activity {
 				scrollOpened = true;
 				scrollValue = 110;
 				started = true;
-				ImageCache.setHeight(6, 20);
+				//ImageCache.setHeight(6, 20);
 			} else {
 				settings = null;
 			}
@@ -231,12 +230,12 @@ public class TitleActivity extends Activity {
 		
 		/* Background */
 		Rasterizer2D.fillRectangle(0, 0, client.windowWidth, client.windowHeight, 0x070505);
-		ImageCache.get(859).drawImage(centerX - 433, centerY - 305);
-		ImageCache.get(860).drawImage(centerX, centerY - 305);
-		ImageCache.get(861).drawImage(centerX - 433, centerY);
-		ImageCache.get(862).drawImage(centerX, centerY);
+		Client.spriteCache.get(859).drawImage(centerX - 433, centerY - 305);
+		Client.spriteCache.get(860).drawImage(centerX, centerY - 305);
+		Client.spriteCache.get(861).drawImage(centerX - 433, centerY);
+		Client.spriteCache.get(862).drawImage(centerX, centerY);
 
-		ImageCache.get(2059).drawImage(centerX - 120, centerY - 245);
+		Client.spriteCache.get(2059).drawImage(centerX - 120, centerY - 245);
 		
 		//clouds drawing
 		if(Config.def.clouds) {
@@ -254,29 +253,29 @@ public class TitleActivity extends Activity {
 			settings.update();
 		} else {
 			/* Scroll */
-			if(ImageCache.get(6).imageWidth > 0) {
+			if(Client.spriteCache.get(6).imageWidth > 0) {
 				if(!started) {
 					started = true;
-					ImageCache.setHeight(6, 20);
+					//ImageCache.setHeight(6, 20);
 				}
-				ImageCache.get(6).drawImage(centerX - 152, centerY - 120 + scrollValue);
+				Client.spriteCache.get(6).drawImage(centerX - 152, centerY - 120 + scrollValue);
 			}
-			ImageCache.get(8).drawImage(centerX - 166, centerY - 133 + scrollValue);
-			ImageCache.get(8).drawImage(centerX - 166, centerY + 107 - scrollValue);
-			if(ImageCache.get(6).imageWidth > 0 && scrollOpened && started) {
+			Client.spriteCache.get(8).drawImage(centerX - 166, centerY - 133 + scrollValue);
+			Client.spriteCache.get(8).drawImage(centerX - 166, centerY + 107 - scrollValue);
+			if(Client.spriteCache.get(6).imageWidth > 0 && scrollOpened && started) {
 				if(scrollValue != 0) {
 					scrollValue -= 5;
-					ImageCache.increaseHeight(6, 10);
+					//ImageCache.increaseHeight(6, 10);
 				} else {
 					if(fadeValue != 80)
 						fadeValue += 2;
 				}
-			} else if(ImageCache.get(6).imageWidth > 0 && started) {
+			} else if(Client.spriteCache.get(6).imageWidth > 0 && started) {
 				if(fadeValue != 0) {
 					fadeValue -= 2;
 				} else if(scrollValue != 110) {
 					scrollValue += 5;
-					ImageCache.decreaseHeight(6, 10);
+					//ImageCache.decreaseHeight(6, 10);
 				}
 			}
 		
@@ -297,7 +296,7 @@ public class TitleActivity extends Activity {
 				
 				Rasterizer2D.fillRectangle(centerX - 127, centerY - 5, 254, 28, 0x000000, fadeValue + alphaOpacity[0]);
 				Rasterizer2D.fillRectangle(centerX - 127, centerY - 47, 254, 28, 0x000000, fadeValue + alphaOpacity[1]);
-				ImageCache.get(0).drawImage(centerX - 59, centerY + 45, fadeValue * 2 + alphaOpacity[2]);
+				Client.spriteCache.get(0).drawImage(centerX - 59, centerY + 45, fadeValue * 2 + alphaOpacity[2]);
 				
 				Rasterizer2D.fillRoundedRectangle(centerX - 55, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 100);
 				if(Config.def.clouds || client.mouseInRegion(centerX - 55, centerY + 87 - scrollValue, centerX - 5, centerY + 105 - scrollValue)) {
@@ -336,9 +335,9 @@ public class TitleActivity extends Activity {
 		}
 		
 		Rasterizer2D.drawRectangle(client.windowWidth - 59, 2, 56, 16, 0x000000);
-		ImageCache.get(client.mouseInRegion(client.windowWidth - 20, 3, client.windowWidth - 3, 20) ? 2042 : 2037).drawImage(client.windowWidth - 22, 3);
-		ImageCache.get(client.mouseInRegion(client.windowWidth - 40, 3, client.windowWidth - 21, 20) ? 2041 : 2036).drawImage(client.windowWidth - 40, 3);
-		ImageCache.get(2035).drawImage(client.windowWidth - 58, 3);
+		Client.spriteCache.get(client.mouseInRegion(client.windowWidth - 20, 3, client.windowWidth - 3, 20) ? 2042 : 2037).drawImage(client.windowWidth - 22, 3);
+		Client.spriteCache.get(client.mouseInRegion(client.windowWidth - 40, 3, client.windowWidth - 21, 20) ? 2041 : 2036).drawImage(client.windowWidth - 40, 3);
+		Client.spriteCache.get(2035).drawImage(client.windowWidth - 58, 3);
 		
 		/* Debugging information */
 		if(Config.def.data()) {
@@ -432,7 +431,7 @@ public class TitleActivity extends Activity {
 			if(alpha <= 250)
 				alpha+=1;
 			x += left ? -1 : 1;
-			ImageCache.get(2).drawImage(x, y, alpha);
+			Client.spriteCache.get(2).drawImage(x, y, alpha);
 			if(x < 0 || x > client.windowWidth - 100 || life <= 0)
 				alpha-=1;
 			if(x < -512 || x > client.windowWidth)

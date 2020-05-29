@@ -1530,11 +1530,11 @@ public class GameActivity extends Activity {
 						calcMobileRenderLoc(mobile, mobile.height + 15);
 						if(client.spriteDrawX > -1) {
 							if(player.skullIcon > 0 && player.skullIcon < 6) {
-								ImageCache.get(1692 + player.skullIcon).drawImage(client.spriteDrawX - 12, client.spriteDrawY - l);
+								Client.spriteCache.get(1692 + player.skullIcon).drawImage(client.spriteDrawX - 12, client.spriteDrawY - l);
 								l += 25;
 							}
 							if(player.headIcon != 255) {
-								ImageCache.get(1592 + player.headIcon).drawImage(client.spriteDrawX - 12, client.spriteDrawY - l);
+								Client.spriteCache.get(1592 + player.headIcon).drawImage(client.spriteDrawX - 12, client.spriteDrawY - l);
 								l += 18;
 							}
 						}
@@ -1542,7 +1542,7 @@ public class GameActivity extends Activity {
 					if(j >= 0 && client.hintType == 10 && client.anInt933 == client.playerEntryList[j]) {
 						calcMobileRenderLoc(mobile, mobile.height + 15);
 						if(client.spriteDrawX > -1) {
-							ImageCache.get(1701 + player.hintIcon).drawImage(client.spriteDrawX - 12, client.spriteDrawY - l);
+							Client.spriteCache.get(1701 + player.hintIcon).drawImage(client.spriteDrawX - 12, client.spriteDrawY - l);
 						}
 					}
 					if(Config.def.names()) {
@@ -1560,13 +1560,13 @@ public class GameActivity extends Activity {
 					if(entityDef_1.headIcon >= 0) {
 						calcMobileRenderLoc(mobile, mobile.height + 15);
 						if(client.spriteDrawX > -1) {
-							ImageCache.get(1592 + entityDef_1.headIcon).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 30);
+							Client.spriteCache.get(1592 + entityDef_1.headIcon).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 30);
 						}
 					}
 					if(client.hintType == 1 && client.NPCHintID == client.npcEntryList[j - client.playerCount] && client.loopCycle % 20 < 10) {
 						calcMobileRenderLoc(mobile, mobile.height + 15);
 						if(client.spriteDrawX > -1) {
-							ImageCache.get(1701).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 28);
+							Client.spriteCache.get(1701).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 28);
 						}
 					}
 				}
@@ -1732,7 +1732,7 @@ public class GameActivity extends Activity {
 		}
 		calcRenderLoc((client.anInt934 - client.baseX << 7) + client.hintRegionX, (client.anInt935 - client.baseY << 7) + client.hintRegionY, client.anInt936 * 2);
 		if(client.spriteDrawX > -1 && client.loopCycle % 20 < 10) {
-			ImageCache.get(1701).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 28);
+			Client.spriteCache.get(1701).drawImage(client.spriteDrawX - 12, client.spriteDrawY - 28);
 		}
 	}
 
@@ -1777,11 +1777,11 @@ public class GameActivity extends Activity {
 		if(client.combatMultiwayMode == 1) {
 			if(client.uiRenderer.isResizableOrFull()) {
 				if(client.uiRenderer.getId() < 500 && client.uiRenderer.getId() != 1)
-					ImageCache.get(1926).drawImage(client.windowWidth - 30, 140);
+					Client.spriteCache.get(1926).drawImage(client.windowWidth - 30, 140);
 				else
-					ImageCache.get(15).drawImage(client.windowWidth - 35, 170);
+					Client.spriteCache.get(15).drawImage(client.windowWidth - 35, 170);
 			} else {
-					ImageCache.get(1926).drawImage(485, 310);
+					Client.spriteCache.get(1926).drawImage(485, 310);
 			}
 		}
 		if(client.systemUpdateTimer != 0) {
@@ -1859,7 +1859,7 @@ public class GameActivity extends Activity {
 					font.drawLeftAlignedString("From", k1, y + l - 1, Config.def.privateChat());
 					k1 += font.getStringWidth("From ");
 					if(rights >= 1) {
-						ImageCache.get(1984 + rights - 1).drawImage(k1, y + l - 12);
+						Client.spriteCache.get(1984 + rights - 1).drawImage(k1, y + l - 12);
 						k1 += 12;
 					}
 					font.drawLeftAlignedString(name + ": " + client.chatMessage[j], k1, y + l, 0);
@@ -1942,8 +1942,8 @@ public class GameActivity extends Activity {
 
 	public void drawOldScrollbar(int x, int y, int visibleHeight, int contentHeight, int scrollPos) {
 		//arrow icons
-		ImageCache.get(211).drawImage(x + 3, y + 3);
-		ImageCache.get(212).drawImage(x + 3, y + visibleHeight - 13);
+		Client.spriteCache.get(211).drawImage(x + 3, y + 3);
+		Client.spriteCache.get(212).drawImage(x + 3, y + visibleHeight - 13);
 		//middle of the top button
 		Rasterizer2D.drawRectangle(x + 2, y + 2, 12, 12, 0x4d4233);
 		//light arrav of the top button
@@ -2140,8 +2140,8 @@ public class GameActivity extends Activity {
 	}
 
 	public void drawWhiteScrollbar(int x, int y, int visibleHeight, int contentHeight, int viewOffY) {
-		ImageCache.get(86).drawImage(x, y, 64);
-		ImageCache.get(87).drawImage(x, y + visibleHeight - 16, 64);
+		Client.spriteCache.get(86).drawImage(x, y, 64);
+		Client.spriteCache.get(87).drawImage(x, y + visibleHeight - 16, 64);
 		Rasterizer2D.drawVerticalLine(x, y + 16, visibleHeight - 32, 0xffffff, 64);
 		Rasterizer2D.drawVerticalLine(x + 15, y + 16, visibleHeight - 32, 0xffffff, 64);
 		int barHeight = (visibleHeight - 32) * visibleHeight / contentHeight;

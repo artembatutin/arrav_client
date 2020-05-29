@@ -1,8 +1,8 @@
 package net.arrav.activity.panel.impl;
 
+import net.arrav.Client;
 import net.arrav.Config;
 import net.arrav.activity.panel.Panel;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.cache.unit.ObjectType;
 import net.arrav.graphic.Rasterizer2D;
 import net.arrav.graphic.img.BitmapImage;
@@ -86,7 +86,7 @@ public class IronManSelectionPanel extends Panel {
 				offset += i % 5 == 4 ? 45 : 0;
 			}
 		} else {
-			ImageCache.get(1929).drawImage(beginX + 45, beginY + 70);
+			Client.spriteCache.get(1929).drawImage(beginX + 45, beginY + 70);
 			boldFont.drawCenteredEffectString("Iron man", beginX + 85, beginY + 60, 0xFF8A1F, true);
 			smallFont.drawLeftAlignedString("Tougher monsters statistics.", beginX + 145, beginY + 60, 0xFF8A1F);
 			smallFont.drawLeftAlignedString("Lose 25% of experience on death.", beginX + 145, beginY + 75, 0xFF8A1F);

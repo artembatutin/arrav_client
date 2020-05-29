@@ -4,7 +4,6 @@ import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.arrav.Client;
 import net.arrav.Config;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.graphic.Rasterizer2D;
 
 import java.text.NumberFormat;
@@ -69,8 +68,8 @@ public class CounterHandler {
 				continue;
 			}
 			if(counterToggled) {
-				//ImageCache.get(update.skill + (client.uiRenderer.getId() > 500 ? 1957 : 2053)).drawImage(x - 25 - update.width, 60 + update.move - yMove, update.alpha);
-				ImageCache.get(update.skill + 1957).drawImage(x - 25 - update.width, 60 + update.move - yMove, update.alpha);
+				//Client.spriteCache.get(update.skill + (client.uiRenderer.getId() > 500 ? 1957 : 2053)).drawImage(x - 25 - update.width, 60 + update.move - yMove, update.alpha);
+				Client.spriteCache.get(update.skill + 1957).drawImage(x - 25 - update.width, 60 + update.move - yMove, update.alpha);
 				client.smallFont.drawRightAlignedEffectString("" + update.xp, x, 80 + update.move - yMove, 0xffffff, true);
 			}
 		}
@@ -93,7 +92,7 @@ public class CounterHandler {
 				Rasterizer2D.fillRectangle(x - width, y, width, 28, client.uiRenderer.getId() == 1 ? 0x000000 : 0x413c34, 170);
 				Rasterizer2D.drawRectangle(x - width, y, width, 28, 0x5b5348);
 				Rasterizer2D.drawRectangle(x - width - 1, y - 1, width + 2, 30, 0x383322);
-				ImageCache.get(975).drawImage(x - width + 2, 10);
+				Client.spriteCache.get(975).drawImage(x - width + 2, 10);
 				client.plainFont.drawRightAlignedEffectString(""+ NumberFormat.getInstance().format(gainedXP), x - 5, y + 19, 0xffffff, true);
 
 			}
@@ -152,7 +151,7 @@ public class CounterHandler {
 			if(client.loopCycle - orbs[skill].levelUpCycle > LEVEL_UP_DISPLAY_TIME - 32) {
 				alpha = 256 - 8 * (client.loopCycle - (orbs[skill].levelUpCycle + LEVEL_UP_DISPLAY_TIME - 32));
 			}
-			ImageCache.get(90).drawImage(xPosition - 44, -2, alpha);
+			Client.spriteCache.get(90).drawImage(xPosition - 44, -2, alpha);
 			int alpha2 = alpha;
 			if(alpha2 == 256 && client.loopCycle - orbs[skill].levelUpCycle > LEVEL_UP_DISPLAY_TIME / 2) {
 				alpha2 = 8 * (client.loopCycle - orbs[skill].levelUpCycle - LEVEL_UP_DISPLAY_TIME / 2);
@@ -160,13 +159,13 @@ public class CounterHandler {
 			if(alpha2 > 256) {
 				alpha2 = 256;
 			}
-			ImageCache.get(skill + 1885).drawImage(xPosition + 30 - ImageCache.get(skill + 91).imageWidth / 2, 63 - ImageCache.get(skill + 91).imageHeight / 2, client.loopCycle - orbs[skill].levelUpCycle > LEVEL_UP_DISPLAY_TIME / 2 ? alpha - alpha2 / 3 * 2 : alpha);
+			Client.spriteCache.get(skill + 1885).drawImage(xPosition + 30 - Client.spriteCache.get(skill + 91).imageWidth / 2, 63 - Client.spriteCache.get(skill + 91).imageHeight / 2, client.loopCycle - orbs[skill].levelUpCycle > LEVEL_UP_DISPLAY_TIME / 2 ? alpha - alpha2 / 3 * 2 : alpha);
 			if(client.loopCycle - orbs[skill].levelUpCycle > LEVEL_UP_DISPLAY_TIME / 2) {
 				if(orbs[skill].levelUpTo < 10) {
-					ImageCache.get(orbs[skill].levelUpTo + 114).drawImage(xPosition + 30 - ImageCache.get(orbs[skill].levelUpTo + 114).imageWidth / 2, 63 - ImageCache.get(orbs[skill].levelUpTo + 114).imageHeight / 2, alpha2);
+					Client.spriteCache.get(orbs[skill].levelUpTo + 114).drawImage(xPosition + 30 - Client.spriteCache.get(orbs[skill].levelUpTo + 114).imageWidth / 2, 63 - Client.spriteCache.get(orbs[skill].levelUpTo + 114).imageHeight / 2, alpha2);
 				} else {
-					ImageCache.get(orbs[skill].levelUpTo % 10 + 114).drawImage(xPosition + 26, 63 - ImageCache.get(orbs[skill].levelUpTo % 10 + 114).imageHeight / 2, alpha2);
-					ImageCache.get((orbs[skill].levelUpTo - orbs[skill].levelUpTo % 10) / 10 + 114).drawImage(xPosition + 31 - ImageCache.get((orbs[skill].levelUpTo - orbs[skill].levelUpTo % 10) / 10 + 114).imageWidth, 63 - ImageCache.get((orbs[skill].levelUpTo - orbs[skill].levelUpTo % 10) / 10 + 114).imageHeight / 2, alpha2);
+					Client.spriteCache.get(orbs[skill].levelUpTo % 10 + 114).drawImage(xPosition + 26, 63 - Client.spriteCache.get(orbs[skill].levelUpTo % 10 + 114).imageHeight / 2, alpha2);
+					Client.spriteCache.get((orbs[skill].levelUpTo - orbs[skill].levelUpTo % 10) / 10 + 114).drawImage(xPosition + 31 - Client.spriteCache.get((orbs[skill].levelUpTo - orbs[skill].levelUpTo % 10) / 10 + 114).imageWidth, 63 - Client.spriteCache.get((orbs[skill].levelUpTo - orbs[skill].levelUpTo % 10) / 10 + 114).imageHeight / 2, alpha2);
 				}
 			}
 			if(client.loopCycle - orbs[skill].levelUpCycle > LEVEL_UP_DISPLAY_TIME) {
@@ -219,13 +218,13 @@ public class CounterHandler {
 			}
 		}
 		final int yPosition = 10;
-		ImageCache.get(88).drawImage(xPosition, yPosition, alpha);
+		Client.spriteCache.get(88).drawImage(xPosition, yPosition, alpha);
 		Rasterizer2D.setClip(xPosition + 8, (int) (45 - orbs[skill].progress) + 5 + yPosition, xPosition + 30, 60 + yPosition);
-		ImageCache.get(89).drawImage(xPosition + 8, 7 + yPosition, alpha);
+		Client.spriteCache.get(89).drawImage(xPosition + 8, 7 + yPosition, alpha);
 		Rasterizer2D.setClip(xPosition + 30, 8 + yPosition, xPosition + 52, (int) (orbs[skill].progress - 38) + yPosition);
-		ImageCache.get(89).drawImage(xPosition + 8, 7 + yPosition, alpha);
+		Client.spriteCache.get(89).drawImage(xPosition + 8, 7 + yPosition, alpha);
 		Rasterizer2D.removeClip();
-		ImageCache.get(skill + 1957).drawImage(xPosition + 31 - ImageCache.get(skill + 1957).imageWidth / 2, 28 - ImageCache.get(skill + 1957).imageHeight / 2 + yPosition + 2, alpha);
+		Client.spriteCache.get(skill + 1957).drawImage(xPosition + 31 - Client.spriteCache.get(skill + 1957).imageWidth / 2, 28 - Client.spriteCache.get(skill + 1957).imageHeight / 2 + yPosition + 2, alpha);
 	}
 
 	public static void drawOrbs() {

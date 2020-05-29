@@ -1,9 +1,9 @@
 package net.arrav.activity.panel.impl;
 
+import net.arrav.Client;
 import net.arrav.Config;
 import net.arrav.Constants;
 import net.arrav.activity.panel.Panel;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.world.Scene;
 import net.arrav.graphic.Rasterizer2D;
 import net.arrav.graphic.img.BitmapImage;
@@ -258,15 +258,15 @@ public class SettingPanel extends Panel {
 	
 		/* Screen Mode */
 		drawSection(x + 215, y + 20, 82, 285, "Screen Mode");
-		ImageCache.get(client.uiRenderer.isFixed() ? 9 : 10).drawImage(x + 230, y + 50);
-		ImageCache.get(client.uiRenderer.isResizable() ? 11 : 12).drawImage(x + 330, y + 50);
-		ImageCache.get(client.uiRenderer.isFullscreen() ? 13 : 14).drawImage(x + 430, y + 50);
+		Client.spriteCache.get(client.uiRenderer.isFixed() ? 9 : 10).drawImage(x + 230, y + 50);
+		Client.spriteCache.get(client.uiRenderer.isResizable() ? 11 : 12).drawImage(x + 330, y + 50);
+		Client.spriteCache.get(client.uiRenderer.isFullscreen() ? 13 : 14).drawImage(x + 430, y + 50);
 		if(client.mouseInRegion(x + 230, y + 50, x + 284, y + 92))
-			ImageCache.get(9).drawImage(x + 230, y + 50);
+			Client.spriteCache.get(9).drawImage(x + 230, y + 50);
 		if(client.mouseInRegion(x + 330, y + 50, x + 383, y + 92))
-			ImageCache.get(11).drawImage(x + 330, y + 50);
+			Client.spriteCache.get(11).drawImage(x + 330, y + 50);
 		if(client.mouseInRegion(x + 429, y + 50, x + 484, y + 92))
-			ImageCache.get(13).drawImage(x + 430, y + 50);
+			Client.spriteCache.get(13).drawImage(x + 430, y + 50);
 			
 		/* Game-frames */
 		drawSection(x + 215, y + 112, 98, 285, "User Interface");
@@ -297,13 +297,13 @@ public class SettingPanel extends Panel {
 
 		int hitmark = Config.def.hitsplat();
 		if(hitmark == 0) {
-			ImageCache.get(1653).drawImage(x + 460, y + 245);
+			Client.spriteCache.get(1653).drawImage(x + 460, y + 245);
 		} else if(hitmark == 1) {
-			ImageCache.get(1654).drawImage(x + 458, y + 245);
+			Client.spriteCache.get(1654).drawImage(x + 458, y + 245);
 		} else if(hitmark == 2) {
-			ImageCache.get(1652).drawImage(x + 450, y + 245);
+			Client.spriteCache.get(1652).drawImage(x + 450, y + 245);
 		} else {
-			ImageCache.get(1664).drawImage(x + 450, y + 245);
+			Client.spriteCache.get(1664).drawImage(x + 450, y + 245);
 		}
 		Rasterizer2D.drawVerticalLine(x + 470, y + 265, 10, 0xDBB047, 90);
 		drawTitleButton("Switch", x + 450, y + 275, 0xDBB047);
@@ -313,7 +313,7 @@ public class SettingPanel extends Panel {
 			Rasterizer2D.fillRectangle(x + 320 - 15, y + 257 - 3, 20, 5, 65280);
 			Rasterizer2D.fillRectangle(x + 320 + 5, y + 257 - 3, 10, 5, 0xff0000);
 		} else if(hitbar == 1) {
-			ImageCache.get(1655).drawImage(x + 280, y + 253);
+			Client.spriteCache.get(1655).drawImage(x + 280, y + 253);
 		} else if(hitbar == 3) {
 			smallFont.drawCenteredString("above heads", x + 300, y + 260, 0xffffff);
 		} else {

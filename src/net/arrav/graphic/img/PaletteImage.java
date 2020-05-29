@@ -49,6 +49,13 @@ public final class PaletteImage extends Rasterizer2D {
 		}
 	}
 
+	public PaletteImage(int width, int height, int[] palette, byte[] pixels) {
+		this.trueWidth = useWidth = width;
+		this.trueHeight = useHeight = height;
+		this.colorMap = palette;
+		this.entryList = pixels;
+	}
+
 	public PaletteImage(CacheArchive archive, String pack, int index) {
 		final Buffer datBuffer = new Buffer(archive.getFile(pack + ".dat"));
 		final Buffer idxBuffer = new Buffer(archive.getFile("index.dat"));

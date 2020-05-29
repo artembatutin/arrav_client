@@ -1,8 +1,8 @@
 package net.arrav.activity.panel.impl;
 
+import net.arrav.Client;
 import net.arrav.Config;
 import net.arrav.activity.panel.Panel;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.cache.unit.Interface;
 import net.arrav.cache.unit.ObjectType;
 import net.arrav.graphic.Rasterizer2D;
@@ -272,11 +272,11 @@ public class ShopPanel extends Panel {
 				img.drawImage(beginX + 28 + x, beginY + offset + 2);
 			}
 			if(currency != null) {
-				ImageCache.get(currency.getImage()).drawImage(beginX + 10 + x, beginY + offset + 32);
+				Client.spriteCache.get(currency.getImage()).drawImage(beginX + 10 + x, beginY + offset + 32);
 			}
 			int am = Interface.cache[3900].invAmt[i];
 			if(am == 999999999) {
-				ImageCache.get(2030).drawImage(beginX + 12 + x, beginY + offset + 6);
+				Client.spriteCache.get(2030).drawImage(beginX + 12 + x, beginY + offset + 6);
 			} else {
 				smallFont.drawLeftAlignedEffectString(am + "", beginX + 12 + x, beginY + offset + 14, 0xFF8A1F, true);
 			}

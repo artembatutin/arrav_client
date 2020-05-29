@@ -11,6 +11,7 @@ import net.arrav.activity.ui.util.*;
 import net.arrav.cache.CacheArchive;
 import net.arrav.cache.CacheIndex;
 import net.arrav.cache.CacheUnpacker;
+import net.arrav.cache.custom.SpritesCache;
 import net.arrav.cache.impl.InterfaceLoader;
 import net.arrav.net.*;
 import net.arrav.world.CollisionMap;
@@ -58,6 +59,11 @@ import java.util.zip.CRC32;
  * TODO: Main interface scrolling with mouse scroll.
  */
 public class Client extends ClientEngine {
+
+	/*
+	 * Sprite cache
+	 */
+	public static SpritesCache spriteCache = new SpritesCache();
 	
 	/*
 	 * Particles
@@ -184,6 +190,7 @@ public class Client extends ClientEngine {
 	public Viewport tabAreaViewport;
 	public Viewport gameAreaViewport;
 	public Viewport fixedFullScreenViewport;
+	public BitmapImage mapback;
 	public BitmapFont smallFont;
 	public BitmapFont plainFont;
 	public BitmapFont boldFont;
@@ -821,7 +828,6 @@ public class Client extends ClientEngine {
 			Model.reset();
 			AnimationFrame.reset();
 			MaterialType.reset();
-			ImageCache.clear();
 			Texture.clear();
 			//Performs garbage collect.
 			System.gc();
@@ -1254,6 +1260,49 @@ public class Client extends ClientEngine {
 	}
 
 
+	public void initMapBack(BitmapImage image) {
+		// minimap initialization.
+			for(int y = 0; y < 33; y++) {
+				int k6 = 999;
+				int i7 = 0;
+				for(int x = 0; x < 34; x++) {
+					if(image.imageRaster[x + y * image.imageWidth] == 0) {
+						if(k6 == 999) {
+							k6 = x;
+						}
+						continue;
+					}
+					if(k6 == 999) {
+						continue;
+					}
+					i7 = x;
+					break;
+				}
+				compassClipStarts[y] = k6;
+				compassLineLengths[y] = i7 - k6;
+			}
+			for(int l6 = 5; l6 < 156; l6++) {
+				int j7 = 999;
+				int l7 = 0;
+				for(int j8 = 25; j8 < 172; j8++) {
+					if(image.imageRaster[j8 + l6 * image.imageWidth] == 0 && (j8 > 34 || l6 > 34)) {
+						if(j7 == 999) {
+							j7 = j8;
+						}
+						continue;
+					}
+					if(j7 == 999) {
+						continue;
+					}
+					l7 = j8;
+					break;
+				}
+				minimapLineStarts[l6 - 5] = j7 - 25;
+				minimapLineLengths[l6 - 5] = l7 - j7;
+			}
+	}
+
+
 	public void processOnDemandQueue() {
 		do {
 			OnDemandEntry entry;
@@ -1289,9 +1338,6 @@ public class Client extends ClientEngine {
 				}
 				if(entry.type == 4 && entry.data != null) {
 					Texture.decode(entry.data, entry.id);
-				}
-				if(entry.type == 5 && entry.data != null) {
-					ImageCache.setImage(new BitmapImage(entry.data), entry.id);
 				}
 			} while(entry.type != 93 || !onDemandRequester.mapCached(entry.id));
 			MapDecoder.decode(new Buffer(entry.data), onDemandRequester, onDemandRequester.mapOld(entry.id));
@@ -1410,7 +1456,7 @@ public class Client extends ClientEngine {
 								}
 							} else if(childWidget.invIcon != null && item < 20) {
 								if(childWidget.invIcon[item] != 0 && childWidget.invIcon[item] != 0) {
-									final BitmapImage itemImage = ImageCache.get(childWidget.invIcon[item]);
+									final BitmapImage itemImage = spriteCache.get(childWidget.invIcon[item]);
 									if(itemImage != null) {
 										itemImage.drawImage(x, y);
 									}
@@ -1562,7 +1608,7 @@ public class Client extends ClientEngine {
 							s1 = childWidget.id + "";
 						}
 						if(rank >= 1) {
-							ImageCache.get(1626 + rank).drawImage(xPos + childWidget.width / 2, yPos + font.lineHeight / 2 - 3);
+							spriteCache.get(1626 + rank).drawImage(xPos + childWidget.width / 2, yPos + font.lineHeight / 2 - 3);
 							xPos += 11;
 						}
 						if(childWidget.textCenter) {
@@ -1587,26 +1633,26 @@ public class Client extends ClientEngine {
 							}
 						}
 					}
-				} else if(childWidget.type == Constants.WIDGET_IMAGE) {
+				} else if(childWidget.type == Constants.WIDGET_SPRITE) {
 					Interface.cache[640].text = "Arrav.net";
 					BitmapImage image = null;
-					if(childWidget.image < -1) {
-						image = ObjectType.getIcon(-childWidget.image, 0, 0);
+					if(childWidget.spriteID < -1) {
+						image = ObjectType.getIcon(-childWidget.spriteID, 0, 0);
 					} else {
-						if(interfaceIsSelected(childWidget) || (childWidget.imageAlt != childWidget.image && childWidget.hoverTriggered && mouseInRegion(xPos, yPos, xPos + childWidget.width, yPos + childWidget.height))) {
-							if(childWidget.imageAlt != 0)
-								image = ImageCache.get(childWidget.imageAlt);
+						if(interfaceIsSelected(childWidget) || (childWidget.secondarySpriteID != childWidget.spriteID && childWidget.hoverTriggered && mouseInRegion(xPos, yPos, xPos + childWidget.width, yPos + childWidget.height))) {
+							if(childWidget.secondarySpriteID != 0)
+								image = spriteCache.get(childWidget.secondarySpriteID);
 						} else {
-							if(childWidget.image != -1)
-								image = ImageCache.get(childWidget.image);
+							if(childWidget.spriteID != -1)
+								image = spriteCache.get(childWidget.spriteID);
 						}
 					}
 					if(image != null) {
 						if(childWidget.id == autocastId && childWidget.id == spellId && anIntArray1045[108] != 0)
-							ImageCache.get(2029).drawImage(xPos-3, yPos-3);
+							spriteCache.get(2029).drawImage(xPos-3, yPos-3);
 						if(spellSelected == 1 && childWidget.id == spellId && spellId != 0 && image != null) {
 							image.drawImage(xPos, yPos, 50);
-						} else if(childWidget.imageTransp)
+						} else if(childWidget.drawsAlpha)
 							image.drawImage(xPos, yPos, 100 + childWidget.alpha);
 						else
 							image.drawImage(xPos, yPos);
@@ -1867,15 +1913,15 @@ public class Client extends ClientEngine {
 	public void drawSoak(int damage, int opacity, int drawPos, int x) {
 		x -= 12;
 		int soakLength = (int) Math.log10(damage) + 1;
-		ImageCache.get(188).drawImage(spriteDrawX + x, drawPos - 12, opacity);
+		spriteCache.get(188).drawImage(spriteDrawX + x, drawPos - 12, opacity);
 		x += 20;
-		ImageCache.get(180).drawImage(spriteDrawX + x, drawPos - 12, opacity);
+		spriteCache.get(180).drawImage(spriteDrawX + x, drawPos - 12, opacity);
 		x += 4;
 		for(int i = 0; i < soakLength * 2; i++) {
-			ImageCache.get(181).drawImage(spriteDrawX + x, drawPos - 12, opacity);
+			spriteCache.get(181).drawImage(spriteDrawX + x, drawPos - 12, opacity);
 			x += 4;
 		}
-		ImageCache.get(182).drawImage(spriteDrawX + x, drawPos - 10, opacity);
+		spriteCache.get(182).drawImage(spriteDrawX + x, drawPos - 10, opacity);
 		smallHitFont.drawCenteredString(damage + "", spriteDrawX - 8 + x + (soakLength == 1 ? 5 : 0), drawPos + 32, 0xffffff, opacity);
 	}
 
@@ -3468,7 +3514,6 @@ public class Client extends ClientEngine {
 		System.gc();
 		taskHandler = null;
 		updateWindow();
-		ImageCache.clear();
 		Texture.clear();
 		LocationType.defCache.clear();
 		ObjectType.defCache.clear();

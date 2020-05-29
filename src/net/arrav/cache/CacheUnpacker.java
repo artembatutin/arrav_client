@@ -8,7 +8,6 @@ import net.arrav.net.Updater;
 import net.arrav.activity.Activity;
 import net.arrav.activity.TitleActivity;
 import net.arrav.cache.impl.*;
-import net.arrav.cache.unit.ImageCache;
 import net.arrav.graphic.GraphicalComponent;
 import net.arrav.graphic.Rasterizer2D;
 import net.arrav.graphic.font.BitmapFont;
@@ -16,10 +15,7 @@ import net.arrav.net.SignLink;
 import net.arrav.util.ThreadUtils;
 import net.arrav.util.io.Buffer;
 
-import java.io.ByteArrayInputStream;
-import java.io.DataInputStream;
-import java.io.IOException;
-import java.io.OutputStream;
+import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 
@@ -156,7 +152,7 @@ public class CacheUnpacker {
 		loadTitleScreen();
 		//Unpacking images.
 		client.titleActivity = new TitleActivity();
-		ImageCache.init(client);
+		Client.spriteCache.init(new File(SignLink.getCacheDir()+"main_file_sprites.dat"), new File(SignLink.getCacheDir()+"main_file_sprites.idx"));
 
 	}
 
@@ -460,14 +456,14 @@ public class CacheUnpacker {
 			}
 			circleAngle = (circleAngle + 20) & 2047;
 			Rasterizer2D.fillRectangle(0, 0, client.windowWidth, client.windowHeight, 0x070505);
-			ImageCache.get(859).drawImage(centerX - 433, centerY - 305);
-			ImageCache.get(860).drawImage(centerX, centerY - 305);
-			ImageCache.get(861).drawImage(centerX - 433, centerY);
-			ImageCache.get(862).drawImage(centerX, centerY);
+			Client.spriteCache.get(859).drawImage(centerX - 433, centerY - 305);
+			Client.spriteCache.get(860).drawImage(centerX, centerY - 305);
+			Client.spriteCache.get(861).drawImage(centerX - 433, centerY);
+			Client.spriteCache.get(862).drawImage(centerX, centerY);
 			Rasterizer2D.fillRoundedRectangle(centerX - 154, centerY - 84, 308, 113, 20, 0x000000, 100);
 			Rasterizer2D.fillRoundedRectangle(centerX - 150, centerY - 80, 300, 105, 17, 0x000000, 225);
-			if(ImageCache.get(7, true) != null)
-				ImageCache.get(7, true).drawAffineTransformedAlphaImage(centerX - 37, centerY - 55, 74, 74, 37, 37, loadingCircleStarts, loadingCircleLengths, circleAngle, 256);
+			if(Client.spriteCache.get(7) != null)
+				Client.spriteCache.get(7).drawAffineTransformedAlphaImage(centerX - 37, centerY - 55, 74, 74, 37, 37, loadingCircleStarts, loadingCircleLengths, circleAngle, 256);
 			client.fancyFont.drawCenteredEffectString(progress + "/5", centerX, centerY - 10, 0xF0BB3C, true);
 			client.boldFont.drawLeftAlignedEffectString(sideMessage, 4, 15, 0xFFFFFF, true);
 			client.smallFont.drawCenteredEffectString(client.onDemandRequester.statusString, centerX, centerY + 60, 0xFFFFFF, true);
