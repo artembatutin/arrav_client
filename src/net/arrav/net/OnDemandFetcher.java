@@ -8,6 +8,7 @@ import net.arrav.cache.CacheArchive;
 import net.arrav.util.DataToolkit;
 import net.arrav.util.collect.LinkedDeque;
 import net.arrav.util.io.Buffer;
+import net.arrav.world.CustomMaps;
 
 import java.io.*;
 import java.net.Socket;
@@ -22,14 +23,14 @@ public final class OnDemandFetcher implements Runnable {
 	private final LinkedDeque requested;
 	public String statusString;
 	private int writeLoopCycle;
-	private int[] regionObjectFiles;
+	public static int[] regionObjectFiles;
 	private final byte[] ioBuffer;
 	private Client client;
 	private final LinkedDeque aClass19_1344;
 	private int completedSize;
 	private int expectedSize;
 	private boolean[] newerMap;
-	private int[] regionLandFiles;
+	public static int[] regionLandFiles;
 	private boolean running;
 	private OutputStream outputStream;
 	private boolean waiting;
@@ -42,7 +43,7 @@ public final class OnDemandFetcher implements Runnable {
 	private final LinkedDeque aClass19_1368;
 	private OnDemandEntry currentEntry;
 	private final LinkedDeque aClass19_1370;
-	private int[] regionFiles;
+	public static int[] regionFiles;
 	private int loopCycle;
 
 	public OnDemandFetcher() {
@@ -184,20 +185,30 @@ public final class OnDemandFetcher implements Runnable {
 		
 
 		Buffer buffer = new Buffer(Constants.JAGGRAB_ENABLED ? archive.getFile("map_index") : DataToolkit.readFile(SignLink.getCacheDir() + "map_index"));
-		int length = buffer.getUShort();
-		regionFiles = new int[length];
-		regionLandFiles = new int[length];
-		regionObjectFiles = new int[length];
-		for(int i = 0; i < length; i++) {
-			regionFiles[i] = buffer.getUShort();
-			regionLandFiles[i] = buffer.getUShort();
-			regionObjectFiles[i] = buffer.getUShort();
-			if(buffer.getBoolean()) {
-				newerMap[regionLandFiles[i]] = true;
-				newerMap[regionObjectFiles[i]] = true;
+		int bufferLength = buffer.getUShort();
+		int combinedLen = bufferLength + CustomMaps.VALUES.length;
+		regionFiles = new int[combinedLen];
+		regionLandFiles = new int[combinedLen];
+		regionObjectFiles = new int[combinedLen];
+		for(int i = 0; i < combinedLen; i++) {
+			if(i < bufferLength) {
+				regionFiles[i] = buffer.getUShort();
+				regionLandFiles[i] = buffer.getUShort();
+				regionObjectFiles[i] = buffer.getUShort();
+				if (buffer.getBoolean()) {
+					newerMap[regionLandFiles[i]] = true;
+					newerMap[regionObjectFiles[i]] = true;
+				}
+			} else {
+				CustomMaps map = CustomMaps.ofOrdinal(i - bufferLength);
+				if(map == null)
+					System.err.println("FUCK!");
+				regionFiles[i] = map.getRegion();
+				regionLandFiles[i] = map.getLandScape();
+				regionObjectFiles[i] = map.getObjectMap();
 			}
 		}
-		System.out.println("map_index size: " + length);
+		System.out.println("map_index size: " + combinedLen);
 
 		this.client = client;
 		running = true;
@@ -424,6 +435,12 @@ public final class OnDemandFetcher implements Runnable {
 		return entry;
 	}
 
+	public int getMap(int regionId, boolean landscape) {
+		for(int region = 0; region < regionFiles.length; region++)
+			if (regionFiles[region] == regionId)
+			return landscape ? regionLandFiles[region] : regionObjectFiles[region];
+			return -1;
+	}
 	public int getMapId(int type, int mapX, int mapY) {
 		int coordinates = (mapY << 8) + mapX;
 		for(int region = 0; region < regionFiles.length; region++) {

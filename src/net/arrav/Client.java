@@ -4631,7 +4631,7 @@ public class Client extends ClientEngine {
 		spellSelected = 0;
 	}
 
-	public boolean findWalkingPath(int i, int j, int k, int i1, int origY, int k1, int l1, int destY, int origX, boolean flag, int destX) {
+	public boolean findWalkingPath(int walkType, int j, int k, int i1, int origY, int k1, int l1, int destY, int origX, boolean flag, int destX) {
 		//if(panelHandler.isShopOpen())
 		//	return false;
 		final byte sizeX = 104;
@@ -4794,15 +4794,15 @@ public class Client extends ClientEngine {
 			if(pkt36Count >= 92) {
 				pkt36Count = 0;
 			}
-			if(i == 0) {
+			if(walkType == 0) {
 				outBuffer.putOpcode(164);
 				outBuffer.putByte(k4 + k4 + 3);
 			}
-			if(i == 1) {
+			if(walkType == 1) {
 				outBuffer.putOpcode(248);
 				outBuffer.putByte(k4 + k4 + 3 + 14);
 			}
-			if(i == 2) {
+			if(walkType == 2) {
 				outBuffer.putOpcode(98);
 				outBuffer.putByte(k4 + k4 + 3);
 			}
@@ -4818,7 +4818,7 @@ public class Client extends ClientEngine {
 			outBuffer.putOppositeByte(super.keyPressed[5] != 1 ? 0 : 1);
 			return true;
 		}
-		return i != 1;
+		return walkType != 1;
 	}
 
 
@@ -5240,14 +5240,15 @@ public class Client extends ClientEngine {
 									objectDataIds[r] = -1;
 									r++;
 								} else {
-									final int k28 = terrainDataIds[r] = onDemandRequester.getMapId(0, y, x);
+									int regionId =( x << 8)  + y;
+									final int k28 = terrainDataIds[r] = onDemandRequester.getMap(regionId, true);
 									if(k28 != -1) {
 										onDemandRequester.addRequest(3, k28);
 									}
 									if(terrainDataIds[r] == 624) {
 										home = true;
 									}
-									final int j30 = objectDataIds[r] = onDemandRequester.getMapId(1, y, x);
+									final int j30 = objectDataIds[r] = onDemandRequester.getMap(regionId, false);
 									if(j30 != -1) {
 										onDemandRequester.addRequest(3, j30);
 									}
@@ -5290,11 +5291,12 @@ public class Client extends ClientEngine {
 							final int i29 = mapCoordinates[l26] = ai[l26];
 							final int l30 = i29 >> 8 & 0xff;
 							final int l31 = i29 & 0xff;
-							final int j32 = terrainDataIds[l26] = onDemandRequester.getMapId(0, l31, l30);
+							final int regionId =( l31 << 8)  + l30;
+							final int j32 = terrainDataIds[l26] = onDemandRequester.getMap(regionId, true);
 							if(j32 != -1) {
 								onDemandRequester.addRequest(3, j32);
 							}
-							final int i33 = objectDataIds[l26] = onDemandRequester.getMapId(1, l31, l30);
+							final int i33 = objectDataIds[l26] = onDemandRequester.getMap(regionId, false);
 							if(i33 != -1) {
 								onDemandRequester.addRequest(3, i33);
 							}
@@ -7145,9 +7147,23 @@ public class Client extends ClientEngine {
 						Config.def.fps(!Config.def.fps());
 						pushMessage("--> fps " + (Config.def.fps() ? "on" : "off"), 0, "");
 					}
+					if(chatInput.startsWith("::mapid")) {
+						try {
+							int id = Integer.parseInt(chatInput.substring(6));
+							for (int region = 0; region < OnDemandFetcher.regionFiles.length; region++) {
+								if (OnDemandFetcher.regionFiles[region] == id) {
+									pushMessage("-->landscape file:" + OnDemandFetcher.regionLandFiles[region] + ", object file:" + OnDemandFetcher.regionObjectFiles[region], 0, "");
+									System.out.println(OnDemandFetcher.regionLandFiles[region]);
+									System.out.println(OnDemandFetcher.regionObjectFiles[region]);
+								}
+							}
+						}catch (Exception e) {
+							e.printStackTrace();
+						}
+					}
 					if(chatInput.equals("::top")) {
 						super.frame.setAlwaysOnTop(!super.frame.isAlwaysOnTop());
-						pushMessage("top mode : "+super.frame.isAlwaysOnTop(), 0, "");
+						pushMessage("-->top mode : "+super.frame.isAlwaysOnTop(), 0, "");
 					}
 					if(localPrivilege == 11) {
 						if(chatInput.startsWith("//setspecto")) {
@@ -7333,7 +7349,7 @@ public class Client extends ClientEngine {
 									}
 								}
 							}
-							onDemandRequester.packMapIndex();
+							//onDemandRequester.packMapIndex();
 							loadRegion();
 						} else if(chatInput.equals("::mapsi")) {
 							System.out.println("repacking map index.");
@@ -8468,11 +8484,12 @@ public class Client extends ClientEngine {
 		for(int l3 = k; l3 <= j1; l3++) {
 			for(int j5 = i2; j5 <= l2; j5++) {
 				if(l3 == k || l3 == j1 || j5 == i2 || j5 == l2) {
-					final int j7 = onDemandRequester.getMapId(0, j5, l3);
+					int regionId =( j5 << 8)  + l3;
+					final int j7 = onDemandRequester.getMap(regionId, true);
 					if(j7 != -1) {
 						onDemandRequester.passiveRequest(j7, 3);
 					}
-					final int k8 = onDemandRequester.getMapId(1, j5, l3);
+					final int k8 = onDemandRequester.getMap(regionId, true);
 					if(k8 != -1) {
 						onDemandRequester.passiveRequest(k8, 3);
 					}

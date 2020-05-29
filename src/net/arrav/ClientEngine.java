@@ -323,6 +323,7 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 	@Override
 	public final void focusLost(FocusEvent focusevent) {
 		awtFocus = false;
+		shiftDown = false;
 		for(int i = 0; i < 128; i++) {
 			keyPressed[i] = 0;
 		}

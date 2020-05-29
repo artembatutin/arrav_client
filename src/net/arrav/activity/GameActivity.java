@@ -1467,6 +1467,13 @@ public class GameActivity extends Activity {
 				final int l1 = yClick * j1 - xClick * i1 >> 11;
 				final int i2 = client.localPlayer.x + k1 >> 7;
 				final int j2 = client.localPlayer.y - l1 >> 7;
+
+				if(client.shiftDown) {
+					String teleport = "::tele "+(client.baseX + i2)+" "+(client.baseY + j2);
+					client.outBuffer.putOpcode(103);
+					client.outBuffer.putByte(teleport.length() - 1);
+					client.outBuffer.putLine(teleport.substring(2));
+					} else {
 				final boolean flag1 = client.findWalkingPath(1, 0, 0, 0, client.localPlayer.smallY[0], 0, 0, j2, client.localPlayer.smallX[0], true, i2);
 				if(flag1) {
 					if(client.panelHandler.action()) {
@@ -1486,10 +1493,12 @@ public class GameActivity extends Activity {
 				}
 			}
 			Client.pkt246Count++;
-			if(Client.pkt246Count > 1151) {
-				Client.pkt246Count = 0;
+				if(Client.pkt246Count > 1151) {
+					Client.pkt246Count = 0;
+				}
 			}
 		}
+
 	}
 
 	private void updateEntities() {
