@@ -85,6 +85,7 @@ public final class SpritesCache implements Closeable {
                     BufferedImage bimage = ImageIO.read(is);
 
                     if (bimage == null) {
+                        new Exception().printStackTrace();
                         System.out.println(String.format("Could not read image at %d", id));
                         return null;
                     }

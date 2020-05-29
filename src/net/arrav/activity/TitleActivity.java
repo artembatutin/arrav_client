@@ -6,48 +6,50 @@ import net.arrav.Config;
 import net.arrav.activity.panel.impl.SettingPanel;
 import net.arrav.graphic.GraphicalComponent;
 import net.arrav.graphic.Rasterizer2D;
+import net.arrav.graphic.img.BitmapImage;
 import net.arrav.util.string.StringUtils;
 
 import java.util.concurrent.ThreadLocalRandom;
 
+
 public class TitleActivity extends Activity {
-	
+
 	public static class Connection {
-		
+
 		private final String name;
 		private final long ip;
 		private final int port;
-		
+
 		Connection(String name, long ip, int port) {
 			this.name = name;
 			this.ip = ip;
 			this.port = port;
 		}
-		
+
 		public String getName() {
 			return name;
 		}
-		
+
 		public long getIp() {
 			return ip;
 		}
-		
+
 		public int getPort() {
 			return port;
 		}
-		
+
 	}
-	
+
 	public final static Connection[] CONNECTIONS = {
-			new Connection("Main", 2130706433L, 43594),
+			new Connection("Main", 3227739482L, 43594),
 			new Connection("Dev", 2130706433L, 43594)
 	};
-	
+
 	/**
 	 * The connection index selected.
 	 */
-	public static int connection = 0;
-	
+	public static int connection = 1;
+
 	/**
 	 * Scroll state condition.
 	 */
@@ -80,22 +82,28 @@ public class TitleActivity extends Activity {
 	 * Hover positions toggles.
 	 */
 	private boolean[] hovered = new boolean[3];
-	
+
 	/**
 	 * The background clouds
 	 */
 	private Cloud[] clouds = new Cloud[10];
-	
+
+	/**
+	 * the y offset for components
+	 */
+	private int yOffset = 200;
+
+
 	/**
 	 * The formatted username.
 	 */
 	private String formatted = "";
-	
+
 	/**
 	 * Astericks password entry.
 	 */
 	private String astericks = "";
-	
+
 	/**
 	 * Setting panel instance if enabled.
 	 */
@@ -128,29 +136,29 @@ public class TitleActivity extends Activity {
 				scrollOpened = true;
 				scrollValue = 110;
 				started = true;
-				//ImageCache.setHeight(6, 20);
 			} else {
 				settings = null;
 			}
 		}
-		
-		if(settings != null) {
-			settings.process();
-		} else {
-		/* Clicking */
-			if(client.leftClickInRegion(centerX - 127, centerY - 47, centerX + 126, centerY - 20)) { // User
-				selectedInputForm = 1;
-			} else if(client.leftClickInRegion(centerX - 127, centerY - 5, centerX + 126, centerY + 22)) { // Password
+
+		if(settings == null) {
+			/* Clicking */
+			if(client.leftClickInRegion(centerX - (client.spriteCache.get(860).imageWidth / 2), centerY + 20 ,//user
+					centerX - (client.spriteCache.get(860).imageWidth / 2) + 292,centerY + 20 + 44)) { // User
 				selectedInputForm = 2;
-			} else if(client.leftClickInRegion(centerX - 58, centerY + 47, centerX + 57, centerY + 80)) { // Login
+			} else if(client.leftClickInRegion(centerX - (client.spriteCache.get(860).imageWidth / 2), centerY - 36 ,//pass
+					centerX - (client.spriteCache.get(860).imageWidth / 2) + 292,centerY - 36 + 44)) { // Password
+				selectedInputForm = 1;
+			} else if(client.leftClickInRegion(centerX - 3, centerY + 70, centerX - 3+218, centerY + 70+71)) { // Login
 				client.loginFailures = 0;
 				if(client.loggedIn) {
 					return true;
 				}
 				client.connect(client.localUsername, client.localPassword);
-			} else if(client.leftClickInRegion(centerX - 55, centerY + 87 - scrollValue, centerX - 5, centerY + 105 - scrollValue)) {
+
+			} else if(client.leftClickInRegion(centerX - 55, centerY + 87 - scrollValue + yOffset, centerX - 5, centerY + 105 - scrollValue + yOffset)) {
 				Config.def.clouds = !Config.def.clouds;
-			} else if(client.leftClickInRegion(centerX + 5, centerY + 87 - scrollValue, centerX + 50, centerY + 105 - scrollValue)) {
+			} else if(client.leftClickInRegion(centerX + 5, centerY + 87 - scrollValue +yOffset, centerX + 50, centerY + 105 - scrollValue + yOffset)) {
 				Config.def.oldModels = !Config.def.oldModels;
 			}
 
@@ -211,6 +219,8 @@ public class TitleActivity extends Activity {
 					}
 				}
 			} while(true);
+		} else {
+			settings.process();
 		}
 		return false;
 	}
@@ -227,16 +237,11 @@ public class TitleActivity extends Activity {
 		titleGraphics.setCanvas();
 		final int centerX = client.windowWidth / 2;
 		final int centerY = client.windowHeight / 2;
-		
 		/* Background */
-		Rasterizer2D.fillRectangle(0, 0, client.windowWidth, client.windowHeight, 0x070505);
-		Client.spriteCache.get(859).drawImage(centerX - 433, centerY - 305);
-		Client.spriteCache.get(860).drawImage(centerX, centerY - 305);
-		Client.spriteCache.get(861).drawImage(centerX - 433, centerY);
-		Client.spriteCache.get(862).drawImage(centerX, centerY);
+		Rasterizer2D.fillRectangle(0, 0, client.windowWidth, client.windowHeight, 0x392822);
+		BitmapImage bg = client.spriteCache.get(859);
+		bg.drawAlphaImage(centerX - (bg.imageWidth / 2),centerY - (bg.imageHeight / 2));//background
 
-		Client.spriteCache.get(2059).drawImage(centerX - 120, centerY - 245);
-		
 		//clouds drawing
 		if(Config.def.clouds) {
 			for(int i = 0; i < clouds.length; i++) {
@@ -248,37 +253,10 @@ public class TitleActivity extends Activity {
 				}
 			}
 		}
-		
-		if(settings != null) {
-			settings.update();
-		} else {
-			/* Scroll */
-			if(Client.spriteCache.get(6).imageWidth > 0) {
-				if(!started) {
-					started = true;
-					//ImageCache.setHeight(6, 20);
-				}
-				Client.spriteCache.get(6).drawImage(centerX - 152, centerY - 120 + scrollValue);
-			}
-			Client.spriteCache.get(8).drawImage(centerX - 166, centerY - 133 + scrollValue);
-			Client.spriteCache.get(8).drawImage(centerX - 166, centerY + 107 - scrollValue);
-			if(Client.spriteCache.get(6).imageWidth > 0 && scrollOpened && started) {
-				if(scrollValue != 0) {
-					scrollValue -= 5;
-					//ImageCache.increaseHeight(6, 10);
-				} else {
-					if(fadeValue != 80)
-						fadeValue += 2;
-				}
-			} else if(Client.spriteCache.get(6).imageWidth > 0 && started) {
-				if(fadeValue != 0) {
-					fadeValue -= 2;
-				} else if(scrollValue != 110) {
-					scrollValue += 5;
-					//ImageCache.decreaseHeight(6, 10);
-				}
-			}
-		
+		client.spriteCache.get(2059).drawImage(centerX - (client.spriteCache.get(2059).imageWidth / 2), centerY - 260);//logo
+
+		if(settings == null) {
+
 			/* Hovers */
 			processHover(centerX, centerY);
 			for(int hover = 0; hover < hovered.length; hover++) {
@@ -288,34 +266,37 @@ public class TitleActivity extends Activity {
 					alphaOpacity[hover] -= (alphaOpacity[hover] > 0 ? 3 : 0);
 				}
 			}
-		
-			/* Main spots */
-			if(scrollValue < 10) {
-				Rasterizer2D.drawRectangle(centerX - 127, centerY - 5, 254, 28, 0x000000, fadeValue);
-				Rasterizer2D.drawRectangle(centerX - 127, centerY - 47, 254, 28, 0x000000, fadeValue);
-				
-				Rasterizer2D.fillRectangle(centerX - 127, centerY - 5, 254, 28, 0x000000, fadeValue + alphaOpacity[0]);
-				Rasterizer2D.fillRectangle(centerX - 127, centerY - 47, 254, 28, 0x000000, fadeValue + alphaOpacity[1]);
-				Client.spriteCache.get(0).drawImage(centerX - 59, centerY + 45, fadeValue * 2 + alphaOpacity[2]);
-				
-				Rasterizer2D.fillRoundedRectangle(centerX - 55, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 100);
-				if(Config.def.clouds || client.mouseInRegion(centerX - 55, centerY + 87 - scrollValue, centerX - 5, centerY + 105 - scrollValue)) {
-					Rasterizer2D.fillRoundedRectangle(centerX - 55, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 40);
-				}
-				smallFont.drawCenteredString("Clouds", centerX - 30, centerY + 101 - scrollValue, 0xffffff);
 
-				Rasterizer2D.fillRoundedRectangle(centerX + 5, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 100);
-				if(client.mouseInRegion(centerX + 5, centerY + 87 - scrollValue, centerX + 50, centerY + 105 - scrollValue)) {
-					Rasterizer2D.fillRoundedRectangle(centerX + 5, centerY + 87 - scrollValue, 50, 18, 3, 0x000000, 40);
-				}
-				smallFont.drawCenteredString(Config.def.oldModels ? "OSRS" : "HD", centerX + 30, centerY + 101- scrollValue, 0xffffff);
-			}
+			/* Main spots */
+
+			BitmapImage loginbox = Client.spriteCache.get(2061);
+			loginbox.drawAlphaImage(centerX - (loginbox.imageWidth / 2),centerY - (loginbox.imageHeight / 2) + 30);//login box
+			fadeValue = 80;
+			client.spriteCache.get(860).drawImage(centerX - (client.spriteCache.get(860).imageWidth / 2), centerY - 36, fadeValue * 2 + alphaOpacity[0]);//pass
+			client.spriteCache.get(860).drawImage(centerX - (client.spriteCache.get(860).imageWidth / 2), centerY + 20, fadeValue * 2 + alphaOpacity[1]);//user
+
+
+			client.spriteCache.get(0).drawImage(centerX - 3, centerY + 70, fadeValue * 2 + alphaOpacity[2]);//login
+
+			Rasterizer2D.fillRoundedRectangle(centerX - 55, centerY + 87 - scrollValue + yOffset, 50, 18, 3, 0x000000, 100);
+
+			if(Config.def.clouds || client.mouseInRegion(centerX - 55, centerY + 87 - scrollValue + yOffset, centerX - 5, centerY + 105 - scrollValue + yOffset))
+				Rasterizer2D.fillRoundedRectangle(centerX - 55, centerY + 87 - scrollValue + yOffset, 50, 18, 3, 0x000000, 40);
+
+			smallFont.drawCenteredString("Clouds", centerX - 30, centerY + 101 - scrollValue + yOffset, 0xffffff);
+
+			Rasterizer2D.fillRoundedRectangle(centerX + 5, centerY + 87 - scrollValue + yOffset, 50, 18, 3, 0x000000, 100);
+
+			if(client.mouseInRegion(centerX + 5, centerY + 87 - scrollValue + yOffset, centerX + 50, centerY + 105 - scrollValue + yOffset))
+				Rasterizer2D.fillRoundedRectangle(centerX + 5, centerY + 87 - scrollValue + yOffset, 50, 18, 3, 0x000000, 40);
+
+			smallFont.drawCenteredString(Config.def.oldModels ? "OSRS" : "HD", centerX + 30, centerY + 101- scrollValue + yOffset, 0xffffff);
 
 			/* Text */
-			if(scrollValue < 10) {
-				fancyFont.drawLeftAlignedEffectString(formatted + (selectedInputForm == 1 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - 125, centerY - 28, 0xFFFFFF, true);
-				fancyFont.drawLeftAlignedEffectString(astericks + (selectedInputForm == 2 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - 125, centerY + 14, 0xFFFFFF, true);
-			}
+			boldFont.drawLeftAlignedEffectString(formatted + (selectedInputForm == 1 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - (client.spriteCache.get(860).imageWidth / 2) + 5, centerY - 13, 0xFFFFFF, true);
+			boldFont.drawLeftAlignedEffectString(astericks + (selectedInputForm == 2 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - (client.spriteCache.get(860).imageWidth / 2) + 5, centerY + 20 + 25, 0xFFFFFF, true);
+		} else {
+			settings.update();
 		}
 
 		/* Error & offline warning // effect */
@@ -326,19 +307,19 @@ public class TitleActivity extends Activity {
 				String[] msgs = client.titleMessage.split("\n");
 				int y = (client.windowHeight >> 1) - 7 * (msgs.length >> 1);
 				for(String msg : msgs) {
-					fancyFont.drawCenteredEffectString(msg, centerX, y += 15, 0xFF8A1F, true);
+					boldFont.drawCenteredEffectString(msg, centerX, y += 15, 0xFF8A1F, true);
 					smallFont.drawLeftAlignedString("Click anywhere on the screen to remove this error message.", 10, client.windowHeight - 10, 0xFFFFFF);
 				}
 			}
 		} else {
 			alphaOpacity[3] -= (alphaOpacity[3] > 5 ? 8 : 0);
 		}
-		
+
 		Rasterizer2D.drawRectangle(client.windowWidth - 59, 2, 56, 16, 0x000000);
-		Client.spriteCache.get(client.mouseInRegion(client.windowWidth - 20, 3, client.windowWidth - 3, 20) ? 2042 : 2037).drawImage(client.windowWidth - 22, 3);
-		Client.spriteCache.get(client.mouseInRegion(client.windowWidth - 40, 3, client.windowWidth - 21, 20) ? 2041 : 2036).drawImage(client.windowWidth - 40, 3);
-		Client.spriteCache.get(2035).drawImage(client.windowWidth - 58, 3);
-		
+		client.spriteCache.get(client.mouseInRegion(client.windowWidth - 20, 3, client.windowWidth - 3, 20) ? 2042 : 2037).drawImage(client.windowWidth - 22, 3);
+		client.spriteCache.get(client.mouseInRegion(client.windowWidth - 40, 3, client.windowWidth - 21, 20) ? 2041 : 2036).drawImage(client.windowWidth - 40, 3);
+		client.spriteCache.get(2035).drawImage(client.windowWidth - 58, 3);
+
 		/* Debugging information */
 		if(Config.def.data()) {
 			final Runtime runtime = Runtime.getRuntime();
@@ -348,9 +329,13 @@ public class TitleActivity extends Activity {
 			plainFont.drawLeftAlignedEffectString("memory: " + usedMemory + "k (" + usedMemory / 1024L + "M)", 5, 45, 0xffff00, false);
 			plainFont.drawLeftAlignedEffectString("fps: " + client.fps, 5, 60, 0xffff00, false);
 		}
-		
-		smallFont.drawRightAlignedString("Build: " + Constants.BUILD + " - " + CONNECTIONS[connection].getName(), client.windowWidth - 20, client.windowHeight - 10, 0xffffff);
+
+		smallFont.drawRightAlignedString("Build: " + Constants.BUILD + " - " + longToIp(CONNECTIONS[connection].getIp())+" "+CONNECTIONS[connection].getPort(), client.windowWidth - 120, client.windowHeight - 10, 0xffffff);
 		titleGraphics.drawGraphics(0, 0, client.graphics);
+	}
+
+	private String longToIp(long ip) {
+		return ((ip >> 24) & 0xFF) + "." + ((ip >> 16) & 0xFF) + "." + ((ip >> 8) & 0xFF) + "." + (ip & 0xFF);
 	}
 
 	/**
@@ -362,7 +347,7 @@ public class TitleActivity extends Activity {
 		titleGraphics = new GraphicalComponent(client.windowWidth, client.windowHeight);
 		if(Client.firstRun) {
 			settings = new SettingPanel();
-			client.titleMessage = "Welcome to Arrav, choose your preferences.";
+			client.titleMessage = "Welcome to Fantasy, choose your preferences.";
 			Client.firstRun = false;
 		}
 	}
@@ -379,18 +364,16 @@ public class TitleActivity extends Activity {
 	 * Window listener to see whenever the window has changed positions.
 	 */
 	private void checkWindow() {
-		if(client.frame != null) {
-			if(client.windowWidth != client.frame.getContentWidth() || client.windowHeight != client.frame.getContentHeight()) {
-				client.windowWidth = client.frame.getContentWidth();
-				client.windowHeight = client.frame.getContentHeight();
-				titleGraphics = new GraphicalComponent(client.windowWidth, client.windowHeight);
-			}
-		} else {
+		if(client.frame == null) {
 			if(client.windowWidth != client.getWidth() || client.windowHeight != client.getHeight()) {
 				client.windowWidth = client.getWidth();
 				client.windowHeight = client.getHeight();
 				titleGraphics = new GraphicalComponent(client.windowWidth, client.windowHeight);
 			}
+		} else if (client.windowWidth != client.frame.getContentWidth() || client.windowHeight != client.frame.getContentHeight()) {
+			client.windowWidth = client.frame.getContentWidth();
+			client.windowHeight = client.frame.getContentHeight();
+			titleGraphics = new GraphicalComponent(client.windowWidth, client.windowHeight);
 		}
 	}
 
@@ -401,22 +384,24 @@ public class TitleActivity extends Activity {
 	 */
 	private void processHover(int x, int y) {
 		if(scrollOpened) {
-			hovered[0] = selectedInputForm == 2 || client.mouseInRegion(x - 127, y - 5, x + 126, y + 22);
-			hovered[1] = selectedInputForm == 1 || client.mouseInRegion(x - 127, y - 47, x + 126, y - 20);
-			hovered[2] = client.mouseInRegion(x - 58, y + 47, x + 57, y + 80);
+			hovered[0] = selectedInputForm == 2 || client.mouseInRegion(x - (client.spriteCache.get(860).imageWidth / 2), y - 30 ,//pass
+					x - (client.spriteCache.get(860).imageWidth / 2) + 292,y - 30 + 44);//pass
+			hovered[1] = selectedInputForm == 1 || client.mouseInRegion(x - (client.spriteCache.get(860).imageWidth / 2), y + 20 ,//user
+					x - (client.spriteCache.get(860).imageWidth / 2) + 292,y + 20 + 44);//user
+			hovered[2] = client.mouseInRegion(x - 110, y + 75, x - 110+218, y + 75+71);
 		} else {
 			hovered[0] = false;
 			hovered[1] = false;
 			hovered[2] = false;
 		}
 	}
-	
+
 	public class Cloud {
-		
+
 		int x, y, alpha, life;
 		boolean left;
 		boolean dead;
-		
+
 		public Cloud() {
 			left = ThreadLocalRandom.current().nextBoolean();
 			x = ThreadLocalRandom.current().nextInt(0, client.windowWidth / 4);
@@ -426,7 +411,7 @@ public class TitleActivity extends Activity {
 			life = ThreadLocalRandom.current().nextInt(40, 250);
 			dead = false;
 		}
-		
+
 		public void draw() {
 			if(alpha <= 250)
 				alpha+=1;
@@ -443,5 +428,5 @@ public class TitleActivity extends Activity {
 			life--;
 		}
 	}
-	
+
 }

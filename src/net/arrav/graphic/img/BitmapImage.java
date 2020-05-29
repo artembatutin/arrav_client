@@ -35,10 +35,9 @@ public final class BitmapImage extends Rasterizer2D {
 		this.imageHeight = height;
 		this.xOffset = offsetX;
 		this.yOffset = offsetY;
+		this.alpha = true;
 		this.imageRaster = pixels;
-
-		Color color = Color.MAGENTA;
-		setTransparency(color.getRed(), color.getGreen(), color.getBlue());
+		setTransparency(255, 0, 255);
 	}
 	public void dump(int newId) {
 		BufferedImage img = new BufferedImage(imageWidth, imageHeight, BufferedImage.TYPE_INT_RGB);
@@ -213,7 +212,7 @@ public final class BitmapImage extends Rasterizer2D {
 		}
 	}
 
-	private void drawAlphaImage(int x, int y) {
+	public void drawAlphaImage(int x, int y) {
 		drawImage(x, y, 256);
 	}
 	

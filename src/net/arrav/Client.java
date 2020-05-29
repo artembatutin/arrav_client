@@ -649,7 +649,7 @@ public class Client extends ClientEngine {
 			nodeID = 10;
 			SignLink.storeId = 32;
 			SignLink.startPriv(InetAddress.getLocalHost());
-			setBackground(Color.BLACK);
+			setBackground(new Color(55, 76, 103));
 			requestFocusInWindow();
 			startApplet();
 		} catch(final Exception exception) {
@@ -1645,6 +1645,8 @@ public class Client extends ClientEngine {
 						} else {
 							if(childWidget.spriteID != -1)
 								image = spriteCache.get(childWidget.spriteID);
+							if(image == null)
+								System.out.println("null image id:"+childWidget.id+" parent:"+childWidget.parent);
 						}
 					}
 					if(image != null) {

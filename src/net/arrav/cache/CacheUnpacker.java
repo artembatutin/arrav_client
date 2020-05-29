@@ -457,9 +457,9 @@ public class CacheUnpacker {
 			circleAngle = (circleAngle + 20) & 2047;
 			Rasterizer2D.fillRectangle(0, 0, client.windowWidth, client.windowHeight, 0x070505);
 			Client.spriteCache.get(859).drawImage(centerX - 433, centerY - 305);
-			Client.spriteCache.get(860).drawImage(centerX, centerY - 305);
-			Client.spriteCache.get(861).drawImage(centerX - 433, centerY);
-			Client.spriteCache.get(862).drawImage(centerX, centerY);
+			Client.spriteCache.get(2059).drawImage(centerX, centerY - 305);
+			//Client.spriteCache.get(861).drawImage(centerX - 433, centerY);
+			//Client.spriteCache.get(862).drawImage(centerX, centerY);
 			Rasterizer2D.fillRoundedRectangle(centerX - 154, centerY - 84, 308, 113, 20, 0x000000, 100);
 			Rasterizer2D.fillRoundedRectangle(centerX - 150, centerY - 80, 300, 105, 17, 0x000000, 225);
 			if(Client.spriteCache.get(7) != null)

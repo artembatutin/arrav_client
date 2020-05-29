@@ -137,7 +137,7 @@ public final class Interface {
 		cache[34000].child(2, 34001, 463, 303);
 		cache[34000].child(1, 34002, 455, 280);
 		cache[34000].child(0, 34003, 420, 260);
-		pack();
+		//pack();
 		Pestpanel2(fonts);
 		Pestpanel(fonts);
 		clanWars(fonts);

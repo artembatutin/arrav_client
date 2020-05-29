@@ -46,7 +46,7 @@ public final class ClientFrame extends Frame {
 			setLocation((screenWidth - gameFrameWidth) / 2, (screenHeight - gameFrameHeight) / 2); // Sets the location to middle of the screen.
 			setLocationRelativeTo(null); //Sets the location of the window relative to the specified component.
 		}
-		setBackground(Color.BLACK); // Sets the background color.
+		setBackground(new Color(55, 76, 103)); // Sets the background color.
 		requestFocus(); // Requests the user's focus.
 		toFront(); // Displays frame to front.
 	}
