@@ -1811,9 +1811,15 @@ public class GameActivity extends Activity {
 		final int y = client.baseY + (client.localPlayer.y - 6 >> 7);
 		final int modeint = client.uiRenderer.getMode();
 		int line = modeint == 0 ? 5 : 1;
-		int off = modeint == 0 ? 511 : client.windowWidth - 200;
+		int off = modeint == 0 ? 511 : client.windowWidth - 240;
+
+
 		if(Config.def.fps()) {
+			System.out.println(off);
 			smallFont.drawRightAlignedString("Fps: " + client.fps, off, (line += 15), 0xffff00);
+			final Runtime runtime = Runtime.getRuntime();
+			final int mem = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
+			smallFont.drawRightAlignedString("Mem: " + mem+"k", off, (line += 15), 0xffff00);
 		}
 		if(Config.def.data()) {
 			final Runtime runtime = Runtime.getRuntime();
