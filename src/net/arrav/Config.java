@@ -10,7 +10,8 @@ import net.arrav.util.io.Buffer;
 public class Config {
 	
 	public static Config def = new Config();
-	
+
+
 	/**
 	 * The login clouds
 	 */
@@ -73,6 +74,7 @@ public class Config {
 	private boolean data = false;
 	private boolean fps = false;
 	private boolean idx = true;
+	private boolean sprite = false;
 
 	/*
 	 * Detail configurations
@@ -231,7 +233,15 @@ public class Config {
 	public boolean idx() {
 		return idx;
 	}
-	
+
+	public boolean sprite() {
+		return sprite;
+	}
+
+	public void setSprite(boolean sprite) {
+		this.sprite = sprite;
+	}
+
 	public void idx(boolean DEBUG_INDEXES) {
 		this.idx = DEBUG_INDEXES;
 	}

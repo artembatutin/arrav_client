@@ -1,23 +1,60 @@
 package net.arrav.graphic.font;
 
-import net.arrav.Constants;
+import net.arrav.Client;
 import net.arrav.cache.CacheArchive;
 import net.arrav.graphic.Rasterizer2D;
+import net.arrav.graphic.img.BitmapImage;
 import net.arrav.util.io.Buffer;
 
-import java.util.Random;
+import java.awt.*;
+
 
 public final class BitmapFont extends Rasterizer2D {
 
-	private byte[][] typefaceMask;
-	private int[] typefaceWidth;
-	private int[] typefaceHeight;
-	private int[] typefaceHorizontalOffset;
-	private int[] typefaceVerticalOffset;
-	private int[] charWidth;
-	public int lineHeight;
-	private Random tooltipRandom;
+	public int lineHeight = 0;
+	public int[] typefaceVerticalOffset;
+	public int[] typefaceHeight;
+	public int[] typefaceHorizontalOffset;
+	public int[] typefaceWidth;
+	public byte[][] typefaceMask;
+	public int[] charWidth;
 	private boolean strikethrought;
+
+	public static String startImage;
+	public static String aRSString_4135;
+	public static String startTransparency;
+	public static String startDefaultShadow;
+	public static String endShadow = "/shad";
+	public static String endEffect;
+	public static String aRSString_4143;
+	public static String endStrikethrough = "/str";
+	public static String aRSString_4147;
+	public static String startColor;
+	public static String lineBreak;
+	public static String startStrikethrough;
+	public static String endColor;
+	public static String endUnderline;
+	public static String defaultStrikethrough;
+	public static String startShadow;
+	public static String startEffect;
+	public static String aRSString_4162;
+	public static String aRSString_4163;
+	public static String endTransparency;
+	public static String aRSString_4165;
+	public static String startUnderline;
+	public static String startDefaultUnderline;
+	public static String aRSString_4169;
+	public static String[] splitTextStrings;
+	public static int defaultColor;
+	public static int textShadowColor;
+	public static int strikethroughColor;
+	public static int defaultTransparency;
+	public static int anInt4175;
+	public static int underlineColor;
+	public static int defaultShadow;
+	public static int anInt4178;
+	public static int transparency;
+	public static int textColor;
 
 	public BitmapFont(CacheArchive archive, String filename, boolean largeSpaces) {
 		try {
@@ -28,7 +65,6 @@ public final class BitmapFont extends Rasterizer2D {
 			typefaceHorizontalOffset = new int[length];
 			typefaceVerticalOffset = new int[length];
 			charWidth = new int[length];
-			tooltipRandom = new Random();
 			strikethrought = false;
 			final Buffer dat = new Buffer(archive.getFile(filename + ".dat"));
 			final Buffer idx = new Buffer(archive.getFile("index.dat"));
@@ -96,7 +132,7 @@ public final class BitmapFont extends Rasterizer2D {
 			if(c > typefaceMask.length && c > typefaceHeight.length)
 				continue;
 			if(c != ' ') {
-				drawTypeface(typefaceMask[c], x + typefaceHorizontalOffset[c], y + typefaceVerticalOffset[c], typefaceWidth[c], typefaceHeight[c], color);
+				drawTypeface(c, x + typefaceHorizontalOffset[c], y + typefaceVerticalOffset[c], typefaceWidth[c], typefaceHeight[c], color);
 			}
 			x += charWidth[c];
 		}
@@ -118,7 +154,7 @@ public final class BitmapFont extends Rasterizer2D {
 		for(int i1 = 0; i1 < s.length(); i1++) {
 			char c = s.charAt(i1);
 			if(c != ' ') {
-				drawTypeface(typefaceMask[c], x + typefaceHorizontalOffset[c], y + typefaceVerticalOffset[c], typefaceWidth[c], typefaceHeight[c], color, alpha);
+				drawTypefaceTrans(c, x + typefaceHorizontalOffset[c], y + typefaceVerticalOffset[c], typefaceWidth[c], typefaceHeight[c], color, alpha);
 			}
 			x += charWidth[c];
 		}
@@ -132,8 +168,100 @@ public final class BitmapFont extends Rasterizer2D {
 		drawLeftAlignedString(s, x - getStringWidth(s), y, color, alpha);
 	}
 
-	public void drawLeftAlignedEffectString(String s, int x, int y, int color, boolean shadow) {
-		strikethrought = false;
+	public void drawLeftAlignedEffectString(String string, int drawX, int drawY, int color, boolean shadow) {
+		if(string == null)
+			return;
+		setColorAndShadow(color, defaultShadow);
+		try {
+			drawY -= lineHeight;
+			for (int currentCharacter = 0; currentCharacter < string.length(); currentCharacter++) {
+				int character = string.charAt(currentCharacter);
+				if (character > 255) {
+					character = 32;
+				}
+
+				if (character == '<') {
+					int end = string.indexOf(">", currentCharacter);
+					if (end != currentCharacter + 1) {
+						if (end > -1 && end < string.length()) {
+							String effect = string.substring(currentCharacter + 1, end);
+
+							if (effect.startsWith(startImage)) {
+								int idx = 0;
+								for (int index = effect.length() - 1; index >= 4; index--) {
+									int num = effect.charAt(index) - 48;
+									int pow = 10 * (effect.length() - 1 - index);
+									if (pow > 0)
+										idx += num * pow;
+									else
+										idx += num;
+								}
+								try {
+									BitmapImage icon = Client.spriteCache.get(idx);
+									icon.drawImage(drawX, drawY);
+									drawX += icon.imageWidth+ icon.xOffset;
+								}catch (Exception e) {
+									e.printStackTrace();
+									System.out.println("Error getting image for text String "+string);
+								}
+								} else if (!setTextEffects(effect)) {
+								end = -1;
+							}
+						}
+						if (end > -1) {
+							currentCharacter = end;
+							continue;
+						}
+					}
+				}
+
+				if (character == '@' && currentCharacter + 4 < string.length()
+						&& string.charAt(currentCharacter + 4) == '@') {
+					textColor = getEffect(string.substring(currentCharacter + 1, currentCharacter + 4));
+					currentCharacter += 4;
+					continue;
+				}
+
+				int width = typefaceWidth[character];
+				int height = typefaceHeight[character];
+				if (character != 32) {
+					if (transparency == 256) {
+						if (textShadowColor != -1) {
+							drawTypeFaceNew(character, drawX + typefaceHorizontalOffset[character] + 1,
+									drawY + typefaceVerticalOffset[character] + 1, width, height, textShadowColor, true);
+						}
+						drawTypeFaceNew(character, drawX + typefaceHorizontalOffset[character],
+								drawY + typefaceVerticalOffset[character], width, height, textColor, false);
+					} else {
+						if (textShadowColor != -1) {
+							drawTypefaceTrans(character, drawX + typefaceHorizontalOffset[character] + 1,
+									drawY + typefaceVerticalOffset[character] + 1, width, height, textShadowColor,
+									transparency);
+						}
+						drawTypefaceTrans(character, drawX + typefaceHorizontalOffset[character],
+								drawY + typefaceVerticalOffset[character], width, height, textColor, transparency);
+					}
+				} else if (anInt4178 > 0) {
+					anInt4175 += anInt4178;
+					drawX += anInt4175 >> 8;
+					anInt4175 &= 0xff;
+				}
+				int lineWidth = charWidth[character];
+				if (strikethroughColor != -1) {
+					drawHorizontalLine(drawX, strikethroughColor, lineWidth,
+							drawY + (int) ((double) lineHeight * 0.69999999999999996D));
+				}
+				if (underlineColor != -1) {
+					drawHorizontalLine(drawX, underlineColor, lineWidth, drawY + lineHeight + 3);
+				}
+				drawX += lineWidth;
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+
+
+		/*strikethrought = false;
 		final int l = x;
 		if(s == null) {
 			return;
@@ -150,16 +278,16 @@ public final class BitmapFont extends Rasterizer2D {
 				final char c = s.charAt(i1);
 				if(c != ' ') {
 					if(shadow) {
-						drawTypeface(typefaceMask[c], x + typefaceHorizontalOffset[c] + 1, y + typefaceVerticalOffset[c] + 1, typefaceWidth[c], typefaceHeight[c], 0);
+						drawTypeface(c, x + typefaceHorizontalOffset[c] + 1, y + typefaceVerticalOffset[c] + 1, typefaceWidth[c], typefaceHeight[c], 0);
 					}
-					drawTypeface(typefaceMask[c], x + typefaceHorizontalOffset[c], y + typefaceVerticalOffset[c], typefaceWidth[c], typefaceHeight[c], color);
+					drawTypeface(c, x + typefaceHorizontalOffset[c], y + typefaceVerticalOffset[c], typefaceWidth[c], typefaceHeight[c], color);
 				}
 				x += charWidth[c];
 			}
 		}
 		if(strikethrought) {
 			Rasterizer2D.drawHorizontalLine(l, y + (int) (lineHeight * 0.69999999999999996D), x - l, 0x800000);
-		}
+		}*/
 	}
 
 	public void drawCenteredEffectString(String s, int x, int y, int color, boolean shadow) {
@@ -179,7 +307,7 @@ public final class BitmapFont extends Rasterizer2D {
 		for(int i1 = 0; i1 < s.length(); i1++) {
 			final char c = s.charAt(i1);
 			if(c != ' ') {
-				drawTypeface(typefaceMask[c], x + typefaceHorizontalOffset[c], y + typefaceVerticalOffset[c] + (int) (Math.sin(i1 / 2D + frame / 5D) * 5D), typefaceWidth[c], typefaceHeight[c], color);
+				drawTypeface(c, x + typefaceHorizontalOffset[c], y + typefaceVerticalOffset[c] + (int) (Math.sin(i1 / 2D + frame / 5D) * 5D), typefaceWidth[c], typefaceHeight[c], color);
 			}
 			x += charWidth[c];
 		}
@@ -194,7 +322,7 @@ public final class BitmapFont extends Rasterizer2D {
 		for(int i1 = 0; i1 < s.length(); i1++) {
 			final char c = s.charAt(i1);
 			if(c != ' ') {
-				drawTypeface(typefaceMask[c], x + typefaceHorizontalOffset[c] + (int) (Math.sin(i1 / 5D + frame / 5D) * 5D), y + typefaceVerticalOffset[c] + (int) (Math.sin(i1 / 3D + frame / 5D) * 5D), typefaceWidth[c], typefaceHeight[c], color);
+				drawTypeface(c, x + typefaceHorizontalOffset[c] + (int) (Math.sin(i1 / 5D + frame / 5D) * 5D), y + typefaceVerticalOffset[c] + (int) (Math.sin(i1 / 3D + frame / 5D) * 5D), typefaceWidth[c], typefaceHeight[c], color);
 			}
 			x += charWidth[c];
 		}
@@ -213,11 +341,68 @@ public final class BitmapFont extends Rasterizer2D {
 		for(int k1 = 0; k1 < s.length(); k1++) {
 			final char c = s.charAt(k1);
 			if(c != ' ') {
-				drawTypeface(typefaceMask[c], x + typefaceHorizontalOffset[c], y + typefaceVerticalOffset[c] + (int) (Math.sin(k1 / 1.5D + frame) * d), typefaceWidth[c], typefaceHeight[c], color);
+				drawTypeface(c, x + typefaceHorizontalOffset[c], y + typefaceVerticalOffset[c] + (int) (Math.sin(k1 / 1.5D + frame) * d), typefaceWidth[c], typefaceHeight[c], color);
 			}
 			x += charWidth[c];
 		}
 	}
+
+	public void drawBaseStringMoveXY(String string, int drawX, int drawY, int[] xModifier, int[] yModifier) {
+		drawY -= lineHeight;
+		int modifierOffset = 0;
+		for (int currentCharacter = 0; currentCharacter < string.length(); currentCharacter++) {
+			int character = string.charAt(currentCharacter);
+			int width = typefaceWidth[character];
+			int height = typefaceHeight[character];
+			int xOff;
+			if (xModifier != null) {
+				xOff = xModifier[modifierOffset];
+			} else {
+				xOff = 0;
+			}
+			int yOff;
+			if (yModifier != null) {
+				yOff = yModifier[modifierOffset];
+			} else {
+				yOff = 0;
+			}
+			modifierOffset++;
+
+			if (character != 32) {
+				if (transparency == 256) {
+					if (textShadowColor != -1) {
+						drawTypeFaceNew(character, (drawX + typefaceHorizontalOffset[character] + 1 + xOff),
+								(drawY + typefaceVerticalOffset[character] + 1 + yOff), width, height, textShadowColor,
+								true);
+					}
+					drawTypeFaceNew(character, drawX + typefaceHorizontalOffset[character] + xOff,
+							drawY + typefaceVerticalOffset[character] + yOff, width, height, textColor, false);
+				} else {
+					if (textShadowColor != -1) {
+						drawTypefaceTrans(character, (drawX + typefaceHorizontalOffset[character] + 1 + xOff),
+								(drawY + typefaceVerticalOffset[character] + 1 + yOff), width, height, textShadowColor,
+								transparency);
+					}
+					drawTypefaceTrans(character, drawX + typefaceHorizontalOffset[character] + xOff,
+							drawY + typefaceVerticalOffset[character] + yOff, width, height, textColor, transparency);
+				}
+			} else if (anInt4178 > 0) {
+				anInt4175 += anInt4178;
+				drawX += anInt4175 >> 8;
+				anInt4175 &= 0xff;
+			}
+			int i_109_ = charWidth[character];
+			if (strikethroughColor != -1) {
+				drawHorizontalLine(drawX, strikethroughColor, i_109_,
+						drawY + (int) ((double) lineHeight * 0.7));
+			}
+			if (underlineColor != -1) {
+				drawHorizontalLine(drawX, underlineColor, i_109_, drawY + lineHeight);
+			}
+			drawX += i_109_;
+		}
+	}
+
 
 	private int getEffect(String code) {
 		if(code.equals("mut")) {
@@ -306,7 +491,47 @@ public final class BitmapFont extends Rasterizer2D {
 		return width;
 	}
 
-	public int getEffectStringWidth(String s) {
+	public int getEffectStringWidth(String string) {
+		if (string == null) {
+			return 0;
+		}
+		int finalWidth = 0;
+		for (int currentCharacter = 0; currentCharacter < string.length(); currentCharacter++) {
+			int character = string.charAt(currentCharacter);
+			if (character > 255) {
+				character = 32;
+			}
+
+			if (character == '<') {
+				int end = string.indexOf(">", currentCharacter);
+				if (end != currentCharacter + 1) {
+					if (end > -1 && end != currentCharacter + 1 && end < string.length()) {
+						String effect = string.substring(currentCharacter + 1, end);
+
+						if (effect.startsWith(startImage)) {
+							finalWidth += 11;
+						}
+
+						currentCharacter = end;
+						continue;
+					}
+				}
+			}
+
+			if (character == '@' && currentCharacter + 4 < string.length()
+					&& string.charAt(currentCharacter + 4) == '@') {
+				textColor = getEffect(string.substring(currentCharacter + 1, currentCharacter + 4));
+				currentCharacter += 4;
+				continue;
+			}
+
+			finalWidth += charWidth[character];
+		}
+		return finalWidth;
+	}
+
+
+	/*public int getEffectStringWidth(String s) {
 		if(s == null) {
 			return 0;
 		}
@@ -319,31 +544,35 @@ public final class BitmapFont extends Rasterizer2D {
 			}
 		}
 		return width;
+	}*/
+	public int getCharacterWidth(int i) {
+		return charWidth[i & 0xff];
 	}
 
-	private void drawTypeface(byte[] mask, int x, int y, int width, int height, int color) {
+
+	private void drawTypeface(int character, int x, int y, int width, int height, int color) {
 		int destPos = x + y * Rasterizer2D.canvasWidth;
 		int destOffset = Rasterizer2D.canvasWidth - width;
 		int maskOffset = 0;
 		int maskPos = 0;
 		if(y < Rasterizer2D.clipStartY) {
-			final int d = Rasterizer2D.clipStartY - y;
-			height -= d;
+			final int offsetY = Rasterizer2D.clipStartY - y;
+			height -= offsetY;
 			y = Rasterizer2D.clipStartY;
-			maskPos += d * width;
-			destPos += d * Rasterizer2D.canvasWidth;
+			maskPos += offsetY * width;
+			destPos += offsetY * Rasterizer2D.canvasWidth;
 		}
 		if(y + height >= Rasterizer2D.clipEndY) {
 			height -= y + height - Rasterizer2D.clipEndY;
 		}
 		if(x < Rasterizer2D.clipStartX) {
-			final int d = Rasterizer2D.clipStartX - x;
-			width -= d;
+			final int offsetX = Rasterizer2D.clipStartX - x;
+			width -= offsetX;
 			x = Rasterizer2D.clipStartX;
-			maskPos += d;
-			destPos += d;
-			maskOffset += d;
-			destOffset += d;
+			maskPos += offsetX;
+			destPos += offsetX;
+			maskOffset += offsetX;
+			destOffset += offsetX;
 		}
 		if(x + width >= Rasterizer2D.clipEndX) {
 			final int d = x + width - Rasterizer2D.clipEndX;
@@ -352,7 +581,7 @@ public final class BitmapFont extends Rasterizer2D {
 			destOffset += d;
 		}
 		if(width > 0 && height > 0) {
-			copyRaster(mask, Rasterizer2D.canvasRaster, maskPos, destPos, maskOffset, destOffset, width, height, color);
+			copyRaster(typefaceMask[character], canvasRaster, maskPos, destPos, maskOffset, destOffset, width, height, color);
 		}
 	}
 
@@ -389,7 +618,7 @@ public final class BitmapFont extends Rasterizer2D {
 		}
 	}
 
-	private void drawTypeface(byte[] mask, int x, int y, int width, int height, int color, int alpha) {
+	private void drawTypefaceTrans(int character, int x, int y, int width, int height, int color, int alpha) {
 		int destPos = x + y * Rasterizer2D.canvasWidth;
 		int destOffset = Rasterizer2D.canvasWidth - width;
 		int maskOffset = 0;
@@ -420,11 +649,12 @@ public final class BitmapFont extends Rasterizer2D {
 			destOffset += d;
 		}
 		if(width > 0 && height > 0) {
-			copyRaster(mask, Rasterizer2D.canvasRaster, maskPos, destPos, maskOffset, destOffset, width, height, color, alpha);
+			copyRasterTrans(typefaceMask[character], Rasterizer2D.canvasRaster, maskPos, destPos, maskOffset, destOffset, width, height, color, alpha);
 		}
 	}
 
-	private void copyRaster(byte[] mask, int[] dest, int maskPos, int destPos, int maskOffset, int destOffset, int width, int height, int color, int alpha) {
+	private void copyRasterTrans(byte[] mask, int[] dest, int maskPos, int destPos,
+								 int maskOffset, int destOffset, int width, int height, int color, int alpha) {
 		color = ((color & 0xff00ff) * alpha & 0xff00ff00) + ((color & 0xff00) * alpha & 0xff0000) >> 8;
 		alpha = 256 - alpha;
 		for(int i2 = 0; i2 < height; i2++) {
@@ -440,15 +670,87 @@ public final class BitmapFont extends Rasterizer2D {
 		}
 	}
 
+	public static void copyRasterNew(int[] is, byte[] is_24_, int i, int i_25_, int i_26_, int i_27_, int i_28_,
+									 int i_29_, int i_30_) {
+		int i_31_ = -(i_27_ >> 2);
+		i_27_ = -(i_27_ & 0x3);
+		for (int i_32_ = -i_28_; i_32_ < 0; i_32_++) {
+			for (int i_33_ = i_31_; i_33_ < 0; i_33_++) {
+				if (is_24_[i_25_++] != 0) {
+					is[i_26_++] = i;
+				} else {
+					i_26_++;
+				}
+				if (is_24_[i_25_++] != 0) {
+					is[i_26_++] = i;
+				} else {
+					i_26_++;
+				}
+				if (is_24_[i_25_++] != 0) {
+					is[i_26_++] = i;
+				} else {
+					i_26_++;
+				}
+				if (is_24_[i_25_++] != 0) {
+					is[i_26_++] = i;
+				} else {
+					i_26_++;
+				}
+			}
+			for (int i_34_ = i_27_; i_34_ < 0; i_34_++) {
+				if (is_24_[i_25_++] != 0) {
+					is[i_26_++] = i;
+				} else {
+					i_26_++;
+				}
+			}
+			i_26_ += i_29_;
+			i_25_ += i_30_;
+		}
+	}
+
+	public void drawTypeFaceNew(int character, int x, int y, int width, int height, int shadowColor, boolean bool) {
+		int i_40_ = x + y * canvasWidth;
+		int i_41_ = canvasWidth - width;
+		int i_42_ = 0;
+		int i_43_ = 0;
+		if (y < clipStartY) {
+			int i_44_ = clipStartY - y;
+			height -= i_44_;
+			y = clipStartY;
+			i_43_ += i_44_ * width;
+			i_40_ += i_44_ * canvasWidth;
+		}
+		if (y + height > clipEndY) {
+			height -= y + height - clipEndY;
+		}
+		if (x < clipStartX) {
+			int i_45_ = clipStartX - x;
+			width -= i_45_;
+			x = clipStartX;
+			i_43_ += i_45_;
+			i_40_ += i_45_;
+			i_42_ += i_45_;
+			i_41_ += i_45_;
+		}
+		if (x + width > clipEndX) {
+			int i_46_ = x + width - clipEndX;
+			width -= i_46_;
+			i_42_ += i_46_;
+			i_41_ += i_46_;
+		}
+		if (width > 0 && height > 0) {
+			copyRasterNew(canvasRaster, typefaceMask[character], shadowColor, i_43_, i_40_, width, height, i_41_,
+					i_42_);
+		}
+	}
+
+
 	public void drawTooltip(String s, int x, int y, int color, int seed) {
 		if(s == null) {
 			return;
 		}
-		tooltipRandom.setSeed(seed);
 		int alpha = 192;
-		if(Constants.ANTI_BOT_ENABLED) {
-			alpha += (tooltipRandom.nextInt() & 0x1f);
-		}
 		y -= lineHeight;
 		for(int index = 0; index < s.length(); index++) {
 			if(s.charAt(index) == '@' && index + 4 < s.length() && s.charAt(index + 4) == '@') {
@@ -470,16 +772,126 @@ public final class BitmapFont extends Rasterizer2D {
 						return;
 					if(c >= typefaceHeight.length)
 						return;
-					drawTypeface(typefaceMask[c], x + typefaceHorizontalOffset[c] + 1, y + typefaceVerticalOffset[c] + 1, typefaceWidth[c], typefaceHeight[c], 0, 192);
-					drawTypeface(typefaceMask[c], x + typefaceHorizontalOffset[c], y + typefaceVerticalOffset[c], typefaceWidth[c], typefaceHeight[c], color, alpha);
+					drawTypefaceTrans(c, x + typefaceHorizontalOffset[c] + 1, y + typefaceVerticalOffset[c] + 1, typefaceWidth[c], typefaceHeight[c], 0, 192);
+					drawTypefaceTrans(c, x + typefaceHorizontalOffset[c], y + typefaceVerticalOffset[c], typefaceWidth[c], typefaceHeight[c], color, alpha);
 				}
 				x += charWidth[c];
-				if(Constants.ANTI_BOT_ENABLED) {
-					if((tooltipRandom.nextInt() & 3) == 0) {
-						x++;
-					}
-				}
 			}
 		}
+	}
+
+	public void setColorAndShadow(int color, int shadow) {
+		strikethroughColor = -1;
+		underlineColor = -1;
+		textShadowColor = defaultShadow = shadow;
+		textColor = defaultColor = color;
+		transparency = defaultTransparency = 256;
+		anInt4178 = 0;
+		anInt4175 = 0;
+	}
+
+	public boolean setTextEffects(String string) {
+		try {
+			if (string.startsWith(startColor)) {
+				String color = string.substring(4);
+				textColor = color.length() < 6 ? Color.decode(color).getRGB() : Integer.parseInt(color, 16);
+				return true;
+			} else if (string.equals(endColor)) {
+				textColor = defaultColor;
+				return true;
+			} else if (string.startsWith(startTransparency)) {
+				transparency = Integer.valueOf(string.substring(6));
+				return true;
+			} else if (string.equals(endTransparency)) {
+				transparency = defaultTransparency;
+				return true;
+			} else if (string.startsWith(startStrikethrough)) {
+				strikethroughColor = Integer.valueOf(string.substring(4));
+				return true;
+			} else if (string.equals(defaultStrikethrough)) {
+				strikethroughColor = 8388608;
+				return true;
+			} else if (string.equals(endStrikethrough)) {
+				strikethroughColor = -1;
+				return true;
+			} else if (string.startsWith(startUnderline)) {
+				underlineColor = Integer.valueOf(string.substring(2));
+				return true;
+			} else if (string.equals(startDefaultUnderline)) {
+				underlineColor = 0;
+				return true;
+			} else if (string.equals(endUnderline)) {
+				underlineColor = -1;
+				return true;
+			} else if (string.startsWith(startShadow)) {
+				textShadowColor = Integer.valueOf(string.substring(5));
+				return true;
+			} else if (string.equals(startDefaultShadow)) {
+				textShadowColor = 0;
+				return true;
+			} else if (string.equals(endShadow)) {
+				textShadowColor = defaultShadow;
+				return true;
+			} else if (string.equals(lineBreak)) {
+				setDefaultTextEffectValues(defaultColor, defaultShadow, defaultTransparency);
+				return true;
+			}
+		}catch (Exception e) {
+			//e.printStackTrace();
+			//System.out.println("ERROR: "+string);
+		}
+		return false;
+	}
+
+	public void setTrans(int shadow, int color, int trans) {
+		textShadowColor = defaultShadow = shadow;
+		textColor = defaultColor = color;
+		transparency = defaultTransparency = trans;
+	}
+
+	public void setDefaultTextEffectValues(int color, int shadow, int trans) {
+		strikethroughColor = -1;
+		underlineColor = -1;
+		textShadowColor = defaultShadow = shadow;
+		textColor = defaultColor = color;
+		transparency = defaultTransparency = trans;
+		anInt4178 = 0;
+		anInt4175 = 0;
+	}
+
+	static {
+		startTransparency = "trans=";
+		startStrikethrough = "str=";
+		startDefaultShadow = "shad";
+		startColor = "col=";
+		lineBreak = "br";
+		defaultStrikethrough = "str";
+		endUnderline = "/u";
+		startImage = "img=";
+		startShadow = "shad=";
+		startUnderline = "u=";
+		endColor = "/col";
+		startDefaultUnderline = "u";
+		endTransparency = "/trans";
+		aRSString_4143 = Integer.toString(100);
+		aRSString_4135 = "nbsp";
+		aRSString_4169 = "reg";
+		aRSString_4165 = "times";
+		aRSString_4162 = "shy";
+		aRSString_4163 = "copy";
+		endEffect = "gt";
+		aRSString_4147 = "euro";
+		startEffect = "lt";
+		defaultTransparency = 256;
+		defaultShadow = -1;
+		anInt4175 = 0;
+		textShadowColor = -1;
+		textColor = 0;
+		defaultColor = 0;
+		strikethroughColor = -1;
+		splitTextStrings = new String[100];
+		underlineColor = -1;
+		anInt4178 = 0;
+		transparency = 256;
 	}
 }

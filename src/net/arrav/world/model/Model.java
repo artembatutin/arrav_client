@@ -133,7 +133,7 @@ public final class Model extends Entity {
 	}
 	
 	
-	public static void method459(int length, OnDemandFetcher odf) {
+	public static void initalize(int length, OnDemandFetcher odf) {
 		newModelHeader = new byte[length][];
 		newestModelHeader = new byte[length][];
 		osrsModelHeader = new byte[length][];

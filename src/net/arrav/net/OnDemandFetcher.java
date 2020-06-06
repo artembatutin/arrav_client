@@ -184,7 +184,8 @@ public final class OnDemandFetcher implements Runnable {
 		}
 		
 
-		Buffer buffer = new Buffer(Constants.JAGGRAB_ENABLED ? archive.getFile("map_index") : DataToolkit.readFile(SignLink.getCacheDir() + "map_index"));
+		boolean test = false;
+		Buffer buffer = new Buffer(Constants.JAGGRAB_ENABLED ? archive.getFile("map_index") : DataToolkit.readFile(SignLink.getCacheDir() + (test ? "map_index2" : "map_index")));
 		int bufferLength = buffer.getUShort();
 		int combinedLen = bufferLength + CustomMaps.VALUES.length;
 		regionFiles = new int[combinedLen];
@@ -195,6 +196,7 @@ public final class OnDemandFetcher implements Runnable {
 				regionFiles[i] = buffer.getUShort();
 				regionLandFiles[i] = buffer.getUShort();
 				regionObjectFiles[i] = buffer.getUShort();
+				if(!test)
 				if (buffer.getBoolean()) {
 					newerMap[regionLandFiles[i]] = true;
 					newerMap[regionObjectFiles[i]] = true;

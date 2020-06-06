@@ -30,7 +30,7 @@ public class ProtocolLoader implements CacheLoader {
 	public void run(Client client) {
 		client.onDemandRequester = new OnDemandFetcher();
 		client.onDemandRequester.start(archive, client);
-		Model.method459(client.onDemandRequester.getModelCount(), client.onDemandRequester);
+		Model.initalize(client.onDemandRequester.getModelCount(), client.onDemandRequester);
 		Texture.init(client.onDemandRequester);
 		
 		//MAC address

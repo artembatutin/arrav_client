@@ -4,6 +4,8 @@ import net.arrav.Constants;
 import net.arrav.util.io.Buffer;
 import net.arrav.cache.CacheArchive;
 
+import java.util.Arrays;
+
 public final class UnderlayFloorType {
 
 	public static UnderlayFloorType[] cache;
@@ -18,7 +20,7 @@ public final class UnderlayFloorType {
 	public int brightness;
 	private int hsl;
 
-	private static int[] FLOOR_TEXTURE = {
+	public static int[] FLOOR_TEXTURE = {
 			-1, 600, 301, 301, -1, -1, -1, 505, -1, 441,//0-9
 			-1, -1, -1, 512, -1, 154, -1, -1, -1, -1,//10-19
 			-1, 154, -1, -1, -1, 512, -1, -1, -1, -1,//20-29
@@ -56,16 +58,17 @@ public final class UnderlayFloorType {
 				cache[i] = new UnderlayFloorType();
 			}
 			cache[i].read(buffer);
+			Arrays.fill(FLOOR_TEXTURE, 512);
 			if(FLOOR_TEXTURE[i] != -1) {
 				cache[i].texture = FLOOR_TEXTURE[i];
 			}
-			if(i == 152) {
+			/*if(i == 152) {
 				cache[i].texture = 9;
 			} else if(i == 41) {
 				cache[i].texture = 58;
 			} else if(i == 94) {
 				cache[i].texture = 529;
-			}
+			}*/
 		}
 		FLOOR_TEXTURE = null;
 	}
@@ -79,7 +82,8 @@ public final class UnderlayFloorType {
 				rgb = buffer.getUMedium();
 				calculateValues(rgb);
 			} else if(code == 2) {
-				texture = buffer.getUShort();
+				texture =
+						buffer.getUShort();
 			} else if(code == 3) {
 				buffer.getUShort();
 			} else if(code == 4) {
@@ -195,7 +199,7 @@ public final class UnderlayFloorType {
 		hsl = hslCode(hr, sr, lr);
 	}
 
-	private int hslCode(int h, int s, int l) {
+	public static int hslCode(int h, int s, int l) {
 		if(l > 179) {
 			s /= 2;
 		}

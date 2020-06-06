@@ -2,6 +2,7 @@ package net.arrav.cache.unit;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.arrav.Constants;
+import net.arrav.util.ReflectionUtil;
 import net.arrav.world.model.Model;
 import net.arrav.net.SignLink;
 import net.arrav.util.io.Buffer;
@@ -10,7 +11,11 @@ import net.arrav.cache.CacheArchive;
 import net.arrav.graphic.font.BitmapFont;
 import net.arrav.util.DataToolkit;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Map;
 
 public final class Interface {
 
@@ -143,10 +148,18 @@ public final class Interface {
 		clanWars(fonts);
 		addPestControlRewardWidget(fonts);
 		/*try {
-			BufferedWriter w = new BufferedWriter(new FileWriter(new File("./int_free.txt")));
+			BufferedWriter w = new BufferedWriter(new FileWriter(new File("./int_values.txt")));
 			for(int i = 0; i < cache.length; i++) {
-				if(cache[i] == null) {
-					w.write(i + "");
+				if(cache[i] != null) {
+					Map<String, String> values = ReflectionUtil.getValues(cache[i]);
+					values.forEach(((s, s2) -> {
+						try {
+							w.write(s+": "+s2);
+							w.newLine();
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					}));
 					w.newLine();
 				}
 			}

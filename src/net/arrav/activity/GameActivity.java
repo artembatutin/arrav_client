@@ -3,6 +3,7 @@ package net.arrav.activity;
 import net.arrav.Config;
 import net.arrav.Constants;
 import net.arrav.activity.ui.UIComponent;
+import net.arrav.activity.ui.util.CombatOverlayHandler;
 import net.arrav.world.Scene;
 import net.arrav.world.emitter.Particle;
 import net.arrav.graphic.Rasterizer2D;
@@ -1347,6 +1348,8 @@ public class GameActivity extends Activity {
 		}
 		updateEntities();
 		drawHeadIcon();
+		client.combatOverlayHandler.displayEntityFeed();
+		client.messageFeedHandler.displayKillFeed();
 		client.method37();
 		client.drawFadeTransition();
 		client.cameraLocationX = camx;
@@ -1815,7 +1818,6 @@ public class GameActivity extends Activity {
 
 
 		if(Config.def.fps()) {
-			System.out.println(off);
 			smallFont.drawRightAlignedString("Fps: " + client.fps, off, (line += 15), 0xffff00);
 			final Runtime runtime = Runtime.getRuntime();
 			final int mem = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);

@@ -135,7 +135,7 @@ public final class LocationType {
 	public static void unpack(CacheArchive archive) {
 		
 		final Buffer idx;
-		if(Constants.USER_HOME_FILE_STORE || true) {
+		if(Constants.USER_HOME_FILE_STORE  || true) {
 			data = new Buffer(archive.getFile("loc.dat"));
 			idx = new Buffer(archive.getFile("loc.idx"));
 		} else {

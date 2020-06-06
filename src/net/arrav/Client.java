@@ -52,6 +52,7 @@ import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.zip.CRC32;
 
@@ -205,6 +206,8 @@ public class Client extends ClientEngine {
 	public MouseTracker mouseDetection;
 	public CollisionMap[] collisionMaps;
 	public TaskHandler taskHandler;
+	public CombatOverlayHandler combatOverlayHandler;
+	public MessageFeedHandler messageFeedHandler;
 	public BitmapImage mapFlag;
 	public BitmapImage mapArrow;
 	public BitmapImage scrollBarTop;
@@ -225,6 +228,7 @@ public class Client extends ClientEngine {
 	public PaletteImage[] runes;
 	public PaletteImage[] mapScenes;
 	public NPC[] npcList;
+	public Entity currentTarget;
 	public Player localPlayer;
 	public Player[] playerList;
 	public Scene scene;
@@ -1649,15 +1653,21 @@ public class Client extends ClientEngine {
 								System.out.println("null image id:"+childWidget.id+" parent:"+childWidget.parent);
 						}
 					}
-					if(image != null) {
-						if(childWidget.id == autocastId && childWidget.id == spellId && anIntArray1045[108] != 0)
-							spriteCache.get(2029).drawImage(xPos-3, yPos-3);
-						if(spellSelected == 1 && childWidget.id == spellId && spellId != 0 && image != null) {
-							image.drawImage(xPos, yPos, 50);
-						} else if(childWidget.drawsAlpha)
-							image.drawImage(xPos, yPos, 100 + childWidget.alpha);
-						else
-							image.drawImage(xPos, yPos);
+
+					if(Config.def.sprite()) {
+						Rasterizer2D.drawRectangle(xPos, yPos, image.imageWidth, image.imageHeight, 0x000000);
+						smallFont.drawLeftAlignedString(childWidget.id + " "+childWidget.spriteID, xPos, yPos + smallFont.lineHeight, 0x000000);
+					} else {
+						if (image != null) {
+							if (childWidget.id == autocastId && childWidget.id == spellId && anIntArray1045[108] != 0)
+								spriteCache.get(2029).drawImage(xPos - 3, yPos - 3);
+							if (spellSelected == 1 && childWidget.id == spellId && spellId != 0 && image != null) {
+								image.drawImage(xPos, yPos, 50);
+							} else if (childWidget.drawsAlpha)
+								image.drawImage(xPos, yPos, 100 + childWidget.alpha);
+							else
+								image.drawImage(xPos, yPos);
+						}
 					}
 				} else if(childWidget.type == Constants.WIDGET_MODEL) {
 					final int centerX = Rasterizer3D.viewport.centerX;
@@ -3247,6 +3257,8 @@ public class Client extends ClientEngine {
 				//flagged = socketStream.read() == 1;
 				titleMessage = "";
 				taskHandler = new TaskHandler(this);
+				combatOverlayHandler = new CombatOverlayHandler(this);
+				messageFeedHandler = new MessageFeedHandler(this);
 				aLong1220 = 0L;
 				anInt1022 = 0;
 				mouseDetection = new MouseTracker(this);
@@ -5821,6 +5833,39 @@ public class Client extends ClientEngine {
 					pktType = -1;
 					return true;
 
+				case 174:
+						int targetIndex = inBuffer.getSShort();
+						int targetType = inBuffer.getSByte();
+						if(targetType == 1) {
+							combatOverlayHandler.pushFeed("", -1,-1);
+							pktType = -1;
+							return true;
+						}else if (targetType == 2) { /* DONT READ DAMAGE LIST FOR PLRS */
+							currentTarget = targetIndex < playerList.length ? playerList[targetIndex] : null;
+						} else {
+							currentTarget = targetIndex < npcList.length ? npcList[targetIndex] : null;
+						}
+
+						if(currentTarget == null) {
+							combatOverlayHandler.pushFeed("", -1,-1);
+							pktType = -1;
+							return true;
+						}
+
+						String oppName = currentTarget instanceof Player ? ((Player)currentTarget).name : ((NPC)currentTarget).type.name;
+						int max = ((Mobile) currentTarget).maxHealth;
+						int min = ((Mobile) currentTarget).currentHealth;
+						combatOverlayHandler.pushFeed(oppName, min, max);
+					pktType = -1;
+					return true;
+
+				case 175:
+					String message = inBuffer.getLine();
+					String color = inBuffer.getLine();
+					messageFeedHandler.pushKill(message, color);
+					pktType = -1;
+					return true;
+
 				case 126:
 					String text = inBuffer.getLine();
 					final int frame = inBuffer.getUShortMinus128();
@@ -6319,7 +6364,6 @@ public class Client extends ClientEngine {
 
 			}
 			SignLink.reportError("T1 - " + pktType + "," + pktSize + " - " + anInt842 + "," + anInt843);
-			logOut();
 		} catch(final IOException _ex) {
 			dropClient();
 			_ex.printStackTrace();
@@ -7240,6 +7284,21 @@ public class Client extends ClientEngine {
 						} else if(chatInput.equals("::idx")) {
 							Config.def.idx(!Config.def.idx());
 							pushMessage("--> index debug " + (Config.def.idx() ? "on" : "off"), 0, "");
+						} else if(chatInput.startsWith("::text")) {
+							try {
+								final String[] args = chatInput.split(" ");
+								Arrays.fill(UnderlayFloorType.FLOOR_TEXTURE, (Integer.parseInt(args[1])));
+								for(int i23 = 0; i23 < UnderlayFloorType.cache.length; i23++) {
+									if (UnderlayFloorType.FLOOR_TEXTURE[i23] != -1) {
+										UnderlayFloorType.cache[i23].texture = UnderlayFloorType.FLOOR_TEXTURE[i23];
+									}
+								}
+							} catch(final Exception e) {
+								pushMessage("Error changin texture", 0, "");
+							}
+						} else if(chatInput.equals("::sprite")) {
+							Config.def.setSprite(!Config.def.sprite());
+							pushMessage("--> sprite debug " + (Config.def.sprite() ? "on" : "off"), 0, "");
 						} else if(chatInput.equals("::data")) {
 							final Runtime runtime = Runtime.getRuntime();
 							final int mem = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
