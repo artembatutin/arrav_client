@@ -206,6 +206,7 @@ public class Client extends ClientEngine {
 	public MouseTracker mouseDetection;
 	public CollisionMap[] collisionMaps;
 	public TaskHandler taskHandler;
+	public ExpOrbHandler exporbHandler;
 	public CombatOverlayHandler combatOverlayHandler;
 	public MessageFeedHandler messageFeedHandler;
 	public BitmapImage mapFlag;
@@ -3257,6 +3258,7 @@ public class Client extends ClientEngine {
 				//flagged = socketStream.read() == 1;
 				titleMessage = "";
 				taskHandler = new TaskHandler(this);
+				exporbHandler = new ExpOrbHandler();
 				combatOverlayHandler = new CombatOverlayHandler(this);
 				messageFeedHandler = new MessageFeedHandler(this);
 				aLong1220 = 0L;
@@ -3527,6 +3529,9 @@ public class Client extends ClientEngine {
 		}
 		System.gc();
 		taskHandler = null;
+		exporbHandler = null;
+		combatOverlayHandler = null;
+		messageFeedHandler = null;
 		updateWindow();
 		Texture.clear();
 		LocationType.defCache.clear();
@@ -5114,6 +5119,7 @@ public class Client extends ClientEngine {
 					final int skill = inBuffer.getUByte();
 					final int exp = inBuffer.getMixEndInt();
 					final int level = inBuffer.getInt();
+					final boolean initial = inBuffer.getBoolean();
 					final int dif = exp - currentExp[skill];
 					boolean first = currentExp[skill] == 0;
 					currentExp[skill] = exp;
@@ -5124,6 +5130,10 @@ public class Client extends ClientEngine {
 							maxStats[skill] = k20 + 2;
 						}
 					}
+					if (!initial && skill != -1 && skill != 99) {
+						exporbHandler.orbs[skill].receivedExperience();
+					}
+
 					OrbHandler.updateOrbs(skill);
 					if(dif > 0 && !first)
 						CounterHandler.add(new CounterHandler.SkillUpdate(skill, dif));
@@ -9370,5 +9380,10 @@ public class Client extends ClientEngine {
 			BIT_MASK[k] = points - 1;
 			points += points;
 		}
+	}
+
+	public boolean hover(int x1, int y1, BitmapImage drawnSprite) {
+		return super.mouseX >= x1 && super.mouseX <= x1 + drawnSprite.imageWidth && super.mouseY >= y1
+				&& super.mouseY <= y1 + drawnSprite.imageHeight;
 	}
 }

@@ -1350,6 +1350,7 @@ public class GameActivity extends Activity {
 		drawHeadIcon();
 		client.combatOverlayHandler.displayEntityFeed();
 		client.messageFeedHandler.displayKillFeed();
+		client.exporbHandler.process();
 		client.method37();
 		client.drawFadeTransition();
 		client.cameraLocationX = camx;

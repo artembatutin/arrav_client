@@ -91,7 +91,7 @@ public class Config {
 	 * View toggle configurations
 	 */
 	private boolean orbs = true;
-	private boolean skillOrbs = false;
+	private boolean skillOrbs = true;
 
 	/*
 	 * Style configurations

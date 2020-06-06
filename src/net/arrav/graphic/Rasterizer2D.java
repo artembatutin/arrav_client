@@ -282,6 +282,38 @@ public class Rasterizer2D {
 		}
 	}
 
+	public static void drawTransparentBox(int leftX, int topY, int width, int height, int rgbColour, int opacity) {
+		if (leftX < clipStartX) {
+			width -= clipStartX - leftX;
+			leftX = clipStartX;
+		}
+		if (topY < clipStartY) {
+			height -= clipStartY - topY;
+			topY = clipStartY;
+		}
+		if (leftX + width > clipEndX)
+			width = clipEndX - leftX;
+		if (topY + height > clipEndY)
+			height = clipEndY - topY;
+		int transparency = 256 - opacity;
+		int red = (rgbColour >> 16 & 0xff) * opacity;
+		int green = (rgbColour >> 8 & 0xff) * opacity;
+		int blue = (rgbColour & 0xff) * opacity;
+		int leftOver = canvasWidth - width;
+		int pixelIndex = leftX + topY * canvasWidth;
+		for (int rowIndex = 0; rowIndex < height; rowIndex++) {
+			for (int columnIndex = 0; columnIndex < width; columnIndex++) {
+				int otherRed = (canvasRaster[pixelIndex] >> 16 & 0xff) * transparency;
+				int otherGreen = (canvasRaster[pixelIndex] >> 8 & 0xff) * transparency;
+				int otherBlue = (canvasRaster[pixelIndex] & 0xff) * transparency;
+				int transparentColour = ((red + otherRed >> 8) << 16) + ((green + otherGreen >> 8) << 8)
+						+ (blue + otherBlue >> 8);
+				canvasRaster[pixelIndex++] = transparentColour;
+			}
+			pixelIndex += leftOver;
+		}
+	}
+
 	/**
 	 * Draws a non-filled rectangle.
 	 */
