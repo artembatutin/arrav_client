@@ -10,15 +10,22 @@ import net.arrav.util.io.Buffer;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.DataBufferInt;
-import java.awt.image.PixelGrabber;
+import java.awt.image.*;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public final class BitmapImage extends Rasterizer2D {
+
+	private static final ColorModel COLOR_MODEL = new DirectColorModel(32, 0xff0000, 0xff00, 0xff);
+
+	public static Graphics2D createGraphics(int[] pixels, int width, int height) {
+		return new java.awt.image.BufferedImage(COLOR_MODEL,
+				java.awt.image.Raster.createWritableRaster(COLOR_MODEL.createCompatibleSampleModel(width, height),
+						new java.awt.image.DataBufferInt(pixels, width * height), null),
+				false, new java.util.Hashtable<Object, Object>()).createGraphics();
+	}
 
 	public boolean alpha;
 	public int imageRaster[];

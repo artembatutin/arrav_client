@@ -1,5 +1,11 @@
 package net.arrav.graphic;
 
+import net.arrav.graphic.img.BitmapImage;
+
+import java.awt.*;
+import java.awt.geom.Arc2D;
+import java.awt.image.Raster;
+
 /**
  * Handles 2D graphic components drawing.
  */
@@ -480,6 +486,50 @@ public class Rasterizer2D {
 		}
 	}
 
+	public static void draw_arc(int x, int y, int width, int height, int stroke, int start, int sweep, int color,
+								int alpha, int closure, boolean fill) {
+		Graphics2D graphics = BitmapImage.createGraphics(canvasRaster, canvasWidth, canvasHeight);
+		graphics.setColor(new Color((color >> 16 & 0xff), (color >> 8 & 0xff), (color & 0xff),
+				((alpha >= 256 || alpha < 0) ? 255 : alpha)));
+
+		RenderingHints render = new RenderingHints(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		render.put(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);// fix the 'jittering'
+
+		graphics.setRenderingHints(render);
+		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
+		if (!fill) {
+			graphics.setStroke(new BasicStroke((Math.max(stroke, 1))));
+		}
+		// Closure types - OPEN(0), CHORD(1), PIE(2)
+		Arc2D.Double arc = new Arc2D.Double(x + stroke, y + stroke, width, height, start, sweep, closure);
+		if (fill) {
+			graphics.fill(arc);
+		} else {
+			graphics.draw(arc);
+		}
+	}
+
+	public static void drawInnerShadow(int x, int y, int width, int height, int color, int alpha, int weight) {
+		int fade_rate = alpha / weight;
+		for (int index = 0; index < weight; index++) {
+			drawHorizontalLine(x + index, y + index, width - (index * 2), color, alpha - (index * fade_rate));
+			drawHorizontalLine(x + index, y + height - index, width - (index * 2), color, alpha - (index * fade_rate));
+			drawVerticalLine(x + index, y + index + 1, height - (index * 2) - 1, color, alpha - (index * fade_rate));
+			drawVerticalLine(x + width - index - 1, y + index + 1, height - (index * 2) - 1, color, alpha - (index * fade_rate));
+		}
+	}
+
+
+	public static void drawDropShadow(int x, int y, int width, int height, int color, int alpha, int weight) {
+		int fade_rate = alpha / weight;
+		for (int index = 0; index < weight; index++) {
+			drawHorizontalLine(x - index, y - index, width + (index * 2), color, alpha - (index * fade_rate));
+			drawHorizontalLine(x - index, y + height + index, width + (index * 2), color, alpha - (index * fade_rate));
+			drawVerticalLine(x - index, y - index + 1, height + (index * 2) - 1, color, alpha - (index * fade_rate));
+			drawVerticalLine(x + width + index - 1, y - index + 1, height + (index * 2) - 1, color, alpha - (index * fade_rate));
+		}
+	}
+
 	public static void fillRoundedRectangle(int x, int y, int width, int height, int radius, int color) {
 		if(x >= clipEndX || y >= clipEndY || x + width < clipStartX || y + height < clipStartY) {
 			return;
@@ -673,6 +723,417 @@ public class Rasterizer2D {
 		clipEndX = bounds[2];
 		clipEndY = bounds[3];
 	}
+
+
+
+	public static void fillGradient(int drawX, int drawY, int width, int height, int startColor, int endColor, int alpha) {
+		int offsetY = 0;
+		int step = 0x10000 / height;
+
+		if (drawX < clipStartX) {
+			width -= clipStartX - drawX;
+			drawX = clipStartX;
+		}
+
+		if (drawY < clipStartY) {
+			offsetY += (clipStartY - drawY) * step;
+			height -= clipStartY - drawY;
+			drawY = clipStartY;
+		}
+
+		if (drawX + width > clipEndX)
+			width = clipEndX - drawX;
+
+		if (drawY + height > clipEndY)
+			height = clipEndY - drawY;
+
+		int dx = canvasWidth - width;
+		int reverseAlpha = 256 - alpha;
+		int pixel = drawX + drawY * canvasWidth;
+		for (int x = -height; x < 0; x++) {
+			int start = 0x10000 - offsetY >> 8;
+			int end = offsetY >> 8;
+			int gradient = ((startColor & 0xff00ff) * start + (endColor & 0xff00ff) * end & 0xff00ff00) + ((startColor & 0xff00) * start + (endColor & 0xff00) * end & 0xff0000) >>> 8;
+			int colour = ((gradient & 0xff00ff) * alpha >> 8 & 0xff00ff) + ((gradient & 0xff00) * alpha >> 8 & 0xff00);
+			for (int y = -width; y < 0; y++) {
+				int pixels1 = canvasRaster[pixel];
+				pixels1 = ((pixels1 & 0xff00ff) * reverseAlpha >> 8 & 0xff00ff) + ((pixels1 & 0xff00) * reverseAlpha >> 8 & 0xff00);
+				canvasRaster[pixel++] = colour + pixels1;
+			}
+			pixel += dx;
+			offsetY += step;
+		}
+	}
+
+	public static void drawAlphaGradient(int x, int y, int gradientWidth, int gradientHeight, int startColor,
+										 int endColor, int alpha) {
+		int k1 = 0;
+		int l1 = 0x10000 / gradientHeight;
+		if (x < clipStartX) {
+			gradientWidth -= clipStartX - x;
+			x = clipStartX;
+		}
+		if (y < clipStartY) {
+			k1 += (clipStartY - y) * l1;
+			gradientHeight -= clipStartY - y;
+			y = clipStartY;
+		}
+		if (x + gradientWidth > clipEndX)
+			gradientWidth = clipEndX - x;
+		if (y + gradientHeight > clipEndY)
+			gradientHeight = clipEndY - y;
+		int i2 = canvasWidth - gradientWidth;
+		int result_alpha = 256 - alpha;
+		int total_pixels = x + y * canvasWidth;
+		for (int k2 = -gradientHeight; k2 < 0; k2++) {
+			int gradient1 = 0x10000 - k1 >> 8;
+			int gradient2 = k1 >> 8;
+			int gradient_color = ((startColor & 0xff00ff) * gradient1 + (endColor & 0xff00ff) * gradient2 & 0xff00ff00)
+					+ ((startColor & 0xff00) * gradient1 + (endColor & 0xff00) * gradient2 & 0xff0000) >>> 8;
+			int color = ((gradient_color & 0xff00ff) * alpha >> 8 & 0xff00ff)
+					+ ((gradient_color & 0xff00) * alpha >> 8 & 0xff00);
+			for (int k3 = -gradientWidth; k3 < 0; k3++) {
+				int colored_pixel = canvasRaster[total_pixels];
+				colored_pixel = ((colored_pixel & 0xff00ff) * result_alpha >> 8 & 0xff00ff)
+						+ ((colored_pixel & 0xff00) * result_alpha >> 8 & 0xff00);
+				canvasRaster[total_pixels++] = color + colored_pixel;
+			}
+			total_pixels += i2;
+			k1 += l1;
+		}
+	}
+
+	public static void drawOutlinedRectangle(int x, int y, int w, int h, int outline, int fill, int alpha) {
+		fillRectangle(x,y,w,h,fill, alpha);
+		drawRectangle(x,y,w,h,outline);
+	}
+
+	public static void drawOutlinedGradientRectangle(int x, int y, int w, int h, int outline, int start, int finish, int alpha) {
+		fillGradient(x,y,w,h,start,finish,alpha);
+		drawRectangle(x,y,w,h,outline);
+	}
+	public static void drawOutlinedRoundedGradientRectangle(int x, int y, int w, int h, int outline, int start, int finish, int alpha) {
+		fillRoundedGradientRectangle(x,y,w,h,start,finish,alpha,true,false);
+		/*drawRoundedRectangle(x,y,w,h,outline,255,false,false);
+        drawRoundedRectangle(x-1,y-1,w+2,h+2,outline,255, false,false);*/
+		drawRoundedGlowBorder(x,y,w,h,outline,255,3,true);
+
+	}
+
+	public static void drawGlowBorder(int x, int y, int w, int h, int color, int maxOpacity, int thickness, boolean inset) {
+		for(int i = 0; i < thickness; i++) {
+			method338(y+i, h-i*2, (int)((float)maxOpacity/thickness*(!inset ? i : thickness-i)), color, w-i*2, x+i);
+		}
+	}
+	public static void drawRoundedGlowBorder(int x, int y, int w, int h, int color, int maxOpacity, int thickness, boolean inset) {
+		for(int i = 0; i < thickness; i++) {
+			drawRoundedRectangle(x+i, y+i, w-i*2, h-i*2, color, (int)((float)maxOpacity/thickness*(!inset ? i : thickness-i)), false, false);
+		}
+	}
+
+
+	public static void fillRoundedGradientRectangle(int x, int y, int width, int height, int color, int color2, int alpha, boolean filled, boolean shadowed) {
+		if (width <= 0) {
+			return;
+		}
+		if (shadowed) {
+			drawRoundedRectangle(x + 1, y + 1, width, height, 0, alpha, filled, false);
+		}
+		if (alpha == -1) {
+			if (filled) {
+
+				drawHorizontalLine(x + 2, y + 1, width - 4, color);
+				drawHorizontalLine(x + 2, y + height - 2, width - 4, color2);
+				fillGradient(x + 1, y + 2, width - 2, height - 4, color, color2, alpha);
+			}
+			// drawHorizontal(worldX + 2, worldY, width - 4, color);
+			// drawHorizontal(worldX + 2, worldY + height - 1, width - 4, color2);
+
+			drawVerticalLine(y+2, color, height-4, x);
+
+			drawVerticalLine(y+ width -1, color, height -4, x+width -1);
+
+			drawHorizontalGradient(x, y+2, 1,height-4, color, color2);
+			drawHorizontalGradient(x+width-1, y+width-1, 1,height-4, color, color2);
+
+
+
+			fillRectangle(x + 1, y + 1, 1, 1, color);
+			fillRectangle(x + width - 2, y + 1, 1, 1, color);
+			fillRectangle(x + width - 2, y + height - 2, 1, 1, color);
+			fillRectangle(x + 1, y + height - 2, 1, 1, color);
+		} else {
+			if (filled) {
+				drawHorizontalLine(x + 2, y + 1, width - 4, color, alpha);
+				drawHorizontalLine(x + 2, y + height - 2, width - 4, color2, alpha);
+				fillGradient(x + 1, y + 2, width - 2, height - 4, color, color2, alpha);
+			}
+			drawHorizontalLine(x + 2, y, width - 4, color, alpha);
+			drawHorizontalLine(x + 2, y + height - 1, width - 4, color2, alpha);
+
+			drawVerticalLine(color, x, alpha, y+2, height -4);
+			drawVerticalLine(color, x + width -1, alpha, y+2, height -4);
+
+			// Raster.drawHorizontalGradient(worldX, worldY+2, 1,height-4, color, color2);
+			//  Raster.drawHorizontalGradient(worldX+width-1, worldY+2, 1,height-4, color, color2);
+
+
+			fillRectangle(x + 1, y + 1, 1, 1, color, alpha);
+			fillRectangle(x + width - 2, y + 1, 1, 1, color, alpha);
+			fillRectangle(x + width - 2, y + height - 2, 1, 1, color, alpha);
+			fillRectangle(x + 1, y + height - 2, 1, 1, color, alpha);
+		}
+	}
+
+	public static void drawOutlinedRoundedRectangle(int x, int y, int w, int h, int outline, int fill, int alpha) {
+		drawRoundedRectangle(x,y,w,h,fill,alpha,true,false);
+		drawRoundedRectangle(x,y,w,h,outline,255, false,false);
+	}
+
+	public static void drawPixels(int i, int j, int k, int l, int i1) {
+		if (k < clipStartX) {
+			i1 -= clipStartX - k;
+			k = clipStartX;
+		}
+		if (j < clipStartY) {
+			i -= clipStartY - j;
+			j = clipStartY;
+		}
+		if (k + i1 > clipEndX)
+			i1 = clipEndX - k;
+		if (j + i > clipEndY)
+			i = clipEndY - j;
+		int k1 = canvasWidth - i1;
+		int l1 = k + j * canvasWidth;
+		for (int i2 = -i; i2 < 0; i2++) {
+			for (int j2 = -i1; j2 < 0; j2++)
+				canvasRaster[l1++] = l;
+
+			l1 += k1;
+		}
+
+	}
+
+
+	public static void drawRoundedRectangle(int x, int y, int width, int height, int color, int alpha, boolean filled,
+											boolean shadowed) {
+		if (shadowed) {
+			drawRoundedRectangle(x + 1, y + 1, width, height, 0, alpha, filled, false);
+		}
+		if (alpha == -1) {
+			if (filled) {
+				method339(y + 1, color, width - 4, x + 2);
+				method339(y + height - 2, color, width - 4, x + 2);
+				drawPixels(height - 4, y + 2, x + 1, color, width - 2);
+			}
+			method339(y, color, width - 4, x + 2);
+			method339(y + height - 1, color, width - 4, x + 2);
+			method341(y + 2, color, height - 4, x);
+			method341(y + 2, color, height - 4, x + width - 1);
+			drawPixels(1, y + 1, x + 1, color, 1);
+			drawPixels(1, y + 1, x + width - 2, color, 1);
+			drawPixels(1, y + height - 2, x + width - 2, color, 1);
+			drawPixels(1, y + height - 2, x + 1, color, 1);
+		} else if (alpha != -1) {
+			if (filled) {
+				method340(color, width - 4, y + 1, alpha, x + 2);
+				method340(color, width - 4, y + height - 2, alpha, x + 2);
+				method335(color, y + 2, width - 2, height - 4, alpha, x + 1);
+			}
+			method340(color, width - 4, y, alpha, x + 2);
+			method340(color, width - 4, y + height - 1, alpha, x + 2);
+			method342(color, x, alpha, y + 2, height - 4);
+			method342(color, x + width - 1, alpha, y + 2, height - 4);
+			method335(color, y + 1, 1, 1, alpha, x + 1);
+			method335(color, y + 1, 1, 1, alpha, x + width - 2);
+			method335(color, y + height - 2, 1, 1, alpha, x + 1);
+			method335(color, y + height - 2, 1, 1, alpha, x + width - 2);
+		}
+	}
+
+	public static void method335(int i, int j, int k, int l, int i1, int k1) {
+		if (k1 < clipStartX) {
+			k -= clipStartX - k1;
+			k1 = clipStartX;
+		}
+		if (j < clipStartY) {
+			l -= clipStartY - j;
+			j = clipStartY;
+		}
+		if (k1 + k > clipEndX)
+			k = clipEndX - k1;
+		if (j + l > clipEndY)
+			l = clipEndY - j;
+		int l1 = 256 - i1;
+		int i2 = (i >> 16 & 0xff) * i1;
+		int j2 = (i >> 8 & 0xff) * i1;
+		int k2 = (i & 0xff) * i1;
+		int k3 = canvasWidth - k;
+		int l3 = k1 + j * canvasWidth;
+		for (int i4 = 0; i4 < l; i4++) {
+			for (int j4 = -k; j4 < 0; j4++) {
+				int l2 = (canvasRaster[l3] >> 16 & 0xff) * l1;
+				int i3 = (canvasRaster[l3] >> 8 & 0xff) * l1;
+				int j3 = (canvasRaster[l3] & 0xff) * l1;
+				int k4 = ((i2 + l2 >> 8) << 16) + ((j2 + i3 >> 8) << 8) + (k2 + j3 >> 8);
+				canvasRaster[l3++] = k4;
+			}
+
+			l3 += k3;
+		}
+	}
+
+	public static void method336(int i, int j, int k, int l, int i1) {
+		if (k < clipStartX) {
+			i1 -= clipStartX - k;
+			k = clipStartX;
+		}
+		if (j < clipStartY) {
+			i -= clipStartY - j;
+			j = clipStartY;
+		}
+		if (k + i1 > clipEndX)
+			i1 = clipEndX - k;
+		if (j + i > clipEndY)
+			i = clipEndY - j;
+		int k1 = canvasWidth - i1;
+		int l1 = k + j * canvasWidth;
+		for (int i2 = -i; i2 < 0; i2++) {
+			for (int j2 = -i1; j2 < 0; j2++)
+				canvasRaster[l1++] = l;
+
+			l1 += k1;
+		}
+
+	}
+
+	public static void method338(int i, int j, int k, int l, int i1, int j1) {
+		method340(l, i1, i, k, j1);
+		method340(l, i1, (i + j) - 1, k, j1);
+		if (j >= 3) {
+			method342(l, j1, k, i + 1, j - 2);
+			method342(l, (j1 + i1) - 1, k, i + 1, j - 2);
+		}
+	}
+
+	public static void method339(int i, int j, int k, int l) {
+		if (i < clipStartY || i >= clipEndY)
+			return;
+		if (l < clipStartX) {
+			k -= clipStartX - l;
+			l = clipStartX;
+		}
+		if (l + k > clipEndX)
+			k = clipEndX - l;
+		int i1 = l + i * canvasWidth;
+		for (int j1 = 0; j1 < k; j1++)
+			canvasRaster[i1 + j1] = j;
+
+	}
+
+	private static void method340(int i, int j, int k, int l, int i1) {
+		if (k < clipStartY || k >= clipEndY)
+			return;
+		if (i1 < clipStartX) {
+			j -= clipStartX - i1;
+			i1 = clipStartX;
+		}
+		if (i1 + j > clipEndX)
+			j = clipEndX - i1;
+		int j1 = 256 - l;
+		int k1 = (i >> 16 & 0xff) * l;
+		int l1 = (i >> 8 & 0xff) * l;
+		int i2 = (i & 0xff) * l;
+		int i3 = i1 + k * canvasWidth;
+		for (int j3 = 0; j3 < j; j3++) {
+			int j2 = (canvasRaster[i3] >> 16 & 0xff) * j1;
+			int k2 = (canvasRaster[i3] >> 8 & 0xff) * j1;
+			int l2 = (canvasRaster[i3] & 0xff) * j1;
+			int k3 = ((k1 + j2 >> 8) << 16) + ((l1 + k2 >> 8) << 8) + (i2 + l2 >> 8);
+			canvasRaster[i3++] = k3;
+		}
+
+	}
+
+	public static void method341(int i, int j, int k, int l) {
+		if (l < clipStartX || l >= clipEndX)
+			return;
+		if (i < clipStartY) {
+			k -= clipStartY - i;
+			i = clipStartY;
+		}
+		if (i + k > clipEndY)
+			k = clipEndY - i;
+		int j1 = l + i * canvasWidth;
+		for (int k1 = 0; k1 < k; k1++)
+			canvasRaster[j1 + k1 * canvasWidth] = j;
+
+	}
+
+	private static void method342(int i, int j, int k, int l, int i1) {
+		if (j < clipStartX || j >= clipEndX)
+			return;
+		if (l < clipStartY) {
+			i1 -= clipStartY - l;
+			l = clipStartY;
+		}
+		if (l + i1 > clipEndY)
+			i1 = clipEndY - l;
+		int j1 = 256 - k;
+		int k1 = (i >> 16 & 0xff) * k;
+		int l1 = (i >> 8 & 0xff) * k;
+		int i2 = (i & 0xff) * k;
+		int i3 = j + l * canvasWidth;
+		for (int j3 = 0; j3 < i1; j3++) {
+			int j2 = (canvasRaster[i3] >> 16 & 0xff) * j1;
+			int k2 = (canvasRaster[i3] >> 8 & 0xff) * j1;
+			int l2 = (canvasRaster[i3] & 0xff) * j1;
+			int k3 = ((k1 + j2 >> 8) << 16) + ((l1 + k2 >> 8) << 8) + (i2 + l2 >> 8);
+			canvasRaster[i3] = k3;
+			i3 += canvasWidth;
+		}
+	}
+
+	public static void drawBubble(int x, int y, int radius, int colour, int initialAlpha) {
+		fillCircleAlpha(x, y, radius, colour, initialAlpha);
+		fillCircleAlpha(x, y, radius + 2, colour, 8);
+		fillCircleAlpha(x, y, radius + 4, colour, 6);
+		fillCircleAlpha(x, y, radius + 6, colour, 4);
+		fillCircleAlpha(x, y, radius + 8, colour, 2);
+	}
+
+	public static void fillCircleAlpha(int posX, int posY, int radius, int colour, int alpha) {
+		int dest_intensity = 256 - alpha;
+		int src_red = (colour >> 16 & 0xff) * alpha;
+		int src_green = (colour >> 8 & 0xff) * alpha;
+		int src_blue = (colour & 0xff) * alpha;
+		int i3 = posY - radius;
+		if (i3 < 0)
+			i3 = 0;
+		int j3 = posY + radius;
+		if (j3 >= canvasWidth)
+			j3 = canvasHeight - 1;
+		for (int y = i3; y <= j3; y++) {
+			int l3 = y - posY;
+			int i4 = (int) Math.sqrt(radius * radius - l3 * l3);
+			int x = posX - i4;
+			if (x < 0)
+				x = 0;
+			int k4 = posX + i4;
+			if (k4 >= canvasWidth)
+				k4 = canvasWidth - 1;
+			int pixel_offset = x + y * canvasWidth;
+			for (int i5 = x; i5 <= k4; i5++) {
+				int dest_red = (canvasRaster[pixel_offset] >> 16 & 0xff) * dest_intensity;
+				int dest_green = (canvasRaster[pixel_offset] >> 8 & 0xff) * dest_intensity;
+				int dest_blue = (canvasRaster[pixel_offset] & 0xff) * dest_intensity;
+				int result_rgb = ((src_red + dest_red >> 8) << 16) + ((src_green + dest_green >> 8) << 8)
+						+ (src_blue + dest_blue >> 8);
+				canvasRaster[pixel_offset++] = result_rgb;
+			}
+		}
+	}
+
 
 	/**
 	 * Draws a vertical gradient fading from <code>topColor</code> to <code>bottomColor</code>.
