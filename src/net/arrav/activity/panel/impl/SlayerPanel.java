@@ -67,9 +67,9 @@ public class SlayerPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 		
-		boldFont.drawLeftAlignedEffectString("Slayer - Points: " + Interface.cache[252].text, beginX + 20, beginY + 31, 0xFF8A1F, true);
+		boldFont.drawLeftAlignedEffectString("Slayer - Points: " + Interface.cache[252].text, beginX + 20, beginY + 31, 0xFF8A1F, 0);
 		
-		plainFont.drawCenteredEffectString("Current assignment: " + Interface.cache[253].text, beginX + 250, beginY + 55, 0xFFFFFF, true);
+		plainFont.drawCenteredEffectString("Current assignment: " + Interface.cache[253].text, beginX + 250, beginY + 55, 0xFFFFFF, 0);
 		
 		smallFont.drawLeftAlignedString("You may spend points to cancel or block your current task.", beginX + 15, beginY + 105, 0xFF8A1F);
 		smallFont.drawLeftAlignedString("Skip: you may be assigned that target again in the future. (30p)", beginX + 15, beginY + 120, 0xFF8A1F);
@@ -78,7 +78,7 @@ public class SlayerPanel extends Panel {
 		
 		Rasterizer2D.drawHorizontalLine(beginX + 250, beginY + 75, 12, 0xFFFFFF);
 		Rasterizer2D.fillRoundedRectangle(beginX + 280, beginY + 65, 62, 20, 2, 0xf3763f, 60);
-		plainFont.drawCenteredEffectString("Reward", beginX + 310, beginY + 80, 0xFFFFFF, true);
+		plainFont.drawCenteredEffectString("Reward", beginX + 310, beginY + 80, 0xFFFFFF, 0);
 		if(client.mouseInRegion(beginX + 280, beginY + 65, beginX + 342, beginY + 85)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 280, beginY + 65, 62, 20, 2, 0xf3763f, 20);
 			Rasterizer2D.drawRectangle(beginX + 347, beginY + 60, 145, 70, 0x000000, 60);
@@ -91,30 +91,30 @@ public class SlayerPanel extends Panel {
 					BitmapImage img = ObjectType.getIcon(item, amt, 0);
 					if(img != null) {
 						img.drawImage(beginX + 353 + (i * 35), beginY + 98);
-						smallFont.drawLeftAlignedEffectString(Client.valueToKOrM(amt), beginX + 353 + (i * 35), beginY + 104, 0xffffff, true);
+						smallFont.drawLeftAlignedEffectString(Client.valueToKOrM(amt), beginX + 353 + (i * 35), beginY + 104, 0xffffff, 0);
 					}
 				}
 			}
 		}
 		Rasterizer2D.fillRoundedRectangle(beginX + 180, beginY + 65, 54, 20, 2, 0xFF8A1F, 60);
-		plainFont.drawCenteredEffectString("Block", beginX + 205, beginY + 80, 0xFF0000, true);
+		plainFont.drawCenteredEffectString("Block", beginX + 205, beginY + 80, 0xFF0000, 0);
 		if(client.mouseInRegion(beginX + 180, beginY + 65, beginX + 234, beginY + 85)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 180, beginY + 65, 54, 20, 2, 0xFF8A1F, 20);
 		}
 		Rasterizer2D.fillRoundedRectangle(beginX + 120, beginY + 65, 54, 20, 2, 0xFF8A1F, 60);
-		plainFont.drawCenteredEffectString("Skip", beginX + 145, beginY + 80, 0xFFFFFF, true);
+		plainFont.drawCenteredEffectString("Skip", beginX + 145, beginY + 80, 0xFFFFFF, 0);
 		if(client.mouseInRegion(beginX + 120, beginY + 65, beginX + 174, beginY + 85)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 120, beginY + 65, 54, 20, 2, 0xFF8A1F, 20);
 		}
 		Rasterizer2D.fillRoundedRectangle(beginX + 40, beginY + 65, 74, 20, 2, 0xf3763f, 60);
-		plainFont.drawCenteredEffectString("Teleport", beginX + 75, beginY + 80, 0xFFFFFF, true);
+		plainFont.drawCenteredEffectString("Teleport", beginX + 75, beginY + 80, 0xFFFFFF, 0);
 		if(client.mouseInRegion(beginX + 50, beginY + 65, beginX + 114, beginY + 85)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 40, beginY + 65, 74, 20, 2, 0xf3763f, 20);
 		}
 		
 		Rasterizer2D.drawRectangle(beginX + 15, beginY + 150, 470, 170, 0x000000, 60);
 		Rasterizer2D.fillRectangle(beginX + 15, beginY + 150, 470, 170, 0x000000, 40);
-		boldFont.drawLeftAlignedEffectString("Blocked tasks:", beginX + 22, beginY + 165, 0xFFFFFF, true);
+		boldFont.drawLeftAlignedEffectString("Blocked tasks:", beginX + 22, beginY + 165, 0xFFFFFF, 0);
 		for(int i = 0; i < 5; i++) {
 			int off = i * 30;
 			smallFont.drawLeftAlignedString("Slot " + (i + 1), beginX + 22, beginY + 189 + off, 0xFFFFFF);

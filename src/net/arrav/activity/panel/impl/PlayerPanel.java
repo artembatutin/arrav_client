@@ -141,7 +141,7 @@ public class PlayerPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 		if(type == -1)
-			plainFont.drawLeftAlignedEffectString(client.localPlayer.name, beginX + 20, beginY + 31, 0xFF8A1F, true);
+			plainFont.drawLeftAlignedEffectString(client.localPlayer.name, beginX + 20, beginY + 31, 0xFF8A1F, 0);
 		else {
 			if(Config.def.panelStyle == 2) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 25, 2, 0xFF8A1F, 60);
@@ -156,7 +156,7 @@ public class PlayerPanel extends Panel {
 				}
 				plainFont.drawCenteredString("Back", beginX + 407, beginY + 32, 0xFF8A1F);
 			}
-			plainFont.drawLeftAlignedEffectString(client.localPlayer.name + " - " + typeNames[type], beginX + 20, beginY + 31, 0xFF8A1F, true);
+			plainFont.drawLeftAlignedEffectString(client.localPlayer.name + " - " + typeNames[type], beginX + 20, beginY + 31, 0xFF8A1F, 0);
 		}
 		if(type == -1) {
 			ResizableUI_CUS.drawFace(beginX + 235, beginY + 75);
@@ -165,7 +165,7 @@ public class PlayerPanel extends Panel {
 				if(client.mouseInRegion(beginX + 52 + i * 115, beginY + 150, beginX + 102 + i * 115, beginY + 200)) {
 					Rasterizer2D.fillRectangle(beginX + 52 + i * 115, beginY + 150, 50, 50, 0x000000, 40);
 				}
-				smallFont.drawLeftAlignedEffectString(typeNames[i], beginX + 38 + i * 120, beginY + 220, 0xffffff, true);
+				smallFont.drawLeftAlignedEffectString(typeNames[i], beginX + 38 + i * 120, beginY + 220, 0xffffff, 0);
 			}
 		} else if(type == 0) {
 			ResizableUI_CUS.drawFace(beginX + 38, beginY + 75);
@@ -191,8 +191,8 @@ public class PlayerPanel extends Panel {
 					offset = 52;
 				}
 			}
-			plainFont.drawCenteredEffectString((int) (((float) total / complet) * 100) + "%", beginX + 55, beginY + 171, 0xFF8A1F, true);
-			plainFont.drawCenteredEffectString(total + " / " + complet, beginX + 55, beginY + 201, 0xFF8A1F, true);
+			plainFont.drawCenteredEffectString((int) (((float) total / complet) * 100) + "%", beginX + 55, beginY + 171, 0xFF8A1F, 0);
+			plainFont.drawCenteredEffectString(total + " / " + complet, beginX + 55, beginY + 201, 0xFF8A1F, 0);
 		} else if(type == 1) {
 			ResizableUI_CUS.drawFace(beginX + 38, beginY + 75);
 			Rasterizer2D.fillRectangle(beginX + 100, beginY + 41, 190, 285, 0xffffff, 20);
@@ -218,7 +218,7 @@ public class PlayerPanel extends Panel {
 			drawTitleButton("Grab from bank", beginX + 310, beginY + 115, 0xdb8145);*/
 			int offset = 60;
 			for(int i = 16051; i < 16065; i++) {
-				plainFont.drawLeftAlignedEffectString(Interface.cache[i].text, beginX + 120, beginY + offset + 5, 0xffffff, true);
+				plainFont.drawLeftAlignedEffectString(Interface.cache[i].text, beginX + 120, beginY + offset + 5, 0xffffff, 0);
 				offset += 15;
 			}
 		} else if(type == 2) {
@@ -240,7 +240,7 @@ public class PlayerPanel extends Panel {
 				if(tiers[u] != -1) {
 					Client.spriteCache.get(2043 + tiers[u]).drawImage(beginX + 132, beginY + offset + 3);
 					if(tex.length() > 0) {
-						smallFont.drawLeftAlignedEffectString(tex, beginX + 152, beginY + offset + 14, difColors[tiers[u]], true);
+						smallFont.drawLeftAlignedEffectString(tex, beginX + 152, beginY + offset + 14, difColors[tiers[u]], 0);
 						if(tex.charAt(0) == '@') {
 							complet += 1;
 						}
@@ -249,7 +249,7 @@ public class PlayerPanel extends Panel {
 				offset += 22;
 			}
 			
-			boldFont.drawCenteredEffectString("Completed: " + complet, beginX + 65, beginY + 181, 0xFF8A1F, true);
+			boldFont.drawCenteredEffectString("Completed: " + complet, beginX + 65, beginY + 181, 0xFF8A1F, 0);
 			Client.spriteCache.get(2043).drawImage(beginX + 18, beginY + 210);
 			smallFont.drawLeftAlignedString("Easy - 75k", beginX + 38, beginY + 221, 0xb3b4b3);
 			Client.spriteCache.get(2044).drawImage(beginX + 18, beginY + 230);
@@ -271,7 +271,7 @@ public class PlayerPanel extends Panel {
 			Rasterizer2D.fillRectangle(477 + beginX, 56 + pos + beginY, 10, height, 0x222222, 120);
 			Rasterizer2D.removeClip();
 			if(task != null) {
-				plainFont.drawLeftAlignedEffectString(task, beginX + 20, beginY + 318, 0xFF8A1F, true);
+				plainFont.drawLeftAlignedEffectString(task, beginX + 20, beginY + 318, 0xFF8A1F, 0);
 			}
 		}
 		

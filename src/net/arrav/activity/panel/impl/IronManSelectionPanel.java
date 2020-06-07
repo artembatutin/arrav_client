@@ -53,7 +53,7 @@ public class IronManSelectionPanel extends Panel {
 		drawMain(beginX, beginY + 8, 500, 328, 0x000000, 0x63625e, 200);
 		//drawOver(beginX, beginY);
 		
-		fancyFont.drawLeftAlignedEffectString("Arrav mode selection", beginX + 180, beginY + 31, 0xFF8A1F, true);
+		fancyFont.drawLeftAlignedEffectString("Arrav mode selection", beginX + 180, beginY + 31, 0xFF8A1F, 0);
 		Rasterizer2D.fillRoundedRectangle(beginX + 20, beginY + 40, 470, 160, 5, Config.def.panelStyle == 2 ? 0xcf9d47 : 0x000000, Config.def.panelStyle == 2 ? 30 : 100);
 		if(client.mouseInRegion(beginX + 190, beginY + 230, beginX + 285, beginY + 260)) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 190, beginY + 230, 100, 30, 2, Config.def.panelStyle == 2 ? 0xcf9d47 : 0x000000, Config.def.panelStyle == 2 ? 60 : 100);
@@ -68,7 +68,7 @@ public class IronManSelectionPanel extends Panel {
 					img.drawImage(beginX + 28 + x, beginY + offset + 2);
 				}
 				if(itemsRegAm[i].length() > 0)
-					smallFont.drawLeftAlignedEffectString(itemsRegAm[i], beginX + 30 + x, beginY + offset + 11, 0xFFFFFF, true);
+					smallFont.drawLeftAlignedEffectString(itemsRegAm[i], beginX + 30 + x, beginY + offset + 11, 0xFFFFFF, 0);
 				offset += i % 7 == 6 ? 35 : 0;
 			}
 		} else if(client.mouseInRegion(beginX + 370, beginY + 80, beginX + 470, beginY + 110)) {
@@ -82,12 +82,12 @@ public class IronManSelectionPanel extends Panel {
 					img.drawImage(beginX + 34 + x, beginY + offset + 2);
 				}
 				if(icon == 995)
-					smallFont.drawLeftAlignedEffectString("200k", beginX + 32 + x, beginY + offset + 11, 0xFFFFFF, true);
+					smallFont.drawLeftAlignedEffectString("200k", beginX + 32 + x, beginY + offset + 11, 0xFFFFFF, 0);
 				offset += i % 5 == 4 ? 45 : 0;
 			}
 		} else {
 			Client.spriteCache.get(1929).drawImage(beginX + 45, beginY + 70);
-			boldFont.drawCenteredEffectString("Iron man", beginX + 85, beginY + 60, 0xFF8A1F, true);
+			boldFont.drawCenteredEffectString("Iron man", beginX + 85, beginY + 60, 0xFF8A1F, 0);
 			smallFont.drawLeftAlignedString("Tougher monsters statistics.", beginX + 145, beginY + 60, 0xFF8A1F);
 			smallFont.drawLeftAlignedString("Lose 25% of experience on death.", beginX + 145, beginY + 75, 0xFF8A1F);
 			smallFont.drawLeftAlignedString("Can only trade iron man members.", beginX + 145, beginY + 90, 0xFF8A1F);

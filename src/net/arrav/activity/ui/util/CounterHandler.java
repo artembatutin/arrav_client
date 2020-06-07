@@ -70,7 +70,7 @@ public class CounterHandler {
 			if(counterToggled) {
 				//Client.spriteCache.get(update.skill + (client.uiRenderer.getId() > 500 ? 1957 : 2053)).drawImage(x - 25 - update.width, 60 + update.move - yMove, update.alpha);
 				Client.spriteCache.get(update.skill + 1957).drawImage(x - 25 - update.width, 60 + update.move - yMove, update.alpha);
-				client.smallFont.drawRightAlignedEffectString("" + update.xp, x, 80 + update.move - yMove, 0xffffff, true);
+				client.smallFont.drawRightAlignedEffectString("" + update.xp, x, 80 + update.move - yMove, 0xffffff, 0);
 			}
 		}
 		if(counterToggled) {
@@ -86,14 +86,14 @@ public class CounterHandler {
 				Rasterizer2D.drawRectangle(x - width - 37, y, width + 37, 17, 0x323130, 100); // darker inner line
 				Rasterizer2D.drawRectangle(x - width - 1 - 37, y - 1, width + 2 + 37, 19, 0xad7d3f); // orange outline
 				Rasterizer2D.drawRectangle(x - width - 1 - 37, y - 1, width + 2 + 37, 19, 0x91825c, 100); // yellow glowlike outline
-				//client.smallFont.drawRightAlignedEffectString("XP:", x - 20, y + 12, 0xffffff, true);
-				client.plainFont.drawRightAlignedEffectString("XP:      " + NumberFormat.getInstance().format(gainedXP), x - 5, y + 13, 0xffffff, true);
+				//client.smallFont.drawRightAlignedEffectString("XP:", x - 20, y + 12, 0xffffff, 0);
+				client.plainFont.drawRightAlignedEffectString("XP:      " + NumberFormat.getInstance().format(gainedXP), x - 5, y + 13, 0xffffff, 0);
 			} else {
 				Rasterizer2D.fillRectangle(x - width, y, width, 28, client.uiRenderer.getId() == 1 ? 0x000000 : 0x413c34, 170);
 				Rasterizer2D.drawRectangle(x - width, y, width, 28, 0x5b5348);
 				Rasterizer2D.drawRectangle(x - width - 1, y - 1, width + 2, 30, 0x383322);
 				Client.spriteCache.get(975).drawImage(x - width + 2, 10);
-				client.plainFont.drawRightAlignedEffectString(""+ NumberFormat.getInstance().format(gainedXP), x - 5, y + 19, 0xffffff, true);
+				client.plainFont.drawRightAlignedEffectString(""+ NumberFormat.getInstance().format(gainedXP), x - 5, y + 19, 0xffffff, 0);
 
 			}
 		}

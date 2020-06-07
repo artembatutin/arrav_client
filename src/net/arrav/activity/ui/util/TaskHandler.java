@@ -64,12 +64,12 @@ public class TaskHandler {
 		if(progress == 100) {
 			//progress = (int) (client.loopCycle - cycle);
 			if(s.startsWith("*")) {
-				client.boldFont.drawCenteredEffectString("Arrav Tutorial.", centerX, y + 30, 0xe1981f, true);
+				client.boldFont.drawCenteredEffectString("Arrav Tutorial.", centerX, y + 30, 0xe1981f, 0);
 			} else
-				client.boldFont.drawCenteredEffectString("Achievements completed!", centerX, y + 30, 0xe1981f, true);
+				client.boldFont.drawCenteredEffectString("Achievements completed!", centerX, y + 30, 0xe1981f, 0);
 			for(int i = 0; i < message.length; i++) {
 				if(message[i].length() > 0) {
-					client.plainFont.drawCenteredEffectString(message[i], centerX, y + 50 + i * 16, 0xbf751d, true);
+					client.plainFont.drawCenteredEffectString(message[i], centerX, y + 50 + i * 16, 0xbf751d, 0);
 				}
 			}
 		}

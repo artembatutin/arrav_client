@@ -431,7 +431,7 @@ public class GameActivity extends Activity {
 			if(client.onDemandRequester.requestedCount > 5) {
 				Rasterizer2D.fillRectangle(0, 0 , 180, 20, 0x000000);
 				Rasterizer2D.drawRectangle(0, 0, 180, 20, 0xffffff);
-				smallFont.drawLeftAlignedEffectString("Loading " + client.onDemandRequester.requestedCount + " files - please wait.", 6, 16, 0xffffff, true);
+				smallFont.drawLeftAlignedEffectString("Loading " + client.onDemandRequester.requestedCount + " files - please wait.", 6, 16, 0xffffff, 0);
 			}
 			client.gameGraphics.drawGraphics(0, 0, client.graphics);
 		} else {
@@ -439,7 +439,7 @@ public class GameActivity extends Activity {
 				client.updateGraphics.setCanvas();
 				Rasterizer2D.fillRectangle(0, 0 , 180, 20, 0x000000);
 				Rasterizer2D.drawRectangle(0, 0, 180, 20, 0xffffff);
-				smallFont.drawLeftAlignedEffectString("Loading " + client.onDemandRequester.requestedCount + " files - please wait.", 6, 16, 0xffffff, true);
+				smallFont.drawLeftAlignedEffectString("Loading " + client.onDemandRequester.requestedCount + " files - please wait.", 6, 16, 0xffffff, 0);
 				client.updateGraphics.drawGraphics(1, 1, client.graphics);
 			}
 		}
@@ -1529,7 +1529,7 @@ public class GameActivity extends Activity {
 					if(Config.def.names()) {
 						calcMobileRenderLoc(mobile, mobile.height + 15);
 						int offset = ((NPC) obj).special == 101 ? 10 : 20;
-						smallFont.drawCenteredEffectString(entityDef.name, client.spriteDrawX, client.spriteDrawY - offset, 0xffbf00, true);
+						smallFont.drawCenteredEffectString(entityDef.name, client.spriteDrawX, client.spriteDrawY - offset, 0xffbf00, 0);
 					}
 				}
 				if(j < client.playerCount) {
@@ -1560,7 +1560,7 @@ public class GameActivity extends Activity {
 						int col = 0x00ff00;
 						//if (player.clanName == localPlayer.clanName)
 						//	col = 0x00ff00;
-						smallFont.drawCenteredEffectString(player.name, client.spriteDrawX, client.spriteDrawY - 10, col, true);
+						smallFont.drawCenteredEffectString(player.name, client.spriteDrawX, client.spriteDrawY - 10, col, 0);
 						//if (player.clanName != "")
 						//	smallText.drawText(col, "<" + player.clanName + ">",
 						//			spriteDrawY - 5, spriteDrawX);
@@ -1612,9 +1612,9 @@ public class GameActivity extends Activity {
 								calcMobileRenderLoc(mobile, mobile.height + 15);
 								int level = obj instanceof NPC ? ((NPC) obj).type.combatLevel : ((Player) obj).combatLevel;
 								if(obj instanceof NPC && ((NPC) obj).special != 101) {
-									smallFont.drawCenteredEffectString("@gre@" + ((NPC) obj).special + "/100", client.spriteDrawX, client.spriteDrawY + -8, 0xff0000, true);
+									smallFont.drawCenteredEffectString("@gre@" + ((NPC) obj).special + "/100", client.spriteDrawX, client.spriteDrawY + -8, 0xff0000, 0);
 								}
-								smallFont.drawCenteredEffectString(getCombatDifferenceColor(client.localPlayer.combatLevel, level) + mobile.currentHealth + "/" + mobile.maxHealth, client.spriteDrawX, client.spriteDrawY + 3, 0xff0000, true);
+								smallFont.drawCenteredEffectString(getCombatDifferenceColor(client.localPlayer.combatLevel, level) + mobile.currentHealth + "/" + mobile.maxHealth, client.spriteDrawX, client.spriteDrawY + 3, 0xff0000, 0);
 							}
 						}
 					} catch(final Exception e) {
@@ -1803,15 +1803,15 @@ public class GameActivity extends Activity {
 
 			if (client.game_message_id == 0) {// Update
 				plainFont.drawLeftAlignedEffectString(client.game_message_context + " " + StringUtils.getFormattedTime(client.game_message_time),
-						4, yPos, 0xffff00, true);
+						4, yPos, 0xffff00, 0);
 			} else if (client.game_message_id == 1) {// announcement
-				plainFont.drawLeftAlignedEffectString(client.game_message_context, 4, yPos + yOffset, 0xffff00, true);
+				plainFont.drawLeftAlignedEffectString(client.game_message_context, 4, yPos + yOffset, 0xffff00, 0);
 			} else if (client.game_message_id == 2) {// icon
-				plainFont.drawLeftAlignedEffectString("<img=14> " + client.game_message_context, 4, yPos + yOffset, 0xffff00, true);
+				plainFont.drawLeftAlignedEffectString("<img=14> " + client.game_message_context, 4, yPos + yOffset, 0xffff00, 0);
 			} else if (client.game_message_id == 3) {// icon with time
 				plainFont.drawLeftAlignedEffectString(
 						"<img=14> " + client.game_message_context + " " + StringUtils.getFormattedTime(client.game_message_time), 4,
-						yPos + yOffset, 0xffff00, true);
+						yPos + yOffset, 0xffff00, 0);
 			}
 
 			client.game_message_time--;

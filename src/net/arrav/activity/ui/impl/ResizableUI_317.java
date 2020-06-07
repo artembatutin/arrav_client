@@ -159,7 +159,7 @@ public class ResizableUI_317 extends ResizableUI {
 						continue;
 					}
 					if(type == 0) {
-						client.plainFont.drawLeftAlignedEffectString(msg, x, y, basicFontColor, true);
+						client.plainFont.drawLeftAlignedEffectString(msg, x, y, basicFontColor, 0);
 					} else if(type == 1) {
 						if(rights >= 1) {
 							Client.spriteCache.get(1984 + rights - 1).drawImage(x + 1, y - 12);
@@ -614,20 +614,20 @@ public class ResizableUI_317 extends ResizableUI {
 		if(client.hoveredChannelButton == 7) {
 			client.chatButtons[3].drawImage(404, y + 143);
 		}
-		client.smallFont.drawLeftAlignedEffectString("Report Abuse", 425, y + 157, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("All", 26, y + 157, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Game", 78, y + 152, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Public", 132, y + 152, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Private", 187, y + 152, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Clan", 249, y + 152, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Trade", 304, y + 152, 0xffffff, true);
-		client.smallFont.drawCenteredEffectString("Yell", 374, y + 152, 0xffffff, true);
-		client.smallFont.drawCenteredEffectString("On", 90, y + 163, 65280, true);
-		client.smallFont.drawCenteredEffectString(text[client.yellChatMode], 374, y + 163, textColor[client.yellChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.publicChatMode], 147, y + 163, textColor[client.publicChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.privateChatMode], 205, y + 163, textColor[client.privateChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.clanChatMode], 260, y + 163, textColor[client.clanChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.tradeMode], 318, y + 163, textColor[client.tradeMode], true);
+		client.smallFont.drawLeftAlignedEffectString("Report Abuse", 425, y + 157, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("All", 26, y + 157, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Game", 78, y + 152, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Public", 132, y + 152, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Private", 187, y + 152, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Clan", 249, y + 152, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Trade", 304, y + 152, 0xffffff, 0);
+		client.smallFont.drawCenteredEffectString("Yell", 374, y + 152, 0xffffff, 0);
+		client.smallFont.drawCenteredEffectString("On", 90, y + 163, 65280, 0);
+		client.smallFont.drawCenteredEffectString(text[client.yellChatMode], 374, y + 163, textColor[client.yellChatMode], 0);
+		client.smallFont.drawCenteredEffectString(text[client.publicChatMode], 147, y + 163, textColor[client.publicChatMode], 0);
+		client.smallFont.drawCenteredEffectString(text[client.privateChatMode], 205, y + 163, textColor[client.privateChatMode], 0);
+		client.smallFont.drawCenteredEffectString(text[client.clanChatMode], 260, y + 163, textColor[client.clanChatMode], 0);
+		client.smallFont.drawCenteredEffectString(text[client.tradeMode], 318, y + 163, textColor[client.tradeMode], 0);
 	}
 	
 	/**
@@ -635,7 +635,7 @@ public class ResizableUI_317 extends ResizableUI {
 	 */
 	private void displayOrb(int x, int y, int orb, boolean hover) {
 		Client.spriteCache.get(hover && client.mouseInRegion(x, y, x + 57, y + 33) ? 1922 : 1921).drawImage(x, y);
-		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 15, y + 26, OrbHandler.getColor(orb), true);
+		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 15, y + 26, OrbHandler.getColor(orb), 0);
 		Client.spriteCache.get(OrbHandler.getOrb(orb)).drawImage(x + 27, y + 3);
 		Rasterizer2D.setClip(x + 27, y + 3, x + 58, y + 3 + OrbHandler.getFill(orb, 27));
 		Client.spriteCache.get(60).drawImage(x + 27, y + 3);

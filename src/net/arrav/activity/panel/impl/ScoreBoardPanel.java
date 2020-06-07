@@ -145,13 +145,13 @@ public class ScoreBoardPanel extends Panel {
 			fancyFont.drawCenteredString(clan ? "Indiv." : "Clan", beginX + 434, beginY + 33, 0xFF8A1F);
 		}*/
 		
-		boldFont.drawLeftAlignedEffectString((clan ? "Clan " : "Player Killing ") + "Scoreboard", beginX + 20, beginY + 30, 0xFF8A1F, true);
-		smallFont.drawLeftAlignedEffectString("#", beginX + 20, beginY + 53, 0xFF8A1F, true);
-		smallFont.drawLeftAlignedEffectString("Player name", beginX + 50, beginY + 53, 0xFF8A1F, true);
-		smallFont.drawLeftAlignedEffectString("Killstreak", beginX + 180, beginY + 53, 0xFF8A1F, true);
-		smallFont.drawLeftAlignedEffectString("Kills", beginX + 260, beginY + 53, 0xFF8A1F, true);
-		smallFont.drawLeftAlignedEffectString("Deaths", beginX + 320, beginY + 53, 0xFF8A1F, true);
-		smallFont.drawLeftAlignedEffectString("K/D ratio", beginX + 380, beginY + 53, 0xFF8A1F, true);
+		boldFont.drawLeftAlignedEffectString((clan ? "Clan " : "Player Killing ") + "Scoreboard", beginX + 20, beginY + 30, 0xFF8A1F, 0);
+		smallFont.drawLeftAlignedEffectString("#", beginX + 20, beginY + 53, 0xFF8A1F, 0);
+		smallFont.drawLeftAlignedEffectString("Player name", beginX + 50, beginY + 53, 0xFF8A1F, 0);
+		smallFont.drawLeftAlignedEffectString("Killstreak", beginX + 180, beginY + 53, 0xFF8A1F, 0);
+		smallFont.drawLeftAlignedEffectString("Kills", beginX + 260, beginY + 53, 0xFF8A1F, 0);
+		smallFont.drawLeftAlignedEffectString("Deaths", beginX + 320, beginY + 53, 0xFF8A1F, 0);
+		smallFont.drawLeftAlignedEffectString("K/D ratio", beginX + 380, beginY + 53, 0xFF8A1F, 0);
 		
 		Rasterizer2D.setClip(beginX + 5, beginY + 60, beginX + 493, beginY + 330);
 		int offset = -scrollPos + 65;
@@ -169,14 +169,14 @@ public class ScoreBoardPanel extends Panel {
 			if(!client.menuOpened && client.mouseInRegion(beginX + 8, beginY + offset, beginX + 468, beginY + offset + 30)) {
 				Rasterizer2D.fillRectangle(beginX + 8, beginY + offset, 460, 30, 0, 40);
 			}
-			smallFont.drawLeftAlignedEffectString("" + (i + 1), beginX + 22, beginY + offset + 19, 0xffffff, true);
-			smallFont.drawLeftAlignedEffectString(client.scoreNames[i], beginX + 40, beginY + offset + 19, 0xffffff, true);
+			smallFont.drawLeftAlignedEffectString("" + (i + 1), beginX + 22, beginY + offset + 19, 0xffffff, 0);
+			smallFont.drawLeftAlignedEffectString(client.scoreNames[i], beginX + 40, beginY + offset + 19, 0xffffff, 0);
 			
-			smallFont.drawCenteredEffectString(client.killstreak[i] + "", beginX + 200, beginY + offset + 19, 0xffffff, true);
-			smallFont.drawCenteredEffectString(client.scoreKills[i] + "", beginX + 270, beginY + offset + 19, 0xffffff, true);
-			smallFont.drawCenteredEffectString(client.scoreDeaths[i] + "", beginX + 340, beginY + offset + 19, 0xffffff, true);
+			smallFont.drawCenteredEffectString(client.killstreak[i] + "", beginX + 200, beginY + offset + 19, 0xffffff, 0);
+			smallFont.drawCenteredEffectString(client.scoreKills[i] + "", beginX + 270, beginY + offset + 19, 0xffffff, 0);
+			smallFont.drawCenteredEffectString(client.scoreDeaths[i] + "", beginX + 340, beginY + offset + 19, 0xffffff, 0);
 			double ratio = ((double) client.scoreKills[i]) / ((double) client.scoreDeaths[i]);
-			smallFont.drawCenteredEffectString(String.format("%.2f", ratio) + "", beginX + 400, beginY + offset + 19, 0xffffff, true);
+			smallFont.drawCenteredEffectString(String.format("%.2f", ratio) + "", beginX + 400, beginY + offset + 19, 0xffffff, 0);
 			offset += 35;
 		}
 		Rasterizer2D.drawRectangle(476 + beginX, 65 + beginY, 12, 260, 0xffffff, 60);

@@ -56,14 +56,14 @@ public class CombatOverlayHandler {
         Rasterizer2D.drawRectangle(xOff, yOff, 141, 50, 0x332f2d, 255);
 
         // name
-        client.plainFont.drawCenteredString(entityFeedName, xOff + 69, yOff + 23, 0xFDFDFD, 255);
+        client.plainFont.drawCenteredEffectString(entityFeedName, xOff + 69, yOff + 23, 0xFDFDFD, 0);
 
         // Hp fill
-        Rasterizer2D.fillRectangle(xOff + 7, yOff + 32, width - 4, 12, 0x66b754, 130);
-        Rasterizer2D.fillRectangle(xOff + 7, yOff + 32, width - 4, 12, 0x66b754, 130);
+        Rasterizer2D.fillRectangle(xOff + 7, yOff + 30, width - 4, 16, 0x66b754, 130);
+        Rasterizer2D.fillRectangle(xOff + 7, yOff + 30, width - 4, 16, 0x66b754, 130);
 
         // Hp empty
-        Rasterizer2D.fillRectangle(xOff + 4 + width, yOff + 32, 135 - width - 4, 12, 0xc43636, 130);
+        Rasterizer2D.fillRectangle(xOff + 4 + width, yOff + 30, 135 - width - 4, 16, 0xc43636, 130);
 
         if (entityAlpha > 0) {
             entityAlpha -= 5;
@@ -71,7 +71,7 @@ public class CombatOverlayHandler {
                     (int) (130 * entityAlpha / 255.0));
         }
 
-        Rasterizer2D.drawRectangle(xOff + 7, yOff + 32, 128, 12, 0x332f2d, 130);
+        Rasterizer2D.drawRectangle(xOff + 7, yOff + 30, 128, 16, 0x332f2d, 130);
 
 
         int hp =  Config.def.hits() ? (entityFeedHP * 10) : entityFeedHP;

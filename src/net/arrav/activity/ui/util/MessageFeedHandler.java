@@ -71,7 +71,7 @@ public class MessageFeedHandler {
                                 0x070606, feedAlpha[index]);
                        // client.smallFont.drawLeftAlignedString(statement, x + 9, feedYPos[index] + 69, 0xff, feedAlpha[index]);
                         client.smallFont.drawLeftAlignedEffectString("<trans=" + feedAlpha[index] + ">" + statement, x + 9,
-                                feedYPos[index] + 69, 0xffffff, true);
+                                feedYPos[index] + 69, 0xffffff, 0);
                     }
                 }
             }

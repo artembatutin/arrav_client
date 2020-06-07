@@ -91,7 +91,7 @@ public class PvPPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 
-		fancyFont.drawLeftAlignedEffectString("Wilderness Activity", beginX + 20, beginY + 31, 0xFF8A1F, true);
+		fancyFont.drawLeftAlignedEffectString("Wilderness Activity", beginX + 20, beginY + 31, 0xFF8A1F, 0);
 		
 		if(Config.def.panelStyle == 2) {
 			Rasterizer2D.fillRoundedRectangle(beginX + 380, beginY + 12, 54, 25, 2, 0xFF8A1F, 60);
@@ -107,7 +107,7 @@ public class PvPPanel extends Panel {
 			fancyFont.drawCenteredString("Stats", beginX + 407, beginY + 32, 0xFF8A1F);
 		}
 		smallFont.drawLeftAlignedString("Don't get fooled by certain hot spots.", beginX + 170, beginY + 33, 0xffffff);
-		plainFont.drawLeftAlignedEffectString(Interface.cache[16038].text, beginX + 10, beginY + 60, 0xffffff, true);
+		plainFont.drawLeftAlignedEffectString(Interface.cache[16038].text, beginX + 10, beginY + 60, 0xffffff, 0);
 		
 		Rasterizer2D.drawRectangle(beginX + 10, beginY + 70, 170, 170, 0x000000);
 		Rasterizer2D.drawHorizontalLine(beginX + 10, beginY + 90, 170, 0x000000);
@@ -168,9 +168,9 @@ public class PvPPanel extends Panel {
 		int offset = 67;
 		for(int i = 0; i < client.killstreak.length - 10; i++) {
 			offset += 15;
-			smallFont.drawLeftAlignedEffectString("" + (i + 1), beginX + 22, beginY + offset + 19, 0xFF8A1F, true);
+			smallFont.drawLeftAlignedEffectString("" + (i + 1), beginX + 22, beginY + offset + 19, 0xFF8A1F, 0);
 			if(client.scoreNames[i] != null) {
-				smallFont.drawLeftAlignedEffectString(client.scoreNames[i], beginX + 50, beginY + offset + 19, 0xFF8A1F, true);
+				smallFont.drawLeftAlignedEffectString(client.scoreNames[i], beginX + 50, beginY + offset + 19, 0xFF8A1F, 0);
 			}
 		}
 	}

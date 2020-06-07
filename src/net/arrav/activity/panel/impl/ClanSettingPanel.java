@@ -220,9 +220,9 @@ public class ClanSettingPanel extends Panel {
 		drawMain(beginX, beginY + 8, 500, 328, 0x000000, 0x63625e, 200);
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
-		boldFont.drawLeftAlignedEffectString("Manage chat '" +Interface.cache[50306].text+ "'", beginX + 20, beginY + 31, 0xFF8A1F, true);
-		smallFont.drawLeftAlignedEffectString("Ranked members", beginX + 180, beginY + 31, 0xFF8A1F, false);
-		smallFont.drawLeftAlignedEffectString("Banned/Muted", beginX + 360, beginY + 31, 0xFF8A1F, false);
+		boldFont.drawLeftAlignedEffectString("Manage chat '" +Interface.cache[50306].text+ "'", beginX + 20, beginY + 31, 0xFF8A1F, 0);
+		smallFont.drawLeftAlignedEffectString("Ranked members", beginX + 180, beginY + 31, 0xFF8A1F, -1);
+		smallFont.drawLeftAlignedEffectString("Banned/Muted", beginX + 360, beginY + 31, 0xFF8A1F, -1);
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
 		int offset = 45;
 		if(advanced) {
@@ -234,18 +234,18 @@ public class ClanSettingPanel extends Panel {
 					Rasterizer2D.fillRectangle(beginX + 8, beginY + offset, 117, height, 0, 40);
 				}
 				if(i < 4) {
-					smallFont.drawCenteredEffectString(Interface.cache[info[i]].text, beginX + 66, beginY + offset + 16, 0xFF8A1F, true);
-					boldFont.drawCenteredEffectString(Interface.cache[info[i] + 1].text, beginX + 66, beginY + offset + 34, 0xFFFFFF, true);
+					smallFont.drawCenteredEffectString(Interface.cache[info[i]].text, beginX + 66, beginY + offset + 16, 0xFF8A1F, 0);
+					boldFont.drawCenteredEffectString(Interface.cache[info[i] + 1].text, beginX + 66, beginY + offset + 34, 0xFFFFFF, 0);
 				} else {
-					smallFont.drawCenteredEffectString(info[i] == 50320 ? "Rename" : "Delete", beginX + 68, beginY + offset + 18, info[i] == 50320 ? 0xFF8A1F : 0xFF0000, true);
+					smallFont.drawCenteredEffectString(info[i] == 50320 ? "Rename" : "Delete", beginX + 68, beginY + offset + 18, info[i] == 50320 ? 0xFF8A1F : 0xFF0000, 0);
 				}
 				offset += i < 4 ? 55 : 32;
 			}
 			Rasterizer2D.drawVerticalLine(beginX + 130, beginY + 30, 310, 0x000000);
 		} else {
-			smallFont.drawCenteredEffectString("Only the owner can", beginX + 66, beginY + offset + 106, 0xFF8A1F, true);
-			smallFont.drawCenteredEffectString("change the clan chat", beginX + 66, beginY + offset + 121, 0xFF8A1F, true);
-			smallFont.drawCenteredEffectString("settings here.", beginX + 66, beginY + offset + 136, 0xFF8A1F, true);
+			smallFont.drawCenteredEffectString("Only the owner can", beginX + 66, beginY + offset + 106, 0xFF8A1F, 0);
+			smallFont.drawCenteredEffectString("change the clan chat", beginX + 66, beginY + offset + 121, 0xFF8A1F, 0);
+			smallFont.drawCenteredEffectString("settings here.", beginX + 66, beginY + offset + 136, 0xFF8A1F, 0);
 		}
 
 		offset = -scrollPos1 + 45;
@@ -266,9 +266,9 @@ public class ClanSettingPanel extends Panel {
 			Client.spriteCache.get(1626 + name.getRank()).drawImage(beginX + 18, beginY + offset + 11);
 			Rasterizer2D.fillRoundedRectangle(beginX + 8, beginY + offset, 30, 30, 3, 0xFF8A1F, 20);
 			if(plainFont.getEffectStringWidth(name.getName()) < 130) {
-				plainFont.drawCenteredEffectString(name.getName(), beginX + 90, beginY + offset + 19, 0xFFFFFF, true);
+				plainFont.drawCenteredEffectString(name.getName(), beginX + 90, beginY + offset + 19, 0xFFFFFF, 0);
 			} else {
-				plainFont.drawLeftAlignedEffectString(name.getName(), beginX + 40, beginY + offset + 19, 0xFFFFFF, true);
+				plainFont.drawLeftAlignedEffectString(name.getName(), beginX + 40, beginY + offset + 19, 0xFFFFFF, 0);
 			}
 
 			offset += 35;
@@ -290,7 +290,7 @@ public class ClanSettingPanel extends Panel {
 			if(client.mouseInRegion(beginX + 188, beginY + offset, beginX + 338, beginY + offset + 30)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 188, beginY + offset, 150, 30, 3, 0x000000, 40);
 			}
-			boldFont.drawCenteredEffectString(name.getName().replace("@mut@", ""), beginX + 265, beginY + offset + 19, 0xFFFFFF, true);
+			boldFont.drawCenteredEffectString(name.getName().replace("@mut@", ""), beginX + 265, beginY + offset + 19, 0xFFFFFF, 0);
 			offset += 35;
 		}
 		for(int i = 0; i < client.clanBansList.length; i++) {
@@ -301,7 +301,7 @@ public class ClanSettingPanel extends Panel {
 			if(client.mouseInRegion(beginX + 188, beginY + offset, beginX + 338, beginY + offset + 30)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 188, beginY + offset, 150, 30, 3, 0x000000, 40);
 			}
-			boldFont.drawCenteredEffectString(name, beginX + 265, beginY + offset + 19, 0xFFFFFF, true);
+			boldFont.drawCenteredEffectString(name, beginX + 265, beginY + offset + 19, 0xFFFFFF, 0);
 			offset += 35;
 		}
 		Rasterizer2D.removeClip();

@@ -93,7 +93,7 @@ public abstract class Panel extends Activity {
 		if(Config.def.panelStyle != 2) {
 			Rasterizer2D.drawRectangle(x - 2, y - 2, width + 4, height, 0x000000);
 		}
-		fancyFont.drawCenteredEffectString(name, x + width / 2, y + 17, 0xFFFFFF, true);
+		fancyFont.drawCenteredEffectString(name, x + width / 2, y + 17, 0xFFFFFF, 0);
 	}
 	
 	protected void drawTitleButton(String text, int x, int y, int color) {
@@ -104,7 +104,7 @@ public abstract class Panel extends Activity {
 		if(client.mouseInRegion(x + 1, y + 3, x + smallFont.getStringWidth(text) + 10, y + 18)) {
 			Rasterizer2D.fillRectangle(x, y, smallFont.getStringWidth(text) + 10, 15, color, 100);
 		}
-		smallFont.drawLeftAlignedEffectString(text, x + 5, y + 13, 0xFFFFFF, true);
+		smallFont.drawLeftAlignedEffectString(text, x + 5, y + 13, 0xFFFFFF, 0);
 	}
 
 }

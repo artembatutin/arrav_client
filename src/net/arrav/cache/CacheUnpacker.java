@@ -490,9 +490,9 @@ public class CacheUnpacker {
 			int fillWidth = (loadingWidth * (completion)) / 100;
 			Rasterizer2D.fillRoundedGradientRectangle(loadingX + 5, loadingY + 5, fillWidth, loadingHeight - 10, percentageColor, ColorConstants.lighten(percentageColor), 100, true, false);
 
-			client.fancyFont.drawCenteredEffectString((completion) + "%", centerX, centerY - 10, 0xF0BB3C, true);
-			client.boldFont.drawLeftAlignedEffectString(sideMessage, 4, 15, 0xFFFFFF, true);
-			client.smallFont.drawCenteredEffectString(client.onDemandRequester.statusString, centerX, centerY + 60, 0xFFFFFF, true);
+			client.fancyFont.drawCenteredEffectString((completion) + "%", centerX, centerY - 10, 0xF0BB3C, 0);
+			client.boldFont.drawLeftAlignedEffectString(sideMessage, 4, 15, 0xFFFFFF, 0);
+			client.smallFont.drawCenteredEffectString(client.onDemandRequester.statusString, centerX, centerY + 60, 0xFFFFFF, 0);
 
 			sendText(message, centerX, centerY - 60);
 		}
@@ -500,7 +500,7 @@ public class CacheUnpacker {
 		private void sendText(String text, int x, int y) {
 			if(client.fancyFont == null)
 				return;
-			client.fancyFont.drawCenteredEffectString(text, x, y, 0xDBB047, true);
+			client.fancyFont.drawCenteredEffectString(text, x, y, 0xDBB047, 0);
 			component.drawGraphics(0, 0, client.graphics);
 		}
 	}

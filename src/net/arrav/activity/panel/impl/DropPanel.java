@@ -213,9 +213,9 @@ public class DropPanel extends Panel {
 		drawClose(beginX, beginY);
 		
 		if(client.panelSearch) {
-			fancyFont.drawLeftAlignedEffectString("Searching: " + client.panelSearchInput, beginX + 20, beginY + 32, 0xFF8A1F, true);
+			fancyFont.drawLeftAlignedEffectString("Searching: " + client.panelSearchInput, beginX + 20, beginY + 32, 0xFF8A1F, 0);
 		} else {
-			fancyFont.drawLeftAlignedEffectString(type.name + " - lvl " + type.combatLevel, beginX + 20, beginY + 32, 0xFF8A1F, true);
+			fancyFont.drawLeftAlignedEffectString(type.name + " - lvl " + type.combatLevel, beginX + 20, beginY + 32, 0xFF8A1F, 0);
 			Rasterizer2D.fillRoundedRectangle(beginX + 340, beginY + 12, 97, 25, 2, Config.def.panelStyle == 2 ? 0xFF8A1F : 0x000000, 60);
 			if(client.mouseInRegion(beginX + 340, beginY + 12, beginX + 437, beginY + 47)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 340, beginY + 12, 97, 25, 2, 0xFF8A1F, 20);
@@ -279,15 +279,15 @@ public class DropPanel extends Panel {
 				//plainFont.drawLeftAlignedString(obj.name, beginX + 190, beginY + offset + 14, 0xffffff);
 				///smallFont.drawLeftAlignedString(ch.name, beginX + 190, beginY + offset + 26, ch.color);
 				if(max > 1 && min != max) {
-					smallFont.drawLeftAlignedEffectString(min + "-" + max, beginX + 15 + x, beginY + offset + 14, 0xFF8A1F, true);
+					smallFont.drawLeftAlignedEffectString(min + "-" + max, beginX + 15 + x, beginY + offset + 14, 0xFF8A1F, 0);
 				}
-				smallFont.drawCenteredEffectString(ch.name, beginX + 52 + x, beginY + offset + 46, ch.color, true);
+				smallFont.drawCenteredEffectString(ch.name, beginX + 52 + x, beginY + offset + 46, ch.color, 0);
 				offset += u % 5 == 4 ? 55 : 0;
 			}
 			if(tooltip != null) {
 				boolean off = (client.mouseX - beginX + 8 + smallFont.getStringWidth(tooltip)) > 490;
 				Rasterizer2D.fillRoundedRectangle(client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 18) : 8), client.mouseY - 3, smallFont.getStringWidth(tooltip) + 7, 15, 3, 0x000000, 200);
-				smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 14) : 12), client.mouseY + 9, 0xFF8A1F, true);
+				smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 14) : 12), client.mouseY + 9, 0xFF8A1F, 0);
 			}
 		}
 

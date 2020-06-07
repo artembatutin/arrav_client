@@ -168,10 +168,10 @@ public final class BitmapFont extends Rasterizer2D {
 		drawLeftAlignedString(s, x - getStringWidth(s), y, color, alpha);
 	}
 
-	public void drawLeftAlignedEffectString(String string, int drawX, int drawY, int color, boolean shadow) {
+	public void drawLeftAlignedEffectString(String string, int drawX, int drawY, int color, int shadow) {
 		if(string == null)
 			return;
-		setColorAndShadow(color, defaultShadow);
+		setColorAndShadow(color, shadow);
 		try {
 			drawY -= lineHeight;
 			for (int currentCharacter = 0; currentCharacter < string.length(); currentCharacter++) {
@@ -290,11 +290,11 @@ public final class BitmapFont extends Rasterizer2D {
 		}*/
 	}
 
-	public void drawCenteredEffectString(String s, int x, int y, int color, boolean shadow) {
+	public void drawCenteredEffectString(String s, int x, int y, int color, int shadow) {
 		drawLeftAlignedEffectString(s, x - getEffectStringWidth(s) / 2, y, color, shadow);
 	}
 
-	public void drawRightAlignedEffectString(String s, int x, int y, int color, boolean shadow) {
+	public void drawRightAlignedEffectString(String s, int x, int y, int color, int shadow) {
 		drawLeftAlignedEffectString(s, x - getEffectStringWidth(s), y, color, shadow);
 	}
 

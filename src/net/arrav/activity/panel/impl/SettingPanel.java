@@ -230,7 +230,7 @@ public class SettingPanel extends Panel {
 				Rasterizer2D.fillRectangle(x + 452, y + 22, 46, 19, 0x000000, 70);
 			Rasterizer2D.fillRectangle(x + 450, y + 20, 50, 23, 0xffffff, 20);
 			Rasterizer2D.fillRectangle(x + 452, y + 22, 46, 19, 0x000000, 70);
-			fancyFont.drawLeftAlignedEffectString("Exit", x + 460, y + 37, 0xFFFFFF, true);
+			fancyFont.drawLeftAlignedEffectString("Exit", x + 460, y + 37, 0xFFFFFF, 0);
 			return;
 		}
 		
@@ -241,20 +241,20 @@ public class SettingPanel extends Panel {
 			drawTitleButton("Switch", x + 160, y + 45 + (button * 24), 0xDBB047);
 		}
 		
-		plainFont.drawLeftAlignedEffectString((Config.def.lowMem() ? "@gre@" : "@red@") + "Low memory mode", x + 30, y + 57, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.tween() ? "@gre@" : "@red@") + "Animation tweening", x + 30, y + 80, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.enchanceMap() ? "@gre@" : "@red@") + "Enhanced Minimap", x + 30, y + 104, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.modelPrecision() ? "@gre@" : "@red@") + "Model precision", x + 30, y + 128, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.lowMem() ? "@gre@" : "@red@") + "Low memory mode", x + 30, y + 57, 0, 0);
+		plainFont.drawLeftAlignedEffectString((Config.def.tween() ? "@gre@" : "@red@") + "Animation tweening", x + 30, y + 80, 0, 0);
+		plainFont.drawLeftAlignedEffectString((Config.def.enchanceMap() ? "@gre@" : "@red@") + "Enhanced Minimap", x + 30, y + 104, 0, 0);
+		plainFont.drawLeftAlignedEffectString((Config.def.modelPrecision() ? "@gre@" : "@red@") + "Model precision", x + 30, y + 128, 0, 0);
 
-		plainFont.drawLeftAlignedEffectString((Config.def.groundDec() ? "@gre@" : "@red@") + "Ground decorations", x + 30, y + 152, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.groundMat() ? "@gre@" : "@red@") + "Ground textures", x + 30, y + 176, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.fog() ? "@gre@" : "@red@") + "Smooth fog", x + 30, y + 199, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.names() ? "@gre@" : "@red@") + "Display names", x + 30, y + 223, 0, true);
-		plainFont.drawLeftAlignedEffectString((!Config.def.roof() ? "@red@" : "@gre@") + "Visible roofs", x + 30, y + 248, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.groundDec() ? "@gre@" : "@red@") + "Ground decorations", x + 30, y + 152, 0, 0);
+		plainFont.drawLeftAlignedEffectString((Config.def.groundMat() ? "@gre@" : "@red@") + "Ground textures", x + 30, y + 176, 0, 0);
+		plainFont.drawLeftAlignedEffectString((Config.def.fog() ? "@gre@" : "@red@") + "Smooth fog", x + 30, y + 199, 0, 0);
+		plainFont.drawLeftAlignedEffectString((Config.def.names() ? "@gre@" : "@red@") + "Display names", x + 30, y + 223, 0, 0);
+		plainFont.drawLeftAlignedEffectString((!Config.def.roof() ? "@red@" : "@gre@") + "Visible roofs", x + 30, y + 248, 0, 0);
 
-		plainFont.drawLeftAlignedEffectString((Config.def.orbs() ? "@gre@" : "@red@") + "Display orbs", x + 30, y + 271, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.skillOrbs() ? "@gre@" : "@red@") + "Display skill orbs", x + 30, y + 295, 0, true);
-		plainFont.drawLeftAlignedEffectString((Config.def.hits() ? "@gre@" : "@red@") + "10x hits", x + 30, y + 319, 0, true);
+		plainFont.drawLeftAlignedEffectString((Config.def.orbs() ? "@gre@" : "@red@") + "Display orbs", x + 30, y + 271, 0, 0);
+		plainFont.drawLeftAlignedEffectString((Config.def.skillOrbs() ? "@gre@" : "@red@") + "Display skill orbs", x + 30, y + 295, 0, 0);
+		plainFont.drawLeftAlignedEffectString((Config.def.hits() ? "@gre@" : "@red@") + "10x hits", x + 30, y + 319, 0, 0);
 	
 		/* Screen Mode */
 		drawSection(x + 215, y + 20, 82, 285, "Screen Mode");
@@ -270,7 +270,7 @@ public class SettingPanel extends Panel {
 			
 		/* Game-frames */
 		drawSection(x + 215, y + 112, 98, 285, "User Interface");
-		fancyFont.drawCenteredEffectString("Selected: " + (client.uiRenderer.id == 1 ? "Custom" : (client.uiRenderer.id == 2 ? "OSRS" : client.uiRenderer.id)), x + 355, y + 155, 0xFFFFFF, true);
+		fancyFont.drawCenteredEffectString("Selected: " + (client.uiRenderer.id == 1 ? "Custom" : (client.uiRenderer.id == 2 ? "OSRS" : client.uiRenderer.id)), x + 355, y + 155, 0xFFFFFF, 0);
 		for(int id = 0; id < Constants.SELECTABLE_GAMEFRAMES.length; id++) {
 			int frame = Constants.SELECTABLE_GAMEFRAMES[id];
 			if(frame == 1) {
@@ -285,7 +285,7 @@ public class SettingPanel extends Panel {
 		if(client.mouseInRegion(x + 280, y + 185, x + 430, y + 208)) {
 			Rasterizer2D.fillRoundedRectangle(x + 280, y + 185, 150, 20, 4, 0xffffff, 25);
 		}
-		boldFont.drawCenteredEffectString("Interface style: " + (Config.def.panelStyle == 0 ? "OSRS" : (Config.def.panelStyle == 1 ? "EOC" : "Custom")), x + 355, y + 200, 0xFFFFFF, true);
+		boldFont.drawCenteredEffectString("Interface style: " + (Config.def.panelStyle == 0 ? "OSRS" : (Config.def.panelStyle == 1 ? "EOC" : "Custom")), x + 355, y + 200, 0xFFFFFF, 0);
 		
 		
 		/* Menus */
@@ -328,7 +328,7 @@ public class SettingPanel extends Panel {
 			Rasterizer2D.fillRectangle(x + 452, y + 22, 46, 19, 0x000000, 70);
 		Rasterizer2D.fillRectangle(x + 450, y + 20, 50, 23, 0xffffff, 20);
 		Rasterizer2D.fillRectangle(x + 452, y + 22, 46, 19, 0x000000, 70);
-		fancyFont.drawLeftAlignedEffectString("Exit", x + 460, y + 37, 0xFFFFFF, true);
+		fancyFont.drawLeftAlignedEffectString("Exit", x + 460, y + 37, 0xFFFFFF, 0);
 		//plainFont.drawLeftAlignedEffectString("Mouse: " + client.mouseX + "," + client.mouseY, x + 5, y + 15, 0xffff00, false);
 	}
 

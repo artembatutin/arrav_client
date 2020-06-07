@@ -131,25 +131,25 @@ public class CounterPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 		
-		boldFont.drawLeftAlignedEffectString("Shop Counter", beginX + 20, beginY + 33, 0xFF8A1F, true);
-		boldFont.drawCenteredEffectString("Quick shops:", beginX + 240, beginY + 100, 0xFF8A1F, true);
+		boldFont.drawLeftAlignedEffectString("Shop Counter", beginX + 20, beginY + 33, 0xFF8A1F, 0);
+		boldFont.drawCenteredEffectString("Quick shops:", beginX + 240, beginY + 100, 0xFF8A1F, 0);
 		
 		if(true) {
-			fancyFont.drawCenteredEffectString("Player owned shops coming soon", beginX + 240, beginY + 70, 0xFF8A1F, true);
+			fancyFont.drawCenteredEffectString("Player owned shops coming soon", beginX + 240, beginY + 70, 0xFF8A1F, 0);
 		} else {
-			fancyFont.drawCenteredEffectString("Search item", beginX + 80, beginY + 70, 0xFF8A1F, true);
+			fancyFont.drawCenteredEffectString("Search item", beginX + 80, beginY + 70, 0xFF8A1F, 0);
 			Rasterizer2D.fillRoundedRectangle(beginX + 10, beginY + 50, 130, 30, 2, 0xcf9d47, 60);
 			if(client.mouseInRegion(beginX + 10, beginY + 50, beginX + 140, beginY + 80)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 10, beginY + 50, 130, 30, 2, 0xcf9d47, 30);
 			}
 			
-			fancyFont.drawCenteredEffectString("Search player shop", beginX + 240, beginY + 70, 0xFF8A1F, true);
+			fancyFont.drawCenteredEffectString("Search player shop", beginX + 240, beginY + 70, 0xFF8A1F, 0);
 			Rasterizer2D.fillRoundedRectangle(beginX + 150, beginY + 50, 180, 30, 2, 0xcf9d47, 60);
 			if(client.mouseInRegion(beginX + 150, beginY + 50, beginX + 330, beginY + 80)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 150, beginY + 50, 180, 30, 2, 0xcf9d47, 30);
 			}
 			
-			fancyFont.drawCenteredEffectString("Edit your shop", beginX + 417, beginY + 70, 0xFF8A1F, true);
+			fancyFont.drawCenteredEffectString("Edit your shop", beginX + 417, beginY + 70, 0xFF8A1F, 0);
 			Rasterizer2D.fillRoundedRectangle(beginX + 340, beginY + 50, 150, 30, 2, 0xcf9d47, 60);
 			if(client.mouseInRegion(beginX + 340, beginY + 50, beginX + 490, beginY + 80)) {
 				Rasterizer2D.fillRoundedRectangle(beginX + 340, beginY + 50, 150, 30, 2, 0xcf9d47, 30);

@@ -128,7 +128,7 @@ public class RoomCreationPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 		
-		fancyFont.drawLeftAlignedEffectString("Build a room - Level: " + consLevel, beginX + 20, beginY + 33, 0xFF8A1F, true);
+		fancyFont.drawLeftAlignedEffectString("Build a room - Level: " + consLevel, beginX + 20, beginY + 33, 0xFF8A1F, 0);
 		
 		/* content */
 		int offset = 50;
@@ -141,9 +141,9 @@ public class RoomCreationPanel extends Panel {
 				Rasterizer2D.drawRectangle(beginX + 6 + x, beginY + offset, 158, 31, 0xffffff);
 			}
 			String strike = consLevel >= room.level ? "" : "@str@";
-			plainFont.drawLeftAlignedEffectString(room.level+"", beginX + 12 + x, beginY + offset + 23, 0xffffff, false);
-			fancyFont.drawLeftAlignedEffectString(strike+room.name, beginX + 38 + x, beginY + offset + 20, 0xffffff, false);
-			smallFont.drawRightAlignedEffectString(room.cost+"", beginX + 155 + x, beginY + offset + 20, 0xffffff, false);
+			plainFont.drawLeftAlignedEffectString(room.level+"", beginX + 12 + x, beginY + offset + 23, 0xffffff, -1);
+			fancyFont.drawLeftAlignedEffectString(strike+room.name, beginX + 38 + x, beginY + offset + 20, 0xffffff, -1);
+			smallFont.drawRightAlignedEffectString(room.cost+"", beginX + 155 + x, beginY + offset + 20, 0xffffff, -1);
 			Rasterizer2D.drawVerticalLine(beginX + 32 + x, beginY + offset, 30, 0xffffff, 50);
 			//plainFont.drawLeftAlignedString("Combat: " + npc.combatLevel, beginX + 320, beginY + offset + 17, 0xffffff);
 			//smallFont.drawLeftAlignedString("Id: " + npc.id, beginX + 410, beginY + offset + 17, 0xffffff);

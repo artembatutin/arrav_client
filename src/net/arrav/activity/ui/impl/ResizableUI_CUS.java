@@ -188,8 +188,8 @@ public class ResizableUI_CUS extends ResizableUI {
 					if(chatMessage.length > 1) {
 						if(type == 0) {
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x000000, 100);
-							client.smallFont.drawLeftAlignedEffectString(chatMessage[0], xPos, yPos, basicFontColor, true);
-							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, basicFontColor, true);
+							client.smallFont.drawLeftAlignedEffectString(chatMessage[0], xPos, yPos, basicFontColor, 0);
+							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, basicFontColor, 0);
 						}
 						if(type == 1) {
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x000000, 100);
@@ -198,8 +198,8 @@ public class ResizableUI_CUS extends ResizableUI {
 								Client.spriteCache.get(1984 + rights - 1).drawImage(xPos, yPos - 5);
 								xPos += 18;
 							}
-							client.smallFont.drawLeftAlignedEffectString(name + ": " + chatMessage[0], xPos, yPos, blueFontColor, true);
-							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, blueFontColor, true);
+							client.smallFont.drawLeftAlignedEffectString(name + ": " + chatMessage[0], xPos, yPos, blueFontColor, 0);
+							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, blueFontColor, 0);
 						}
 						if(type == 2) {
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x3C1414, 100);
@@ -208,18 +208,18 @@ public class ResizableUI_CUS extends ResizableUI {
 								Client.spriteCache.get(1984 + rights - 1).drawImage(xPos, yPos - 5);
 								xPos += 18;
 							}
-							client.smallFont.drawLeftAlignedEffectString("From: " + name + ":  " + chatMessage[0], xPos, yPos, redFontColor, true);
-							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, redFontColor, true);
+							client.smallFont.drawLeftAlignedEffectString("From: " + name + ":  " + chatMessage[0], xPos, yPos, redFontColor, 0);
+							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, redFontColor, 0);
 						}
 						if(type == 4) {
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x000000, 100);
-							client.smallFont.drawLeftAlignedEffectString(name + " " + chatMessage[0], xPos, yPos, purpleFontColor, true);
-							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, purpleFontColor, true);
+							client.smallFont.drawLeftAlignedEffectString(name + " " + chatMessage[0], xPos, yPos, purpleFontColor, 0);
+							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, purpleFontColor, 0);
 						}
 						if(type == 5) {
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x000000, 100);
-							client.smallFont.drawLeftAlignedEffectString(chatMessage[0], xPos, yPos, redFontColor, true);
-							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, redFontColor, true);
+							client.smallFont.drawLeftAlignedEffectString(chatMessage[0], xPos, yPos, redFontColor, 0);
+							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, redFontColor, 0);
 						}
 						if(type == 6) {
 							if(rights != 0) {
@@ -228,8 +228,8 @@ public class ResizableUI_CUS extends ResizableUI {
 								xPos += 18;
 							}
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x3C1414, 100);
-							client.smallFont.drawLeftAlignedEffectString("To " + name + ": " + chatMessage[0], xPos, yPos, redFontColor, true);
-							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, redFontColor, true);
+							client.smallFont.drawLeftAlignedEffectString("To " + name + ": " + chatMessage[0], xPos, yPos, redFontColor, 0);
+							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, redFontColor, 0);
 						}
 						if(type == 8) {
 							if(rights != 0) {
@@ -238,14 +238,14 @@ public class ResizableUI_CUS extends ResizableUI {
 								xPos += 18;
 							}
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x3C1414, 100);
-							client.smallFont.drawLeftAlignedEffectString(name + ": " + chatMessage[0], xPos, yPos, orangeFontColor, true);
-							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, orangeFontColor, true);
+							client.smallFont.drawLeftAlignedEffectString(name + ": " + chatMessage[0], xPos, yPos, orangeFontColor, 0);
+							client.smallFont.drawLeftAlignedEffectString(chatMessage[1], xPos, yPos + 13, orangeFontColor, 0);
 						}
 						
 					} else {
 						if(type == 0) {
 							Rasterizer2D.fillRectangle(xPos - 2, yPos - 13, 329, 30, 0x000000, 100);
-							client.smallFont.drawLeftAlignedEffectString(chatMessage[0], xPos, yPos + 7, basicFontColor, true);
+							client.smallFont.drawLeftAlignedEffectString(chatMessage[0], xPos, yPos + 7, basicFontColor, 0);
 						}
 						if(type == 1) {
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x000000, 100);
@@ -254,7 +254,7 @@ public class ResizableUI_CUS extends ResizableUI {
 								Client.spriteCache.get(1984 + rights - 1).drawImage(xPos, yPos - 5);
 								xPos += 18;
 							}
-							client.smallFont.drawLeftAlignedEffectString(name + ": " + chatMessage[0], xPos, yPos + 7, blueFontColor, true);
+							client.smallFont.drawLeftAlignedEffectString(name + ": " + chatMessage[0], xPos, yPos + 7, blueFontColor, 0);
 						}
 						if(type == 2) {
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x3C1414, 100);
@@ -263,11 +263,11 @@ public class ResizableUI_CUS extends ResizableUI {
 								Client.spriteCache.get(1984 + rights - 1).drawImage(xPos, yPos - 5);
 								xPos += 18;
 							}
-							client.smallFont.drawLeftAlignedEffectString("From " + name + ":  " + chatMessage[0], xPos, yPos + 7, redFontColor, true);
+							client.smallFont.drawLeftAlignedEffectString("From " + name + ":  " + chatMessage[0], xPos, yPos + 7, redFontColor, 0);
 						}
 						if(type == 4) {
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x000000, 100);
-							client.smallFont.drawLeftAlignedEffectString(name + " " + chatMessage[0], xPos, yPos + 7, purpleFontColor, true);
+							client.smallFont.drawLeftAlignedEffectString(name + " " + chatMessage[0], xPos, yPos + 7, purpleFontColor, 0);
 						}
 						if(type == 6) {
 							if(rights != 0) {
@@ -276,7 +276,7 @@ public class ResizableUI_CUS extends ResizableUI {
 								xPos += 18;
 							}
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x3C1414, 100);
-							client.smallFont.drawLeftAlignedEffectString("To " + name + ": " + chatMessage[0], xPos, yPos + 7, redFontColor, true);
+							client.smallFont.drawLeftAlignedEffectString("To " + name + ": " + chatMessage[0], xPos, yPos + 7, redFontColor, 0);
 						}
 						if(type == 8) {
 							if(rights != 0) {
@@ -285,7 +285,7 @@ public class ResizableUI_CUS extends ResizableUI {
 								xPos += 18;
 							}
 							Rasterizer2D.fillRectangle(xPos - 3, yPos - 13, 330, 30, 0x3C1414, 100);
-							client.smallFont.drawLeftAlignedEffectString(name + ": " + chatMessage[0], xPos, yPos + 7, orangeFontColor, true);
+							client.smallFont.drawLeftAlignedEffectString(name + ": " + chatMessage[0], xPos, yPos + 7, orangeFontColor, 0);
 						}
 					}
 					totalMessages++;
@@ -305,10 +305,10 @@ public class ResizableUI_CUS extends ResizableUI {
 			}
 			String[] message = splitString(client.smallFont, myName + ": ", client.chatInput, 325, false, 0);
 			if(message.length > 1) {
-				client.smallFont.drawLeftAlignedEffectString(myName + ": " + message[0], 36, y + 136, 0xffffff, true);
-				client.smallFont.drawLeftAlignedEffectString(message[1], 46, y + 148, 0xffffff, true);
+				client.smallFont.drawLeftAlignedEffectString(myName + ": " + message[0], 36, y + 136, 0xffffff, 0);
+				client.smallFont.drawLeftAlignedEffectString(message[1], 46, y + 148, 0xffffff, 0);
 			} else {
-				client.smallFont.drawLeftAlignedEffectString(myName + ": " + message[0], 36, y + 136, 0xffffff, true);
+				client.smallFont.drawLeftAlignedEffectString(myName + ": " + message[0], 36, y + 136, 0xffffff, 0);
 			}
 		}
 		Client.spriteCache.get((client.mouseInRegion(0, client.windowHeight - 45, 52, client.windowHeight)) ? 3 : 4).drawImage(0, client.windowHeight - 50);
@@ -610,17 +610,17 @@ public class ResizableUI_CUS extends ResizableUI {
 				Rasterizer2D.fillRectangle(66 + 57 * i, y + 140, 48, 20, 0xffffff, 50);
 			}
 		}
-		client.smallFont.drawLeftAlignedEffectString("All", 84, y + 155, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Game", 133, y + 155, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Public", 188, y + 150, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Private", 242, y + 150, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Clan", 307, y + 150, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Trade", 360, y + 150, 0xffffff, true);
-		client.smallFont.drawCenteredEffectString(text[client.publicChatMode], 203, y + 161, textColor[client.publicChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.privateChatMode], 261, y + 161, textColor[client.privateChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.clanChatMode], 316, y + 161, textColor[client.clanChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.tradeMode], 374, y + 161, textColor[client.tradeMode], true);
-		//game.smallFont.drawCenteredString(374, y + 163, text[game.duelMode], tetColor[game.duelMode], true);
+		client.smallFont.drawLeftAlignedEffectString("All", 84, y + 155, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Game", 133, y + 155, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Public", 188, y + 150, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Private", 242, y + 150, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Clan", 307, y + 150, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Trade", 360, y + 150, 0xffffff, 0);
+		client.smallFont.drawCenteredEffectString(text[client.publicChatMode], 203, y + 161, textColor[client.publicChatMode], 0);
+		client.smallFont.drawCenteredEffectString(text[client.privateChatMode], 261, y + 161, textColor[client.privateChatMode], 0);
+		client.smallFont.drawCenteredEffectString(text[client.clanChatMode], 316, y + 161, textColor[client.clanChatMode], 0);
+		client.smallFont.drawCenteredEffectString(text[client.tradeMode], 374, y + 161, textColor[client.tradeMode], 0);
+		//game.smallFont.drawCenteredString(374, y + 163, text[game.duelMode], tetColor[game.duelMode], 0);
 	}
 
 	/**
@@ -726,7 +726,7 @@ public class ResizableUI_CUS extends ResizableUI {
 				Rasterizer2D.removeClip();
 				Client.spriteCache.get(OrbHandler.poisoned ? 1874 : 1649).drawImage(208 - OrbHandler.getFill(orb, 192), 23);
 			}
-			client.smallFont.drawLeftAlignedEffectString(client.currentStats[3] + " / " + client.maxStats[3] * 10, 90, 38, 0xffffff, true);
+			client.smallFont.drawLeftAlignedEffectString(client.currentStats[3] + " / " + client.maxStats[3] * 10, 90, 38, 0xffffff, 0);
 			return;
 		}
 		int move = orb == Constants.ORB_RUN ? orb * 68 : orb == Constants.ORB_SUMMONING ? orb * 68 : orb * 70;
@@ -737,7 +737,7 @@ public class ResizableUI_CUS extends ResizableUI {
 		Rasterizer2D.removeClip();
 		Client.spriteCache.get(61 + orb).drawImage(25 + move - Client.spriteCache.get(61 + orb).imageWidth / 2, 67 - Client.spriteCache.get(61 + orb).imageHeight / 2);
 		//Client.spriteCache.get(hover && client.mouseInRegion(x, y, x + 57, y + 33) ? 51 : 1645).drawImage(x - 6, y - 5);
-		client.smallFont.drawLeftAlignedEffectString(OrbHandler.getValue(orb), 50 + move, 69, OrbHandler.getColor(orb), true);
+		client.smallFont.drawLeftAlignedEffectString(OrbHandler.getValue(orb), 50 + move, 69, OrbHandler.getColor(orb), 0);
 
 	}
 

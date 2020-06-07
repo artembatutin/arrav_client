@@ -273,11 +273,11 @@ public class BankPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 
-		boldFont.drawCenteredEffectString("Bank of Arrav", 250, beginY + 31, 0xff981f, true);
+		boldFont.drawCenteredEffectString("Bank of Arrav", 250, beginY + 31, 0xff981f, 0);
 
 		/* Slots */
 		if (client.bankSearching) {
-			smallFont.drawLeftAlignedEffectString("Searching for: " + client.bankSearch, beginX + 10, beginY + 33, 0xff981f, true);
+			smallFont.drawLeftAlignedEffectString("Searching for: " + client.bankSearch, beginX + 10, beginY + 33, 0xff981f, 0);
 		} else {
 			for (int i = 1; i < 11; i++) {
 				if (Interface.cache[270 + i - 1].invId == null)
@@ -346,7 +346,7 @@ public class BankPanel extends Panel {
 					if(icon > 0) {
 						String name = ObjectType.get(icon).name;
 						if (client.bankSearch.length() == 0) {
-							plainFont.drawCenteredEffectString("No search term entered!", 250, 164, 0x757575, true);
+							plainFont.drawCenteredEffectString("No search term entered!", 250, 164, 0x757575, 0);
 						}
 						if(client.bankSearch.length() > 0 && name != null && name.toLowerCase().contains(client.bankSearch)) {
 							if(client.mouseInRegion(beginX + 55 + x, beginY + offset, beginX + 91 + x, beginY + offset + 44)) {
@@ -364,7 +364,7 @@ public class BankPanel extends Panel {
 									} else if(amt.endsWith("K")) {
 										color = 0xffffff;
 									}
-									smallFont.drawLeftAlignedEffectString(amt, beginX + 54 + x, beginY + offset + 14, color, true);
+									smallFont.drawLeftAlignedEffectString(amt, beginX + 54 + x, beginY + offset + 14, color, 0);
 								}
 								offset += shift % 7 == 6 ? 45 : 0;
 								shift++;
@@ -435,7 +435,7 @@ public class BankPanel extends Panel {
 							} else if(amt.endsWith("K")) {
 								color = 0xffffff;
 							}
-							smallFont.drawLeftAlignedEffectString(amt, beginX + 54 + x, beginY + offset + 14, color, true); // amount text, beginx+29 = default
+							smallFont.drawLeftAlignedEffectString(amt, beginX + 54 + x, beginY + offset + 14, color, 0); // amount text, beginx+29 = default
 						}
 					}
 				}
@@ -447,7 +447,7 @@ public class BankPanel extends Panel {
 		if(!client.menuOpened && client.mouseDragButton == 0 && tooltip != null && !tooltip.isEmpty()) {
 			boolean off = (client.mouseX + smallFont.getStringWidth(tooltip)) > 490;
 			Rasterizer2D.fillRoundedRectangle(client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 14) : 8), client.mouseY - 3, smallFont.getStringWidth(tooltip) + 7, 15, 3, 0x000000, 200);
-			smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 10) : 12), client.mouseY + 9, 0xff981f, true);
+			smallFont.drawLeftAlignedEffectString(tooltip, client.mouseX + (off ? -(smallFont.getStringWidth(tooltip) + 10) : 12), client.mouseY + 9, 0xff981f, 0);
 		}
 		Rasterizer2D.removeClip();
 
@@ -483,7 +483,7 @@ public class BankPanel extends Panel {
 					} else if(amt.endsWith("K")) {
 						color = 0xffffff;
 					}
-					smallFont.drawLeftAlignedEffectString(amt, xSelected + 1, ySelected + 9, color, true);
+					smallFont.drawLeftAlignedEffectString(amt, xSelected + 1, ySelected + 9, color, 0);
 				}
 			}
 		}
@@ -562,28 +562,28 @@ public class BankPanel extends Panel {
 				Client.spriteCache.get(Config.def.panelStyle == 0 ? 2007 : 2022).drawImage(beginX + 343, beginY + 293);
 			}
 			if(Config.def.panelStyle == 0) {
-				plainFont.drawCenteredEffectString("Rearrange mode:", beginX + 93, beginY + 300, 0xff981f, true);
+				plainFont.drawCenteredEffectString("Rearrange mode:", beginX + 93, beginY + 300, 0xff981f, 0);
 				Client.spriteCache.get(2016).drawImage(beginX + 4, beginY + 304);
 				if(client.anIntArray1045[116] == 0) {
 					Client.spriteCache.get(2017).drawImage(beginX + 4, beginY + 304);
 				}
-				plainFont.drawCenteredEffectString("Swap", beginX + 45, beginY + 319, 0xff981f, true);
+				plainFont.drawCenteredEffectString("Swap", beginX + 45, beginY + 319, 0xff981f, 0);
 				Client.spriteCache.get(2016).drawImage(beginX + 86, beginY + 304);
 				if(client.anIntArray1045[116] != 0) {
 					Client.spriteCache.get(2017).drawImage(beginX + 86, beginY + 304);
 				}
-				plainFont.drawCenteredEffectString("Insert", beginX + 127, beginY + 319, 0xff981f, true);
-				plainFont.drawCenteredEffectString("Withdraw as:", beginX + 263, beginY + 300, 0xff981f, true);
+				plainFont.drawCenteredEffectString("Insert", beginX + 127, beginY + 319, 0xff981f, 0);
+				plainFont.drawCenteredEffectString("Withdraw as:", beginX + 263, beginY + 300, 0xff981f, 0);
 				Client.spriteCache.get(2016).drawImage(beginX + 173, beginY + 304);
 				if(client.anIntArray1045[115] == 0) {
 					Client.spriteCache.get(2017).drawImage(beginX + 173, beginY + 304);
 				}
-				plainFont.drawCenteredEffectString("Item", beginX + 214, beginY + 319, 0xff981f, true);
+				plainFont.drawCenteredEffectString("Item", beginX + 214, beginY + 319, 0xff981f, 0);
 				Client.spriteCache.get(2016).drawImage(beginX + 258, beginY + 304);
 				if(client.anIntArray1045[115] != 0) {
 					Client.spriteCache.get(2017).drawImage(beginX + 258, beginY + 304);
 				}
-				plainFont.drawCenteredEffectString("Noted", beginX + 299, beginY + 319, 0xff981f, true);
+				plainFont.drawCenteredEffectString("Noted", beginX + 299, beginY + 319, 0xff981f, 0);
 			} else {
 				Client.spriteCache.get(client.anIntArray1045[115] == 0 ? 2004 : 2005).drawImage(beginX + 104, beginY + 296);
 				if(client.mouseInRegion(beginX + 104, beginY + 296, beginX + 139, beginY + 321)) {
@@ -594,8 +594,8 @@ public class BankPanel extends Panel {
 					Rasterizer2D.fillRectangle(beginX + 64, beginY + 296, 35, 25, 0x000000, 30);
 				}
 				Client.spriteCache.get(2020).drawImage(beginX + 9, beginY + 293);
-				smallFont.drawCenteredEffectString("" + itemCount, beginX + 29, beginY + 305, 0xff981f, true);
-				smallFont.drawCenteredEffectString("" + max, beginX + 29, beginY + 320, 0xff981f, true);
+				smallFont.drawCenteredEffectString("" + itemCount, beginX + 29, beginY + 305, 0xff981f, 0);
+				smallFont.drawCenteredEffectString("" + max, beginX + 29, beginY + 320, 0xff981f, 0);
 			}
 		}
 	}

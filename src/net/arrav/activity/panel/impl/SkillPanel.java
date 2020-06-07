@@ -75,7 +75,7 @@ public class SkillPanel extends Panel {
 		drawOver(beginX, beginY);
 		
 		drawClose(beginX, beginY);
-		fancyFont.drawLeftAlignedEffectString("Skilling Teleport", beginX + 20, beginY + 31, 0xFF8A1F, true);
+		fancyFont.drawLeftAlignedEffectString("Skilling Teleport", beginX + 20, beginY + 31, 0xFF8A1F, 0);
 
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
 		int offset = 45;
@@ -88,7 +88,7 @@ public class SkillPanel extends Panel {
 				Rasterizer2D.fillRectangle(beginX + 8 + x, beginY + offset, 117, 50, 0, 40);
 			}
 			Client.spriteCache.get(124 + image + 5).drawImage(beginX + 49 + x, beginY + offset);
-			smallFont.drawCenteredEffectString(SKILL_NAME[i], beginX + 66 + x, beginY + offset + 46, 0xFF8A1F, true);
+			smallFont.drawCenteredEffectString(SKILL_NAME[i], beginX + 66 + x, beginY + offset + 46, 0xFF8A1F, 0);
 			offset += i % 4 == 3 ? 55 : 0;
 		}
 

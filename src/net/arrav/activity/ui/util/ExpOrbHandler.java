@@ -38,8 +38,7 @@ public class ExpOrbHandler {
 		boolean hpOverlay = /* Client.instance.shouldDrawCombatBox() */ false;
 
 		int y = -2;
-		int x = (int) (Client.instance.getWidth() / 3.1) - (totalOrbs * 30);
-
+		int x = (int) (Client.instance.windowWidth / 3.1) - (totalOrbs * 30);
 		if (x < 5) {
 			x = 5;
 		}

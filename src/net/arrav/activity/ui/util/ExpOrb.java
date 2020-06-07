@@ -93,13 +93,13 @@ public class ExpOrb {
 
 			Client.instance.smallFont.drawLeftAlignedEffectString(Constants.SKILL_NAMES_ORDERED[skill],
 					mouseX + Client.instance.smallFont.getEffectStringWidth(Constants.SKILL_NAMES_ORDERED[skill]) - 25, mouseY + 20,
-					16777215, true);
+					16777215, 0);
 			Client.instance.smallFont.drawLeftAlignedEffectString("Level: @gre@" + Client.instance.maxStats[skill], mouseX + 5,
-					mouseY + 35, 16777215, true);
+					mouseY + 35, 16777215, 0);
 			Client.instance.smallFont.drawLeftAlignedEffectString("Exp: @gre@" + nf.format(Client.instance.currentExp[skill]),
-					mouseX + 5, mouseY + 50, 16777215, true);
+					mouseX + 5, mouseY + 50, 16777215, 0);
 			Client.instance.smallFont.drawLeftAlignedEffectString("Exp Left: @gre@" + nf.format(remainderExp()), mouseX + 5,
-					mouseY + 65, 16777215, true);
+					mouseY + 65, 16777215, 0);
 
 			Rasterizer2D.drawRoundedRectangle(mouseX, mouseY + 70, 121, 15, 0xED4747, 100, true, true);
 

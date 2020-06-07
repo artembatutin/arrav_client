@@ -293,8 +293,8 @@ public class TitleActivity extends Activity {
 			smallFont.drawCenteredString(Config.def.oldModels ? "OSRS" : "HD", centerX + 30, centerY + 101- scrollValue + yOffset, 0xffffff);
 
 			/* Text */
-			boldFont.drawLeftAlignedEffectString(formatted + (selectedInputForm == 1 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - (client.spriteCache.get(860).imageWidth / 2) + 5, centerY - 13, 0xFFFFFF, true);
-			boldFont.drawLeftAlignedEffectString(astericks + (selectedInputForm == 2 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - (client.spriteCache.get(860).imageWidth / 2) + 5, centerY + 20 + 25, 0xFFFFFF, true);
+			boldFont.drawLeftAlignedEffectString(formatted + (selectedInputForm == 1 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - (client.spriteCache.get(860).imageWidth / 2) + 5, centerY - 13, 0xFFFFFF, 0);
+			boldFont.drawLeftAlignedEffectString(astericks + (selectedInputForm == 2 & client.loopCycle % 40 < 20 ? "|" : ""), centerX - (client.spriteCache.get(860).imageWidth / 2) + 5, centerY + 20 + 25, 0xFFFFFF, 0);
 		} else {
 			settings.update();
 		}
@@ -307,7 +307,7 @@ public class TitleActivity extends Activity {
 				String[] msgs = client.titleMessage.split("\n");
 				int y = (client.windowHeight >> 1) - 7 * (msgs.length >> 1);
 				for(String msg : msgs) {
-					boldFont.drawCenteredEffectString(msg, centerX, y += 15, 0xFF8A1F, true);
+					boldFont.drawCenteredEffectString(msg, centerX, y += 15, 0xFF8A1F, 0);
 					smallFont.drawLeftAlignedString("Click anywhere on the screen to remove this error message.", 10, client.windowHeight - 10, 0xFFFFFF);
 				}
 			}
@@ -324,10 +324,10 @@ public class TitleActivity extends Activity {
 		if(Config.def.data()) {
 			final Runtime runtime = Runtime.getRuntime();
 			final int usedMemory = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
-			plainFont.drawLeftAlignedEffectString("mouse: " + client.mouseX + "," + client.mouseY, 5, 15, 0xffff00, false);
-			plainFont.drawLeftAlignedEffectString("dMouse: " + -(centerX - client.mouseX) + "," + -(centerY - client.mouseY), 5, 30, 0xffff00, false);
-			plainFont.drawLeftAlignedEffectString("memory: " + usedMemory + "k (" + usedMemory / 1024L + "M)", 5, 45, 0xffff00, false);
-			plainFont.drawLeftAlignedEffectString("fps: " + client.fps, 5, 60, 0xffff00, false);
+			plainFont.drawLeftAlignedEffectString("mouse: " + client.mouseX + "," + client.mouseY, 5, 15, 0xffff00, -1);
+			plainFont.drawLeftAlignedEffectString("dMouse: " + -(centerX - client.mouseX) + "," + -(centerY - client.mouseY), 5, 30, 0xffff00, -1);
+			plainFont.drawLeftAlignedEffectString("memory: " + usedMemory + "k (" + usedMemory / 1024L + "M)", 5, 45, 0xffff00, -1);
+			plainFont.drawLeftAlignedEffectString("fps: " + client.fps, 5, 60, 0xffff00, -1);
 		}
 
 		smallFont.drawRightAlignedString("Build: " + Constants.BUILD + " - " + longToIp(CONNECTIONS[connection].getIp())+" "+CONNECTIONS[connection].getPort(), client.windowWidth - 120, client.windowHeight - 10, 0xffffff);

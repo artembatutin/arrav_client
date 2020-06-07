@@ -60,7 +60,7 @@ public class MonsterPanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 
-		fancyFont.drawLeftAlignedEffectString("Dungeon Teleport", beginX + 20, beginY + 31, 0xFF8A1F, true);
+		fancyFont.drawLeftAlignedEffectString("Dungeon Teleport", beginX + 20, beginY + 31, 0xFF8A1F, 0);
 		smallFont.drawLeftAlignedString("You can right click \"More info\" to check drops on monsters", beginX + 150, beginY + 25, 0xFF8A1F);
 		smallFont.drawLeftAlignedString("or access the Monster database from the quest tab.", beginX + 150, beginY + 36, 0xFF8A1F);
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
@@ -74,7 +74,7 @@ public class MonsterPanel extends Panel {
 					Rasterizer2D.fillRectangle(beginX + 8 + x, beginY + offset, 77, 50, 0, 40);
 			}
 			Rasterizer2D.drawRectangle(beginX + 8 + x, beginY + offset, 77, 50, 0, 200);
-			smallFont.drawCenteredEffectString(DUNGEONS[i], beginX + 46 + x, beginY + offset + 46, 0xFF8A1F, true);
+			smallFont.drawCenteredEffectString(DUNGEONS[i], beginX + 46 + x, beginY + offset + 46, 0xFF8A1F, 0);
 			if(DISABLED[i])
 				Rasterizer2D.fillRectangle(beginX + 8 + x, beginY + offset, 77, 50, 0x000000, 150);
 			offset += i % 6 == 5 ? 55 : 0;

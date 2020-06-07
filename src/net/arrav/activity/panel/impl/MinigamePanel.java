@@ -79,7 +79,7 @@ public class MinigamePanel extends Panel {
 		drawOver(beginX, beginY);
 		drawClose(beginX, beginY);
 
-		fancyFont.drawLeftAlignedEffectString("Minigame teleport", beginX + 20, beginY + 31, 0xFF8A1F, true);
+		fancyFont.drawLeftAlignedEffectString("Minigame teleport", beginX + 20, beginY + 31, 0xFF8A1F, 0);
 		Rasterizer2D.setClip(beginX + 5, beginY + 40, beginX + 493, beginY + 330);
 		int offset = 45;
 		for(int i = 0; i < mgs.length; i++) {
@@ -90,7 +90,7 @@ public class MinigamePanel extends Panel {
 			} else if(client.mouseInRegion(beginX + 12 + x, beginY + offset, beginX + 82 + x, beginY + offset + 70)) {
 				Rasterizer2D.fillRectangle(beginX + 12 + x, beginY + offset, 70, 70, 0, 40);
 			}
-			smallFont.drawCenteredEffectString(mgs[i].name, beginX + 46 + x, beginY + offset + 82, 0xFF8A1F, true);
+			smallFont.drawCenteredEffectString(mgs[i].name, beginX + 46 + x, beginY + offset + 82, 0xFF8A1F, 0);
 			offset += i % 6 == 5 ? 95 : 0;
 		}
 

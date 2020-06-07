@@ -1619,23 +1619,23 @@ public class Client extends ClientEngine {
 							xPos += 11;
 						}
 						if(childWidget.textCenter) {
-							font.drawCenteredEffectString(s1, xPos + childWidget.width / 2, l6, color, childWidget.textShadow);
+							font.drawCenteredEffectString(s1, xPos + childWidget.width / 2, l6, color, childWidget.textShadow ? 0 : -1);
 						} else {
 							switch (childWidget.textAlign) {
 								case 0:
-									font.drawLeftAlignedEffectString(s1, xPos, l6, color, childWidget.textShadow);
+									font.drawLeftAlignedEffectString(s1, xPos, l6, color, childWidget.textShadow ? 0 : -1);
 									break;
 								case 1:
-									font.drawCenteredEffectString(s1, xPos + (childWidget.width / 2), l6, color, childWidget.textShadow);
+									font.drawCenteredEffectString(s1, xPos + (childWidget.width / 2), l6, color, childWidget.textShadow ? 0 : -1);
 									break;
 								case 2:
-									font.drawRightAlignedEffectString(s1, xPos, l6, color, childWidget.textShadow);
+									font.drawRightAlignedEffectString(s1, xPos, l6, color, childWidget.textShadow ? 0 : -1);
 									break;
 								case 3:
-									font.drawCenteredEffectString(s1, xPos, l6, color, childWidget.textShadow);
+									font.drawCenteredEffectString(s1, xPos, l6, color, childWidget.textShadow ? 0 : -1);
 									break;
 								default:
-									font.drawLeftAlignedEffectString(s1, xPos, l6, color, childWidget.textShadow);
+									font.drawLeftAlignedEffectString(s1, xPos, l6, color, childWidget.textShadow ? 0 : -1);
 									break;
 							}
 						}
@@ -1711,7 +1711,7 @@ public class Client extends ClientEngine {
 						}
 					}
 					if(Config.def.idx()) {
-						boldFont.drawCenteredEffectString(childWidget.id + "", xPos + childWidget.width / 2, yPos, 0x000000, childWidget.textShadow);
+						boldFont.drawCenteredEffectString(childWidget.id + "", xPos + childWidget.width / 2, yPos, 0x000000, childWidget.textShadow ? 0 : -1);
 					}
 					if(model != null) {
 						model.drawModel(childWidget.modelRoll, 0, childWidget.modelYaw, 0, i5, l5);
@@ -1734,9 +1734,9 @@ public class Client extends ClientEngine {
 								final int x = xPos + xColumn * (115 + childWidget.invPadX);
 								final int y = yPos + yColumn * (12 + childWidget.invPadY);
 								if(childWidget.textCenter) {
-									font.drawCenteredEffectString(itemData, x + childWidget.width / 2, y, childWidget.color, childWidget.textShadow);
+									font.drawCenteredEffectString(itemData, x + childWidget.width / 2, y, childWidget.color, childWidget.textShadow ? 0 : -1);
 								} else {
-									font.drawLeftAlignedEffectString(itemData, x, y, childWidget.color, childWidget.textShadow);
+									font.drawLeftAlignedEffectString(itemData, x, y, childWidget.color, childWidget.textShadow ? 0 : -1);
 								}
 							}
 							item++;
@@ -1908,15 +1908,15 @@ public class Client extends ClientEngine {
 							message = "";
 						}
 						if(childWidget.textCenter) {
-							font.drawCenteredEffectString(splitMessage, x + childWidget.width / 2, j11, y, false);
+							font.drawCenteredEffectString(splitMessage, x + childWidget.width / 2, j11, y, -1);
 						} else if(splitMessage.contains("\\r")) {
 							final String text = splitMessage.substring(0, splitMessage.indexOf("\\r"));
 							final String text2 = splitMessage.substring(splitMessage.indexOf("\\r") + 2);
-							font.drawLeftAlignedEffectString(text, x + 3, j11, 0, false);
+							font.drawLeftAlignedEffectString(text, x + 3, j11, 0, -1);
 							final int rightX = boxWidth + x - font.getEffectStringWidth(text2) - 2;
-							font.drawLeftAlignedEffectString(text2, rightX, j11, 0, false);
+							font.drawLeftAlignedEffectString(text2, rightX, j11, 0, -1);
 						} else {
-							font.drawLeftAlignedEffectString(splitMessage, x + 3, j11, 0, false);
+							font.drawLeftAlignedEffectString(splitMessage, x + 3, j11, 0, -1);
 						}
 					}
 				}
@@ -3172,7 +3172,7 @@ public class Client extends ClientEngine {
 	public void loadingStages() {
 		if(Config.def.lowMem() && loadingStage == 2 && MapDecoder.plane != cameraPlane) {
 			gameGraphics.setCanvas();
-			fancyFont.drawLeftAlignedEffectString("Loading - please wait...", 10, 20, 0xffffff, true);
+			fancyFont.drawLeftAlignedEffectString("Loading - please wait...", 10, 20, 0xffffff,  0);
 			int off = uiRenderer.isResizableOrFull() ? 0 : 4;
 			gameGraphics.drawGraphics(off, off, super.graphics);
 			loadingStage = 1;
@@ -3553,8 +3553,8 @@ public class Client extends ClientEngine {
 			return;
 		}
 		gameGraphics.setCanvas();
-		plainFont.drawLeftAlignedEffectString("Connection lost", 10, 25, 0xffffff, true);
-		plainFont.drawLeftAlignedEffectString("Please wait - attempting to reestablish...", 10, 40, 0xffffff, true);
+		plainFont.drawLeftAlignedEffectString("Connection lost", 10, 25, 0xffffff, 0);
+		plainFont.drawLeftAlignedEffectString("Please wait - attempting to reestablish...", 10, 40, 0xffffff, 0);
 		if(uiRenderer.isResizableOrFull()) {
 			gameGraphics.drawGraphics(0, 0, super.graphics);
 		} else {
@@ -5237,7 +5237,7 @@ public class Client extends ClientEngine {
 					loadingStage = 1;
 					aLong824 = System.currentTimeMillis();
 					gameGraphics.setCanvas();
-					fancyFont.drawLeftAlignedEffectString("Loading - please wait...", 10, 20, 0xffffff, true);
+					fancyFont.drawLeftAlignedEffectString("Loading - please wait...", 10, 20, 0xffffff, 0);
 					if(uiRenderer.isResizableOrFull()) {
 						gameGraphics.drawGraphics(0, 0, super.graphics);
 					} else {

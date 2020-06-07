@@ -255,10 +255,10 @@ public class AssetDrawer {
 					if(mx > x && mx < x + w && my > i2 - 13 && my < i2 + 3) {
 						j2 = 0xffff00;
 					}
-					client.boldFont.drawLeftAlignedEffectString(client.menuItemName[l1], x + 3, i2, j2, true);
+					client.boldFont.drawLeftAlignedEffectString(client.menuItemName[l1], x + 3, i2, j2, 0);
 				}
 				if(demo)
-					client.boldFont.drawLeftAlignedEffectString(client.menuItemName[0], x + 3, y + 46, 0xffff00, true);
+					client.boldFont.drawLeftAlignedEffectString(client.menuItemName[0], x + 3, y + 46, 0xffff00, 0);
 				break;
 
 			case 2:
@@ -272,10 +272,10 @@ public class AssetDrawer {
 					if(mx > x && mx < x + w && my > i2 - 13 && my < i2 + 3) {
 						j2 = 0xffff00;
 					}
-					client.boldFont.drawLeftAlignedEffectString(client.menuItemName[l1], x + 3, i2, j2, true);
+					client.boldFont.drawLeftAlignedEffectString(client.menuItemName[l1], x + 3, i2, j2, 0);
 				}
 				if(demo)
-					client.boldFont.drawLeftAlignedEffectString(client.menuItemName[0], x + 3, y + 46, 0xffff00, true);
+					client.boldFont.drawLeftAlignedEffectString(client.menuItemName[0], x + 3, y + 46, 0xffff00, 0);
 				break;
 
 			case 3:
@@ -314,11 +314,11 @@ public class AssetDrawer {
 						Rasterizer2D.fillRectangle(x + 3, i2 - 11, w - 6, 15, 0x6f695d);
 						j2 = 0xeee5c6;
 					}
-					client.boldFont.drawLeftAlignedEffectString(client.menuItemName[l1], x + 4, i2, j2, true);
+					client.boldFont.drawLeftAlignedEffectString(client.menuItemName[l1], x + 4, i2, j2, 0);
 				}
 				if(demo) {
 					Rasterizer2D.fillRectangle(x + 3, y + 35, w - 6, 15, 0x6f695d);
-					client.boldFont.drawLeftAlignedEffectString(client.menuItemName[0], x + 4, y + 46, 0xeee5c6, true);
+					client.boldFont.drawLeftAlignedEffectString(client.menuItemName[0], x + 4, y + 46, 0xeee5c6, 0);
 				}
 				break;
 
@@ -358,11 +358,11 @@ public class AssetDrawer {
 						Rasterizer2D.fillRectangle(x + 3, i2 - 11, w - 6, 15, 0x26566C);
 						j2 = 0xeee5c6;
 					}
-					client.plainFont.drawLeftAlignedEffectString(client.menuItemName[l1], x + 4, i2, j2, true);
+					client.plainFont.drawLeftAlignedEffectString(client.menuItemName[l1], x + 4, i2, j2, 0);
 				}
 				if(demo) {
 					Rasterizer2D.fillRectangle(x + 3, y + 46 - 11, w - 6, 15, 0x26566C);
-					client.plainFont.drawLeftAlignedEffectString(client.menuItemName[0], x + 4, y + 46, 0xeee5c6, true);
+					client.plainFont.drawLeftAlignedEffectString(client.menuItemName[0], x + 4, y + 46, 0xeee5c6, 0);
 				}
 				break;
 
@@ -402,11 +402,11 @@ public class AssetDrawer {
 						Rasterizer2D.fillRectangle(x + 3, i2 - 11, w - 6, 15, 0x26566C, 150);
 						j2 = 0xeee5c6;
 					}
-					client.plainFont.drawLeftAlignedEffectString(client.menuItemName[l1], x + 4, i2, j2, true);
+					client.plainFont.drawLeftAlignedEffectString(client.menuItemName[l1], x + 4, i2, j2, 0);
 				}
 				if(demo) {
 					Rasterizer2D.fillRectangle(x + 3, y + 46 - 11, w - 6, 15, 0x26566C, 150);
-					client.plainFont.drawLeftAlignedEffectString(client.menuItemName[0], x + 4, y + 46, 0xeee5c6, true);
+					client.plainFont.drawLeftAlignedEffectString(client.menuItemName[0], x + 4, y + 46, 0xeee5c6, 0);
 				}
 				break;
 
@@ -420,11 +420,11 @@ public class AssetDrawer {
 						Rasterizer2D.fillRectangle(x + 3, i2 - 14, w - 6, 15, 0xCB8804, 150);
 						j2 = 0xeee5c6;
 					}
-					client.plainFont.drawLeftAlignedEffectString(client.menuItemName[l1], x + 6, i2 - 2, j2, true);
+					client.plainFont.drawLeftAlignedEffectString(client.menuItemName[l1], x + 6, i2 - 2, j2, 0);
 				}
 				if(demo) {
 					Rasterizer2D.fillRectangle(x + 3, y + 32, w - 6, 15, 0xCB8804, 150);
-					client.plainFont.drawLeftAlignedEffectString(client.menuItemName[0], x + 6, y + 44, 0xeee5c6, true);
+					client.plainFont.drawLeftAlignedEffectString(client.menuItemName[0], x + 6, y + 44, 0xeee5c6, 0);
 				}
 				break;
 		}

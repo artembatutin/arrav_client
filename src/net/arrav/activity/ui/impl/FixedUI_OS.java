@@ -143,7 +143,7 @@ public class FixedUI_OS extends FixedUI {
 						continue;
 					}
 					if(type == 0) {
-						client.plainFont.drawLeftAlignedEffectString(msg, x, y, 0, false);
+						client.plainFont.drawLeftAlignedEffectString(msg, x, y, 0, -1);
 					} else if(type == 1) {
 						if(rights >= 1) {
 							Client.spriteCache.get(1984 + rights - 1).drawImage(x + 1, y - 12);
@@ -554,20 +554,20 @@ public class FixedUI_OS extends FixedUI {
 		if(client.hoveredChannelButton == 7) {
 			client.chatButtons[3].drawImage(404, 142);
 		}
-		client.smallFont.drawLeftAlignedEffectString("Report Abuse", 425, 157, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("All", 26, 157, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Game", 78, 154, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Public", 132, 154, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Private", 187, 154, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Clan", 249, 154, 0xffffff, true);
-		client.smallFont.drawLeftAlignedEffectString("Trade", 304, 154, 0xffffff, true);
-		client.smallFont.drawCenteredEffectString("Yell", 374, 154, 0xffffff, true);
-		client.smallFont.drawCenteredEffectString("On", 90, 164, 65280, true);
-		client.smallFont.drawCenteredEffectString(text[client.yellChatMode], 374, 164, textColor[client.yellChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.publicChatMode], 147, 165, textColor[client.publicChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.privateChatMode], 205, 165, textColor[client.privateChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.clanChatMode], 260, 165, textColor[client.clanChatMode], true);
-		client.smallFont.drawCenteredEffectString(text[client.tradeMode], 318, 165, textColor[client.tradeMode], true);
+		client.smallFont.drawLeftAlignedEffectString("Report Abuse", 425, 157, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("All", 26, 157, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Game", 78, 154, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Public", 132, 154, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Private", 187, 154, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Clan", 249, 154, 0xffffff, 0);
+		client.smallFont.drawLeftAlignedEffectString("Trade", 304, 154, 0xffffff, 0);
+		client.smallFont.drawCenteredEffectString("Yell", 374, 154, 0xffffff, 0);
+		client.smallFont.drawCenteredEffectString("On", 90, 164, 65280, 0);
+		client.smallFont.drawCenteredEffectString(text[client.yellChatMode], 374, 164, textColor[client.yellChatMode], 0);
+		client.smallFont.drawCenteredEffectString(text[client.publicChatMode], 147, 165, textColor[client.publicChatMode], 0);
+		client.smallFont.drawCenteredEffectString(text[client.privateChatMode], 205, 165, textColor[client.privateChatMode], 0);
+		client.smallFont.drawCenteredEffectString(text[client.clanChatMode], 260, 165, textColor[client.clanChatMode], 0);
+		client.smallFont.drawCenteredEffectString(text[client.tradeMode], 318, 165, textColor[client.tradeMode], 0);
 	}
 	
 	/**
@@ -575,7 +575,7 @@ public class FixedUI_OS extends FixedUI {
 	 */
 	private void displayOrb(int x, int y, int orb, boolean hover) {
 		Client.spriteCache.get(hover && client.mouseInRegion(x + 519, y + 4, x + 576, y + 37) ? 1922 : 1921).drawImage(x, y);
-		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 15, y + 26, OrbHandler.getColor(orb), true);
+		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 15, y + 26, OrbHandler.getColor(orb), 0);
 		Client.spriteCache.get(OrbHandler.getOrb(orb)).drawImage(x + 27, y + 3);
 		Rasterizer2D.setClip(x + 27, y + 3, x + 54, y + 3 + OrbHandler.getFill(orb, 27));
 		Client.spriteCache.get(60).drawImage(x + 27, y + 3);
@@ -590,7 +590,7 @@ public class FixedUI_OS extends FixedUI {
 	 */
 	private void displaySpecialOrb(int x, int y, int orb, boolean hover) {
 		Client.spriteCache.get(hover && client.mouseInRegion(x + 519, y + 4, x + 576, y + 37) ? 1924 : 1923).drawImage(x, y);
-		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 43, y + 26, OrbHandler.getColor(orb), true);
+		client.smallFont.drawCenteredEffectString(OrbHandler.getValue(orb), x + 43, y + 26, OrbHandler.getColor(orb), 0);
 		Client.spriteCache.get(orb == Constants.ORB_RUN && OrbHandler.runEnabled ? 73 : orb == Constants.ORB_HEALTH && OrbHandler.poisoned ? 78 : 56 + orb).drawImage(x + 4, y + 4);
 		Rasterizer2D.setClip(x + 3, y + 3, x + 30, y + 3 + OrbHandler.getFill(orb, 27));
 		Client.spriteCache.get(60).drawImage(x + 3, y + 3);
