@@ -3,6 +3,7 @@ package net.arrav.cache.impl;
 import net.arrav.Client;
 import net.arrav.cache.CacheArchive;
 import net.arrav.cache.CacheLoader;
+import net.arrav.cache.CacheUnpacker;
 import net.arrav.world.model.Model;
 import net.arrav.graphic.tex.Texture;
 import net.arrav.net.OnDemandFetcher;
@@ -29,10 +30,11 @@ public class ProtocolLoader implements CacheLoader {
 	@Override
 	public void run(Client client) {
 		client.onDemandRequester = new OnDemandFetcher();
+		CacheUnpacker.progress = 7;
 		client.onDemandRequester.start(archive, client);
+		CacheUnpacker.progress = 10;
 		Model.initalize(client.onDemandRequester.getModelCount(), client.onDemandRequester);
 		Texture.init(client.onDemandRequester);
-		
 		//MAC address
 		try {
 			InetAddress inet = InetAddress.getLocalHost();
@@ -46,7 +48,7 @@ public class ProtocolLoader implements CacheLoader {
 		} catch(UnknownHostException | SocketException e) {
 			e.printStackTrace();
 		}
-		
+		CacheUnpacker.progress = 11;
 		//client.onDemandRequester.writeChecksumList(7);
 		//for(int i = 0; i < Constants.CACHE_INDEX_COUNT - 1; i++) {
 		//	client.onDemandRequester.writeChecksumList(i);

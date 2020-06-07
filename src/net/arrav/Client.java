@@ -299,7 +299,9 @@ public class Client extends ClientEngine {
 	public int itemPressX;
 	public int itemPressY;
 	public int chatScrollPos;
-	public int systemUpdateTimer;
+	public int game_message_time;
+	public int game_message_id;
+	public String game_message_context;
 	public int menuPos;
 	public int spellSelected;
 	private int spellId;
@@ -3276,7 +3278,8 @@ public class Client extends ClientEngine {
 				anInt842 = -1;
 				anInt843 = -1;
 				pktSize = 0;
-				systemUpdateTimer = 0;
+				game_message_time = 0;
+				game_message_id = -1;
 				anInt1011 = 0;
 				hintType = 0;
 				menuPos = 0;
@@ -5418,7 +5421,9 @@ public class Client extends ClientEngine {
 					return true;
 
 				case 114:
-					systemUpdateTimer = inBuffer.getLitEndUShort() * 30;
+					game_message_id = inBuffer.getUShort();
+					game_message_time = inBuffer.getUShort();
+					game_message_context = inBuffer.getLine();
 					pktType = -1;
 					return true;
 

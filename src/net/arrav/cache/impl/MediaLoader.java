@@ -2,6 +2,7 @@ package net.arrav.cache.impl;
 
 import net.arrav.Config;
 import net.arrav.cache.CacheLoader;
+import net.arrav.cache.CacheUnpacker;
 import net.arrav.graphic.img.PaletteImage;
 import net.arrav.Client;
 import net.arrav.activity.ui.UIRenderer;
@@ -25,8 +26,8 @@ public class MediaLoader implements CacheLoader {
 	public void run(Client client) {
 		client.mapback = Client.spriteCache.get(69);
 		client.initMapBack(client.mapback);
-
 		client.uiRenderer = new UIRenderer(client, Config.def.gameframe());
+		CacheUnpacker.progress = 12;
 		if(Config.def.gameframe() == 1)
 			client.setMode(1);
 		for(int k4 = 0; k4 < 8; k4++) {
@@ -47,6 +48,7 @@ public class MediaLoader implements CacheLoader {
 		for(int i4 = 0; i4 < 5; i4++) {
 			client.hitMarks[i4] = new BitmapImage(archive, "hitmarks", i4);
 		}
+		CacheUnpacker.progress = 13;
 		client.mapFlag = new BitmapImage(archive, "mapmarker", 0);
 		client.mapArrow = new BitmapImage(archive, "mapmarker", 1);
 		client.mapDotItem = new BitmapImage(archive, "mapdots", 0);
@@ -59,5 +61,7 @@ public class MediaLoader implements CacheLoader {
 		client.scrollBarDown = new BitmapImage(archive, "scrollbar", 1);
 		client.minimapImage = new BitmapImage(512, 512);
 		Rasterizer3D.setBrightness(0.80000000000000004F);
+		CacheUnpacker.progress = 14;
+
 	}
 }

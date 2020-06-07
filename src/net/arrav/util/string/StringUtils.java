@@ -7,6 +7,25 @@ public final class StringUtils {
 	//Character maping values.
 	private static final char[] CHARACTER_MAP = {'_', 'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z', '0', '1', '2', '3', '4', '5', '6', '7', '8', '9'};
 
+	public static String getFormattedTime(int time) {
+		int seconds = time / 50;
+
+		if (seconds < 60)
+			return "0:" + seconds + "";
+		else {
+			int mins = seconds / 60;
+			int remainderSecs = seconds - (mins * 60);
+			if (mins < 60) {
+				return mins + ":" + (remainderSecs < 10 ? "0" : "") + remainderSecs + "";
+			} else {
+				int hours = mins / 60;
+				int remainderMins = mins - (hours * 60);
+				return (hours < 10 ? "0" : "") + hours + "h " + (remainderMins < 10 ? "0" : "") + remainderMins + "m " + (remainderSecs < 10 ? "0" : "") + remainderSecs + "s";
+			}
+		}
+	}
+
+
 	/**
 	 * Formats a username so every word begins by a capital and
 	 * other characters are lower case.

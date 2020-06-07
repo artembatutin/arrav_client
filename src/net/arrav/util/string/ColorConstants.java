@@ -1,5 +1,7 @@
 package net.arrav.util.string;
 
+import java.awt.*;
+
 public class ColorConstants {
     public static final int GREEN_TEXT = 0x33AC25;
     public static final int RED_TEXT = 0xDF1F11;
@@ -16,5 +18,15 @@ public class ColorConstants {
     public final static int DARK_BLUE = 0x000080;
     public final static int GREEN = 0x09FF00;
     public final static int PALE_GREEN = 0x46b556;
+    public final static int LOADIN_1 = 0xFF403434;
+    public final static int LOADIN_2 = 0xFF2F2929;
+    public final static Color red       = new Color(243, 234, 234, 255).brighter();
+
+
+    public static int lighten(int color) {
+        Color c = new Color(color);
+       return c.brighter().brighter().getRGB();
+    }
+
 
 }

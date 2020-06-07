@@ -3,7 +3,7 @@ package net.arrav.activity;
 import net.arrav.Config;
 import net.arrav.Constants;
 import net.arrav.activity.ui.UIComponent;
-import net.arrav.activity.ui.util.CombatOverlayHandler;
+import net.arrav.util.string.StringUtils;
 import net.arrav.world.Scene;
 import net.arrav.world.emitter.Particle;
 import net.arrav.graphic.Rasterizer2D;
@@ -28,9 +28,6 @@ public class GameActivity extends Activity {
 
 	@Override
 	public boolean process() {
-		if(client.systemUpdateTimer > 1) {
-			client.systemUpdateTimer--;
-		}
 		if(client.anInt1011 > 0) {
 			client.anInt1011--;
 		}
@@ -1143,7 +1140,7 @@ public class GameActivity extends Activity {
 			return;
 		}
 		int i = 0;
-		if(client.systemUpdateTimer != 0) {
+		if(client.game_message_time != 0) {
 			i = 1;
 		}
 		for(int j = 0; j < 500; j++) {
@@ -1797,8 +1794,31 @@ public class GameActivity extends Activity {
 					Client.spriteCache.get(1926).drawImage(485, 310);
 			}
 		}
-		if(client.systemUpdateTimer != 0) {
-			int seconds = client.systemUpdateTimer / 50;
+
+
+		if (client.openInterfaceID == -1 && client.game_message_time > 0) {
+			int yOffset = client.uiRenderer.getMode() == Constants.UI_FIXED ? 0 : client.getHeight() - 498;
+			//int yOffset = frameMode == ScreenMode.FIXED ? 0 : frameHeight - 498;
+			int yPos = 35;
+
+			if (client.game_message_id == 0) {// Update
+				plainFont.drawLeftAlignedEffectString(client.game_message_context + " " + StringUtils.getFormattedTime(client.game_message_time),
+						4, yPos, 0xffff00, true);
+			} else if (client.game_message_id == 1) {// announcement
+				plainFont.drawLeftAlignedEffectString(client.game_message_context, 4, yPos + yOffset, 0xffff00, true);
+			} else if (client.game_message_id == 2) {// icon
+				plainFont.drawLeftAlignedEffectString("<img=14> " + client.game_message_context, 4, yPos + yOffset, 0xffff00, true);
+			} else if (client.game_message_id == 3) {// icon with time
+				plainFont.drawLeftAlignedEffectString(
+						"<img=14> " + client.game_message_context + " " + StringUtils.getFormattedTime(client.game_message_time), 4,
+						yPos + yOffset, 0xffff00, true);
+			}
+
+			client.game_message_time--;
+		}
+
+		/*if(client.game_message_time != 0) {
+			int seconds = client.game_message_time / 50;
 			final int minutes = seconds / 60;
 			seconds %= 60;
 			plainFont.drawLeftAlignedString("System update in: " + minutes + ":" + (seconds < 10 ? "0" : "") + seconds, 4, 329, 0xffff00);
@@ -1806,7 +1826,7 @@ public class GameActivity extends Activity {
 			if(client.anInt849 > 75) {
 				client.anInt849 = 0;
 			}
-		}
+		}*/
 		if(!client.menuOpened) {
 			processRightClick();
 			drawTooltip();
@@ -1856,7 +1876,7 @@ public class GameActivity extends Activity {
 		}
 		final BitmapFont font = plainFont;
 		int i = 0;
-		if(client.systemUpdateTimer != 0) {
+		if(client.game_message_time != 0) {
 			i = 1;
 		}
 		for(int j = 0; j < 500; j++) {

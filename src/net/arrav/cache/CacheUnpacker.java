@@ -1,6 +1,7 @@
 package net.arrav.cache;
 
 import net.arrav.Constants;
+import net.arrav.graphic.img.BitmapImage;
 import net.arrav.graphic.img.PaletteImage;
 import net.arrav.Client;
 import net.arrav.Config;
@@ -14,7 +15,10 @@ import net.arrav.graphic.font.BitmapFont;
 import net.arrav.net.SignLink;
 import net.arrav.util.ThreadUtils;
 import net.arrav.util.io.Buffer;
+import net.arrav.util.string.ColorConstants;
 
+import java.awt.*;
+import java.awt.image.Raster;
 import java.io.*;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -37,13 +41,6 @@ public class CacheUnpacker {
 	private Socket loadingSocket;
 
 	/**
-	 * Loading circle data.
-	 */
-	private int[] loadingCircleStarts;
-	private int[] loadingCircleLengths;
-	private int circleAngle = 0;
-
-	/**
 	 * Client access instance.
 	 */
 	private final Client client;
@@ -53,7 +50,9 @@ public class CacheUnpacker {
 	 */
 	private volatile String message = "";
 	private volatile String sideMessage;
-	private volatile int progress;
+	public static int progress;
+	private static int lastProgress = 0;
+	private int LP;
 
 	/**
 	 * Is loading finished?
@@ -89,28 +88,20 @@ public class CacheUnpacker {
 		Config.def.load();
 		message = "Preparing packing modules.";
 		client.startThread(new LoaderScreen(centerX, centerY), 8);
-		if(!Constants.USER_HOME_FILE_STORE) {
-			client.repackCacheIndex(1);
-			client.repackCacheIndex(2);
-			client.repackCacheIndex(3);
-			client.repackCacheIndex(4);
-			client.repackCacheIndex(5);
-			client.repackCacheIndex(6);
-			client.repackCacheIndex(7);
-			client.repackCacheIndex(8);
-		}
+		progress = 5;
 		load(new ProtocolLoader(getCacheArchive(5, "versionlist", CacheUnpacker.EXPECTED_CRC[5])));
 		load(new MediaLoader(getCacheArchive(4, "media", CacheUnpacker.EXPECTED_CRC[4])));
+		progress = 15;
 		load(new ConfigurationLoader(getCacheArchive(2, "config", CacheUnpacker.EXPECTED_CRC[2])));
 		load(new InterfaceLoader(getCacheArchive(3, "interface", CacheUnpacker.EXPECTED_CRC[3])));
+		progress = 80;
 		load(new SceneLoader());
+		progress = 100;
 		finished = true;
 		client.titleActivity.initialize();
 		TitleActivity.scrollOpened = true;
 		TitleActivity.scrollValue = 110;
 		// Resetting when finished
-		loadingCircleStarts = null;
-		loadingCircleLengths = null;
 		message = null;
 		System.gc();
 	}
@@ -118,7 +109,6 @@ public class CacheUnpacker {
 	private void load(CacheLoader loader) {
 		message = loader.message();
 		loader.run(client);
-		progress++;
 	}
 
 	/**
@@ -417,7 +407,15 @@ public class CacheUnpacker {
 			// Drawing the loading screen while the loading process is going
 			long t1 = System.currentTimeMillis();
 			do {
-				updateLoading(x, y);
+				if(lastProgress != progress) {
+					for (int i = lastProgress; i < progress; i++) {
+						updateLoading(i, x, y);
+					}
+				} else {
+					updateLoading(progress, x, y);
+				}
+
+				lastProgress = progress;
 				long t2 = System.currentTimeMillis();
 				if(t2 - t1 < 10) {
 					try {
@@ -433,20 +431,9 @@ public class CacheUnpacker {
 		/**
 		 * Loading screen draw loop.
 		 */
-		private synchronized void updateLoading(int centerX, int centerY) {
+		private synchronized void updateLoading(int completion, int centerX, int centerY) {
 			if(client.onDemandRequester == null)
 				return;
-			if(loadingCircleStarts == null || loadingCircleLengths == null) {
-				loadingCircleStarts = new int[74];
-				loadingCircleLengths = new int[74];
-				for(int i = 37; i >= 0; i--) {
-					final int amt = (int) Math.sqrt(37 * 37 - (37 - i) * (37 - i));
-					loadingCircleLengths[i] = 2 * amt;
-					loadingCircleLengths[73 - i] = 2 * amt;
-					loadingCircleStarts[i] = -amt + 37;
-					loadingCircleStarts[73 - i] = -amt + 37;
-				}
-			}
 			if(component == null || component.getWidth() != client.windowWidth || component.getHeight() != client.windowHeight) {
 				component = new GraphicalComponent(client.windowWidth, client.windowHeight);
 				component.setCanvas();
@@ -454,19 +441,59 @@ public class CacheUnpacker {
 				component.setCanvas();
 				Rasterizer2D.clearCanvas();
 			}
-			circleAngle = (circleAngle + 20) & 2047;
 			Rasterizer2D.fillRectangle(0, 0, client.windowWidth, client.windowHeight, 0x070505);
-			Client.spriteCache.get(859).drawImage(centerX - 433, centerY - 305);
-			Client.spriteCache.get(2059).drawImage(centerX, centerY - 305);
-			//Client.spriteCache.get(861).drawImage(centerX - 433, centerY);
-			//Client.spriteCache.get(862).drawImage(centerX, centerY);
-			Rasterizer2D.fillRoundedRectangle(centerX - 154, centerY - 84, 308, 113, 20, 0x000000, 100);
-			Rasterizer2D.fillRoundedRectangle(centerX - 150, centerY - 80, 300, 105, 17, 0x000000, 225);
-			if(Client.spriteCache.get(7) != null)
-				Client.spriteCache.get(7).drawAffineTransformedAlphaImage(centerX - 37, centerY - 55, 74, 74, 37, 37, loadingCircleStarts, loadingCircleLengths, circleAngle, 256);
-			client.fancyFont.drawCenteredEffectString(progress + "/5", centerX, centerY - 10, 0xF0BB3C, true);
+			BitmapImage bg = Client.spriteCache.get(859);
+			BitmapImage icon = Client.spriteCache.get(2059);
+			bg.drawImage(centerX - (bg.imageWidth / 2), centerY - (bg.imageHeight / 2));
+			icon.drawImage(centerX - (icon.imageWidth / 2), centerY - (bg.imageHeight / 2));
+
+			int percentage = completion;
+
+			if (percentage > 100)
+				percentage = 100;
+
+			if (percentage >= 0 && percentage <= 19) {
+				fadingToColor = 0xD4222E;
+			} else if (percentage >= 20 && percentage <= 39) {
+				fadingToColor = 0xF5793B;
+			} else if (percentage >= 59 && percentage <= 79) {
+				fadingToColor = 0x53D462;
+			} else {
+				fadingToColor = 0x0FD426;
+			}
+
+			if (!switchColor) {
+				if (percentageColor != fadingToColor)
+					switchColor = true;
+			}
+
+			if (switchColor) {
+				steps++;
+				if (steps >= 100) {
+					steps = 1;
+					switchColor = false;
+					percentageColor = fadingToColor;
+				} else {
+					percentageColor = fadeColors(new Color(percentageColor), new Color(fadingToColor), steps);
+				}
+			}
+
+			int loadingWidth = 490;
+			int loadingHeight = 40;
+			int loadingX = centerX - (loadingWidth /  2);
+			int loadingY = centerY - (loadingHeight /  2);
+
+
+			Rasterizer2D.drawOutlinedRoundedGradientRectangle(loadingX, loadingY, loadingWidth, loadingHeight, 0x0f0f0e, 0x191919, 0x191919, 255);
+			Rasterizer2D.drawRoundedGlowBorder(loadingX, loadingY, loadingWidth, loadingHeight, ColorConstants.BLACK, 40, 7, true);
+
+			int fillWidth = (loadingWidth * (completion)) / 100;
+			Rasterizer2D.fillRoundedGradientRectangle(loadingX + 5, loadingY + 5, fillWidth, loadingHeight - 10, percentageColor, ColorConstants.lighten(percentageColor), 100, true, false);
+
+			client.fancyFont.drawCenteredEffectString((completion) + "%", centerX, centerY - 10, 0xF0BB3C, true);
 			client.boldFont.drawLeftAlignedEffectString(sideMessage, 4, 15, 0xFFFFFF, true);
 			client.smallFont.drawCenteredEffectString(client.onDemandRequester.statusString, centerX, centerY + 60, 0xFFFFFF, true);
+
 			sendText(message, centerX, centerY - 60);
 		}
 		
@@ -476,6 +503,19 @@ public class CacheUnpacker {
 			client.fancyFont.drawCenteredEffectString(text, x, y, 0xDBB047, true);
 			component.drawGraphics(0, 0, client.graphics);
 		}
+	}
+
+	public static int percentageColor;
+	public static int steps = 1;
+	public static int fadingToColor;
+	public static boolean switchColor = false;
+
+	public static int fadeColors(Color color1, Color color2, float step) {
+		float ratio = step / 100;
+		int r = (int) (color2.getRed() * ratio + color1.getRed() * (1 - ratio));
+		int g = (int) (color2.getGreen() * ratio + color1.getGreen() * (1 - ratio));
+		int b = (int) (color2.getBlue() * ratio + color1.getBlue() * (1 - ratio));
+		return new Color(r, g, b).getRGB();
 	}
 }
 
