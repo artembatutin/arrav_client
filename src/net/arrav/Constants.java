@@ -42,6 +42,7 @@ public final class Constants {
 	public static final byte MSG_REQUEST = 3;
 	public static final byte MSG_CLAN = 4;
 	public static final byte MSG_GAME = 5;
+	public static final byte MSG_YELL = 6;
 
 	/*
 	 * Skill constants
@@ -72,7 +73,7 @@ public final class Constants {
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 0,//20
 			0, 0, 0, 1, 0, 0, -1, 0, 0, -1,//30
 			0, 0, 0, -2, 4, 3, 0, 0, 0, 2,//40
-			0, 0, 0, 5, 0, 0, 6, 0, 0, 9,//50
+			0, 0, 0, 5, 0, 0, 6, 0, 0, 10,//50
 			0, -1, -2, -2, -2, 0, 0, 0, 0, -2,//60
 			1, 0, 0, 2, -2, 0, 0, 0, 0, 6,//70
 			4, 2, 4, 0, 4, 0, 0, 0, 6, 3,//80

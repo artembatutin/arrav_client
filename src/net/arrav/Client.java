@@ -3609,6 +3609,7 @@ public class Client extends ClientEngine {
 				showChat = !showChat;
 			}
 		}
+
 		if(code == 887) {
 			yellChatMode = 2;
 			sendPrivacyChatState();
@@ -3637,6 +3638,15 @@ public class Client extends ClientEngine {
 			selectedChannelButton = 5;
 			if(chatTypeView != Constants.MSG_REQUEST) {
 				chatTypeView = Constants.MSG_REQUEST;
+				showChat = true;
+			} else {
+				showChat = !showChat;
+			}
+		}
+		if(code == 884) {
+			selectedChannelButton = 6;
+			if(chatTypeView != Constants.MSG_YELL) {
+				chatTypeView = Constants.MSG_YELL;
 				showChat = true;
 			} else {
 				showChat = !showChat;
@@ -5013,47 +5023,48 @@ public class Client extends ClientEngine {
 					return true;
 
 				case 50:
-					final long l4 = inBuffer.getLong();
-					final int i18 = inBuffer.getUByte();
-					String s7 = StringUtils.formatName(StringUtils.decryptName(l4));
-					for(int k24 = 0; k24 < friendsCount; k24++) {
-						if(l4 != friendsListAsLongs[k24]) {
+					final long username = inBuffer.getLong();
+					final int world = inBuffer.getUByte();
+					final int display = inBuffer.getUByte();
+					String name = StringUtils.formatName(StringUtils.decryptName(username));
+					for(int index = 0; index < friendsCount; index++) {
+						if(username != friendsListAsLongs[index]) {
 							continue;
 						}
-						if(friendsNodeIDs[k24] != i18) {
-							friendsNodeIDs[k24] = i18;
-							if(i18 >= 2) {
-								pushMessage(s7 + " has logged in.", 5, "");
+						if(friendsNodeIDs[index] != world) {
+							friendsNodeIDs[index] = world;
+							if (world >= 2 && display == 1) {
+								pushMessage(name + " has logged in.", 5, "");
 							}
-							if(i18 <= 1) {
-								pushMessage(s7 + " has logged out.", 5, "");
+							if (world <= 1 && display == 1) {
+								pushMessage(name + " has logged out.", 5, "");
 							}
 						}
-						s7 = null;
+						name = null;
 
 					}
-					if(s7 != null && friendsCount < 200) {
-						friendsListAsLongs[friendsCount] = l4;
-						friendsList[friendsCount] = s7;
-						friendsNodeIDs[friendsCount] = i18;
+					if (name != null && friendsCount < 200) {
+						friendsListAsLongs[friendsCount] = username;
+						friendsList[friendsCount] = name;
+						friendsNodeIDs[friendsCount] = world;
 						friendsCount++;
 					}
-					for(boolean flag6 = false; !flag6; ) {
-						flag6 = true;
-						for(int k29 = 0; k29 < friendsCount - 1; k29++) {
-							if(friendsNodeIDs[k29] != nodeID && friendsNodeIDs[k29 + 1] == nodeID || friendsNodeIDs[k29] == 0 && friendsNodeIDs[k29 + 1] != 0) {
-								final int j31 = friendsNodeIDs[k29];
-								friendsNodeIDs[k29] = friendsNodeIDs[k29 + 1];
-								friendsNodeIDs[k29 + 1] = j31;
-								final String s10 = friendsList[k29];
-								friendsList[k29] = friendsList[k29 + 1];
-								friendsList[k29 + 1] = s10;
-								final long l32 = friendsListAsLongs[k29];
-								friendsListAsLongs[k29] = friendsListAsLongs[k29 + 1];
-								friendsListAsLongs[k29 + 1] = l32;
-								flag6 = false;
+					for (boolean sort = false; !sort;) {
+						sort = true;
+						for (int index = 0; index < friendsCount - 1; index++)
+							if (friendsNodeIDs[index] != nodeID && friendsNodeIDs[index + 1] == nodeID
+									|| friendsNodeIDs[index] == 0 && friendsNodeIDs[index + 1] != 0) {
+								int j31 = friendsNodeIDs[index];
+								friendsNodeIDs[index] = friendsNodeIDs[index + 1];
+								friendsNodeIDs[index + 1] = j31;
+								String s10 = friendsList[index];
+								friendsList[index] = friendsList[index + 1];
+								friendsList[index + 1] = s10;
+								long l32 = friendsListAsLongs[index];
+								friendsListAsLongs[index] = friendsListAsLongs[index + 1];
+								friendsListAsLongs[index + 1] = l32;
+								sort = false;
 							}
-						}
 					}
 					pktType = -1;
 					return true;
@@ -5850,6 +5861,7 @@ public class Client extends ClientEngine {
 
 			}
 			SignLink.reportError("T1 - " + pktType + "," + pktSize + " - " + anInt842 + "," + anInt843);
+			logOut();
 		} catch(final IOException _ex) {
 			dropClient();
 			_ex.printStackTrace();
