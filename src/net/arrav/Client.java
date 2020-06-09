@@ -7,6 +7,7 @@ import net.arrav.activity.TitleActivity;
 import net.arrav.activity.panel.PanelHandler;
 import net.arrav.activity.panel.impl.ObjectCreationPanel.ConstructionObject;
 import net.arrav.activity.ui.UIComponent;
+import net.arrav.activity.ui.interfaces.InterfaceRenderer;
 import net.arrav.activity.ui.util.*;
 import net.arrav.cache.CacheArchive;
 import net.arrav.cache.CacheIndex;
@@ -138,7 +139,7 @@ public class Client extends ClientEngine {
 	public final int[] anIntArray873;
 	public final int[] currentExp;
 	public final int[] currentStats;
-	private final int[] currentStatGoals;
+	public final int[] currentStatGoals;
 	public final int[] anIntArray928;
 	public final int[] chatType;
 	public final int[] compassClipStarts;
@@ -172,7 +173,7 @@ public class Client extends ClientEngine {
 	private final int[] anIntArray1177 = {0, 0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 3};
 	private final int[][][] constructRegionData;
 	private final long[] ignoreListAsLongs;
-	private boolean rollCharacterInInterface;
+	public boolean rollCharacterInInterface;
 	public static int mac;
 
 	/*
@@ -304,8 +305,8 @@ public class Client extends ClientEngine {
 	public String game_message_context;
 	public int menuPos;
 	public int spellSelected;
-	private int spellId;
-	private int autocastId;
+	public int spellId;
+	public int autocastId;
 	public int loopCycle;
 	public int minimapZoom;
 	public int mapVerticalRotation;
@@ -366,7 +367,7 @@ public class Client extends ClientEngine {
 	public int anInt1315;
 	public int anInt1500;
 	public int anInt1501;
-	private int questLine;
+	public int questLine;
 	private int duelMode;
 	private int nodeID = 10;
 	public int[] friendsNodeIDs;
@@ -407,7 +408,7 @@ public class Client extends ClientEngine {
 	private boolean aBoolean1047;
 	private boolean regionLoaded;
 	private boolean inTutorialIsland;
-	private boolean aBoolean1149;
+	public boolean aBoolean1149;
 	private int planeReq;
 	private int daysSinceLastLogin;
 	private int ignoreCount;
@@ -429,8 +430,8 @@ public class Client extends ClientEngine {
 	private int membersInt;
 	public int spellUsableOn;
 	public int chatEffectsToggle;
-	private int atInventoryInterface;
-	private int atInventoryIndex;
+	public int atInventoryInterface;
+	public int atInventoryIndex;
 	private int anInt839;
 	private int anInt841;
 	private int anInt842;
@@ -469,8 +470,8 @@ public class Client extends ClientEngine {
 	public int anInt1264;
 	private int anInt1268;
 	private int anInt1269;
-	private int anInt1283;
-	private int anInt1284;
+	public int anInt1283;
+	public int anInt1284;
 	private int anInt1285;
 	private int localPlayerSlot;
 	private int[] bigX;
@@ -1001,7 +1002,7 @@ public class Client extends ClientEngine {
 		}
 	}
 
-	private static String valueToKOrMLong(int i) {
+	public static String valueToKOrMLong(int i) {
 		//for(int k = s.length() - 3; k > 0; k -= 3) {
 		//	s = s.substring(0, k) + "," + s.substring(k);
 		//}
@@ -1352,577 +1353,7 @@ public class Client extends ClientEngine {
 	}
 
 	public void drawWidget(Interface widget, int xPosition, int yPosition, int activeScroll, UIComponent component) {
-		if(widget.type != 0 || widget.children == null) {
-			return;
-		}
-		if(widget.hoverTriggered && anInt1026 != widget.id && anInt1048 != widget.id && anInt1039 != widget.id) {
-			return;
-		}
-		final int[] saveClip = Rasterizer2D.getClip();
-		Rasterizer2D.setClip(xPosition, yPosition, xPosition + widget.width, yPosition + widget.height);
-		for(int child = 0; child < widget.children.length; child++) {
-			int xPos = widget.childX[child] + xPosition;
-			int yPos = widget.childY[child] + yPosition - activeScroll;
-			final Interface childWidget = Interface.cache[widget.children[child]];
-			xPos += childWidget.offsetX;
-			yPos += childWidget.offsetY;
-			if(childWidget.contentType > 0) {
-				drawFriendsListOrWelcomeScreen(childWidget);
-			}
-			if(childWidget.type == Constants.TYPE_CONTAINER) {
-				if(childWidget.scrollPos > childWidget.scrollMax - childWidget.height) {
-					childWidget.scrollPos = childWidget.scrollMax - childWidget.height;
-				}
-				if(childWidget.scrollPos < 0) {
-					childWidget.scrollPos = 0;
-				}
-				drawWidget(childWidget, xPos, yPos, childWidget.scrollPos, component);
-				if(childWidget.scrollMax > childWidget.height) {
-					if(uiRenderer.id == 459) {
-						gameActivity.drawOldScrollbar(xPos + childWidget.width, yPos, childWidget.height, childWidget.scrollMax, childWidget.scrollPos);
-					} else {
-						gameActivity.drawScrollbar(xPos + childWidget.width, yPos, childWidget.height, childWidget.scrollMax, childWidget.scrollPos);
-					}
-				}
-			} else if(childWidget.type != Constants.WIDGET_MODEL_LIST) {
-				if(childWidget.type == Constants.WIDGET_INVENTORY) {
-					int item = 0;
-					for(int i = 0; i < childWidget.height; i++) {
-						for(int i2 = 0; i2 < childWidget.width; i2++) {
-							int x = xPos + i2 * (32 + childWidget.invPadX);
-							int y = yPos + i * (32 + childWidget.invPadY);
-							if(item < 20) {
-								x += childWidget.invIconX[item];
-								y += childWidget.invIconY[item];
-							}
-							if(item < childWidget.invId.length && childWidget.invId[item] > 0) {
-								int mouseDragOffsetX = 0;
-								int mouseDragOffsetY = 0;
-								final int itemID = childWidget.invId[item] - 1;
-								if(x > Rasterizer2D.clipStartX - 32 && x < Rasterizer2D.clipEndX && y > Rasterizer2D.clipStartY - 32 && y < Rasterizer2D.clipEndY || activeInterfaceType != 0 && invSrcSlot == item) {
-									int borderColor = 0;
-									if(itemSelected == 1 && anInt1283 == item && anInt1284 == childWidget.id) {
-										borderColor = 0xffffff;
-									}
-									final BitmapImage itemImage = ObjectType.getIcon(itemID, childWidget.invAmt[item], borderColor);
-									if(itemImage != null) {
-										if(activeInterfaceType != 0 && invSrcSlot == item && invWidgetId == childWidget.id) {
-											mouseDragOffsetX = mouseX - itemPressX;
-											mouseDragOffsetY = mouseY - itemPressY;
-											if(mouseDragOffsetX < 5 && mouseDragOffsetX > -5) {
-												mouseDragOffsetX = 0;
-											}
-											if(mouseDragOffsetY < 5 && mouseDragOffsetY > -5) {
-												mouseDragOffsetY = 0;
-											}
-											if(itemPressTimer < 10) {
-												mouseDragOffsetX = 0;
-												mouseDragOffsetY = 0;
-											}
-											itemImage.drawImage(x + mouseDragOffsetX, y + mouseDragOffsetY, 128);
-											if(y + mouseDragOffsetY < Rasterizer2D.clipStartY && widget.scrollPos > 0) {
-												int i10 = anInt945 * (Rasterizer2D.clipStartY - y - mouseDragOffsetY) / 3;
-												if(i10 > anInt945 * 10) {
-													i10 = anInt945 * 10;
-												}
-												if(i10 > widget.scrollPos) {
-													i10 = widget.scrollPos;
-												}
-												widget.scrollPos -= i10;
-												itemPressY += i10;
-											}
-											if(y + mouseDragOffsetY + 32 > Rasterizer2D.clipEndY && widget.scrollPos < widget.scrollMax - widget.height) {
-												int j10 = anInt945 * (y + mouseDragOffsetY + 32 - Rasterizer2D.clipEndY) / 3;
-												if(j10 > anInt945 * 10) {
-													j10 = anInt945 * 10;
-												}
-												if(j10 > widget.scrollMax - widget.height - widget.scrollPos) {
-													j10 = widget.scrollMax - widget.height - widget.scrollPos;
-												}
-												widget.scrollPos += j10;
-												itemPressY -= j10;
-											}
-										} else if(atInventoryInterfaceType != 0 && atInventoryIndex == item && atInventoryInterface == childWidget.id) {
-											itemImage.drawImage(x, y);
-										} else {
-											itemImage.drawImage(x, y);
-										}
-										if(itemImage.imageOriginalWidth == 33 || childWidget.invAmt[item] != 1) {
-											final int amount = childWidget.invAmt[item];
-											String amt = valueToKOrM(amount);
-											int color = 0xffff00;
-											if(amt.endsWith("M")) {
-												color = 0x00ff80;
-											} else if(amt.endsWith("K")) {
-												color = 0xffffff;
-											}
-											smallFont.drawLeftAlignedString(amt, x + 1 + mouseDragOffsetX, y + 10 + mouseDragOffsetY, 0);
-											smallFont.drawLeftAlignedString(amt, x + mouseDragOffsetX, y + 9 + mouseDragOffsetY, color);
-										}
-									}
-								}
-							} else if(childWidget.invIcon != null && item < 20) {
-								if(childWidget.invIcon[item] != 0 && childWidget.invIcon[item] != 0) {
-									final BitmapImage itemImage = spriteCache.get(childWidget.invIcon[item]);
-									if(itemImage != null) {
-										itemImage.drawImage(x, y);
-									}
-								}
-							}
-							item++;
-						}
-					}
-				} else if(childWidget.type == Constants.WIDGET_RECTANGLE) {
-					boolean hover = false;
-					if(anInt1039 == childWidget.id || anInt1048 == childWidget.id || anInt1026 == childWidget.id) {
-						hover = true;
-					}
-					int color;
-					if(interfaceIsSelected(childWidget)) {
-						color = childWidget.colorAlt;
-						if(hover && childWidget.hoverColorAlt != 0) {
-							color = childWidget.hoverColorAlt;
-						}
-					} else {
-						color = childWidget.color;
-						if(hover && childWidget.hoverColor != 0) {
-							color = childWidget.hoverColor;
-						}
-					}
-					if(childWidget.alpha == 0) {
-						if(childWidget.rectFilled) {
-							Rasterizer2D.fillRectangle(xPos, yPos, childWidget.width, childWidget.height, color);
-						} else {
-							Rasterizer2D.drawRectangle(xPos, yPos, childWidget.width, childWidget.height, color);
-						}
-					} else if(childWidget.rectFilled) {
-						Rasterizer2D.fillRectangle(xPos, yPos, childWidget.width, childWidget.height, color, 256 - (childWidget.alpha & 0xff));
-					} else {
-						Rasterizer2D.drawRectangle(xPos, yPos, childWidget.width, childWidget.height, color, 256 - (childWidget.alpha & 0xff));
-					}
-				} else if(childWidget.type == Constants.WIDGET_STRING) {
-					final BitmapFont font = Interface.fonts[childWidget.fontId];
-					String message = childWidget.text;
-					boolean hover = false;
-					if(anInt1039 == childWidget.id || anInt1048 == childWidget.id || anInt1026 == childWidget.id) {
-						hover = true;
-					}
-					int color;
-					if(childWidget.id >= 16026 && childWidget.id <= 17026) {
-						Rasterizer2D.fillRectangle(xPos - 20, yPos - 1, 175, 13, 0x000000, 70);
-						if(questLine == childWidget.id) {
-							Rasterizer2D.fillRectangle(xPos - 20, yPos - 1, 175, 13, 0x000000, 70);
-							questLine = 0;
-						}
-					}
-					if(interfaceIsSelected(childWidget)) {
-						color = childWidget.colorAlt;
-						if(hover && childWidget.hoverColorAlt != 0) {
-							color = childWidget.hoverColorAlt;
-						}
-						if(childWidget.textAlt.length() > 0) {
-							message = childWidget.textAlt;
-						}
-					} else {
-						color = childWidget.color;
-						if(hover && childWidget.hoverColor != 0) {
-							color = childWidget.hoverColor;
-						}
-					}
-					if(childWidget.actionType == 6 && aBoolean1149) {
-						message = "Please wait...";
-						color = childWidget.color;
-					}
-					if(component == UIComponent.CHAT) {
-						if(color == 0xffff00)
-							color = 255;
-						if(color == 49152)
-							color = 0xffffff;
-						if(uiRenderer.getId() == 1) {
-							if(color == 0x000000)
-								color = 0xecdec6;
-							if(color == 0xffff00)
-								color = 0x000000;
-							if(color == 0x800000)
-								color = 0xc5a44c;
-							if(color == 0x0000ff)
-								color = 0xff9100;
-						}
-					}
-					for(int l6 = yPos + font.lineHeight; message.length() > 0; l6 += font.lineHeight) {
-						if(message.contains("%")) {
-							do {
-								final int k7 = message.indexOf("%1");
-								if(k7 == -1) {
-									break;
-								}
-								message = message.substring(0, k7) + interfaceIntToString(extractInterfaceValues(childWidget, 0)) + message.substring(k7 + 2);
-							} while(true);
-							do {
-								final int l7 = message.indexOf("%2");
-								if(l7 == -1) {
-									break;
-								}
-								message = message.substring(0, l7) + interfaceIntToString(extractInterfaceValues(childWidget, 1)) + message.substring(l7 + 2);
-							} while(true);
-							do {
-								final int i8 = message.indexOf("%3");
-								if(i8 == -1) {
-									break;
-								}
-								message = message.substring(0, i8) + interfaceIntToString(extractInterfaceValues(childWidget, 2)) + message.substring(i8 + 2);
-							} while(true);
-							do {
-								final int j8 = message.indexOf("%4");
-								if(j8 == -1) {
-									break;
-								}
-								message = message.substring(0, j8) + interfaceIntToString(extractInterfaceValues(childWidget, 3)) + message.substring(j8 + 2);
-							} while(true);
-							do {
-								final int k8 = message.indexOf("%5");
-								if(k8 == -1) {
-									break;
-								}
-								message = message.substring(0, k8) + interfaceIntToString(extractInterfaceValues(childWidget, 4)) + message.substring(k8 + 2);
-							} while(true);
-							do {
-								int index = message.indexOf("%6");
-
-								if(index == -1) {
-									break;
-								}
-
-								message = message.substring(0, index) + interfaceIntToString(extractInterfaceValues(widget, 5)) + message.substring(index + 2);
-							} while(true);
-						}
-						int rank = 0;
-						if(message.contains("@ra")) {
-							int spot = message.contains("@red@") ? 8 : 3;
-							rank = Byte.parseByte(Character.toString(message.charAt(spot)));
-							message = message.replaceAll("@ra" + rank +"@", "");
-						}
-						final int l8 = message.indexOf("\\n");
-						String s1;
-						if(l8 != -1) {
-							s1 = message.substring(0, l8);
-							message = message.substring(l8 + 2);
-						} else {
-							s1 = message;
-							message = "";
-						}
-						if(Config.def.idx()) {
-							s1 = childWidget.id + "";
-						}
-						if(rank >= 1) {
-							spriteCache.get(1626 + rank).drawImage(xPos + childWidget.width / 2, yPos + font.lineHeight / 2 - 3);
-							xPos += 11;
-						}
-						if(childWidget.textCenter) {
-							font.drawCenteredEffectString(s1, xPos + childWidget.width / 2, l6, color, childWidget.textShadow ? 0 : -1);
-						} else {
-							switch (childWidget.textAlign) {
-								case 0:
-									font.drawLeftAlignedEffectString(s1, xPos, l6, color, childWidget.textShadow ? 0 : -1);
-									break;
-								case 1:
-									font.drawCenteredEffectString(s1, xPos + (childWidget.width / 2), l6, color, childWidget.textShadow ? 0 : -1);
-									break;
-								case 2:
-									font.drawRightAlignedEffectString(s1, xPos, l6, color, childWidget.textShadow ? 0 : -1);
-									break;
-								case 3:
-									font.drawCenteredEffectString(s1, xPos, l6, color, childWidget.textShadow ? 0 : -1);
-									break;
-								default:
-									font.drawLeftAlignedEffectString(s1, xPos, l6, color, childWidget.textShadow ? 0 : -1);
-									break;
-							}
-						}
-					}
-				} else if(childWidget.type == Constants.WIDGET_SPRITE) {
-					Interface.cache[640].text = "Arrav.net";
-					BitmapImage image = null;
-					if(childWidget.spriteID < -1) {
-						image = ObjectType.getIcon(-childWidget.spriteID, 0, 0);
-					} else {
-						if(interfaceIsSelected(childWidget) || (childWidget.secondarySpriteID != childWidget.spriteID && childWidget.hoverTriggered && mouseInRegion(xPos, yPos, xPos + childWidget.width, yPos + childWidget.height))) {
-							if(childWidget.secondarySpriteID != 0)
-								image = spriteCache.get(childWidget.secondarySpriteID);
-						} else {
-							if(childWidget.spriteID != -1)
-								image = spriteCache.get(childWidget.spriteID);
-							if(image == null)
-								System.out.println("null image id:"+childWidget.id+" parent:"+childWidget.parent);
-						}
-					}
-
-					if(Config.def.sprite()) {
-						Rasterizer2D.drawRectangle(xPos, yPos, image.imageWidth, image.imageHeight, 0x000000);
-						smallFont.drawLeftAlignedString(childWidget.id + " "+childWidget.spriteID, xPos, yPos + smallFont.lineHeight, 0x000000);
-					} else {
-						if (image != null) {
-							if (childWidget.id == autocastId && childWidget.id == spellId && anIntArray1045[108] != 0)
-								spriteCache.get(2029).drawImage(xPos - 3, yPos - 3);
-							if (spellSelected == 1 && childWidget.id == spellId && spellId != 0 && image != null) {
-								image.drawImage(xPos, yPos, 50);
-							} else if (childWidget.drawsAlpha)
-								image.drawImage(xPos, yPos, 100 + childWidget.alpha);
-							else
-								image.drawImage(xPos, yPos);
-						}
-					}
-				} else if(childWidget.type == Constants.WIDGET_MODEL) {
-					final int centerX = Rasterizer3D.viewport.centerX;
-					final int centerY = Rasterizer3D.viewport.centerY;
-					Rasterizer3D.viewport.centerX = xPos + childWidget.width / 2;
-					Rasterizer3D.viewport.centerY = yPos + childWidget.height / 2;
-					final int i5 = Rasterizer3D.angleSine[childWidget.modelYaw] * childWidget.modelZoom >> 16;
-					final int l5 = Rasterizer3D.angleCosine[childWidget.modelYaw] * childWidget.modelZoom >> 16;
-					final boolean isSelected = interfaceIsSelected(childWidget);
-					int animationID;
-					Rasterizer3D.textured = false;
-					if(isSelected) {
-						animationID = childWidget.modelAnimAlt;
-					} else {
-						animationID = childWidget.modelAnim;
-					}
-					Model model;
-					if(animationID == -1) {
-						model = childWidget.getModel(-1, -1, isSelected);
-					} else {
-						if(animationID > DeformSequence.cache.length) {
-							Rasterizer3D.textured = true;
-							return;
-						}
-						final DeformSequence animation = DeformSequence.cache[animationID];
-						if(animation == null) {
-							Rasterizer3D.textured = true;
-							return;
-						}
-						model = childWidget.getModel(animation.anIntArray354[childWidget.modelAnimLength], animation.frameList[childWidget.modelAnimLength], isSelected);
-					}
-					if(widget.id == forcedChatWidgetId) {
-						Rasterizer2D.setClip(25, 25, 505, 116);
-					}
-					if(childWidget.id == 15125) {
-						if(leftClickInRegion(xPos, yPos - 180, xPos + childWidget.width, yPos - 80 + childWidget.height)) {
-							rollCharacterInInterface = !rollCharacterInInterface;
-						}
-					}
-					if(Config.def.idx()) {
-						boldFont.drawCenteredEffectString(childWidget.id + "", xPos + childWidget.width / 2, yPos, 0x000000, childWidget.textShadow ? 0 : -1);
-					}
-					if(model != null) {
-						model.drawModel(childWidget.modelRoll, 0, childWidget.modelYaw, 0, i5, l5);
-					}
-					Rasterizer2D.removeClip();
-					Rasterizer3D.viewport.centerX = centerX;
-					Rasterizer3D.viewport.centerY = centerY;
-					Rasterizer3D.textured = true;
-				} else if(childWidget.type == Constants.WIDGET_ITEM_LIST) {
-					final BitmapFont font = Interface.fonts[childWidget.fontId];
-					int item = 0;
-					for(int yColumn = 0; yColumn < childWidget.height; yColumn++) {
-						for(int xColumn = 0; xColumn < childWidget.width; xColumn++) {
-							if(childWidget.invId[item] > 0) {
-								final ObjectType itemDef = ObjectType.get(childWidget.invId[item] - 1);
-								String itemData = itemDef.name;
-								if(itemDef.stackable || childWidget.invAmt[item] != 1) {
-									itemData = itemData + " x" + valueToKOrMLong(childWidget.invAmt[item]);
-								}
-								final int x = xPos + xColumn * (115 + childWidget.invPadX);
-								final int y = yPos + yColumn * (12 + childWidget.invPadY);
-								if(childWidget.textCenter) {
-									font.drawCenteredEffectString(itemData, x + childWidget.width / 2, y, childWidget.color, childWidget.textShadow ? 0 : -1);
-								} else {
-									font.drawLeftAlignedEffectString(itemData, x, y, childWidget.color, childWidget.textShadow ? 0 : -1);
-								}
-							}
-							item++;
-						}
-					}
-				} else if(childWidget.type == Constants.WIDGET_TOOLTIP && (anInt1500 == childWidget.id || anInt1044 == childWidget.id || anInt1129 == childWidget.id) && anInt1501 == 50 && !menuOpened) {
-					int boxWidth = 0;
-					int boxHeight = 0;
-					final BitmapFont font = plainFont;
-					for(String message = childWidget.text; message.length() > 0; ) {
-						if(message.contains("%")) {
-							do {
-								final int k7 = message.indexOf("%1");
-								if(k7 == -1) {
-									break;
-								}
-								message = message.substring(0, k7) + interfaceIntToString(extractInterfaceValues(childWidget, 0)) + message.substring(k7 + 2);
-							} while(true);
-							do {
-								final int l7 = message.indexOf("%2");
-								if(l7 == -1) {
-									break;
-								}
-								message = message.substring(0, l7) + interfaceIntToString(extractInterfaceValues(childWidget, 1)) + message.substring(l7 + 2);
-							} while(true);
-							do {
-								final int i8 = message.indexOf("%3");
-								if(i8 == -1) {
-									break;
-								}
-								message = message.substring(0, i8) + interfaceIntToString(extractInterfaceValues(childWidget, 2)) + message.substring(i8 + 2);
-							} while(true);
-							do {
-								final int j8 = message.indexOf("%4");
-								if(j8 == -1) {
-									break;
-								}
-								message = message.substring(0, j8) + interfaceIntToString(extractInterfaceValues(childWidget, 3)) + message.substring(j8 + 2);
-							} while(true);
-							do {
-								final int k8 = message.indexOf("%5");
-								if(k8 == -1) {
-									break;
-								}
-								message = message.substring(0, k8) + interfaceIntToString(extractInterfaceValues(childWidget, 4)) + message.substring(k8 + 2);
-							} while(true);
-						}
-						final int lineSplit = message.indexOf("\\n");
-						String splitMessage;
-						if(lineSplit != -1) {
-							splitMessage = message.substring(0, lineSplit);
-							message = message.substring(lineSplit + 2);
-						} else {
-							splitMessage = message;
-							message = "";
-						}
-						final int lineWidth = font.getEffectStringWidth(splitMessage);
-						if(lineWidth > boxWidth) {
-							boxWidth = lineWidth;
-						}
-						boxHeight += font.lineHeight + 1;
-					}
-
-					int skillId = -1;
-					int[] skillIds = {0, 3, 14, 2, 16, 13, 1, 15, 10, 4, 17, 7, 5, 12, 11, 6, 9, 8, 20, 18, 19, 21, 22, 23, 24};
-					for(int i = 0; i < 25; i++) {
-						if(Constants.MORE_DETAILS_PANEL_ID[i] == childWidget.id) {
-							if(currentStatGoals[skillIds[i]] == 0) {
-								break;
-							}
-							boolean maxLevel = false;
-							if(maxStats[skillIds[i]] >= 99) {
-								if(skillIds[i] != 24) {
-									maxStats[skillIds[i]] = 99;
-									maxLevel = true;
-								} else if(maxStats[skillIds[i]] >= 120) {
-									maxStats[skillIds[i]] = 120;
-									maxLevel = true;
-								}
-							}
-							if(!maxLevel)
-								skillId = i;
-							break;
-						}
-					}
-					if(skillId != -1) {
-						boxHeight += 15;
-					}
-
-					boxWidth += 6;
-					boxHeight += 7;
-					int x = xPos + childWidget.width - 5 - boxWidth;
-					int y = yPos + childWidget.height + 5;
-					if(x < xPos + 5) {
-						x = xPos + 5;
-					}
-					if(x + boxWidth > xPosition + widget.width) {
-						x = xPosition + widget.width - boxWidth;
-					}
-					if(y + boxHeight > yPosition + widget.height) {
-						y = yPos - boxHeight;
-					}
-					if(component == UIComponent.INVENTORY) {//Boundaries
-						if(widget.id == 3917) {//fixing skill menus
-							if(widget.childX[child] + boxWidth > 205) {
-								x -= (widget.childX[child] + boxWidth) - 190;
-							}
-							if(widget.childY[child] + boxHeight > 220) {
-								y -= (boxHeight + widget.childY[child]) - 160;
-							}
-						}
-					}
-
-					Rasterizer2D.fillRectangle(x, y, boxWidth, boxHeight, 0xFFFFA0);
-					Rasterizer2D.drawRectangle(x, y, boxWidth, boxHeight, 0);
-					if(skillId != -1) {
-						Double percentage = (double) (currentStatGoals[skillIds[skillId]] != 0 ? (currentExp[skillIds[skillId]] * 100) / getXPForLevel(currentStatGoals[skillIds[skillId]]) : (currentExp[skillIds[skillId]] * 100) / getXPForLevel(currentStats[skillIds[skillId]] + 1));
-						Rasterizer2D.fillRectangle(x + 5, (y + boxHeight) - 15, boxWidth - 10, 12, 0xE62E00);
-						Rasterizer2D.fillRectangle(x + 5, (y + boxHeight) - 15, (int) ((percentage / 100) * (boxWidth - 10)), 12, 0x00B800);
-						Rasterizer2D.drawRectangle(x + 5, (y + boxHeight) - 15, boxWidth - 10, 12, 0);
-						smallFont.drawCenteredString(currentStatGoals[skillIds[skillId]] != 0 ? "To level " + currentStatGoals[skillIds[skillId]] : "Next level", x + (boxWidth / 2), (y + boxHeight) - 4, 0x000);
-					}
-					String message = childWidget.text;
-					for(int j11 = y + font.lineHeight + 2; message.length() > 0; j11 += font.lineHeight + 1) {
-						if(message.contains("%")) {
-							do {
-								final int k7 = message.indexOf("%1");
-								if(k7 == -1) {
-									break;
-								}
-								message = message.substring(0, k7) + interfaceIntToString(extractInterfaceValues(childWidget, 0)) + message.substring(k7 + 2);
-							} while(true);
-							do {
-								final int l7 = message.indexOf("%2");
-								if(l7 == -1) {
-									break;
-								}
-								message = message.substring(0, l7) + interfaceIntToString(extractInterfaceValues(childWidget, 1)) + message.substring(l7 + 2);
-							} while(true);
-							do {
-								final int i8 = message.indexOf("%3");
-								if(i8 == -1) {
-									break;
-								}
-								message = message.substring(0, i8) + interfaceIntToString(extractInterfaceValues(childWidget, 2)) + message.substring(i8 + 2);
-							} while(true);
-							do {
-								final int j8 = message.indexOf("%4");
-								if(j8 == -1) {
-									break;
-								}
-								message = message.substring(0, j8) + interfaceIntToString(extractInterfaceValues(childWidget, 3)) + message.substring(j8 + 2);
-							} while(true);
-							do {
-								final int k8 = message.indexOf("%5");
-								if(k8 == -1) {
-									break;
-								}
-								message = message.substring(0, k8) + interfaceIntToString(extractInterfaceValues(childWidget, 4)) + message.substring(k8 + 2);
-							} while(true);
-						}
-						final int lineSplit = message.indexOf("\\n");
-						String splitMessage;
-						if(lineSplit != -1) {
-							splitMessage = message.substring(0, lineSplit);
-							message = message.substring(lineSplit + 2);
-						} else {
-							splitMessage = message;
-							message = "";
-						}
-						if(childWidget.textCenter) {
-							font.drawCenteredEffectString(splitMessage, x + childWidget.width / 2, j11, y, -1);
-						} else if(splitMessage.contains("\\r")) {
-							final String text = splitMessage.substring(0, splitMessage.indexOf("\\r"));
-							final String text2 = splitMessage.substring(splitMessage.indexOf("\\r") + 2);
-							font.drawLeftAlignedEffectString(text, x + 3, j11, 0, -1);
-							final int rightX = boxWidth + x - font.getEffectStringWidth(text2) - 2;
-							font.drawLeftAlignedEffectString(text2, rightX, j11, 0, -1);
-						} else {
-							font.drawLeftAlignedEffectString(splitMessage, x + 3, j11, 0, -1);
-						}
-					}
-				}
-			}
-		}
-		Rasterizer2D.setClip(saveClip);
+		InterfaceRenderer.drawWidget(widget, xPosition, yPosition, activeScroll, component);
 	}
 
 	public void drawSoak(int damage, int opacity, int drawPos, int x) {
@@ -1940,7 +1371,7 @@ public class Client extends ClientEngine {
 		smallHitFont.drawCenteredString(damage + "", spriteDrawX - 8 + x + (soakLength == 1 ? 5 : 0), drawPos + 32, 0xffffff, opacity);
 	}
 
-	private void drawFriendsListOrWelcomeScreen(Interface class9) {
+	public void drawFriendsListOrWelcomeScreen(Interface class9) {
 		int j = class9.contentType;
 		if(j >= 1 && j <= 100 || j >= 701 && j <= 800) {
 			if(j == 1 && anInt900 == 0) {
@@ -2546,7 +1977,7 @@ public class Client extends ClientEngine {
 		}
 	}
 
-	private int extractInterfaceValues(Interface class9, int j) {
+	public int extractInterfaceValues(Interface class9, int j) {
 		if(class9.valueIndexArray == null || j >= class9.valueIndexArray.length) {
 			return -2;
 		}
@@ -2836,7 +2267,7 @@ public class Client extends ClientEngine {
 		}
 	}
 
-	private boolean interfaceIsSelected(Interface class9) {
+	public boolean interfaceIsSelected(Interface class9) {
 		if(class9.valueCompareType == null) {
 			return false;
 		}
@@ -2863,7 +2294,7 @@ public class Client extends ClientEngine {
 		return true;
 	}
 
-	private String interfaceIntToString(int j) {
+	public String interfaceIntToString(int j) {
 		if(j < 0x3b9ac9ff) {
 			return j + "";
 		} else {
@@ -3167,6 +2598,14 @@ public class Client extends ClientEngine {
 		if(k2 < 0 && j2 > 0 || k2 > 0 && j2 < 0) {
 			cameraYaw = yawLimit;
 		}
+	}
+
+	private void sendPrivacyChatState() {
+		outBuffer.putOpcode(95);
+		outBuffer.putByte(publicChatMode);
+		outBuffer.putByte(privateChatMode);
+		outBuffer.putByte(tradeMode);
+		outBuffer.putByte(clanChatMode);
 	}
 
 	public void loadingStages() {
@@ -4087,12 +3526,15 @@ public class Client extends ClientEngine {
 		}
 		if(code == 1003) {
 			clanChatMode = 2;
+			sendPrivacyChatState();
 		}
 		if(code == 1002) {
 			clanChatMode = 1;
+			sendPrivacyChatState();
 		}
 		if(code == 1001) {
 			clanChatMode = 0;
+			sendPrivacyChatState();
 		}
 		if(code == 1000) {
 			selectedChannelButton = 4;
@@ -4123,15 +3565,19 @@ public class Client extends ClientEngine {
 		}
 		if(code == 997) {
 			publicChatMode = 3;
+			sendPrivacyChatState();
 		}
 		if(code == 996) {
 			publicChatMode = 2;
+			sendPrivacyChatState();
 		}
 		if(code == 995) {
 			publicChatMode = 1;
+			sendPrivacyChatState();
 		}
 		if(code == 994) {
 			publicChatMode = 0;
+			sendPrivacyChatState();
 		}
 		if(code == 993) {
 			selectedChannelButton = 2;
@@ -4144,12 +3590,15 @@ public class Client extends ClientEngine {
 		}
 		if(code == 992) {
 			privateChatMode = 2;
+			sendPrivacyChatState();
 		}
 		if(code == 991) {
 			privateChatMode = 1;
+			sendPrivacyChatState();
 		}
 		if(code == 990) {
 			privateChatMode = 0;
+			sendPrivacyChatState();
 		}
 		if(code == 989) {
 			selectedChannelButton = 3;
@@ -4162,21 +3611,27 @@ public class Client extends ClientEngine {
 		}
 		if(code == 887) {
 			yellChatMode = 2;
+			sendPrivacyChatState();
 		}
 		if(code == 886) {
 			yellChatMode = 1;
+			sendPrivacyChatState();
 		}
 		if(code == 885) {
 			yellChatMode = 0;
+			sendPrivacyChatState();
 		}
 		if(code == 987) {
 			tradeMode = 2;
+			sendPrivacyChatState();
 		}
 		if(code == 986) {
 			tradeMode = 1;
+			sendPrivacyChatState();
 		}
 		if(code == 985) {
 			tradeMode = 0;
+			sendPrivacyChatState();
 		}
 		if(code == 984) {
 			selectedChannelButton = 5;
@@ -5685,17 +5140,17 @@ public class Client extends ClientEngine {
 					return true;
 
 				case 79:
-					final int j5 = inBuffer.getLitEndUShort();
-					int l12 = inBuffer.getUShortMinus128();
-					final Interface class9_3 = Interface.cache[j5];
-					if(class9_3 != null && class9_3.type == 0) {
-						if(l12 < 0) {
-							l12 = 0;
+					final int interId = inBuffer.getInt();
+					int scrollAmt = inBuffer.getUShort();
+					final Interface widg = Interface.cache[interId];
+					if(widg != null && widg.type == 0) {
+						if(scrollAmt < 0) {
+							scrollAmt = 0;
 						}
-						if(l12 > class9_3.scrollMax - class9_3.height) {
-							l12 = class9_3.scrollMax - class9_3.height;
+						if(scrollAmt > widg.scrollMax - widg.height) {
+							scrollAmt = widg.scrollMax - widg.height;
 						}
-						class9_3.scrollPos = l12;
+						widg.scrollPos = scrollAmt;
 					}
 					pktType = -1;
 					return true;
@@ -5707,6 +5162,14 @@ public class Client extends ClientEngine {
 							handleSettings(k5);
 						}
 					}
+					pktType = -1;
+					return true;
+
+				case 206:
+					publicChatMode = inBuffer.getUByte();
+					privateChatMode = inBuffer.getUByte();
+					clanChatMode = inBuffer.getUByte();
+					tradeMode = inBuffer.getUByte();
 					pktType = -1;
 					return true;
 
@@ -5848,6 +5311,21 @@ public class Client extends ClientEngine {
 					pktType = -1;
 					return true;
 
+				case 203:
+					try {
+						int interf = inBuffer.getInt();
+						String message = inBuffer.getLine();
+
+						if (Interface.cache[interf] != null) {
+							Interface.cache[interf].tooltip = message;
+						}
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					pktType = -1;
+					return true;
+
+
 				case 174:
 						int targetIndex = inBuffer.getSShort();
 						int targetType = inBuffer.getSByte();
@@ -5914,13 +5392,6 @@ public class Client extends ClientEngine {
 						if(Interface.cache[frame] != null)
 							Interface.cache[frame].text = text;
 					}
-					pktType = -1;
-					return true;
-
-				case 206:
-					publicChatMode = inBuffer.getUByte();
-					privateChatMode = inBuffer.getUByte();
-					tradeMode = inBuffer.getUByte();
 					pktType = -1;
 					return true;
 

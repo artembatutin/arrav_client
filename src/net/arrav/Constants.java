@@ -49,7 +49,7 @@ public final class Constants {
 	static final byte SKILL_AMOUNT = 25;
 	public static final String[] SKILL_NAMES_UNORDERED = {"Attack", "Defence", "Strength", "Hitpoints", "Ranged", "Prayer", "Magic", "Cooking", "Woodcutting", "Fletching", "Fishing", "Firemaking", "Crafting", "Smithing", "Mining", "Herblore", "Agility", "Thieving", "Slayer", "Farming", "Runecrafting", "Hunter", "Construction", "Summoning", "Dungeoneering"};
 	public static final String[] SKILL_NAMES_ORDERED = {"Attack", "Hitpoints", "Mining", "Strength", "Agility", "Smithing", "Defence", "Herblore", "Fishing", "Range", "Thieving", "Cooking", "Prayer", "Crafting", "Firemaking", "Magic", "Fletching", "Woodcutting", "Rune", "Slayer", "Farming", "Construction", "Hunter", "Summoning", "Dungeoneering"};
-	static final int[] MORE_DETAILS_PANEL_ID = new int[]{4040, 4076, 4112, 4046, 4082, 4118, 4052, 4088, 4124, 4058, 4094, 4130, 4064, 4100, 4136, 4070, 4106, 4142, 4160, 2832, 13917, 19005, 19006, 19007, 19008};
+	public static final int[] MORE_DETAILS_PANEL_ID = new int[]{4040, 4076, 4112, 4046, 4082, 4118, 4052, 4088, 4124, 4058, 4094, 4130, 4064, 4100, 4136, 4070, 4106, 4142, 4160, 2832, 13917, 19005, 19006, 19007, 19008};
 
 	/*
 	 * Widget constants
@@ -75,7 +75,7 @@ public final class Constants {
 			0, 0, 0, 5, 0, 0, 6, 0, 0, 9,//50
 			0, -1, -2, -2, -2, 0, 0, 0, 0, -2,//60
 			1, 0, 0, 2, -2, 0, 0, 0, 0, 6,//70
-			4, 2, 4, 0, 4, 0, 0, 0, 4, 3,//80
+			4, 2, 4, 0, 4, 0, 0, 0, 6, 3,//80
 			-2, 8, 0, 7, 2, 0, 6, 0, 0, -2,//90
 			0, 0, 0, 0, 0, 0, 2, 0, 1, -1,//100
 			2, 0, 0, -1, 4, 2, 0, 0, 0, 1,//110
@@ -88,7 +88,7 @@ public final class Constants {
 			3, 0, 0, 3, -1, 0, 6, 0, 0, 0,//180
 			0, 0, 0, 0, 2, 0, -1, 0, 0, 0,//190
 			0, 0, 0, 0, 0, -1, 0, 0, 0, 4,//200
-			0, 0, 0, 0, 0, 3, 0, 4, 0, -1,//210
+			0, 0, -1, 0, 0, 4, 0, 4, 0, -1,//210
 			0, 0, 0, -2, 7, 0, -1, 2, 0, 0,//220
 			1, 0, 0, 0, 0, 0, 0, 0, 0, 8,//230
 			0, 0, 0, 0, 0, 0, 0, 0, 0, 2,//240
