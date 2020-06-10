@@ -146,23 +146,22 @@ public final class ObjectType {
 		//Repacking with fixes.
 		if(REPACK) {
 			try {
-				packValues();
+				packValues("obj2");
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 	
-	public static void packValues() throws IOException {
+	public static void packValues(String name) throws IOException {
 		final Buffer data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/obj.dat"));
 		final Buffer index = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/obj.idx"));
 
 		final int length = index.getUShort();
-		System.out.println("OSRS OBJ 174: " + length);
 		ObjectType[] items = new ObjectType[length];
 		data.pos = 2;
-		DataOutputStream dat = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/item/obj2.dat"));
-		DataOutputStream idx = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/item/obj2.idx"));
+		DataOutputStream dat = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/item/"+name+".dat"));
+		DataOutputStream idx = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/item/"+name+".idx"));
 		idx.writeShort(length);
 		dat.writeShort(length);
 		for(int i = 0; i < length; i++) {

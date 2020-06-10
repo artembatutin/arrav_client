@@ -195,12 +195,16 @@ public class AssetDrawer {
 				end2 = Client.spriteCache.get((type * 3) + 152);
 				end1.drawImage(client.spriteDrawX - 12 + x, drawPos - 27, opacity);
 				x += 4;
+				int spriteWidth = 8;
 				for(int i = 0; i < hitLength * 2; i++) {
 					middle.drawImage(client.spriteDrawX - 12 + x, drawPos - 27, opacity);
 					x += 4;
+					spriteWidth += 4;
 				}
 				end2.drawImage(client.spriteDrawX - 12 + x, drawPos - 27, opacity);
-				(type == 1 ? client.bigHitFont : client.smallHitFont).drawCenteredString(damage + "", client.spriteDrawX + 4 + (soak > 0 ? -16 : 0), drawPos + (type == 1 ? 2 : 32) - 15, 0xffffff, opacity);
+				int len = (type == 1 ? client.bigHitFont : client.smallHitFont).getStringWidth(damage+"");
+				int xPos = client.spriteDrawX + ((spriteWidth / 2) - (len / 2));
+				(type == 1 ? client.bigHitFont : client.smallHitFont).drawCenteredString(damage + "", xPos + (soak > 0 ? -16 : 0), drawPos + (type == 1 ? 2 : 32) - 15, 0xffffff, opacity);
 			} else {
 				String text = damage + "";
 				Rasterizer2D.fillRoundedRectangle(client.spriteDrawX + (soak > 0 ? -16 : 0) - 3, drawPos - 27, (type == 1 ? client.bigHitFont : client.smallHitFont).getStringWidth(text) + 6, 19, 5, 0x000000, opacity / 2);
