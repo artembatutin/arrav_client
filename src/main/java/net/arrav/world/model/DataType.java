@@ -17,4 +17,12 @@ public enum DataType {
     public int getIndex() {
         return index;
     }
+
+    public static DataType ofOrdinal(int ordinal) {
+        for(DataType type : VALUES)
+            if(type.ordinal() == ordinal)
+                return type;
+            return null;
+    }
+    private static final DataType[] VALUES = values();
 }

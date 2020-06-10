@@ -146,40 +146,39 @@ public final class ObjectType {
 		//Repacking with fixes.
 		if(REPACK) {
 			try {
-				repackOSRS();
+				packValues();
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
 		}
 	}
 	
-	public static void repackOSRS() throws IOException {
-		final Buffer osrs_data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/osrs_obj.dat"));
-		final Buffer osrs_idx = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/osrs_obj.idx"));
-		final int length = osrs_idx.getUShort();
+	public static void packValues() throws IOException {
+		final Buffer data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/obj.dat"));
+		final Buffer index = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/obj.idx"));
+
+		final int length = index.getUShort();
 		System.out.println("OSRS OBJ 174: " + length);
 		ObjectType[] items = new ObjectType[length];
-		osrs_data.pos = 2;
-		int size = 22308;
+		data.pos = 2;
 		DataOutputStream dat = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/item/obj2.dat"));
 		DataOutputStream idx = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/item/obj2.idx"));
-		idx.writeShort(size);
-		dat.writeShort(size);
-		for(int i = 0; i < size; i++) {
-			ObjectType obj;
+		idx.writeShort(length);
+		dat.writeShort(length);
+		for(int i = 0; i < length; i++) {
+			ObjectType obj = new ObjectType();
 			try {
 				//System.out.println(i);
+				int start = dat.size();
+
 				obj = get(i);
-				if(i < items.length) {
-					ObjectType osrs = new ObjectType();
-					osrs.decodeOSRS(osrs_data);
-					if(obj.name != null && osrs.name != null) {
-					}
-				}
-				int offset1 = dat.size();
-				int offset2 = dat.size();
-				int writeOffset = offset2 - offset1;
-				idx.writeShort(writeOffset);
+				obj.decode(data, i);
+
+
+				obj.encode(dat);
+
+				int end = dat.size();
+				idx.writeShort(end - start);
 			} catch(Exception e) {
 				e.printStackTrace();
 				break;
@@ -200,7 +199,7 @@ public final class ObjectType {
 			} else if(opcode == 2) {
 				name = buffer.getLine();
 			} else if(opcode == 3) {
-				buffer.getUShort();
+				dataType = DataType.ofOrdinal(buffer.getUByte());
 			} else if(opcode == 4) {
 				iconZoom = buffer.getUShort();
 			} else if(opcode == 5) {
@@ -215,21 +214,10 @@ public final class ObjectType {
 				iconVerticalOffset = buffer.getUShort();
 				if(iconVerticalOffset > 32767)
 					iconVerticalOffset -= 65536;
-			} else if(opcode == 9) {
-				buffer.getUShort();
-			} else if(opcode == 10) {
-				buffer.getUShort();
 			} else if(opcode == 11) {
 				stackable = true;
 			} else if(opcode == 12) {
 				value = buffer.getInt();
-			} else if(opcode == 13) {
-				buffer.getUShort();
-			} else if(opcode == 14) {
-				buffer.getUShort();
-			} else if(opcode == 15) {
-				buffer.getUShort();
-			} else if(opcode == 16) {
 			} else if(opcode == 23) {
 				maleEquip = buffer.getUShort();
 			} else if(opcode == 24) {
@@ -272,24 +260,12 @@ public final class ObjectType {
 				for(int i_35_ = 0; index > i_35_; i_35_++) {
 					recolorDstPalette[i_35_] = buffer.getSByte();
 				}
-			} else if(opcode == 43) {
-				buffer.getUShort();
-			} else if(opcode == 44) {
-				buffer.getUShort();
-			} else if(opcode == 45) {
-				buffer.getUShort();
-			} else if(opcode == 46) {
-				buffer.getUShort();
 			} else if(opcode == 65) {
 				//stockmarket = true;
 			} else if(opcode == 78) {
 				tertiaryMaleModel = buffer.getUShort();
 			} else if(opcode == 79) {
 				tertiaryFemaleModel = buffer.getUShort();
-			} else if(opcode == 80) {
-				buffer.getUShort();
-			} else if(opcode == 81) {
-				buffer.getUShort();
 			} else if(opcode == 90) {
 				maleDialoguemodelId = buffer.getUShort();
 			} else if(opcode == 91) {
@@ -335,14 +311,6 @@ public final class ObjectType {
 				womanEquipOffsetX = buffer.getSByte();
 				womanEquipOffsetY = buffer.getSByte();
 				womanEquipOffsetZ = buffer.getSByte();
-			} else if(opcode == 127) {
-				buffer.getSByte();
-				buffer.getSByte();
-				buffer.getSByte();
-			} else if(opcode == 128) {
-				buffer.getSByte();
-				buffer.getSByte();
-				buffer.getSByte();
 			} else {
 				System.out.println("[ObjectType] Unknown opcode: " + opcode);
 				break;
@@ -497,6 +465,10 @@ public final class ObjectType {
 				out.write(name.replaceAll("_", " ").getBytes());
 				out.writeByte(10);
 				written.add(2);
+			}  else if(dataType != DataType.NEWEST && !written.contains(3)) {
+				out.writeByte(3);
+				out.writeByte(dataType.ordinal());
+				written.add(3);
 			} else if(iconZoom != 2000 && !written.contains(4)) {
 				out.writeByte(4);
 				out.writeShort(iconZoom);
