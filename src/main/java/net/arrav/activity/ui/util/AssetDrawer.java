@@ -209,6 +209,7 @@ public class AssetDrawer {
 				String text = damage + "";
 				Rasterizer2D.fillRoundedRectangle(client.spriteDrawX + (soak > 0 ? -16 : 0) - 3, drawPos - 27, (type == 1 ? client.bigHitFont : client.smallHitFont).getStringWidth(text) + 6, 19, 5, 0x000000, opacity / 2);
 				(type == 1 ? client.bigHitFont : client.smallHitFont).drawLeftAlignedString(text, client.spriteDrawX + (soak > 0 ? -16 : 0), drawPos + (type == 1 ? 5 : 34) - 19, 0xffffff);
+				x += (type == 1 ? client.bigHitFont : client.smallHitFont).getStringWidth(text) + 6;
 			}
 
 			if(soak > 0) {
