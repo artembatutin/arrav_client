@@ -85,7 +85,7 @@ public final class SpotAnimation {
 		if(model != null) {
 			return model;
 		}
-		model = Model.get(modelid);
+		model = Model.fetchModel(modelid);
 		if(model == null) {
 			return null;
 		}

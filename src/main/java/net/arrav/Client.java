@@ -12,6 +12,7 @@ import net.arrav.activity.ui.util.*;
 import net.arrav.cache.CacheArchive;
 import net.arrav.cache.CacheIndex;
 import net.arrav.cache.CacheUnpacker;
+import net.arrav.cache.custom.ModelVault;
 import net.arrav.cache.custom.SpritesCache;
 import net.arrav.cache.impl.InterfaceLoader;
 import net.arrav.net.*;
@@ -66,6 +67,8 @@ public class Client extends ClientEngine {
 	 * Sprite cache
 	 */
 	public static SpritesCache spriteCache = new SpritesCache();
+
+	public static ModelVault modelVault = new ModelVault();
 	
 	/*
 	 * Particles

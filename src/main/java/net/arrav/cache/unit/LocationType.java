@@ -9,14 +9,13 @@ import net.arrav.Constants;
 import net.arrav.cache.CacheArchive;
 import net.arrav.net.SignLink;
 import net.arrav.util.DataToolkit;
-import net.arrav.util.ReflectionUtil;
+import net.arrav.world.model.DataType;
 import net.arrav.world.model.Model;
 import net.arrav.net.OnDemandFetcher;
 import net.arrav.util.io.Buffer;
 import net.arrav.Client;
 
 import java.io.*;
-import java.util.Arrays;
 
 public final class LocationType {
 
@@ -56,6 +55,7 @@ public final class LocationType {
 	public int[] modelIds;
 	public int[] modelIdsOSRS;
 	private int[] modelTypes;
+	public DataType dataType;
 	private int[] modelTypesOSRS;
 	public int varBitId;
 	public int offsetAmplifier;
@@ -74,6 +74,7 @@ public final class LocationType {
 
 	private LocationType() {
 		id = -1;
+		dataType = DataType.NEWEST;
 	}
 
 	public static LocationType getRelative(int id) {
@@ -702,13 +703,13 @@ public final class LocationType {
 			}
 			boolean cached = true;
 			for(final int element : modelIds) {
-				cached &= Model.isCached(element & 0xffff, isOsrs() ? 7 : id > 42003 ? 0 : 6);
+				cached &= Model.isCached(element & 0xffff, dataType != DataType.NEWEST ? id > 42003 ? DataType.NEWEST : DataType.NEW : dataType);
 			}
 			return cached;
 		}
 		for(int type = 0; type < modelTypes.length; type++) {
 			if(modelTypes[type] == modelType) {
-				return Model.isCached(modelIds[type] & 0xffff, isOsrs() ? 7 : id > 42003 ? 0 : 6);
+				return Model.isCached(modelIds[type] & 0xffff, dataType != DataType.NEWEST ? id > 42003 ? DataType.NEWEST : DataType.NEW : dataType);
 			}
 		}
 		return true;
@@ -742,7 +743,7 @@ public final class LocationType {
 			return true;
 		boolean cached = true;
 		for(final int element : modelIds) {
-			cached &= Model.isCached(element & 0xffff, isOsrs() ? 7 : id > 42003 ? 0 : 6);
+			cached &= Model.isCached(element & 0xffff, dataType != DataType.NEWEST ? id > 42003 ? DataType.NEWEST : DataType.NEW : dataType);
 		}
 		return cached;
 	}
@@ -791,7 +792,7 @@ public final class LocationType {
 				}
 				model = modelCache.get(l2);
 				if(model == null) {
-					model = Model.get(l2 & 0xffff, isOsrs() ? 7 : id > 42003 ? 0 : 6);
+					model = Model.fetchModel(l2 & 0xffff, dataType != DataType.NEWEST ? id > 42003 ? DataType.NEWEST : DataType.NEW : dataType);
 					if(model == null) {
 						return null;
 					}
@@ -833,7 +834,7 @@ public final class LocationType {
 			}
 			model = modelCache.get(modelId);
 			if(model == null) {
-				model = Model.get(modelId & 0xffff, isOsrs() ? 7 : id > 42003 ? 0 : 6);
+				model = Model.fetchModel(modelId & 0xffff, dataType != DataType.NEWEST ? id > 42003 ? DataType.NEWEST : DataType.NEW : dataType);
 				if(model == null) {
 					return null;
 				}
@@ -904,6 +905,7 @@ public final class LocationType {
 	private void renew() {
 		modelIds = null;
 		modelTypes = null;
+		dataType = DataType.NEWEST;
 		name = null;
 		description = null;
 		modifiedModelColors = null;

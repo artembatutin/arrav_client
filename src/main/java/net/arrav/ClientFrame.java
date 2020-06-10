@@ -28,13 +28,13 @@ public final class ClientFrame extends Frame {
 		setTitle("Arrav - Official Client | " + (undecorative ? "Fullscreen" : resizable ? "Resizable" : "Fixed")); // Sets the frame's title.
 		setResizable(resizable); // Sets the frame resizable or fixed.
 		setUndecorated(undecorative); // Sets the frame undecorative or windowed.
-		try {
-			Image icon = ImageIO.read(getClass().getResource("icon.png"));
-			setIconImage(icon);
-			Cursor cursor = toolkit.createCustomCursor(ImageIO.read(getClass().getResource("cursor.png")), new Point(0, 0), "cursor");
-			setCursor(cursor);
-		} catch(IOException e) {
-		}
+		//try {
+		//	Image icon = ImageIO.read(getClass().getResource("icon.png"));
+		//	setIconImage(icon);
+		//	Cursor cursor = toolkit.createCustomCursor(ImageIO.read(getClass().getResource("cursor.png")), new Point(0, 0), "cursor");
+		//	setCursor(cursor);
+		//} catch(IOException e) {
+		//}
 		
 		setVisible(true); // Sets the frame to a visible state.
 		insets = getInsets(); // Initialize the insets.

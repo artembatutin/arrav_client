@@ -112,7 +112,7 @@ public final class Identikit {
 		}
 		final Model aclass30_sub2_sub4_sub6s[] = new Model[modelIds.length];
 		for(int i = 0; i < modelIds.length; i++) {
-			aclass30_sub2_sub4_sub6s[i] = Model.get(modelIds[i]);
+			aclass30_sub2_sub4_sub6s[i] = Model.fetchModel(modelIds[i]);
 		}
 
 		Model model;
@@ -150,7 +150,7 @@ public final class Identikit {
 		int j = 0;
 		for(int k = 0; k < 5; k++) {
 			if(headModelIds[k] != -1) {
-				aclass30_sub2_sub4_sub6s[j++] = Model.get(headModelIds[k]);
+				aclass30_sub2_sub4_sub6s[j++] = Model.fetchModel(headModelIds[k]);
 			}
 		}
 

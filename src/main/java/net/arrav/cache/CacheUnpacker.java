@@ -143,7 +143,7 @@ public class CacheUnpacker {
 		//Unpacking images.
 		client.titleActivity = new TitleActivity();
 		Client.spriteCache.init(new File(SignLink.getCacheDir()+"main_file_sprites.dat"), new File(SignLink.getCacheDir()+"main_file_sprites.idx"));
-
+		Client.modelVault.init(new File(SignLink.getCacheDir()+"models.dat"), new File(SignLink.getCacheDir()+"models.idx"));
 	}
 
 	private void loadTitleScreen() {

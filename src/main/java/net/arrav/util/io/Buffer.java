@@ -222,6 +222,10 @@ public final class Buffer extends DoublyLinkableEntry {
 		return data[pos++];
 	}
 
+	public void skip(int amt) {
+		pos+=amt;
+	}
+
 	public int getOppositeUByte() {
 		return -data[pos++] & 0xff;
 	}

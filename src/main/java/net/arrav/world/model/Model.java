@@ -40,7 +40,8 @@ public final class Model extends Entity {
 	private static byte[][] newestModelHeader;
 	private static byte[][] newModelHeader;
 	private static byte[][] osrsModelHeader;
-	
+	private static byte[][] customModelHeader;
+
 	public int vertexAmt;
 	public int[] vertexX;
 	public int[] vertexY;
@@ -137,10 +138,11 @@ public final class Model extends Entity {
 		newModelHeader = new byte[length][];
 		newestModelHeader = new byte[length][];
 		osrsModelHeader = new byte[length][];
+		customModelHeader = new byte[length][];
 		odFetcher = odf;
 	}
 	
-	public Model(int modelId, byte[] data, boolean osrs) {
+	public Model(int modelId, byte[] data) {
 		try {
 			if(data != null && data.length > 1)
 				if(usesNewHeader(data)) {
@@ -148,10 +150,12 @@ public final class Model extends Entity {
 				} else {
 					decodeOld(data);
 				}
+
 			if(!Config.def.modelPrecision() && upscaled) {
 				scale(32, 32, 32);
 				upscaled = false;
 			}
+
 			int[][] attachments = ParticleAttachment.getAttachments(modelId);
 			if (attachments != null) {
 				for (int n = 0; n < attachments.length; n++) {
@@ -1454,6 +1458,8 @@ public final class Model extends Entity {
 			newModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
 		else if(type == 7)
 			osrsModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
+		else if(type == 255)
+			customModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
 		else
 			newestModelHeader[id] = data != null ? data : EMPTY_BYTE_ARRAY;
 	}
@@ -1463,60 +1469,68 @@ public final class Model extends Entity {
 		newestModelHeader[index] = null;
 		newModelHeader[index] = null;
 		osrsModelHeader[index] = null;
+		customModelHeader[index] = null;
+	}
+
+	
+	public static Model fetchModel(int index) {
+		return fetchModel(index, DataType.NEWEST);
 	}
 	
-	private static boolean isOSRS(int index, int type) {
-		if((type == 0 || type == 6) && Config.def.oldModels && index < 34026) {
-			return true;
-		}
-		return false;
-	}
-	
-	public static Model get(int index) {
-		int type = 0;
-		if(isOSRS(index, type)) {
-			type = 7;
-		}
-		return get(index, type);
-	}
-	
-	public static Model get(int index, int type) {
+	public static Model fetchModel(int index, DataType type) {
 		byte[] data;
-		if(type == 6)
+
+
+
+
+		if(type == DataType.NEW)
 			data = newModelHeader[index];
-		else if(type == 7)
+		else if(type == DataType.OSRS)
 			data = osrsModelHeader[index];
+		else if(type == DataType.CUSTOM)
+			data = customModelHeader[index];
 		else
 			data = newestModelHeader[index];
+
+		if(data == null && type == DataType.CUSTOM) {
+			data = Client.modelVault.getData(index);
+			method460(data, index, 255);
+		}
+
 		if(data == null) {
-			odFetcher.addRequest(type, index);
+			odFetcher.addRequest(type.getIndex(), index);
 			return null;
 		} else {
-			return new Model(index, data, type == 7);
+			if(type == DataType.CUSTOM)
+				System.out.println("model:"+index);
+			return new Model(index, data);
 		}
 		
 		
 	}
 	
 	public static boolean isCached(int id) {
-		int type = 0;
-		if(isOSRS(id, type)) {
-			type = 7;
-		}
-		return isCached(id, type);
-		
+		return isCached(id, DataType.NEWEST);
 	}
 	
-	public static boolean isCached(int id, int type) {
+	public static boolean isCached(int id, DataType type) {
 		if(id == -1)
 			return true;
-		if(type == 0 && newestModelHeader[id] != null)
+		if(type == DataType.NEWEST && newestModelHeader[id] != null)
 			return true;
-		if(type == 6 && newModelHeader[id] != null)
+		if(type == DataType.NEW && newModelHeader[id] != null)
 			return true;
-		if(type == 7 && osrsModelHeader[id] != null)
+		if(type == DataType.OSRS && osrsModelHeader[id] != null)
 			return true;
-		odFetcher.addRequest(type, id);
+
+		if(type == DataType.CUSTOM) {
+			if(customModelHeader[id] != null)
+				return true;
+			else
+			method460(Client.modelVault.getData(id), id, 255);
+			return true;
+		}
+		odFetcher.addRequest(type.getIndex(), id);
 		return false;
 		
 	}

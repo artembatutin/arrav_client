@@ -5,6 +5,7 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.arrav.Config;
 import net.arrav.Constants;
 import net.arrav.cache.CacheArchive;
+import net.arrav.world.model.DataType;
 import net.arrav.world.model.Model;
 import net.arrav.net.SignLink;
 import net.arrav.util.io.Buffer;
@@ -50,12 +51,11 @@ public final class NPCType {
 	private int contrast;
 	private int scaleZ;
 	private int scaleXY;
-	
+
+	public DataType dataType;
 	private int[] modelId;
-	private int[] modelIdOSRS;
 	private int[] dialogueModels;
 	public int childrenIDs[];
-	private boolean osrs;
 	private boolean nonTextured;
 	private boolean fixPriority;
 
@@ -70,6 +70,7 @@ public final class NPCType {
 		headIcon = -1;
 		standAnimationId = -1;
 		id = -1;
+		dataType = DataType.NEWEST;
 		degreesToTurn = 32;
 		turnRightAnimationId = -1;
 		clickable = true;
@@ -89,14 +90,17 @@ public final class NPCType {
 		data.pos = index[id];
 		npc.id = id;
 		npc.decode(data);
-		npc.osrs();
-		
+
 		if(id == 8331) {
 			npc.name = "Guardian";
 		}
 		//pets
-		if(id == 3167)
+		if(id == 3167) {
 			npc.pet(1615, "Abyssal orphan", 48);
+			npc.dataType = DataType.CUSTOM;
+			npc.modelId = new int[]{1};
+
+		}
 		if(id == 3168)
 			npc.pet(2745, "Jadiku", 28);
 		if(id == 3169)
@@ -131,6 +135,7 @@ public final class NPCType {
 		this.name = name;
 		this.scaleXY = scale;
 		this.scaleZ = scale;
+		this.dataType = copied.dataType;
 	}
 
 	public static void reset() {
@@ -255,11 +260,10 @@ public final class NPCType {
 					if(childrenIDs[i2] == 65535)
 						childrenIDs[i2] = -1;
 				}
-			} else if(i == 31) {
+			} else if(i == 31) {//osrs bs
 				int j = stream.getUByte();
-				modelIdOSRS = new int[j];
 				for(int j1 = 0; j1 < j; j1++)
-					modelIdOSRS[j1] = stream.getUShort();
+					stream.getUShort();
 			} else if(i == 30)
 				clickable = false;
 			else
@@ -323,12 +327,7 @@ public final class NPCType {
 				if(i == 1265) {
 					System.out.println("rock crabs: " + obj.name + " - " + osrs.name);
 				}
-				if(obj.name != null && osrs.name != null) {
-					if(obj.name.equalsIgnoreCase(osrs.name)) {
-						System.out.println("set osrs for " + obj.name + " - " + obj.id);
-						obj.modelIdOSRS = osrs.modelId;//setting model ids.
-					}
-				}
+
 			}
 			int offset1 = dat.size();
 			obj.encode(dat);
@@ -547,15 +546,6 @@ public final class NPCType {
 					out.writeShort(c);
 				}
 				written.add(19);
-			} else if(modelIdOSRS != null && !written.contains(31)) {
-				out.writeByte(31);
-				out.writeByte(modelIdOSRS.length);
-				if(modelIdOSRS.length > 0) {
-					for(int aModelId : modelIdOSRS) {
-						out.writeShort(aModelId);
-					}
-				}
-				written.add(31);
 			} else if(actions != null && !actionsd) {
 				for(int i = 0; i < actions.length; i++) {
 					if(actions[i] != null) {
@@ -589,7 +579,7 @@ public final class NPCType {
 		}
 		boolean flag1 = false;
 		for(int anAdditionalModelCount : dialogueModels) {
-			if(!Model.isCached(anAdditionalModelCount, osrs ? 7 : 0)) {
+			if(!Model.isCached(anAdditionalModelCount, dataType)) {
 				flag1 = true;
 			}
 		}
@@ -598,7 +588,7 @@ public final class NPCType {
 		}
 		final Model[] parts = new Model[dialogueModels.length];
 		for(int j = 0; j < dialogueModels.length; j++) {
-			parts[j] = Model.get(dialogueModels[j], osrs ? 7 : 0);
+			parts[j] = Model.fetchModel(dialogueModels[j], dataType);
 		}
 
 		Model model;
@@ -655,7 +645,7 @@ public final class NPCType {
 		if(model == null) {
 			boolean flag = false;
 			for(int aModelId : modelId) {
-				if(!Model.isCached(aModelId, osrs ? 7 : 0)) {
+				if(!Model.isCached(aModelId, dataType)) {
 					flag = true;
 				}
 			}
@@ -720,7 +710,7 @@ public final class NPCType {
 			boolean flag = false;
 			if(modelId != null) {
 				for(int aModelId : modelId) {
-					if(!Model.isCached(aModelId, osrs ? 7 : 0)) {
+					if(!Model.isCached(aModelId, dataType)) {
 						flag = true;
 					}
 				}
@@ -732,7 +722,7 @@ public final class NPCType {
 			}
 			final Model[] parts = new Model[modelId.length];
 			for(int j1 = 0; j1 < modelId.length; j1++) {
-				parts[j1] = Model.get(modelId[j1], osrs ? 7 : 0);
+				parts[j1] = Model.fetchModel(modelId[j1], dataType);
 			}
 			if(parts.length == 1) {
 				cachedModel = parts[0];
@@ -780,15 +770,4 @@ public final class NPCType {
 		}
 		return model;
 	}
-	
-	private void osrs() {
-		if(modelId == null && modelIdOSRS != null) {
-			modelId = modelIdOSRS;
-			osrs = true;
-		} else if(Config.def.oldModels && modelIdOSRS != null) {
-			modelId = modelIdOSRS;
-			osrs = true;
-		}
-	}
-	
 }

@@ -2,7 +2,6 @@ package net.arrav.cache.unit;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.arrav.Constants;
-import net.arrav.util.ReflectionUtil;
 import net.arrav.world.model.Model;
 import net.arrav.net.SignLink;
 import net.arrav.util.io.Buffer;
@@ -11,11 +10,7 @@ import net.arrav.cache.CacheArchive;
 import net.arrav.graphic.font.BitmapFont;
 import net.arrav.util.DataToolkit;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.util.Map;
 
 public final class Interface {
 
@@ -1763,7 +1758,7 @@ public final class Interface {
 			return model;
 		}
 		if(i == 1) {
-			model = Model.get(j);
+			model = Model.fetchModel(j);
 		}
 		if(i == 2) {
 			model = NPCType.get(j).method160();
@@ -1772,7 +1767,7 @@ public final class Interface {
 			model = client.localPlayer.getModel();
 		}
 		if(i == 4) {
-			model = ObjectType.get(j).method202(50);
+			model = ObjectType.get(j).getItemModel(50);
 		}
 		if(i == 5) {
 			model = null;

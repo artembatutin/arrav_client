@@ -202,7 +202,7 @@ public final class Player extends Mobile {
 				if(k2 >= 256 && k2 < 32768 && !Identikit.cache[k2 - 256].bodyModelCached()) {
 					flag = true;
 				}
-				if(k2 >= 32768 && !ObjectType.get(k2 - 32768).method195(gender)) {
+				if(k2 >= 32768 && !ObjectType.get(k2 - 32768).equipModelFetched(gender)) {
 					flag = true;
 				}
 			}
@@ -233,7 +233,7 @@ public final class Player extends Mobile {
 					}
 				}
 				if(i3 >= 32768) {
-					Model model_4 = ObjectType.get(i3 - 32768).method196(gender);
+					Model model_4 = ObjectType.get(i3 - 32768).getEquipModel(gender);
 					if(model_4 != null) {
 						aclass30_sub2_sub4_sub6s[j2++] = model_4;
 					}
@@ -305,7 +305,7 @@ public final class Player extends Mobile {
 				}
 			}
 			if(i1 >= 32768) {
-				final Model model_2 = ObjectType.get(i1 - 32768).method194(gender);
+				final Model model_2 = ObjectType.get(i1 - 32768).getDialogueModel(gender);
 				if(model_2 != null) {
 					aclass30_sub2_sub4_sub6s[k++] = model_2;
 				}
