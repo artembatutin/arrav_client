@@ -1,0 +1,35 @@
+import java.sql.Wrapper
+
+buildscript {
+    repositories {
+        mavenCentral()
+        jcenter()
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+apply plugin: 'application'
+
+mainClassName = "net.arrav.Client"
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+
+
+}
+sourceSets {
+    main.java.srcDirs = ['src/main/java']
+    test.java.srcDirs = ['src/test/java']
+}
+
+task wrapper(type: org.gradle.api.tasks.wrapper.Wrapper) {
+    gradleVersion = '4.6'
+}
