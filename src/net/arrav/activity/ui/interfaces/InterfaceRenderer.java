@@ -324,16 +324,19 @@ public class InterfaceRenderer {
                         } else {
                             if(childWidget.spriteID != -1)
                                 image = Client.spriteCache.get(childWidget.spriteID);
-                            if(image == null)
-                                System.out.println("null image id:"+childWidget.id+" parent:"+childWidget.parent);
                         }
+                    }
+
+
+                    if(image == null) {
+                        System.out.println("null image id:"+childWidget.id+" parent:"+childWidget.parent+" sprite:"+childWidget.spriteID+" sprite:"+childWidget.secondarySpriteID);
+                        continue;
                     }
 
                     if(Config.def.sprite()) {
                         Rasterizer2D.drawRectangle(xPos, yPos, image.imageWidth, image.imageHeight, 0x000000);
                         client.smallFont.drawLeftAlignedString(childWidget.id + " "+childWidget.spriteID, xPos, yPos + client.smallFont.lineHeight, 0x000000);
                     } else {
-                        if (image != null) {
                             if (childWidget.id == client.autocastId && childWidget.id == client.spellId && client.anIntArray1045[108] != 0)
                                 Client.spriteCache.get(2029).drawImage(xPos - 3, yPos - 3);
                             if (client.spellSelected == 1 && childWidget.id == client.spellId && client.spellId != 0 && image != null) {
@@ -342,7 +345,6 @@ public class InterfaceRenderer {
                                 image.drawImage(xPos, yPos, 100 + childWidget.alpha);
                             else
                                 image.drawImage(xPos, yPos);
-                        }
                     }
                 }
                 else if(childWidget.type == Constants.WIDGET_MODEL) {
