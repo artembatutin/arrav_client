@@ -4,6 +4,7 @@ import net.arrav.Constants;
 import net.arrav.world.model.Model;
 import net.arrav.Config;
 import net.arrav.world.model.Entity;
+import net.arrav.world.model.Player;
 import net.arrav.world.tile.*;
 import net.arrav.graphic.Rasterizer3D;
 import net.arrav.util.collect.LinkedDeque;
@@ -1340,14 +1341,14 @@ public final class Scene {
 		if(l < 3 || !flag) {
 			return;
 		}
-		for(int k1 = 0; k1 < model.triAmt; k1++) {
+		for(int k1 = 0; k1 < model.numberOfTriangleFaces; k1++) {
 			if(anIntArray486[model.vertexIndex3d1[k1]] == anInt488 && anIntArray486[model.vertexIndex3d2[k1]] == anInt488 && anIntArray486[model.vertexIndex3d3[k1]] == anInt488) {
-				model.triType[k1] = -1;
+				model.face_render_type[k1] = -1;
 			}
 		}
-		for(int l1 = 0; l1 < model_1.triAmt; l1++) {
+		for(int l1 = 0; l1 < model_1.numberOfTriangleFaces; l1++) {
 			if(anIntArray487[model_1.vertexIndex3d1[l1]] == anInt488 && anIntArray487[model_1.vertexIndex3d2[l1]] == anInt488 && anIntArray487[model_1.vertexIndex3d3[l1]] == anInt488) {
-				model_1.triType[l1] = -1;
+				model_1.face_render_type[l1] = -1;
 			}
 		}
 		

@@ -603,7 +603,7 @@ public class GameActivity extends Activity {
 			client.menuPos++;
 		}
 		long j = -1;
-		for(int k = 0; k < Model.modelHoverAmt; k++) {
+		for(int k = 0; k < Model.objectsRendered; k++) {
 			final long hash = Model.modelHover[k];
 			final int x = (int) (hash & 0x7f);
 			final int y = (int) (hash >> 7 & 0x7f);
@@ -1326,7 +1326,7 @@ public class GameActivity extends Activity {
 		final int camroll = client.cameraRoll;
 		final int camyaw = client.cameraYaw;
 		Model.aBoolean1684 = true;
-		Model.modelHoverAmt = 0;
+		Model.objectsRendered = 0;
 		if(client.uiRenderer.isFixed()) {
 			Rasterizer3D.viewport = client.gameAreaViewport;
 		}

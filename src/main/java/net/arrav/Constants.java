@@ -4,6 +4,8 @@ public final class Constants {
 
 	private Constants() {
 	}
+
+	public static final int MAX_POLYGON = 15_000;
 	
 	public static boolean MEMORY_MAPPED_CACHE = false;
 	public static boolean JAGGRAB_ENABLED = false;

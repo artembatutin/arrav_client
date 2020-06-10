@@ -109,16 +109,16 @@ public final class ObjectType {
 			obj.toLend();
 		}
 
-		if(obj.id == 14293) {
-			obj.dataType = DataType.CUSTOM;
-			obj.modelId = 0;
-			obj.maleEquip = 0;
-			obj.femaleEquip = 0;
-			obj.femaleEquipAlt = 0;
-			obj.maleEquipAlt = 0;
-			obj.actions = new String[5];
-			obj.actions[1] = "Wear";
-		}
+	//if(obj.id == 14293) {
+	//	obj.dataType = DataType.CUSTOM;
+	//	obj.modelId = 0;
+	//	obj.maleEquip = 0;
+	//	obj.femaleEquip = 0;
+	//	obj.femaleEquipAlt = 0;
+	//	obj.maleEquipAlt = 0;
+	//	obj.actions = new String[5];
+	//	obj.actions[1] = "Wear";
+	//}
 
 		defCache.put(id, obj);
 		return obj;

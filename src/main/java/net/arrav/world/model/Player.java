@@ -5,6 +5,7 @@ import net.arrav.Client;
 import net.arrav.Config;
 import net.arrav.cache.unit.*;
 import net.arrav.graphic.Rasterizer3D;
+import net.arrav.util.ReflectionUtil;
 import net.arrav.util.io.Buffer;
 import net.arrav.util.string.StringUtils;
 
@@ -170,12 +171,12 @@ public final class Player extends Mobile {
 			if(super.idleAnim >= 0 && super.idleAnim != super.anInt1511) {
 				i1 = DeformSequence.cache[super.idleAnim].frameList[super.idleAnimFrame];
 			}
-			if(animation.playerReplacementShield >= 0) {
-				j1 = animation.playerReplacementShield;
+			if(animation.leftHandItem >= 0) {
+				j1 = animation.leftHandItem;
 				l += j1 - equipment[5] << 8;
 			}
-			if(animation.playerReplacementWeapon >= 0) {
-				k1 = animation.playerReplacementWeapon;
+			if(animation.rightHandITem >= 0) {
+				k1 = animation.rightHandITem;
 				l += k1 - equipment[3] << 16;
 
 			}
@@ -398,6 +399,17 @@ public final class Player extends Mobile {
 		iron = buffer.getUByte() == 1;
 		visible = true;
 		aLong1718 = 0L;
+
+		if (this.desc != null) {
+			this.combatLevel = this.desc.combatLevel;
+			this.anInt1511 = this.desc.standAnimationId;
+			this.anInt1512 = this.desc.standAnimationId;
+			this.anInt1554 = this.desc.walkAnimationId;
+			this.anInt1555 = this.desc.standAnimationId;
+			this.anInt1556 = this.desc.walkAnimationId;
+			this.anInt1557 = this.desc.walkAnimationId;
+		}
+
 		for(int k1 = 0; k1 < 12; k1++) {
 			aLong1718 <<= 4;
 			if(equipment[k1] >= 256) {

@@ -29,8 +29,8 @@ public final class DeformSequence {
 	public int flowControl[];
 	public boolean dynamic;
 	public int priority;
-	public int playerReplacementShield;
-	public int playerReplacementWeapon;
+	public int leftHandItem;
+	public int rightHandITem;
 	public int maximumLoops;
 	public int precedenceAnimating;
 	public int precedenceWalking;
@@ -40,8 +40,8 @@ public final class DeformSequence {
 		animCycle = -1;
 		dynamic = false;
 		priority = 5;
-		playerReplacementShield = -1;
-		playerReplacementWeapon = -1;
+		leftHandItem = -1;
+		rightHandITem = -1;
 		maximumLoops = 99;
 		precedenceAnimating = -1;
 		precedenceWalking = -1;
@@ -108,14 +108,14 @@ public final class DeformSequence {
 			} else if(code == 5) {
 				priority = buffer.getUByte();
 			} else if(code == 6) {
-				playerReplacementShield = buffer.getUShort();
-				if(playerReplacementShield != 0) {
-					playerReplacementShield += 32256;
+				leftHandItem = buffer.getUShort();
+				if(leftHandItem != 0) {
+					leftHandItem += 32256;
 				}
 			} else if(code == 7) {
-				playerReplacementWeapon = buffer.getUShort();
-				if(playerReplacementWeapon != 0) {
-					playerReplacementWeapon += 32256;
+				rightHandITem = buffer.getUShort();
+				if(rightHandITem != 0) {
+					rightHandITem += 32256;
 				}
 			} else if(code == 8) {
 				maximumLoops = buffer.getUByte();
@@ -159,11 +159,11 @@ public final class DeformSequence {
 			}
 			precedenceWalking = 0;
 		}
-		if(playerReplacementShield == 65535) {
-			playerReplacementShield = 0;
+		if(leftHandItem == 65535) {
+			leftHandItem = 0;
 		}
-		if(playerReplacementWeapon == 65535) {
-			playerReplacementWeapon = 0;
+		if(rightHandITem == 65535) {
+			rightHandITem = 0;
 		}
 	}
 
@@ -198,17 +198,17 @@ public final class DeformSequence {
 				out.writeByte(5);
 				out.writeByte(priority);
 				written.add(5);
-			} else if(playerReplacementShield != -1 && !written.contains(6)) {
+			} else if(leftHandItem != -1 && !written.contains(6)) {
 				out.writeByte(6);
-				if(playerReplacementShield != 0)
-					playerReplacementShield -= 32256;
-				out.writeShort(playerReplacementShield);
+				if(leftHandItem != 0)
+					leftHandItem -= 32256;
+				out.writeShort(leftHandItem);
 				written.add(6);
-			} else if(playerReplacementWeapon != -1 && !written.contains(7)) {
+			} else if(rightHandITem != -1 && !written.contains(7)) {
 				out.writeByte(7);
-				if(playerReplacementWeapon != 0)
-					playerReplacementWeapon -= 32256;
-				out.writeShort(playerReplacementWeapon);
+				if(rightHandITem != 0)
+					rightHandITem -= 32256;
+				out.writeShort(rightHandITem);
 				written.add(7);
 			} else if(maximumLoops != 9 && !written.contains(8)) {
 				out.writeByte(8);

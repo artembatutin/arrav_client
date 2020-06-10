@@ -2,7 +2,6 @@ package net.arrav.world.model;
 
 import net.arrav.Client;
 import net.arrav.Constants;
-import net.arrav.util.ReflectionUtil;
 import net.arrav.world.emitter.Particle;
 import net.arrav.world.emitter.ParticleAttachment;
 import net.arrav.world.emitter.ParticleDefinition;
@@ -46,18 +45,18 @@ public final class Model extends Entity {
 	public int[] vertexX;
 	public int[] vertexY;
 	public int[] vertexZ;
-	public int triAmt;
+	public int numberOfTriangleFaces;
 	public short[] vertexIndex3d1;
 	public short[] vertexIndex3d2;
 	public short[] vertexIndex3d3;
 	public int[] triCol1;
 	public int[] triCol2;
 	public int[] triCol3;
-	public byte[] triType;
+	public byte[] face_render_type;
 	public int[] triTex;
 	private short[] triTexCoord;
 	public byte[] triPri;
-	private byte[] triAlpha;
+	private byte[] face_alpha;
 	public int[] triFill;
 	private int priAmt;
 	public int texAmt;
@@ -83,22 +82,22 @@ public final class Model extends Entity {
 	public int[] vectorNormalZ;
 	public int[] vectorNormalMagnitude;
 	private static OnDemandFetcher odFetcher;
-	private static boolean[] projTriClipX = new boolean[4096];
-	private static boolean[] projTriClipZ = new boolean[4096];
-	private static int[] projVertexX = new int[4096];
-	private static int[] projVertexY = new int[4096];
-	private static int[] vertex2dZ = new int[4096];
-	private static int[] projVertexLocalZ = new int[4096];
-	private static int[] projTexVertexX = new int[4096];
-	private static int[] projTexVertexY = new int[4096];
-	private static int[] projTexVertexZ = new int[4096];
-	private static int[] anIntArray1671 = new int[3000];
-	private static int[][] anIntArrayArray1672 = new int[1500][512];
+	private static boolean[] projTriClipX = new boolean[Constants.MAX_POLYGON];
+	private static boolean[] outOfReach = new boolean[Constants.MAX_POLYGON];
+	private static int[] projVertexX = new int[Constants.MAX_POLYGON];
+	private static int[] projVertexY = new int[Constants.MAX_POLYGON];
+	private static int[] vertex2dZ = new int[Constants.MAX_POLYGON];
+	private static int[] projVertexLocalZ = new int[Constants.MAX_POLYGON];
+	private static int[] projTexVertexX = new int[Constants.MAX_POLYGON];
+	private static int[] projTexVertexY = new int[Constants.MAX_POLYGON];
+	private static int[] projTexVertexZ = new int[Constants.MAX_POLYGON];
+	private static int[] depthListIndices = new int[Constants.MAX_POLYGON];
+	private static int[][] faceLists = new int[Constants.MAX_POLYGON][512];
 	private static int[] anIntArray1673 = new int[12];
-	private static int[][] anIntArrayArray1674 = new int[12][2000];
-	private static int[] anIntArray1675 = new int[2000];
-	private static int[] anIntArray1676 = new int[2000];
-	private static int[] anIntArray1677 = new int[12];
+	private static int[][] anIntArrayArray1674 = new int[12][Constants.MAX_POLYGON];
+	private static int[] anIntArray1675 = new int[Constants.MAX_POLYGON];
+	private static int[] anIntArray1676 = new int[Constants.MAX_POLYGON];
+	private static int[] anIntArray1677 = new int[Constants.MAX_POLYGON];
 	private static final int[] triReqX = new int[10];
 	private static final int[] triReqY = new int[10];
 	private static final int[] triReqCol = new int[10];
@@ -108,7 +107,7 @@ public final class Model extends Entity {
 	public static boolean aBoolean1684;
 	public static int hoverX;
 	public static int hoverY;
-	public static int modelHoverAmt;
+	public static int objectsRendered;
 	public static final long[] modelHover = new long[1000];
 	public static int angleSine[];
 	public static int angleCosine[];
@@ -132,7 +131,7 @@ public final class Model extends Entity {
 		hslToRgbMap = Rasterizer3D.hslToRgbMap;
 		shadeAmt = Rasterizer3D.lightDecay;
 	}
-	
+
 	
 	public static void initalize(int length, OnDemandFetcher odf) {
 		newModelHeader = new byte[length][];
@@ -199,7 +198,7 @@ public final class Model extends Entity {
 	}
 	
 	private void decode800(byte[] is) {
-		triAmt = 0;
+		numberOfTriangleFaces = 0;
 		triPriGlobal = (byte) 0;
 		texAmt = 0;
 		
@@ -216,7 +215,7 @@ public final class Model extends Entity {
 			upscaled = size > 13;
 			buffers[0].pos = is.length - 26;
 			vertexAmt = buffers[0].getUShort();
-			triAmt = buffers[0].getUShort();
+			numberOfTriangleFaces = buffers[0].getUShort();
 			texAmt = buffers[0].getUShort();
 			int footerFlags = buffers[0].getUByte();
 			boolean hasFillAttributes = (footerFlags & 0x1) == 1;
@@ -246,7 +245,7 @@ public final class Model extends Entity {
 			}
 			if(!hasManyTriangles) {
 				if(modelTriangleSkinValue == 1)
-					triangles = triAmt;
+					triangles = numberOfTriangleFaces;
 				else
 					triangles = 0;
 			}
@@ -271,28 +270,28 @@ public final class Model extends Entity {
 			pos += vertexAmt;
 			int renderTypePos = pos;
 			if(hasFillAttributes)
-				pos += triAmt;
-			int depthTriTypeOffset = pos;
-			pos += triAmt;
+				pos += numberOfTriangleFaces;
+			int depthface_render_typeOffset = pos;
+			pos += numberOfTriangleFaces;
 			int priorityPos = pos;
 			if(modelPriority == 255)
-				pos += triAmt;
+				pos += numberOfTriangleFaces;
 			int triangleSkinPos = pos;
 			pos += triangles;
 			int vertexSkinsPos = pos;
 			pos += vertices;
 			int alphaPos = pos;
 			if(modelAlpha == 1)
-				pos += triAmt;
+				pos += numberOfTriangleFaces;
 			int depthTriViewspaceOffset = pos;
 			pos += modelVertexPoint;
 			int texturePos = pos;
 			if(modelTexture == 1)
-				pos += triAmt * 2;
+				pos += numberOfTriangleFaces * 2;
 			int textureCoordPos = pos;
 			pos += modelTextureCoords;
 			int colorPos = pos;
-			pos += triAmt * 2;
+			pos += numberOfTriangleFaces * 2;
 			int vertexXOffsetPos = pos;
 			pos += modelVerticesX;
 			int vertexYOffsetPos = pos;
@@ -336,26 +335,26 @@ public final class Model extends Entity {
 			vertexX = new int[vertexAmt];
 			vertexY = new int[vertexAmt];
 			vertexZ = new int[vertexAmt];
-			vertexIndex3d1 = new short[triAmt];
-			vertexIndex3d2 = new short[triAmt];
-			vertexIndex3d3 = new short[triAmt];
+			vertexIndex3d1 = new short[numberOfTriangleFaces];
+			vertexIndex3d2 = new short[numberOfTriangleFaces];
+			vertexIndex3d3 = new short[numberOfTriangleFaces];
 			if(modelVertexSkins == 1)
 				vertexSkin = new int[vertexAmt];
 			if(hasFillAttributes)
-				triType = new byte[triAmt];
+				face_render_type = new byte[numberOfTriangleFaces];
 			if(modelPriority == 255)
-				triPri = new byte[triAmt];
+				triPri = new byte[numberOfTriangleFaces];
 			else
 				triPriGlobal = (byte) modelPriority;
 			if(modelAlpha == 1)
-				triAlpha = new byte[triAmt];
+				face_alpha = new byte[numberOfTriangleFaces];
 			if(modelTriangleSkinValue == 1)
-				triSkin = new int[triAmt];
+				triSkin = new int[numberOfTriangleFaces];
 			if(modelTexture == 1)
-				triTex = new int[triAmt];
+				triTex = new int[numberOfTriangleFaces];
 			if(modelTexture == 1 && (texAmt > 0 || numUVCoords > 0))
-				triTexCoord = new short[triAmt];
-			triFill = new int[triAmt];
+				triTexCoord = new short[numberOfTriangleFaces];
+			triFill = new int[numberOfTriangleFaces];
 			if(texAmt > 0) {
 				texVertex1 = new short[texAmt];
 				texVertex2 = new short[texAmt];
@@ -419,9 +418,9 @@ public final class Model extends Entity {
 					anIntArray1669[coord] = size;
 					size += buffers[0].getUByte();
 				}
-				uvCoordVertexA = new byte[triAmt];
-				uvCoordVertexB = new byte[triAmt];
-				uvCoordVertexC = new byte[triAmt];
+				uvCoordVertexA = new byte[numberOfTriangleFaces];
+				uvCoordVertexB = new byte[numberOfTriangleFaces];
+				uvCoordVertexC = new byte[numberOfTriangleFaces];
 				textureCoordU = new float[numUVCoords];
 				textureCoordV = new float[numUVCoords];
 				for(coord = 0; coord < numUVCoords; coord++) {
@@ -436,14 +435,14 @@ public final class Model extends Entity {
 			buffers[4].pos = (triangleSkinPos);
 			buffers[5].pos = (texturePos);
 			buffers[6].pos = (textureCoordPos);
-			for(int tri = 0; tri < triAmt; tri++) {
+			for(int tri = 0; tri < numberOfTriangleFaces; tri++) {
 				triFill[tri] = (buffers[0].getUShort());
 				if(hasFillAttributes)
-					triType[tri] = buffers[1].getSByte();
+					face_render_type[tri] = buffers[1].getSByte();
 				if(modelPriority == 255)
 					triPri[tri] = buffers[2].getSByte();
 				if(modelAlpha == 1)
-					triAlpha[tri] = buffers[3].getSByte();
+					face_alpha[tri] = buffers[3].getSByte();
 				if(modelTriangleSkinValue == 1) {
 					if(hasManyTriangles)
 						triSkin[tri] = buffers[4].getUShortMinusOne();
@@ -467,7 +466,7 @@ public final class Model extends Entity {
 			}
 			maxDepth = -1;
 			buffers[0].pos = (depthTriViewspaceOffset);
-			buffers[1].pos = (depthTriTypeOffset);
+			buffers[1].pos = (depthface_render_typeOffset);
 			buffers[2].pos = (uvCoordPos);
 			calculateMaxDepth(buffers[0], buffers[1], buffers[2]);
 			buffers[0].pos = (texturedTriangleType0Offset);
@@ -544,7 +543,7 @@ public final class Model extends Entity {
 			buffers[i] = new Buffer(is);
 		buffers[0].pos = is.length - 18;
 		vertexAmt = buffers[0].getUShort();
-		triAmt = buffers[0].getUShort();
+		numberOfTriangleFaces = buffers[0].getUShort();
 		texAmt = buffers[0].getUByte();
 		int i_157_ = buffers[0].getUByte();
 		int modelPriority = buffers[0].getUByte();
@@ -560,26 +559,26 @@ public final class Model extends Entity {
 		
 		pos += vertexAmt;
 		int i_168_ = pos;
-		pos += triAmt;
+		pos += numberOfTriangleFaces;
 		int priorityPos = pos;
 		if(modelPriority == 255)
-			pos += triAmt;
+			pos += numberOfTriangleFaces;
 		int i_170_ = pos;
 		if(modelTriSkins == 1)
-			pos += triAmt;
+			pos += numberOfTriangleFaces;
 		int i_171_ = pos;
 		if(i_157_ == 1)
-			pos += triAmt;
+			pos += numberOfTriangleFaces;
 		int i_172_ = pos;
 		if(modelVertexSkins == 1)
 			pos += vertexAmt;
 		int i_173_ = pos;
 		if(modelAlpha == 1)
-			pos += triAmt;
+			pos += numberOfTriangleFaces;
 		int i_174_ = pos;
 		pos += i_165_;
 		int i_175_ = pos;
-		pos += triAmt * 2;
+		pos += numberOfTriangleFaces * 2;
 		int i_176_ = pos;
 		pos += texAmt * 6;
 		int i_177_ = pos;
@@ -591,24 +590,24 @@ public final class Model extends Entity {
 		vertexX = new int[vertexAmt];
 		vertexY = new int[vertexAmt];
 		vertexZ = new int[vertexAmt];
-		vertexIndex3d1 = new short[triAmt];
-		vertexIndex3d2 = new short[triAmt];
-		vertexIndex3d3 = new short[triAmt];
-		triFill = new int[triAmt];
+		vertexIndex3d1 = new short[numberOfTriangleFaces];
+		vertexIndex3d2 = new short[numberOfTriangleFaces];
+		vertexIndex3d3 = new short[numberOfTriangleFaces];
+		triFill = new int[numberOfTriangleFaces];
 		
 		if(modelVertexSkins == 1)
 			vertexSkin = new int[vertexAmt];
 		
 		if(modelTriSkins == 1)
-			triSkin = new int[triAmt];
+			triSkin = new int[numberOfTriangleFaces];
 		
 		if(modelAlpha == 1)
-			triAlpha = new byte[triAmt];
+			face_alpha = new byte[numberOfTriangleFaces];
 		
 		if(modelPriority != 255)
 			triPriGlobal = (byte) modelPriority;
 		else
-			triPri = new byte[triAmt];
+			triPri = new byte[numberOfTriangleFaces];
 		
 		if(texAmt > 0) {
 			texVertex1 = new short[texAmt];
@@ -620,9 +619,9 @@ public final class Model extends Entity {
 		pos += i_164_;
 		
 		if(i_157_ == 1) {
-			triTex = new int[triAmt];
-			triType = new byte[triAmt];
-			triTexCoord = new short[triAmt];
+			triTex = new int[numberOfTriangleFaces];
+			face_render_type = new byte[numberOfTriangleFaces];
+			triTexCoord = new short[numberOfTriangleFaces];
 		}
 		
 		buffers[0].pos = i_167_;
@@ -658,15 +657,15 @@ public final class Model extends Entity {
 		buffers[2].pos = priorityPos;
 		buffers[3].pos = i_173_;
 		buffers[4].pos = i_170_;
-		for(int i_188_ = 0; (i_188_ ^ 0xffffffff) > (triAmt ^ 0xffffffff); i_188_++) {
+		for(int i_188_ = 0; (i_188_ ^ 0xffffffff) > (numberOfTriangleFaces ^ 0xffffffff); i_188_++) {
 			triFill[i_188_] = buffers[0].getUShort();
 			if(i_157_ == 1) {
 				int i_189_ = buffers[1].getUByte();
 				if((i_189_ & 0x1) == 1) {
 					has_face_type = true;
-					triType[i_188_] = (byte) 1;
+					face_render_type[i_188_] = (byte) 1;
 				} else
-					triType[i_188_] = (byte) 0;
+					face_render_type[i_188_] = (byte) 0;
 				if((i_189_ & 0x2) == 2) {
 					triTexCoord[i_188_] = (short) (i_189_ >> 2);
 					triTex[i_188_] = triFill[i_188_];
@@ -681,7 +680,7 @@ public final class Model extends Entity {
 			if(modelPriority == 255)
 				triPri[i_188_] = buffers[2].getSByte();
 			if(modelAlpha == 1)
-				triAlpha[i_188_] = buffers[3].getSByte();
+				face_alpha[i_188_] = buffers[3].getSByte();
 			if(modelTriSkins == 1)
 				triSkin[i_188_] = buffers[4].getUByte();
 		}
@@ -692,7 +691,7 @@ public final class Model extends Entity {
 		short i_191_ = 0;
 		short i_192_ = 0;
 		int i_193_ = 0;
-		for(int i_194_ = 0; triAmt > i_194_; i_194_++) {
+		for(int i_194_ = 0; numberOfTriangleFaces > i_194_; i_194_++) {
 			int i_195_ = buffers[1].getUByte();
 			if(i_195_ == 1) {
 				i_190_ = (short) (i_193_ + buffers[0].getSSmart());
@@ -754,7 +753,7 @@ public final class Model extends Entity {
 		}
 		if(triTexCoord != null) {
 			boolean textured = false;
-			for(int i_199_ = 0; i_199_ < triAmt; i_199_++) {
+			for(int i_199_ = 0; i_199_ < numberOfTriangleFaces; i_199_++) {
 				int i_200_ = 0xffff & triTexCoord[i_199_];
 				if(i_200_ != 0xffff) {
 					if(((texVertex1[i_200_] & 0xffff) == vertexIndex3d1[i_199_]) && ((0xffff & texVertex2[i_200_]) == vertexIndex3d2[i_199_]) && vertexIndex3d3[i_199_] == (texVertex3[i_200_] & 0xffff))
@@ -769,7 +768,7 @@ public final class Model extends Entity {
 		if(!has_texture_type)
 			triTex = null;
 		if(!has_face_type)
-			triType = null;
+			face_render_type = null;
 		int s = 4 << 7;
 	}
 	
@@ -783,7 +782,7 @@ public final class Model extends Entity {
 		Buffer nc7 = new Buffer(data);
 		nc1.pos = data.length - 23;
 		vertexAmt = nc1.getUShort();
-		triAmt = nc1.getUShort();
+		numberOfTriangleFaces = nc1.getUShort();
 		texAmt = nc1.getUByte();
 		int flags = nc1.getUByte();
 		int priority_opcode = nc1.getUByte();
@@ -800,7 +799,7 @@ public final class Model extends Entity {
 		int texture_ = 0;
 		int texture__ = 0;
 		int face;
-		triFill = new int[triAmt];
+		triFill = new int[numberOfTriangleFaces];
 		if (texAmt > 0) {
 			texType = new byte[texAmt];
 			nc1.pos = 0;
@@ -825,18 +824,18 @@ public final class Model extends Entity {
 		
 		int drawTypeBasePos = pos;
 		if (flags == 1)
-			pos += triAmt;
+			pos += numberOfTriangleFaces;
 		
 		int faceMeshLink_offset = pos;
-		pos += triAmt;
+		pos += numberOfTriangleFaces;
 		
 		int facePriorityBasePos = pos;
 		if (priority_opcode == 255)
-			pos += triAmt;
+			pos += numberOfTriangleFaces;
 		
 		int tSkinBasePos = pos;
 		if (tSkin_opcode == 1)
-			pos += triAmt;
+			pos += numberOfTriangleFaces;
 		
 		int vSkinBasePos = pos;
 		if (vSkin_opcode == 1)
@@ -844,20 +843,20 @@ public final class Model extends Entity {
 		
 		int alphaBasePos = pos;
 		if (alpha_opcode == 1)
-			pos += triAmt;
+			pos += numberOfTriangleFaces;
 		
 		int faceVPoint_offset = pos;
 		pos += i4;
 		
 		int textureIdBasePos = pos;
 		if (texture_opcode == 1)
-			pos += triAmt * 2;
+			pos += numberOfTriangleFaces * 2;
 		
 		int textureBasePos = pos;
 		pos += j4;
 		
 		int color_offset = pos;
-		pos += triAmt * 2;
+		pos += numberOfTriangleFaces * 2;
 		
 		int vertexX_offset = pos;
 		pos += j3;
@@ -889,25 +888,25 @@ public final class Model extends Entity {
 		vertexX = new int[vertexAmt];
 		vertexY = new int[vertexAmt];
 		vertexZ = new int[vertexAmt];
-		vertexIndex3d1 = new short[triAmt];
-		vertexIndex3d2 = new short[triAmt];
-		vertexIndex3d3 = new short[triAmt];
+		vertexIndex3d1 = new short[numberOfTriangleFaces];
+		vertexIndex3d2 = new short[numberOfTriangleFaces];
+		vertexIndex3d3 = new short[numberOfTriangleFaces];
 		if (vSkin_opcode == 1)
 			vertexSkin = new int[vertexAmt];
 		if (flags == 1)
-			triType = new byte[triAmt];
+			face_render_type = new byte[numberOfTriangleFaces];
 		if (priority_opcode == 255)
-			triPri = new byte[triAmt];
+			triPri = new byte[numberOfTriangleFaces];
 		else
 			triPriGlobal = (byte) priority_opcode;
 		if (alpha_opcode == 1)
-			triAlpha = new byte[triAmt];
+			face_alpha = new byte[numberOfTriangleFaces];
 		if (tSkin_opcode == 1)
-			triSkin = new int[triAmt];
+			triSkin = new int[numberOfTriangleFaces];
 		if (texture_opcode == 1)
-			triTex = new int[triAmt];
+			triTex = new int[numberOfTriangleFaces];
 		if (texture_opcode == 1 && texAmt > 0)
-			triTexCoord = new short[triAmt];
+			triTexCoord = new short[numberOfTriangleFaces];
 		
 		if (texAmt > 0) {
 			texVertex1 = new short[texAmt];
@@ -953,18 +952,18 @@ public final class Model extends Entity {
 		nc5.pos = tSkinBasePos;
 		nc6.pos = textureIdBasePos;
 		nc7.pos = textureBasePos;
-		for (face = 0; face < triAmt; face++) {
+		for (face = 0; face < numberOfTriangleFaces; face++) {
 			triFill[face] = (short) nc1.getUShort();
 			if (flags == 1) {
-				triType[face] = nc2.getSByte();
+				face_render_type[face] = nc2.getSByte();
 			}
 			if (priority_opcode == 255) {
 				triPri[face] = nc3.getSByte();
 			}
 			if (alpha_opcode == 1) {
-				triAlpha[face] = nc4.getSByte();
-				if (triAlpha[face] < 0)
-					triAlpha[face] = (byte) (256 + triAlpha[face]);
+				face_alpha[face] = nc4.getSByte();
+				if (face_alpha[face] < 0)
+					face_alpha[face] = (byte) (256 + face_alpha[face]);
 				
 			}
 			if (tSkin_opcode == 1)
@@ -973,8 +972,8 @@ public final class Model extends Entity {
 			if (texture_opcode == 1) {
 				triTex[face] = (short) (nc6.getUShort() - 1);
 				if(triTex[face] >= 0) {
-					if(triType != null) {
-						if(triType[face] < 2 && triFill[face] != 127 && triFill[face] != -27075) {
+					if(face_render_type != null) {
+						if(face_render_type[face] < 2 && triFill[face] != 127 && triFill[face] != -27075) {
 							triTex[face] = -1;
 						}
 					}
@@ -992,7 +991,7 @@ public final class Model extends Entity {
 		int coordinate_b = 0;
 		int coordinate_c = 0;
 		int last_coordinate = 0;
-		for (face = 0; face < triAmt; face++) {
+		for (face = 0; face < numberOfTriangleFaces; face++) {
 			int opcode = nc2.getUByte();
 			if (opcode == 1) {
 				coordinate_a = nc1.getSSmart() + last_coordinate;
@@ -1073,7 +1072,7 @@ public final class Model extends Entity {
 			
 			buffers[0].pos = data.length - 23;
 			vertexAmt = buffers[0].getUShort();
-			triAmt = buffers[0].getUShort();
+			numberOfTriangleFaces = buffers[0].getUShort();
 			texAmt = buffers[0].getUByte();
 			int i_50_ = buffers[0].getUByte();
 			boolean have_mode = (i_50_ & 0x1) == 1;
@@ -1117,30 +1116,30 @@ public final class Model extends Entity {
 			data_pos += vertexAmt;
 			int tri_mode_start = data_pos;
 			if(have_mode)
-				data_pos += triAmt;
+				data_pos += numberOfTriangleFaces;
 			int tri_idx_offset = data_pos;
-			data_pos += triAmt;
+			data_pos += numberOfTriangleFaces;
 			int i_73_ = data_pos;
 			if(mdl_priority == 255)
-				data_pos += triAmt;
+				data_pos += numberOfTriangleFaces;
 			int tri_skin_start = data_pos;
 			if(have_tri_skins == 1)
-				data_pos += triAmt;
+				data_pos += numberOfTriangleFaces;
 			int vertex_skin_offset = data_pos;
 			if(i_58_ == 1)
 				data_pos += vertexAmt;
 			int tri_alpha_start = data_pos;
 			if(have_alpha == 1)
-				data_pos += triAmt;
+				data_pos += numberOfTriangleFaces;
 			int tri_enc_offset = data_pos;
 			data_pos += i_62_;
 			int tri_tex_start = data_pos;
 			if(have_tex == 1)
-				data_pos += triAmt * 2;
+				data_pos += numberOfTriangleFaces * 2;
 			int i_79_ = data_pos;
 			data_pos += i_63_;
 			int tri_colour_start = data_pos;
-			data_pos += 2 * triAmt;
+			data_pos += 2 * numberOfTriangleFaces;
 			int vertex_x_offset = data_pos;
 			data_pos += i_59_;
 			int vertex_y_offset = data_pos;
@@ -1169,23 +1168,23 @@ public final class Model extends Entity {
 			vertexX = new int[vertexAmt];
 			vertexY = new int[vertexAmt];
 			vertexZ = new int[vertexAmt];
-			vertexIndex3d1 = new short[triAmt];
-			vertexIndex3d2 = new short[triAmt];
-			vertexIndex3d3 = new short[triAmt];
-			triFill = new int[triAmt];
+			vertexIndex3d1 = new short[numberOfTriangleFaces];
+			vertexIndex3d2 = new short[numberOfTriangleFaces];
+			vertexIndex3d3 = new short[numberOfTriangleFaces];
+			triFill = new int[numberOfTriangleFaces];
 			if(have_alpha == 1)
-				triAlpha = new byte[triAmt];
+				face_alpha = new byte[numberOfTriangleFaces];
 			if(have_mode)
-				triType = new byte[triAmt];
+				face_render_type = new byte[numberOfTriangleFaces];
 			if(have_tex == 1)
-				triTex = new int[triAmt];
+				triTex = new int[numberOfTriangleFaces];
 			if(i_58_ == 1)
 				vertexSkin = new int[vertexAmt];
 			if(have_tri_skins == 1)
-				triSkin = new int[triAmt];
+				triSkin = new int[numberOfTriangleFaces];
 			int i_91_ = data_pos;
 			if(mdl_priority == 255)
-				triPri = new byte[triAmt];
+				triPri = new byte[numberOfTriangleFaces];
 			else
 				triPriGlobal = (byte) mdl_priority;
 			if(texAmt > 0) {
@@ -1206,7 +1205,7 @@ public final class Model extends Entity {
 				}
 			}
 			if(have_tex == 1 && texAmt > 0)
-				triTexCoord = new short[triAmt];
+				triTexCoord = new short[numberOfTriangleFaces];
 			buffers[0].pos = vertex_enc_offset;
 			buffers[1].pos = vertex_x_offset;
 			buffers[2].pos = vertex_y_offset;
@@ -1242,14 +1241,14 @@ public final class Model extends Entity {
 			buffers[4].pos = tri_skin_start;
 			buffers[5].pos = tri_tex_start;
 			buffers[6].pos = i_79_;
-			for(int tri_id = 0; tri_id < triAmt; tri_id++) {
+			for(int tri_id = 0; tri_id < numberOfTriangleFaces; tri_id++) {
 				triFill[tri_id] = buffers[0].getUShort();
 				if(have_mode)
-					triType[tri_id] = buffers[1].getSByte();//BIT0 - Shading, BIT1 - Texturing
+					face_render_type[tri_id] = buffers[1].getSByte();//BIT0 - Shading, BIT1 - Texturing
 				if(mdl_priority == 255)
 					triPri[tri_id] = buffers[2].getSByte();
 				if(have_alpha == 1)
-					triAlpha[tri_id] = buffers[3].getSByte();
+					face_alpha[tri_id] = buffers[3].getSByte();
 				if(have_tri_skins == 1)
 					triSkin[tri_id] = buffers[4].getUByte();
 				if(have_tex == 1)
@@ -1268,7 +1267,7 @@ public final class Model extends Entity {
 			short fy = 0;
 			short fz = 0;
 			int prev_zview = 0;
-			for(int tri_ptr = 0; tri_ptr < triAmt; tri_ptr++) {
+			for(int tri_ptr = 0; tri_ptr < numberOfTriangleFaces; tri_ptr++) {
 				int tri_enc = buffers[1].getUByte();
 				if(tri_enc == 1) {
 					fx = (short) (prev_zview + buffers[0].getSSmart());
@@ -1501,8 +1500,6 @@ public final class Model extends Entity {
 			odFetcher.addRequest(type.getIndex(), index);
 			return null;
 		} else {
-			if(type == DataType.CUSTOM)
-				System.out.println("model:"+index);
 			return new Model(index, data);
 		}
 		
@@ -1556,15 +1553,15 @@ public final class Model extends Entity {
 	
 	public static void reset() {
 		projTriClipX = null;
-		projTriClipZ = null;
+		outOfReach = null;
 		projVertexX = null;
 		projVertexY = null;
 		projVertexLocalZ = null;
 		projTexVertexX = null;
 		projTexVertexY = null;
 		projTexVertexZ = null;
-		anIntArray1671 = null;
-		anIntArrayArray1672 = null;
+		depthListIndices = null;
+		faceLists = null;
 		anIntArray1673 = null;
 		anIntArrayArray1674 = null;
 		anIntArray1675 = null;
@@ -1580,14 +1577,14 @@ public final class Model extends Entity {
 		hoverable = false;
 	}
 	
-	public Model(boolean flag, boolean flag1, boolean flag2, Model model) {
-		this(flag, flag1, flag2, false, model);
+	public Model(boolean flag, boolean needAddToSelectedObjects, boolean flag2, Model model) {
+		this(flag, needAddToSelectedObjects, flag2, false, model);
 	}
 	
-	public Model(boolean flag, boolean flag1, boolean flag2, boolean texture, Model model) {//objects (trees/bushes/walls/roofs/etc) //Graphcis //NPCs
+	public Model(boolean flag, boolean needAddToSelectedObjects, boolean flag2, boolean texture, Model model) {//objects (trees/bushes/walls/roofs/etc) //Graphcis //NPCs
 		hoverable = false;
 		vertexAmt = model.vertexAmt;
-		triAmt = model.triAmt;
+		numberOfTriangleFaces = model.numberOfTriangleFaces;
 		texAmt = model.texAmt;
 		if(flag2) {
 			verticesParticle = model.verticesParticle;
@@ -1610,19 +1607,19 @@ public final class Model extends Entity {
 		if(flag) {
 			triFill = model.triFill;
 		} else {
-			triFill = new int[triAmt];
+			triFill = new int[numberOfTriangleFaces];
 			if(model.triFill != null)
-				for(int k = 0; k != triAmt; k++)
+				for(int k = 0; k != numberOfTriangleFaces; k++)
 					triFill[k] = model.triFill[k];
 		}
 		
-		if(flag1) {
-			triAlpha = model.triAlpha;
+		if(needAddToSelectedObjects) {
+			face_alpha = model.face_alpha;
 		} else {
-			triAlpha = new byte[triAmt];
-			if(model.triAlpha != null) {
-				for(int i1 = 0; i1 < triAmt; i1++)
-					triAlpha[i1] = model.triAlpha[i1];
+			face_alpha = new byte[numberOfTriangleFaces];
+			if(model.face_alpha != null) {
+				for(int i1 = 0; i1 < numberOfTriangleFaces; i1++)
+					face_alpha[i1] = model.face_alpha[i1];
 			}
 		}
 		vertexSkin = model.vertexSkin;
@@ -1641,14 +1638,14 @@ public final class Model extends Entity {
 		vertexIndex3d3 = model.vertexIndex3d3;
 		triPriGlobal = model.triPriGlobal;
 		triPri = model.triPri;
-		triType = model.triType;
+		face_render_type = model.face_render_type;
 		upscaled = model.upscaled;
 	}
 	
-	public Model(boolean flag, boolean flag1, Model model) {
+	public Model(boolean flag, boolean needAddToSelectedObjects, Model model) {
 		hoverable = false;
 		vertexAmt = model.vertexAmt;
-		triAmt = model.triAmt;
+		numberOfTriangleFaces = model.numberOfTriangleFaces;
 		texAmt = model.texAmt;
 		if(flag) {
 			vertexY = new int[vertexAmt];
@@ -1667,23 +1664,23 @@ public final class Model extends Entity {
 			texType = model.texType;
 		}
 		
-		if(flag1) {
-			triCol1 = new int[triAmt];
-			triCol2 = new int[triAmt];
-			triCol3 = new int[triAmt];
-			for(int k = 0; k < triAmt; k++) {
+		if(needAddToSelectedObjects) {
+			triCol1 = new int[numberOfTriangleFaces];
+			triCol2 = new int[numberOfTriangleFaces];
+			triCol3 = new int[numberOfTriangleFaces];
+			for(int k = 0; k < numberOfTriangleFaces; k++) {
 				triCol1[k] = model.triCol1[k];
 				triCol2[k] = model.triCol2[k];
 				triCol3[k] = model.triCol3[k];
 			}
 			
-			triType = new byte[triAmt];
-			if(model.triType == null) {
-				for(int l = 0; l < triAmt; l++)
-					triType[l] = 0;
+			face_render_type = new byte[numberOfTriangleFaces];
+			if(model.face_render_type == null) {
+				for(int l = 0; l < numberOfTriangleFaces; l++)
+					face_render_type[l] = 0;
 				
 			} else {
-				System.arraycopy(model.triType, 0, triType, 0, triAmt);
+				System.arraycopy(model.face_render_type, 0, face_render_type, 0, numberOfTriangleFaces);
 			}
 			System.arraycopy(model.vectorX, 0, super.vectorX, 0, model.vectorX.length);
 			System.arraycopy(model.vectorY, 0, super.vectorY, 0, model.vectorY.length);
@@ -1705,13 +1702,13 @@ public final class Model extends Entity {
 			triCol1 = model.triCol1;
 			triCol2 = model.triCol2;
 			triCol3 = model.triCol3;
-			triType = model.triType;
+			face_render_type = model.face_render_type;
 		}
 		verticesParticle = model.verticesParticle;
 		vertexX = model.vertexX;
 		vertexZ = model.vertexZ;
 		triFill = model.triFill;
-		triAlpha = model.triAlpha;
+		face_alpha = model.face_alpha;
 		triPri = model.triPri;
 		priAmt = model.priAmt;
 		vertexIndex3d1 = model.vertexIndex3d1;
@@ -1743,16 +1740,16 @@ public final class Model extends Entity {
 		boolean has_texture = false;
 		boolean has_coordinates = false;
 		vertexAmt = 0;
-		triAmt = 0;
+		numberOfTriangleFaces = 0;
 		texAmt = 0;
 		triPriGlobal = -1;
 		for(int model_index = 0; model_index < number_of_models; model_index++) {
 			Model connect = attatch[model_index];
 			if(connect != null) {
 				vertexAmt += connect.vertexAmt;
-				triAmt += connect.triAmt;
+				numberOfTriangleFaces += connect.numberOfTriangleFaces;
 				texAmt += connect.texAmt;
-				has_render_type |= connect.triType != null;
+				has_render_type |= connect.face_render_type != null;
 				if(connect.triPri != null) {
 					has_priorities = true;
 				} else {
@@ -1761,7 +1758,7 @@ public final class Model extends Entity {
 					if(triPriGlobal != connect.triPriGlobal)
 						has_priorities = true;
 				}
-				has_alpha |= connect.triAlpha != null;
+				has_alpha |= connect.face_alpha != null;
 				has_skin |= connect.triFill != null;
 				has_texture |= connect.triTex != null;
 				has_coordinates |= connect.triTexCoord != null;
@@ -1772,12 +1769,12 @@ public final class Model extends Entity {
 		vertexX = new int[vertexAmt];
 		vertexY = new int[vertexAmt];
 		vertexZ = new int[vertexAmt];
-		vertexIndex3d1 = new short[triAmt];
-		vertexIndex3d2 = new short[triAmt];
-		vertexIndex3d3 = new short[triAmt];
-		triCol1 = new int[triAmt];
-		triCol2 = new int[triAmt];
-		triCol3 = new int[triAmt];
+		vertexIndex3d1 = new short[numberOfTriangleFaces];
+		vertexIndex3d2 = new short[numberOfTriangleFaces];
+		vertexIndex3d3 = new short[numberOfTriangleFaces];
+		triCol1 = new int[numberOfTriangleFaces];
+		triCol2 = new int[numberOfTriangleFaces];
+		triCol3 = new int[numberOfTriangleFaces];
 		if(texAmt > 0) {
 			texVertex1 = new short[texAmt];
 			texVertex2 = new short[texAmt];
@@ -1785,19 +1782,19 @@ public final class Model extends Entity {
 			texType = new byte[texAmt];
 		}
 		if(has_render_type)
-			triType = new byte[triAmt];
+			face_render_type = new byte[numberOfTriangleFaces];
 		if(has_priorities)
-			triPri = new byte[triAmt];
+			triPri = new byte[numberOfTriangleFaces];
 		if(has_alpha)
-			triAlpha = new byte[triAmt];
+			face_alpha = new byte[numberOfTriangleFaces];
 		if(has_skin)
-			triFill = new int[triAmt];
+			triFill = new int[numberOfTriangleFaces];
 		if(has_texture)
-			triTex = new int[triAmt];
+			triTex = new int[numberOfTriangleFaces];
 		if(has_coordinates)
-			triTexCoord = new short[triAmt];
+			triTexCoord = new short[numberOfTriangleFaces];
 		vertexAmt = 0;
-		triAmt = 0;
+		numberOfTriangleFaces = 0;
 		texAmt = 0;
 		int priority = 0;
 		for(int model_index = 0; model_index < number_of_models; model_index++) {
@@ -1819,46 +1816,46 @@ public final class Model extends Entity {
 					vertexAmt++;
 				}
 				
-				for(int i2 = 0; i2 < connect.triAmt; i2++) {
-					vertexIndex3d1[triAmt] = (short) (connect.vertexIndex3d1[i2] + k1);
-					vertexIndex3d2[triAmt] = (short) (connect.vertexIndex3d2[i2] + k1);
-					vertexIndex3d3[triAmt] = (short) (connect.vertexIndex3d3[i2] + k1);
-					triCol1[triAmt] = connect.triCol1[i2];
-					triCol2[triAmt] = connect.triCol2[i2];
-					triCol3[triAmt] = connect.triCol3[i2];
+				for(int i2 = 0; i2 < connect.numberOfTriangleFaces; i2++) {
+					vertexIndex3d1[numberOfTriangleFaces] = (short) (connect.vertexIndex3d1[i2] + k1);
+					vertexIndex3d2[numberOfTriangleFaces] = (short) (connect.vertexIndex3d2[i2] + k1);
+					vertexIndex3d3[numberOfTriangleFaces] = (short) (connect.vertexIndex3d3[i2] + k1);
+					triCol1[numberOfTriangleFaces] = connect.triCol1[i2];
+					triCol2[numberOfTriangleFaces] = connect.triCol2[i2];
+					triCol3[numberOfTriangleFaces] = connect.triCol3[i2];
 					if(has_render_type)
-						if(connect.triType == null) {
-							triType[triAmt] = 0;
+						if(connect.face_render_type == null) {
+							face_render_type[numberOfTriangleFaces] = 0;
 						} else {
-							int j2 = connect.triType[i2];
+							int j2 = connect.face_render_type[i2];
 							if((j2 & 2) == 2)
 								j2 += priority << 2;
-							triType[triAmt] = (byte) j2;
+							face_render_type[numberOfTriangleFaces] = (byte) j2;
 						}
 					if(has_priorities)
 						if(connect.triPri == null)
-							triPri[triAmt] = (byte) connect.triPriGlobal;
+							triPri[numberOfTriangleFaces] = (byte) connect.triPriGlobal;
 						else
-							triPri[triAmt] = connect.triPri[i2];
+							triPri[numberOfTriangleFaces] = connect.triPri[i2];
 					if(has_alpha)
-						if(connect.triAlpha == null)
-							triAlpha[triAmt] = 0;
+						if(connect.face_alpha == null)
+							face_alpha[numberOfTriangleFaces] = 0;
 						else
-							triAlpha[triAmt] = connect.triAlpha[i2];
+							face_alpha[numberOfTriangleFaces] = connect.face_alpha[i2];
 					if(has_skin && connect.triFill != null)
-						triFill[triAmt] = connect.triFill[i2];
+						triFill[numberOfTriangleFaces] = connect.triFill[i2];
 					if(has_texture) {
 						if(connect.triTex != null && connect.triTex[i2] != -1) {
-							triTex[triAmt] = connect.triTex[i2];
+							triTex[numberOfTriangleFaces] = connect.triTex[i2];
 						} else {
-							triTex[triAmt] = -1;
+							triTex[numberOfTriangleFaces] = -1;
 							
 						}
 					}
 					if(has_coordinates) {
-						triTexCoord[triAmt] = (short) (connect.triTexCoord == null || connect.triTexCoord[i2] == -1 ? -1 : (connect.triTexCoord[i2] & 0xffff) + texAmt);
+						triTexCoord[numberOfTriangleFaces] = (short) (connect.triTexCoord == null || connect.triTexCoord[i2] == -1 ? -1 : (connect.triTexCoord[i2] & 0xffff) + texAmt);
 					}
-					triAmt++;
+					numberOfTriangleFaces++;
 				}
 				for(int textured_faces = 0; textured_faces < connect.texAmt; textured_faces++) {
 					texType[texAmt] = connect.texType[textured_faces];
@@ -1886,7 +1883,7 @@ public final class Model extends Entity {
 			boolean has_coordinates = false;
 			boolean color = false;
 			vertexAmt = 0;
-			triAmt = 0;
+			numberOfTriangleFaces = 0;
 			texAmt = 0;
 			triPriGlobal = -1;
 			Model connect;
@@ -1895,10 +1892,10 @@ public final class Model extends Entity {
 				connect = attatch[model_index];
 				if(connect != null) {
 					vertexAmt += connect.vertexAmt;
-					triAmt += connect.triAmt;
+					numberOfTriangleFaces += connect.numberOfTriangleFaces;
 					texAmt += connect.texAmt;
-					has_render_type |= connect.triType != null;
-					has_alpha |= connect.triAlpha != null;
+					has_render_type |= connect.face_render_type != null;
+					has_alpha |= connect.face_alpha != null;
 					if(connect.triPri != null) {
 						has_priorities = true;
 					} else {
@@ -1916,21 +1913,21 @@ public final class Model extends Entity {
 				}
 			}
 			if(color)
-				triFill = new int[triAmt];
+				triFill = new int[numberOfTriangleFaces];
 			verticesParticle = new int[vertexAmt];
 			vertexX = new int[vertexAmt];
 			vertexY = new int[vertexAmt];
 			vertexZ = new int[vertexAmt];
 			vertexSkin = new int[vertexAmt];
-			vertexIndex3d1 = new short[triAmt];
-			vertexIndex3d2 = new short[triAmt];
-			vertexIndex3d3 = new short[triAmt];
+			vertexIndex3d1 = new short[numberOfTriangleFaces];
+			vertexIndex3d2 = new short[numberOfTriangleFaces];
+			vertexIndex3d3 = new short[numberOfTriangleFaces];
 			
 			if(has_render_type)
-				triType = new byte[triAmt];
+				face_render_type = new byte[numberOfTriangleFaces];
 			
 			if(has_skin)
-				triSkin = new int[triAmt];
+				triSkin = new int[numberOfTriangleFaces];
 			
 			if(texAmt > 0) {
 				texVertex1 = new short[texAmt];
@@ -1940,19 +1937,19 @@ public final class Model extends Entity {
 			}
 			
 			if(has_coordinates)
-				triTexCoord = new short[triAmt];
+				triTexCoord = new short[numberOfTriangleFaces];
 			
 			if(has_texture)
-				triTex = new int[triAmt];
+				triTex = new int[numberOfTriangleFaces];
 			
 			if(has_alpha)
-				triAlpha = new byte[triAmt];
+				face_alpha = new byte[numberOfTriangleFaces];
 			
 			if(has_priorities)
-				triPri = new byte[triAmt];
+				triPri = new byte[numberOfTriangleFaces];
 			
 			vertexAmt = 0;
-			triAmt = 0;
+			numberOfTriangleFaces = 0;
 			texAmt = 0;
 			int[] offsets = null;
 			int texture_face = 0;
@@ -1978,20 +1975,20 @@ public final class Model extends Entity {
 							vertexAmt++;
 						}
 					}
-					for(int j1 = 0; j1 < connect.triAmt; j1++) {
+					for(int j1 = 0; j1 < connect.numberOfTriangleFaces; j1++) {
 						if(has_render_type) {
 							if(old_format) {
-								if(connect.triType == null) {
-									triType[triAmt] = 0;
+								if(connect.face_render_type == null) {
+									face_render_type[numberOfTriangleFaces] = 0;
 								} else {
-									int type = connect.triType[j1];
+									int type = connect.face_render_type[j1];
 									if((type & 2) == 2)
 										type += texture_face << 2;
-									triType[triAmt] = (byte) type;
+									face_render_type[numberOfTriangleFaces] = (byte) type;
 								}
 							} else {
-								if(connect.triType != null) {
-									triType[triAmt] = connect.triType[j1];
+								if(connect.face_render_type != null) {
+									face_render_type[numberOfTriangleFaces] = connect.face_render_type[j1];
 								} else {
 									old_format = true;
 								}
@@ -1999,44 +1996,44 @@ public final class Model extends Entity {
 							
 						}
 						if(has_priorities && connect.triPri != null)
-							triPri[triAmt] = connect.triPri[j1];
+							triPri[numberOfTriangleFaces] = connect.triPri[j1];
 						else if(triPri != null) {
-							triPri[triAmt] = connect.triPriGlobal;
+							triPri[numberOfTriangleFaces] = connect.triPriGlobal;
 						}
 						
-						if(has_alpha && connect.triAlpha != null)
-							triAlpha[triAmt] = connect.triAlpha[j1];
+						if(has_alpha && connect.face_alpha != null)
+							face_alpha[numberOfTriangleFaces] = connect.face_alpha[j1];
 						
 						if(has_texture) {
 							if(connect.triTex != null && connect.triTex[j1] != -1) {
-								triTex[triAmt] = connect.triTex[j1];
+								triTex[numberOfTriangleFaces] = connect.triTex[j1];
 								display_model_specific_texture = true;
 							} else {
-								triTex[triAmt] = -1;
+								triTex[numberOfTriangleFaces] = -1;
 								
 							}
 						}
 						
 						if(has_alpha && connect.triSkin != null)
-							triSkin[triAmt] = connect.triSkin[j1];
+							triSkin[numberOfTriangleFaces] = connect.triSkin[j1];
 						
 						if(vertex_coord != -1) {
-							vertexIndex3d1[triAmt] = (short) ((connect.vertexIndex3d1[j1]) + vertex_coord);
-							vertexIndex3d2[triAmt] = (short) ((connect.vertexIndex3d2[j1]) + vertex_coord);
-							vertexIndex3d3[triAmt] = (short) ((connect.vertexIndex3d3[j1]) + vertex_coord);
+							vertexIndex3d1[numberOfTriangleFaces] = (short) ((connect.vertexIndex3d1[j1]) + vertex_coord);
+							vertexIndex3d2[numberOfTriangleFaces] = (short) ((connect.vertexIndex3d2[j1]) + vertex_coord);
+							vertexIndex3d3[numberOfTriangleFaces] = (short) ((connect.vertexIndex3d3[j1]) + vertex_coord);
 						} else {
-							vertexIndex3d1[triAmt] = (short) (method465(connect, connect.vertexIndex3d1[j1]));
-							vertexIndex3d2[triAmt] = (short) (method465(connect, connect.vertexIndex3d2[j1]));
-							vertexIndex3d3[triAmt] = (short) (method465(connect, connect.vertexIndex3d3[j1]));
+							vertexIndex3d1[numberOfTriangleFaces] = (short) (method465(connect, connect.vertexIndex3d1[j1]));
+							vertexIndex3d2[numberOfTriangleFaces] = (short) (method465(connect, connect.vertexIndex3d2[j1]));
+							vertexIndex3d3[numberOfTriangleFaces] = (short) (method465(connect, connect.vertexIndex3d3[j1]));
 						}
 						if(color) {
 							if(connect.triFill != null) {
-								triFill[triAmt] = connect.triFill[j1];
+								triFill[numberOfTriangleFaces] = connect.triFill[j1];
 							} else {
-								triFill[triAmt] = 0;
+								triFill[numberOfTriangleFaces] = 0;
 							}
 						}
-						triAmt++;
+						numberOfTriangleFaces++;
 					}
 				}
 			}
@@ -2045,8 +2042,8 @@ public final class Model extends Entity {
 				connect = attatch[model_index];
 				if(connect != null) {
 					if(has_coordinates) {
-						for(int mapped_pointers = 0; mapped_pointers < connect.triAmt; mapped_pointers++)
-							triTexCoord[/* triAmt */face++] = (short) (connect.triTexCoord == null || connect.triTexCoord[mapped_pointers] == -1 ? -1 : (connect.triTexCoord[mapped_pointers] & 0xffff) + texAmt);
+						for(int mapped_pointers = 0; mapped_pointers < connect.numberOfTriangleFaces; mapped_pointers++)
+							triTexCoord[/* numberOfTriangleFaces */face++] = (short) (connect.triTexCoord == null || connect.triTexCoord[mapped_pointers] == -1 ? -1 : (connect.triTexCoord[mapped_pointers] & 0xffff) + texAmt);
 						
 						
 					}
@@ -2091,7 +2088,7 @@ public final class Model extends Entity {
 	
 	private void drawTriangle(int face) {
 		try {
-			if(projTriClipZ[face]) {
+			if(outOfReach[face]) {
 				drawTriangleOrQuad(face);
 				return;
 			}
@@ -2102,13 +2099,13 @@ public final class Model extends Entity {
 			if(triFill != null && triFill[face] == -1)
 				return;
 			Rasterizer3D.clippedScan = projTriClipX[face];
-			Rasterizer3D.alphaFilter = (triAlpha == null ? 0 : triAlpha[face] & 0xFF);
+			Rasterizer3D.alphaFilter = (face_alpha == null ? 0 : face_alpha[face] & 0xFF);
 			int face_type;
-			if(triType == null) {
+			if(face_render_type == null) {
 				face_type = 0;
-			} else // if(triType[face] != -1)
+			} else // if(face_render_type[face] != -1)
 			{
-				face_type = triType[face] & 0xff;
+				face_type = face_render_type[face] & 0xff;
 			}
 			
 			boolean noTextureValues = (triTex == null || (face < triTex.length && triTex[face] == -1));
@@ -2277,7 +2274,7 @@ public final class Model extends Entity {
 			}
 		}
 		try {
-			method483(false, false, 0);
+			translateToScreen(false, false, 0);
 		} catch(final Exception e) {
 			//e.printStackTrace();
 		}
@@ -2347,7 +2344,7 @@ public final class Model extends Entity {
 			final int my = hoverY - Rasterizer3D.viewport.centerY;
 			if(mx > k3 && mx < l3 && my > i5 && my < k4) {
 				if(hoverable) {
-					modelHover[modelHoverAmt++] = hash;
+					modelHover[objectsRendered++] = hash;
 				} else {
 					hover = true;
 				}
@@ -2397,9 +2394,9 @@ public final class Model extends Entity {
 			}
 		}
 		try {
-			method483(flag, hover, hash);
+			translateToScreen(flag, hover, hash);
 		} catch(final Exception e) {
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 	
@@ -2413,7 +2410,7 @@ public final class Model extends Entity {
 	
 	public void method464(Model model, boolean flag, boolean texture, boolean npc) {
 		vertexAmt = model.vertexAmt;
-		triAmt = model.triAmt;
+		numberOfTriangleFaces = model.numberOfTriangleFaces;
 		texAmt = model.texAmt;
 		if(anIntArray1622.length < vertexAmt) {
 			anIntArray1622 = new int[vertexAmt + 100];
@@ -2451,21 +2448,21 @@ public final class Model extends Entity {
 			
 		}
 		if(flag) {
-			triAlpha = model.triAlpha;
+			face_alpha = model.face_alpha;
 		} else {
-			if(anIntArray1625.length < triAmt) {
-				anIntArray1625 = new byte[Math.max(anIntArray1625.length * 2, triAmt)];
+			if(anIntArray1625.length < numberOfTriangleFaces) {
+				anIntArray1625 = new byte[Math.max(anIntArray1625.length * 2, numberOfTriangleFaces)];
 			}
-			triAlpha = anIntArray1625;
-			if(model.triAlpha == null) {
-				for(int l = 0; l < triAmt; l++) {
-					triAlpha[l] = 0;
+			face_alpha = anIntArray1625;
+			if(model.face_alpha == null) {
+				for(int l = 0; l < numberOfTriangleFaces; l++) {
+					face_alpha[l] = 0;
 				}
 			} else {
-				System.arraycopy(model.triAlpha, 0, triAlpha, 0, triAmt);
+				System.arraycopy(model.face_alpha, 0, face_alpha, 0, numberOfTriangleFaces);
 			}
 		}
-		triType = model.triType;
+		face_render_type = model.face_render_type;
 		triFill = model.triFill;
 		triPri = model.triPri;
 		priAmt = model.priAmt;
@@ -2630,7 +2627,7 @@ public final class Model extends Entity {
 		if(triSkin != null) {
 			final int[] temp = new int[256];
 			int max = 0;
-			for(int i = 0; i < triAmt; i++) {
+			for(int i = 0; i < numberOfTriangleFaces; i++) {
 				final int blink = triSkin[i];
 				temp[blink]++;
 				if(blink > max) {
@@ -2642,7 +2639,7 @@ public final class Model extends Entity {
 				triangleSkin[i2] = new int[temp[i2]];
 				temp[i2] = 0;
 			}
-			for(int i = 0; i < triAmt; i++) {
+			for(int i = 0; i < numberOfTriangleFaces; i++) {
 				final int blink = triSkin[i];
 				triangleSkin[blink][temp[blink]++] = i;
 			}
@@ -3043,14 +3040,14 @@ public final class Model extends Entity {
 			return;
 		}
 		// adjust alpha
-		if(code == 5 && triangleSkin != null && triAlpha != null) {
+		if(code == 5 && triangleSkin != null && face_alpha != null) {
 			if(triangleSkin != null) {
 				for(int t_skin : ai) {
 					if(t_skin < triangleSkin.length) {
 						int[] triangle_list = triangleSkin[t_skin];
 						for(int tri_idx : triangle_list) {
 							
-							int i_233_ = (triAlpha[tri_idx] & 0xff) + 8 * dx;
+							int i_233_ = (face_alpha[tri_idx] & 0xff) + 8 * dx;
 							if(i_233_ >= 0) {
 								if(i_233_ > 255) {
 									i_233_ = 255;
@@ -3058,7 +3055,7 @@ public final class Model extends Entity {
 							} else {
 								i_233_ = 0;
 							}
-							triAlpha[tri_idx] = (byte) i_233_;
+							face_alpha[tri_idx] = (byte) i_233_;
 						}
 					}
 				}
@@ -3112,7 +3109,7 @@ public final class Model extends Entity {
 	}
 	
 	public void replaceHsl(int from, int to) {
-		for(int i = 0; i < triAmt; i++) {
+		for(int i = 0; i < numberOfTriangleFaces; i++) {
 			if(triFill[i] == from) {
 				triFill[i] = to;
 			}
@@ -3120,7 +3117,7 @@ public final class Model extends Entity {
 	}
 	
 	public final void setTexture(final short oldTextureId, final short newTextureId) {
-		for(int id = 0; id < triAmt; id++) {
+		for(int id = 0; id < numberOfTriangleFaces; id++) {
 			if(triTex != null)
 				if(triTex[id] == oldTextureId) {
 					triTex[id] = newTextureId;
@@ -3132,7 +3129,7 @@ public final class Model extends Entity {
 		for(int i = 0; i < vertexAmt; i++) {
 			vertexZ[i] = -vertexZ[i];
 		}
-		for(int i = 0; i < triAmt; i++) {
+		for(int i = 0; i < numberOfTriangleFaces; i++) {
 			final short x = vertexIndex3d1[i];
 			vertexIndex3d1[i] = vertexIndex3d3[i];
 			vertexIndex3d3[i] = x;
@@ -3158,9 +3155,9 @@ public final class Model extends Entity {
 		final int distance = (int) Math.sqrt(lightx * lightx + lighty * lighty + lightz * lightz);
 		final int intensity = contrast * distance >> 8;
 		if(triCol1 == null) {
-			triCol1 = new int[triAmt];
-			triCol2 = new int[triAmt];
-			triCol3 = new int[triAmt];
+			triCol1 = new int[numberOfTriangleFaces];
+			triCol2 = new int[numberOfTriangleFaces];
+			triCol3 = new int[numberOfTriangleFaces];
 		}
 		if(super.vectorX == null) {
 			super.vectorX = new int[vertexAmt];
@@ -3168,7 +3165,7 @@ public final class Model extends Entity {
 			super.vectorZ = new int[vertexAmt];
 			super.vectorMagnitude = new int[vertexAmt];
 		}
-		for(int i2 = 0; i2 < triAmt; i2++) {
+		for(int i2 = 0; i2 < numberOfTriangleFaces; i2++) {
 			if(triFill[i2] == 65535 || triFill[i2] == 16705 || triFill[i2] == 37798) {
 				triFill[i2] = 255;
 			}
@@ -3195,7 +3192,7 @@ public final class Model extends Entity {
 			l4 = (l4 << 8) / k5;
 			i5 = (i5 << 8) / k5;
 			j5 = (j5 << 8) / k5;
-			if(triType == null || (triType[i2] & 1) == 0) {
+			if(face_render_type == null || (face_render_type[i2] & 1) == 0) {
 				if(j2 < vectorX.length) {
 					super.vectorX[j2] += l4;
 					super.vectorY[j2] += i5;
@@ -3216,7 +3213,7 @@ public final class Model extends Entity {
 				}
 			} else {
 				final int light = lightness + (lightx * l4 + lighty * i5 + lightz * j5) / intensity;
-				triCol1[i2] = adjustLightness(triFill[i2], light, triType[i2]);
+				triCol1[i2] = adjustLightness(triFill[i2], light, face_render_type[i2]);
 			}
 		}
 		if(flag) {
@@ -3239,11 +3236,11 @@ public final class Model extends Entity {
 	}
 	
 	public void doShading(int lightness, int contrast, int lightx, int lighty, int lightz) {
-		for(int i = 0; i < triAmt; i++) {
+		for(int i = 0; i < numberOfTriangleFaces; i++) {
 			final int x3d = vertexIndex3d1[i];
 			final int y3d = vertexIndex3d2[i];
 			final int z3d = vertexIndex3d3[i];
-			if(triType == null) {
+			if(face_render_type == null) {
 				final int tex = triFill[i];
 				int light;
 				if(x3d < vectorX.length) {
@@ -3258,9 +3255,9 @@ public final class Model extends Entity {
 					light = lightness + (lightx * vectorX[z3d] + lighty * vectorY[z3d] + lightz * vectorZ[z3d]) / (contrast * vectorMagnitude[z3d]);
 					triCol3[i] = adjustLightness(tex, light, 0);
 				}
-			} else if((triType[i] & 1) == 0) {
+			} else if((face_render_type[i] & 1) == 0) {
 				final int tex = triFill[i];
-				final int type = triType[i];
+				final int type = face_render_type[i];
 				int light;
 				if(x3d < vectorX.length) {
 					light = lightness + (lightx * vectorX[x3d] + lighty * vectorY[x3d] + lightz * vectorZ[x3d]) / (contrast * vectorMagnitude[x3d]);
@@ -3286,22 +3283,22 @@ public final class Model extends Entity {
 		vectorNormalMagnitude = null;
 		vertexSkin = null;
 		triSkin = null;
-		if(triType != null) {
-			for(int l1 = 0; l1 < triAmt; l1++) {
-				if((triType[l1] & 2) == 2) {
+		if(face_render_type != null) {
+			for(int l1 = 0; l1 < numberOfTriangleFaces; l1++) {
+				if((face_render_type[l1] & 2) == 2) {
 					return;
 				}
 			}
 		}
 		triFill = null;
 	}
-	
-	private void method483(boolean flag, boolean flag1, long hash) {
+
+	private void translateToScreen(boolean flag, boolean needAddToSelectedObjects, long hash) {
 		for(int j = 0; j < maxDiagonalDistUpAndDown; j++) {
-			anIntArray1671[j] = 0;
+			depthListIndices[j] = 0;
 		}
-		for(int k = 0; k < triAmt; k++) {
-			if(triType == null || triType[k] != -1) {
+		for(int k = 0; k < numberOfTriangleFaces; k++) {
+			if(face_render_type == null || face_render_type[k] != -1) {
 				final int l = vertexIndex3d1[k];
 				final int k1 = vertexIndex3d2[k];
 				final int j2 = vertexIndex3d3[k];
@@ -3309,31 +3306,31 @@ public final class Model extends Entity {
 				final int l3 = projVertexX[k1];
 				final int k4 = projVertexX[j2];
 				if(flag && (i3 == -5000 || l3 == -5000 || k4 == -5000)) {
-					projTriClipZ[k] = true;
+					outOfReach[k] = true;
 					final int j5 = (projVertexLocalZ[l] + projVertexLocalZ[k1] + projVertexLocalZ[j2]) / 3 + maxDiagonalDistUp;
-					anIntArrayArray1672[j5][anIntArray1671[j5]++] = k;
+					faceLists[j5][depthListIndices[j5]++] = k;
 				} else {
-					if(flag1 && method486(hoverX, hoverY, projVertexY[l], projVertexY[k1], projVertexY[j2], i3, l3, k4)) {
-						modelHover[modelHoverAmt++] = hash;
-						flag1 = false;
+					if(needAddToSelectedObjects && cursorOn(hoverX, hoverY, projVertexY[l], projVertexY[k1], projVertexY[j2], i3, l3, k4)) {
+						modelHover[objectsRendered++] = hash;
+						needAddToSelectedObjects = false;
 					}
 					if((i3 - l3) * (projVertexY[j2] - projVertexY[k1]) - (projVertexY[l] - projVertexY[k1]) * (k4 - l3) > 0) {
-						projTriClipZ[k] = false;
+						outOfReach[k] = false;
 						projTriClipX[k] = i3 < 0 || l3 < 0 || k4 < 0 || i3 > Rasterizer3D.viewport.width || l3 > Rasterizer3D.viewport.width || k4 > Rasterizer3D.viewport.width;
 						final int k5 = (projVertexLocalZ[l] + projVertexLocalZ[k1] + projVertexLocalZ[j2]) / 3 + maxDiagonalDistUp;
-						if(k5 > anIntArrayArray1672.length || k5 > anIntArray1671.length) {
+						if(k5 > faceLists.length || k5 > depthListIndices.length) {
 							return;
 						}
-						anIntArrayArray1672[k5][anIntArray1671[k5]++] = k;
+						faceLists[k5][depthListIndices[k5]++] = k;
 					}
 				}
 			}
 		}
 		if(triPri == null) {
 			for(int i1 = maxDiagonalDistUpAndDown - 1; i1 >= 0; i1--) {
-				final int l1 = anIntArray1671[i1];
+				final int l1 = depthListIndices[i1];
 				if(l1 > 0) {
-					final int ai[] = anIntArrayArray1672[i1];
+					final int ai[] = faceLists[i1];
 					for(int j3 = 0; j3 < l1; j3++) {
 						drawTriangle(ai[j3]);
 					}
@@ -3346,9 +3343,9 @@ public final class Model extends Entity {
 			anIntArray1677[j1] = 0;
 		}
 		for(int i2 = maxDiagonalDistUpAndDown - 1; i2 >= 0; i2--) {
-			final int k2 = anIntArray1671[i2];
+			final int k2 = depthListIndices[i2];
 			if(k2 > 0) {
-				final int ai1[] = anIntArrayArray1672[i2];
+				final int ai1[] = faceLists[i2];
 				for(int i4 = 0; i4 < k2; i4++) {
 					final int l4 = ai1[i4];
 					final int l5 = triPri[l4];
@@ -3490,7 +3487,7 @@ public final class Model extends Entity {
 	public int[] verticesParticle;
 	
 	private void drawTriangleOrQuad(int idx) {
-		if(triFill != null && triAlpha != null)
+		if(triFill != null && face_alpha != null)
 			if(triFill[idx] == 65535)
 				return;// XXX: ARTEM FIX FOR BLACK MAPS.
 		final int centerX = Rasterizer3D.viewport.centerX;
@@ -3578,23 +3575,23 @@ public final class Model extends Entity {
 					Rasterizer3D.clippedScan = true;
 				}
 				int meshType;
-				if(triType == null) {
+				if(face_render_type == null) {
 					meshType = 0;
 				} else {
-					meshType = triType[idx] & 3;
+					meshType = face_render_type[idx] & 3;
 				}
 				if(meshType == 0) {
 					Rasterizer3D.drawGouraudTriangle(y1, y2, y3, x1, x2, x3, 0, 0, 0, triReqCol[0], triReqCol[1], triReqCol[2]);
 				} else if(meshType == 1) {
 					Rasterizer3D.drawFlatTriangle(y1, y2, y3, x1, x2, x3, 0, 0, 0, hslToRgbMap[triCol1[idx]]);
 				} else if(meshType == 2) {
-					final int j8 = triType[idx] >> 2;
+					final int j8 = face_render_type[idx] >> 2;
 					final int k9 = texVertex1[j8] & 0xffff;
 					final int k10 = texVertex2[j8] & 0xffff;
 					final int k11 = texVertex3[j8] & 0xffff;
 					Rasterizer3D.drawTexturedTriangle(y1, y2, y3, x1, x2, x3, 0, 0, 0, triReqCol[0], triReqCol[1], triReqCol[2], projTexVertexX[k9], projTexVertexX[k10], projTexVertexX[k11], projTexVertexY[k9], projTexVertexY[k10], projTexVertexY[k11], projTexVertexZ[k9], projTexVertexZ[k10], projTexVertexZ[k11], triFill[idx], false, false);
 				} else if(meshType == 3) {
-					final int k8 = triType[idx] >> 2;
+					final int k8 = face_render_type[idx] >> 2;
 					final int l9 = texVertex1[k8] & 0xffff;
 					final int l10 = texVertex2[k8] & 0xffff;
 					final int l11 = texVertex3[k8] & 0xffff;
@@ -3606,10 +3603,10 @@ public final class Model extends Entity {
 					Rasterizer3D.clippedScan = true;
 				}
 				int i8;
-				if(triType == null) {
+				if(face_render_type == null) {
 					i8 = 0;
 				} else {
-					i8 = triType[idx] & 3;
+					i8 = face_render_type[idx] & 3;
 				}
 				if(i8 == 0) {
 					Rasterizer3D.drawGouraudTriangle(y1, y2, y3, x1, x2, x3, 0, 0, 0, triReqCol[0], triReqCol[1], triReqCol[2]);
@@ -3623,7 +3620,7 @@ public final class Model extends Entity {
 					return;
 				}
 				if(i8 == 2) {
-					final int i9 = triType[idx] >> 2;
+					final int i9 = face_render_type[idx] >> 2;
 					final int i10 = texVertex1[i9];
 					final int i11 = texVertex2[i9];
 					final int i12 = texVertex3[i9];
@@ -3632,7 +3629,7 @@ public final class Model extends Entity {
 					return;
 				}
 				if(i8 == 3) {
-					final int j9 = triType[idx] >> 2;
+					final int j9 = face_render_type[idx] >> 2;
 					final int j10 = texVertex1[j9];
 					final int j11 = texVertex2[j9];
 					final int j12 = texVertex3[j9];
@@ -3648,7 +3645,7 @@ public final class Model extends Entity {
 		short i_290_ = 0;
 		short i_291_ = 0;
 		int i_292_ = 0;
-		for(int i_293_ = 0; i_293_ < triAmt; i_293_++) {
+		for(int i_293_ = 0; i_293_ < numberOfTriangleFaces; i_293_++) {
 			int i_294_ = class475_sub17_288_.getSByte() & 0xFF;
 			int i_295_ = i_294_ & 0x7;
 			if(i_295_ == 1) {
@@ -3708,7 +3705,7 @@ public final class Model extends Entity {
 	
 	void decodeTexturedTriangles(Buffer class475_sub17, Buffer class475_sub17_142_, Buffer class475_sub17_143_, Buffer class475_sub17_144_, Buffer class475_sub17_145_, Buffer class475_sub17_146_) {
 		for(int i = 0; i < texAmt; i++) {
-			int i_147_ = triType[i] & 0xff;
+			int i_147_ = face_render_type[i] & 0xff;
 			if(i_147_ == 0) {
 				texVertex1[i] = (short) (class475_sub17.getUShort());
 				texVertex2[i] = (short) (class475_sub17.getUShort());
@@ -3779,7 +3776,7 @@ public final class Model extends Entity {
 		}
 	}
 	
-	private boolean method486(int i, int j, int k, int l, int i1, int j1, int k1, int l1) {
+	private boolean cursorOn(int i, int j, int k, int l, int i1, int j1, int k1, int l1) {
 		if(j < k && j < l && j < i1) {
 			return false;
 		}
