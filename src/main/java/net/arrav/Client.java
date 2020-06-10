@@ -1121,7 +1121,7 @@ public class Client extends ClientEngine {
 		anInt893 = 0;
 		updateNPCMovement(buffer);
 		addNewNPC(psize, buffer);
-		method86(buffer);
+		updateNpcs(buffer);
 		for(int k = 0; k < anInt839; k++) {
 			final int l = anIntArray840[k];
 			if(npcList[l].anInt1537 != loopCycle) {
@@ -4598,9 +4598,9 @@ public class Client extends ClientEngine {
 							maxStats[skill] = k20 + 2;
 						}
 					}
-					if (!initial && skill != -1 && skill != 99) {
-						exporbHandler.orbs[skill].receivedExperience();
-					}
+					//if (!initial && skill != -1 && skill != 99) {
+					//	exporbHandler.orbs[skill].receivedExperience();
+					//}
 
 					OrbHandler.updateOrbs(skill);
 					if(dif > 0 && !first)
@@ -8367,7 +8367,7 @@ public class Client extends ClientEngine {
 		return true;
 	}
 
-	private void method86(Buffer stream) {
+	private void updateNpcs(Buffer stream) {
 		for(int j = 0; j < anInt893; j++) {
 			final int k = anIntArray894[j];
 			final NPC entity = npcList[k];
@@ -8450,23 +8450,25 @@ public class Client extends ClientEngine {
 				entity.anInt1539 = stream.getLitEndUShort();
 			}
 			if((l & 2) != 0) {
-				int l1 = stream.getUShort();
-				int k2 = stream.getUByte();
+				int damage = stream.getInt();
+				int hitMask = stream.getUByte();
 				int icon = stream.getUByte();
-				entity.updateHitData(k2, l1, loopCycle, icon, 0);
+				int soak = stream.getInt();
+				entity.updateHitData(hitMask, damage, loopCycle, icon, soak);
 				entity.loopCycleStatus = loopCycle + 300;
-				entity.currentHealth = stream.getUShort();
-				entity.maxHealth = 100;
+				entity.maxHealth = stream.getInt();
+				entity.currentHealth = stream.getInt();
 				entity.special = stream.getUByte();
 			}
 			if((l & 0x20) != 0) {
-				int j1 = stream.getUShort();
-				int j2 = stream.getUByte();
+				int damage = stream.getInt();
+				int hitMask = stream.getUByte();
 				int icon = stream.getUByte();
-				entity.updateHitData(j2, j1, loopCycle, icon, 0);
+				int soak = stream.getInt();
+				entity.updateHitData(hitMask, damage, loopCycle, icon, soak);
 				entity.loopCycleStatus = loopCycle + 300;
-				entity.currentHealth = stream.getUShort();
-				entity.maxHealth = 100;
+				entity.maxHealth = stream.getInt();
+				entity.currentHealth = stream.getInt();
 				entity.special = stream.getUByte();
 			}
 		}

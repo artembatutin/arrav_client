@@ -5,7 +5,7 @@ import net.arrav.activity.ui.UIRenderer;
 import net.arrav.net.SignLink;
 
 import javax.imageio.ImageIO;
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 import java.applet.Applet;
 import java.awt.*;
@@ -558,18 +558,17 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 		idleTime = 0;
 		tempClickX = x;
 		tempClickY = y;
-		int type = mouseevent.getButton();
 		tempClickTime = System.currentTimeMillis();
-		if(type == 2) {
+		if (mouseevent.getButton() == MouseEvent.BUTTON2) {
 			mouseWheelDown = true;
 			mouseWheelX = x;
 			mouseWheelY = y;
 			return;
 		}
-		if(mouseevent.isMetaDown()) {
+		if(mouseevent.getButton() == MouseEvent.BUTTON3) {
 			tempClickButton = 2;
 			mouseDragButton = 2;
-		} else {
+		} else if(mouseevent.getButton() == MouseEvent.BUTTON1){
 			tempClickButton = 1;
 			mouseDragButton = 1;
 		}
