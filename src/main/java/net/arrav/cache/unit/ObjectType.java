@@ -3,6 +3,7 @@ package net.arrav.cache.unit;
 import com.google.gson.Gson;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import net.arrav.Config;
 import net.arrav.graphic.Viewport;
 import net.arrav.cache.CacheArchive;
 import net.arrav.net.SignLink;
@@ -14,6 +15,7 @@ import net.arrav.graphic.Rasterizer2D;
 import net.arrav.graphic.Rasterizer3D;
 import net.arrav.graphic.img.BitmapImage;
 import net.arrav.util.io.Buffer;
+import net.arrav.world.model.TieredEntity;
 
 import java.io.DataOutputStream;
 import java.io.FileOutputStream;
@@ -34,7 +36,7 @@ public final class ObjectType {
 	public static ObjectType nulled;
 	
 	public int id;
-	public int tier;
+	public TieredEntity tier;
 	public DataType dataType;
 	public int modelId;
 	public int iconZoom;
@@ -112,16 +114,11 @@ public final class ObjectType {
 			obj.toLend();
 		}
 
-	//if(obj.id == 14293) {
-	//	obj.dataType = DataType.CUSTOM;
-	//	obj.modelId = 0;
-	//	obj.maleEquip = 0;
-	//	obj.femaleEquip = 0;
-	//	obj.femaleEquipAlt = 0;
-	//	obj.maleEquipAlt = 0;
-	//	obj.actions = new String[5];
-	//	obj.actions[1] = "Wear";
-	//}
+	if(obj.id == 14293) {
+		obj.tier = TieredEntity.TIER1;
+	}
+		if(obj.tier != null)
+			obj.name = "<col="+obj.tier.getColor()+">"+obj.name+(Config.def.isShowTier() ? " "+ obj.tier.getName()+"</col>" : "</col>");
 
 		defCache.put(id, obj);
 		return obj;
@@ -222,6 +219,8 @@ public final class ObjectType {
 				iconVerticalOffset = buffer.getUShort();
 				if(iconVerticalOffset > 32767)
 					iconVerticalOffset -= 65536;
+			} else if(opcode == 9) {
+				tier = TieredEntity.ofOrdinal(buffer.getUByte());
 			} else if(opcode == 11) {
 				stackable = true;
 			} else if(opcode == 12) {
@@ -497,9 +496,9 @@ public final class ObjectType {
 				out.writeByte(8);
 				out.writeShort(iconVerticalOffset);
 				written.add(8);
-			} else if(tier != -1 && !written.contains(9)) {
+			} else if(tier != null && !written.contains(9)) {
 				out.writeByte(9);
-				out.writeByte(tier);
+				out.writeByte(tier.ordinal());
 				written.add(9);
 			} else if(stackable && !written.contains(11)) {
 				out.writeByte(11);
@@ -1027,7 +1026,7 @@ public final class ObjectType {
 		actions = null;
 		dataType = DataType.NEWEST;
 		maleEquip = -1;
-		tier = -1;
+		tier = null;
 		maleEquipAlt = -1;
 		femaleEquip = -1;
 		femaleEquipAlt = -1;

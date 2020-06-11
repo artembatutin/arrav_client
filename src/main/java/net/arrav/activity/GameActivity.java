@@ -3,6 +3,7 @@ package net.arrav.activity;
 import net.arrav.Config;
 import net.arrav.Constants;
 import net.arrav.activity.ui.UIComponent;
+import net.arrav.util.string.ColorConstants;
 import net.arrav.util.string.StringUtils;
 import net.arrav.world.Scene;
 import net.arrav.world.emitter.Particle;
@@ -1345,6 +1346,7 @@ public class GameActivity extends Activity {
 		}
 		updateEntities();
 		drawHeadIcon();
+		Rasterizer2D.fillRectangle(50, 50, 50, 50, ColorConstants.BURGUNDY);
 		client.combatOverlayHandler.displayEntityFeed();
 		client.messageFeedHandler.displayKillFeed();
 		client.exporbHandler.process();
@@ -1942,7 +1944,7 @@ public class GameActivity extends Activity {
 			s = s + "@whi@ / " + (client.menuPos - 2) + " more options";
 		}
 		int off = client.uiRenderer.isFixed() ? 4 : 0;
-		boldFont.drawTooltip(s, 4 + off, 15 + off, 0xffffff, client.loopCycle / 1000);
+		plainFont.drawLeftAlignedEffectString(s, 4 + off, 15 + off, 0xffffff, 0);
 	}
 
 	public void processScrollbar(int x, int y, int mX, int mY, int visibleHeight, int contentHeight, Interface widget) {

@@ -15,8 +15,9 @@ public class ColorConstants {
     public final static int PALE_ORANGE = 0xc8aa64;
     public final static int RED = 0xfe3200;
     public final static int BURGUNDY = 0x800000;
+    Color color = new Color(8388608);
     public final static int DARK_BLUE = 0x000080;
-    public final static int GREEN = 0x09FF00;
+    public final static int GREEN = 0xFF00;
     public final static int PALE_GREEN = 0x46b556;
     public final static int LOADIN_1 = 0xFF403434;
     public final static int LOADIN_2 = 0xFF2F2929;

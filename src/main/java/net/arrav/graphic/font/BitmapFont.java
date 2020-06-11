@@ -5,6 +5,7 @@ import net.arrav.cache.CacheArchive;
 import net.arrav.graphic.Rasterizer2D;
 import net.arrav.graphic.img.BitmapImage;
 import net.arrav.util.io.Buffer;
+import net.arrav.util.string.ColorConstants;
 
 import java.awt.*;
 
@@ -649,7 +650,8 @@ public final class BitmapFont extends Rasterizer2D {
 			destOffset += d;
 		}
 		if(width > 0 && height > 0) {
-			copyRasterTrans(typefaceMask[character], Rasterizer2D.canvasRaster, maskPos, destPos, maskOffset, destOffset, width, height, color, alpha);
+			//copyRasterTrans(typefaceMask[character], Rasterizer2D.canvasRaster, maskPos, destPos, maskOffset, destOffset, width, height, color, alpha);
+			copyRasterTransGradient(typefaceMask[character], Rasterizer2D.canvasRaster, maskPos, destPos, maskOffset, destOffset, width, height, ColorConstants.PALE_GREEN,color, alpha);
 		}
 	}
 
@@ -665,6 +667,29 @@ public final class BitmapFont extends Rasterizer2D {
 				}
 				destPos++;
 			}
+			destPos += destOffset;
+			maskPos += maskOffset;
+		}
+	}
+	private void copyRasterTransGradient(byte[] mask, int[] dest, int maskPos, int destPos,
+								 int maskOffset, int destOffset, int width, int height, int color1, int color2, int alpha) {
+		int offsetY = 0;
+		int step = 0x10000 / height;
+		int reverseAlpha = 256 - alpha;
+		for (int x = -height; x < 0; x++) {
+			int start = 0x10000 - offsetY >> 8;
+			int end = offsetY >> 8;
+			int gradient = ((color1 & 0xff00ff) * start + (color2 & 0xff00ff) * end & 0xff00ff00) + ((color1 & 0xff00) * start + (color2 & 0xff00) * end & 0xff0000) >>> 8;
+			int colour = ((gradient & 0xff00ff) * alpha >> 8 & 0xff00ff) + ((gradient & 0xff00) * alpha >> 8 & 0xff00);
+			for (int y = -width; y < 0; y++) {
+				if(mask[maskPos++] != 0) {
+					int blendedColor = dest[destPos];
+					blendedColor = ((blendedColor & 0xff00ff) * reverseAlpha >> 8 & 0xff00ff) + ((blendedColor & 0xff00) * reverseAlpha >> 8 & 0xff00);
+					dest[destPos] = colour + blendedColor;
+				}
+				destPos++;
+			}
+			offsetY += step;
 			destPos += destOffset;
 			maskPos += maskOffset;
 		}
@@ -740,8 +765,7 @@ public final class BitmapFont extends Rasterizer2D {
 			i_41_ += i_46_;
 		}
 		if (width > 0 && height > 0) {
-			copyRasterNew(canvasRaster, typefaceMask[character], shadowColor, i_43_, i_40_, width, height, i_41_,
-					i_42_);
+			copyRasterNew(canvasRaster, typefaceMask[character], shadowColor, i_43_, i_40_, width, height, i_41_, i_42_);
 		}
 	}
 
@@ -794,7 +818,7 @@ public final class BitmapFont extends Rasterizer2D {
 		try {
 			if (string.startsWith(startColor)) {
 				String color = string.substring(4);
-				textColor = color.length() < 6 ? Color.decode(color).getRGB() : Integer.parseInt(color, 16);
+				textColor = (0xff000000 | Integer.decode(color));
 				return true;
 			} else if (string.equals(endColor)) {
 				textColor = defaultColor;

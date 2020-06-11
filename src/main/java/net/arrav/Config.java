@@ -16,7 +16,9 @@ public class Config {
 	 * The login clouds
 	 */
 	public boolean clouds = false;
-	
+
+	public boolean showTier = true;
+
 	/**
 	 * The brightness to be saved.
 	 */
@@ -265,7 +267,15 @@ public class Config {
 	public boolean groundMat() {
 		return groundMat;
 	}
-	
+
+	public boolean isShowTier() {
+		return showTier;
+	}
+
+	public void setShowTier(boolean showTier) {
+		this.showTier = showTier;
+	}
+
 	public void groundMat(boolean groundMat) {
 		this.groundMat = groundMat;
 	}
