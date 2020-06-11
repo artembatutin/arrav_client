@@ -1,11 +1,13 @@
 package net.arrav.cache.unit;
 
+import com.google.gson.Gson;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.arrav.graphic.Viewport;
 import net.arrav.cache.CacheArchive;
 import net.arrav.net.SignLink;
 import net.arrav.util.DataToolkit;
+import net.arrav.util.string.JsonSaver;
 import net.arrav.world.model.DataType;
 import net.arrav.world.model.Model;
 import net.arrav.graphic.Rasterizer2D;
@@ -32,27 +34,28 @@ public final class ObjectType {
 	public static ObjectType nulled;
 	
 	public int id;
+	public int tier;
 	public DataType dataType;
-	private int modelId;
+	public int modelId;
 	public int iconZoom;
 	public int iconYaw;
 	public int iconRoll;
-	private int iconVerticalOffset;
-	private int iconHorizontalOffset;
+	public int iconVerticalOffset;
+	public int iconHorizontalOffset;
 	
-	private int maleEquip;
-	private int maleEquipAlt;
-	private int femaleEquip;
-	private int femaleEquipAlt;
+	public int maleEquip;
+	public int maleEquipAlt;
+	public int femaleEquip;
+	public int femaleEquipAlt;
 	
-	private int groundScaleZ;
-	private int groundScaleY;
-	private int groundScaleX;
-	private short[] retextureDst;
-	private short[] retextureSrc;
-	private int[] modifiedModelColors;
-	private int[] originalModelColors;
-	private byte[] recolorDstPalette;
+	public int groundScaleZ;
+	public int groundScaleY;
+	public int groundScaleX;
+	public short[] retextureDst;
+	public short[] retextureSrc;
+	public int[] modifiedModelColors;
+	public int[] originalModelColors;
+	public byte[] recolorDstPalette;
 	
 	public int value;
 	public String name;
@@ -60,30 +63,30 @@ public final class ObjectType {
 	public String[] actions;
 	public String[] groundActions;
 	public boolean stackable;
-	private int noteId;
-	private int noteTemplateId;
-	private int[] stackableIds;
-	private int[] stackAmounts;
-	private int maleDialogueHatmodelId;
-	private int femaleDialogueHatmodelId;
-	private int maleDialoguemodelId;
-	private int femaleDialoguemodelId;
-	private int tertiaryMaleModel;
-	private int tertiaryFemaleModel;
-	private int diffusion;
-	private int ambience;
+	public int noteId;
+	public int noteTemplateId;
+	public int[] stackableIds;
+	public int[] stackAmounts;
+	public int maleDialogueHatmodelId;
+	public int femaleDialogueHatmodelId;
+	public int maleDialoguemodelId;
+	public int femaleDialoguemodelId;
+	public int tertiaryMaleModel;
+	public int tertiaryFemaleModel;
+	public int diffusion;
+	public int ambience;
 	public int team;
-	private int spriteCameraYaw;
+	public int spriteCameraYaw;
 	
-	private int womanEquipOffsetZ;
-	private int womanEquipOffsetY;
-	private int womanEquipOffsetX;
-	private int maleEquipOffsetZ;
-	private int maleEquipOffsetY;
-	private int maleEquipOffsetX;
+	public int womanEquipOffsetZ;
+	public int womanEquipOffsetY;
+	public int womanEquipOffsetX;
+	public int maleEquipOffsetZ;
+	public int maleEquipOffsetY;
+	public int maleEquipOffsetX;
 	
-	private int lendID;
-	private int lentItemID;
+	public int lendID;
+	public int lentItemID;
 	public String[] equipActions;
 	
 	public ObjectType() {
@@ -130,8 +133,8 @@ public final class ObjectType {
 			data = new Buffer(archive.getFile("obj.dat"));
 			buffer = new Buffer(archive.getFile("obj.idx"));
 		} else {*/
-			data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/obj.dat"));
-			buffer = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/obj.idx"));
+			data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/custom_obj.dat"));
+			buffer = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/custom_obj.idx"));
 		//}
 		
 		length = buffer.getUShort();
@@ -154,16 +157,18 @@ public final class ObjectType {
 	}
 	
 	public static void packValues(String name) throws IOException {
-		final Buffer data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/obj.dat"));
-		final Buffer index = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/obj.idx"));
+		//final Buffer data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/obj.dat"));
+		//final Buffer index = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/item/obj.idx"));
 
-		final int length = index.getUShort();
-		ObjectType[] items = new ObjectType[length];
 		data.pos = 2;
 		DataOutputStream dat = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/item/"+name+".dat"));
 		DataOutputStream idx = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/item/"+name+".idx"));
 		idx.writeShort(length);
 		dat.writeShort(length);
+
+		JsonSaver saver = new JsonSaver();
+		Gson gson = new Gson();
+
 		for(int i = 0; i < length; i++) {
 			ObjectType obj = new ObjectType();
 			try {
@@ -182,8 +187,12 @@ public final class ObjectType {
 				e.printStackTrace();
 				break;
 			}
-			//System.out.println("writted: " + i + " - offset: " + writeOffset);
+			saver.current().add(i+"", gson.toJsonTree(obj));
+			saver.split();
+			double progress = ((double) (i + 1) / length) * 100;
+			System.out.println(String.format("%.2f%s", progress, "%"));
 		}
+		saver.publish("./tacking/item_definitions.json");
 		dat.close();
 		idx.close();
 	}
@@ -451,7 +460,7 @@ public final class ObjectType {
 		}
 	}
 
-	private void encode(DataOutputStream out) throws IOException {
+	public void encode(DataOutputStream out) throws IOException {
 		boolean actionsd = false, actionsd2 = false, actionsd3 = false;
 		Set<Integer> written = new HashSet<>();
 		do {
@@ -488,6 +497,10 @@ public final class ObjectType {
 				out.writeByte(8);
 				out.writeShort(iconVerticalOffset);
 				written.add(8);
+			} else if(tier != -1 && !written.contains(9)) {
+				out.writeByte(9);
+				out.writeByte(tier);
+				written.add(9);
 			} else if(stackable && !written.contains(11)) {
 				out.writeByte(11);
 				written.add(11);
@@ -1014,6 +1027,7 @@ public final class ObjectType {
 		actions = null;
 		dataType = DataType.NEWEST;
 		maleEquip = -1;
+		tier = -1;
 		maleEquipAlt = -1;
 		femaleEquip = -1;
 		femaleEquipAlt = -1;
@@ -1077,6 +1091,73 @@ public final class ObjectType {
 			System.arraycopy(obj.actions, 0, actions, 0, 4);
 		}
 		actions[4] = "Discard";
+	}
+
+	public ObjectType clone() {
+		final ObjectType itemDef = new ObjectType();
+		itemDef.actions = new String[5];
+		itemDef.id = id;
+		itemDef.tier = tier;
+		itemDef.dataType = dataType;
+		itemDef.modelId = modelId;
+		itemDef.iconZoom = iconZoom;
+		itemDef.iconYaw = iconYaw;
+		itemDef.iconRoll = iconRoll;
+		itemDef.iconHorizontalOffset = iconHorizontalOffset;
+		itemDef.iconVerticalOffset = iconVerticalOffset;
+		itemDef.spriteCameraYaw = spriteCameraYaw;
+		itemDef.maleEquip = maleEquip;
+		itemDef.maleEquipAlt = maleEquipAlt;
+		itemDef.femaleEquip = femaleEquip;
+		itemDef.femaleEquipAlt = femaleEquipAlt;
+		itemDef.groundScaleZ = groundScaleZ;
+		itemDef.groundScaleY = groundScaleY;
+		itemDef.groundScaleX = groundScaleX;
+		itemDef.retextureDst = retextureDst;
+		itemDef.retextureSrc = retextureSrc;
+		itemDef.modifiedModelColors = modifiedModelColors;
+		itemDef.originalModelColors = originalModelColors;
+		itemDef.recolorDstPalette = recolorDstPalette;
+		itemDef.value = 0;
+		itemDef.name = name;
+		itemDef.description = description;
+		itemDef.stackable = stackable;
+		itemDef.noteId = noteId;
+		itemDef.noteTemplateId = noteTemplateId;
+		itemDef.stackableIds = stackableIds;
+		itemDef.stackAmounts = stackAmounts;
+		itemDef.maleDialogueHatmodelId = maleDialogueHatmodelId;
+		itemDef.femaleDialogueHatmodelId = femaleDialogueHatmodelId;
+		itemDef.maleDialoguemodelId = maleDialoguemodelId;
+		itemDef.femaleDialoguemodelId = femaleDialoguemodelId;
+		itemDef.tertiaryMaleModel = tertiaryMaleModel;
+		itemDef.tertiaryFemaleModel = tertiaryFemaleModel;
+		itemDef.diffusion = diffusion;
+		itemDef.ambience = ambience;
+		itemDef.womanEquipOffsetZ = womanEquipOffsetZ;
+		itemDef.womanEquipOffsetY = womanEquipOffsetY;
+		itemDef.womanEquipOffsetX = womanEquipOffsetX;
+		itemDef.maleEquipOffsetZ = maleEquipOffsetZ;
+		itemDef.maleEquipOffsetY = maleEquipOffsetY;
+		itemDef.maleEquipOffsetX = maleEquipOffsetX;
+		itemDef.team = team;
+		itemDef.lendID = lendID;
+		itemDef.lentItemID = lentItemID;
+
+		itemDef.equipActions = new String[5];
+		itemDef.actions = new String[5];
+		itemDef.groundActions = new String[5];
+
+		if(equipActions != null) {
+			System.arraycopy(equipActions, 0, itemDef.equipActions, 0, 5);
+		}
+		if(actions != null) {
+			System.arraycopy(actions, 0, itemDef.actions, 0, 5);
+		}
+		if(groundActions != null) {
+			System.arraycopy(groundActions, 0, itemDef.groundActions, 0, 5);
+		}
+		return this;
 	}
 	
 	private void toNote() {

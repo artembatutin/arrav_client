@@ -2,6 +2,7 @@ package net.arrav;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
+import javafx.application.Application;
 import net.arrav.activity.GameActivity;
 import net.arrav.activity.TitleActivity;
 import net.arrav.activity.panel.PanelHandler;
@@ -16,6 +17,7 @@ import net.arrav.cache.custom.ModelVault;
 import net.arrav.cache.custom.SpritesCache;
 import net.arrav.cache.impl.InterfaceLoader;
 import net.arrav.net.*;
+import net.arrav.util.tool.itemdef.ItemDefinitionEditor;
 import net.arrav.world.CollisionMap;
 import net.arrav.world.MapDecoder;
 import net.arrav.world.Scene;
@@ -6687,6 +6689,16 @@ public class Client extends ClientEngine {
 						final Runtime runtime = Runtime.getRuntime();
 						final int mem = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
 						pushMessage("--> mem: " + mem + "k", 0, "");
+					}
+					if(chatInput.startsWith("::editor")) {
+						try {
+							logOut();
+							(new Thread(() -> {
+								Application.launch(ItemDefinitionEditor.class, new String[0]);
+							})).start();
+						}catch (Exception e) {
+							e.printStackTrace();
+						}
 					}
 					if(chatInput.equals("::fps")) {
 						Config.def.fps(!Config.def.fps());
