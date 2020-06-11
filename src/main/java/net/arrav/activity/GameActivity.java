@@ -1346,7 +1346,6 @@ public class GameActivity extends Activity {
 		}
 		updateEntities();
 		drawHeadIcon();
-		Rasterizer2D.fillRectangle(50, 50, 50, 50, ColorConstants.BURGUNDY);
 		client.combatOverlayHandler.displayEntityFeed();
 		client.messageFeedHandler.displayKillFeed();
 		client.exporbHandler.process();
@@ -1749,6 +1748,7 @@ public class GameActivity extends Activity {
 	}
 
 	private void drawWorldOverlay() {
+		ColorConstants.processFading();
 		int offset = 4;
 		if(client.uiRenderer.isResizableOrFull()) {
 			offset = 0;
@@ -1841,10 +1841,10 @@ public class GameActivity extends Activity {
 
 
 		if(Config.def.fps()) {
-			smallFont.drawRightAlignedString("Fps: " + client.fps, off, (line += 15), 0xffff00);
+			smallFont.drawRightAlignedString("Fps: " + client.fps, off, (line += 15), ColorConstants.TEST_FADE.getColor());
 			final Runtime runtime = Runtime.getRuntime();
 			final int mem = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
-			smallFont.drawRightAlignedString("Mem: " + mem+"k", off, (line += 15), 0xffff00);
+			smallFont.drawRightAlignedString("Mem: " + mem+"k", off, (line += 15), ColorConstants.TEST_FADE.getColor());
 		}
 		if(Config.def.data()) {
 			final Runtime runtime = Runtime.getRuntime();
