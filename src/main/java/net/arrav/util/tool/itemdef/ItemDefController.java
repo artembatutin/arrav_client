@@ -2,9 +2,13 @@ package net.arrav.util.tool.itemdef;
 
 import com.google.gson.Gson;
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
 import javafx.collections.transformation.FilteredList;
 import javafx.concurrent.Task;
 import javafx.embed.swing.SwingFXUtils;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -21,8 +25,10 @@ import net.arrav.net.SignLink;
 import net.arrav.util.DataToolkit;
 import net.arrav.util.io.Buffer;
 import net.arrav.util.string.JsonSaver;
+import net.arrav.world.model.DataType;
 import net.arrav.world.model.Model;
 import net.arrav.world.model.Player;
+import net.arrav.world.model.TieredEntity;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -48,7 +54,10 @@ public class ItemDefController implements Initializable {
     public ListView<ObjectType> definitionsList;
     public ImageView sprite;
     public Button reset, save;
-    public CheckBox wearable;
+    public ComboBox<String> actions;
+    public ChoiceBox<DataType> dataType;
+    public ComboBox<String> groundActions;
+    public TextField tier;
 
     private ObjectType selectedDefinition;
 
@@ -61,7 +70,7 @@ public class ItemDefController implements Initializable {
     public void initDefs() {
         ArrayList<ObjectType> defs = new ArrayList<>();
         for(int i = 0; i < ObjectType.length; i++) {
-            ObjectType def = ObjectType.get(i);
+            ObjectType def = ObjectType.uncached(i);
             defs.add(def.clone());
         }
         cache = defs;
@@ -95,7 +104,27 @@ public class ItemDefController implements Initializable {
         });
 
 
+        actions.getEditor().textProperty().addListener((obs, oldText, newText) -> {
+            if(oldText.equals(newText))
+                return;
+            if(selectedDefinition.actions == null)
+                selectedDefinition.actions = new String[10];
+            actions.getItems().set(actions.getSelectionModel().getSelectedIndex(), newText);
+            actions.getItems().toArray(selectedDefinition.actions);
+        });
+        groundActions.getEditor().textProperty().addListener((obs, oldText, newText) -> {
+            if(oldText.equals(newText))
+                return;
+            if(selectedDefinition.groundActions == null)
+                selectedDefinition.groundActions = new String[10];
+            groundActions.getItems().set(groundActions.getSelectionModel().getSelectedIndex(), newText);
+            groundActions.getItems().toArray(selectedDefinition.groundActions);
+        });
 
+
+        dataType.setItems(FXCollections.observableArrayList(DataType.values()));
+
+        dataType.valueProperty().addListener((observable, oldValue, newValue) -> selectedDefinition.dataType = newValue);
 
         definitionsList.setCellFactory(d -> new ListCell<ObjectType>() {
             @Override
@@ -123,10 +152,6 @@ public class ItemDefController implements Initializable {
             this.selectedDefinition.iconRoll = newValue.intValue();
             updateSprite();
         });
-        //this.translationZ.valueProperty().addListener((observable, oldValue, newValue) -> {
-        //    this.selectedDefinition.modelOffset1 = newValue.intValue();
-        //    updateSprite();
-        //});
         this.translationY.valueProperty().addListener((observable, oldValue, newValue) -> {
             this.selectedDefinition.iconVerticalOffset = newValue.intValue();
             updateSprite();
@@ -135,25 +160,35 @@ public class ItemDefController implements Initializable {
             this.selectedDefinition.iconHorizontalOffset = newValue.intValue();
             updateSprite();
         });
-        this.wearable.selectedProperty().addListener((observable, oldValue, newValue) -> {
-            if(newValue) {
-                this.selectedDefinition.actions = new String[]{null, "Wear", null, null, "Drop"};
-                this.selectedDefinition.groundActions = new String[]{null, null, "Take", null, null};
-            } else {
-                this.selectedDefinition.actions = selectedClone.actions;
-                this.selectedDefinition.groundActions = selectedClone.groundActions;
-            }
-
-        });
         this.opcaity.valueProperty().addListener((observable, oldValue, newValue) -> {
             this.selectedDefinition.diffusion = 400 - newValue.intValue();
             updateSprite();
         });
 
-        this.itemName.textProperty().addListener((observable, oldValue, newValue) -> this.selectedDefinition.name = newValue);
+        tier.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (!newValue.matches("\\d*")) {
+                tier.setText(newValue.replaceAll("[^\\d]", ""));
+            }
+        });
+
+
+        this.tier.textProperty().addListener((observable, oldValue, newValue) ->  {
+            if(!newValue.equals(""))
+            this.selectedDefinition.tier = TieredEntity.ofOrdinal(Integer.parseInt(newValue));
+        });
+        this.itemName.textProperty().addListener((observable, oldValue, newValue) -> {
+            this.selectedDefinition.name = newValue;
+            definitionsList.refresh();
+        });
         this.maleEquip.textProperty().addListener((observable, oldValue, newValue) -> this.selectedDefinition.maleEquip = Integer.parseInt(newValue));
         this.femaleEquip.textProperty().addListener((observable, oldValue, newValue) -> this.selectedDefinition.femaleEquip = Integer.parseInt(newValue));
-        this.modelID.textProperty().addListener((observable, oldValue, newValue) -> this.selectedDefinition.modelId = Integer.parseInt(newValue));
+        this.modelID.textProperty().addListener((observable, oldValue, newValue) -> {
+            if(newValue.equals(""))
+                return;
+            this.selectedDefinition.modelId = Integer.parseInt(newValue);
+            updateSprite();
+        });
+
     }
 
 
@@ -161,9 +196,18 @@ public class ItemDefController implements Initializable {
     private void selectDefinition() {
         if(definitionsList.getSelectionModel().getSelectedItem() == null)
             return;
+
+        if(actions.getSelectionModel() != null)
+        actions.getSelectionModel().clearSelection();
+        if(groundActions.getSelectionModel() != null)
+            groundActions.getSelectionModel().clearSelection();
+        actions.getItems().removeAll();
+        groundActions.getItems().removeAll();
         selectedDefinition = definitionsList.getSelectionModel().getSelectedItem();
 
         selectedClone = selectedDefinition.clone();
+
+
         this.sprite.setImage(loading);
         Player.modelcache.clear();
         ObjectType.modelcache.clear();
@@ -174,15 +218,16 @@ public class ItemDefController implements Initializable {
         updateDefinitionGrid();
     }
 
-    private String[] wearActions = new String[]{null, "Wear", null, null, "Drop"};
-    private String[] groundActions = new String[]{null, null, "Take", null, null};
-
     private void updateDefinitionGrid() {
         ObjectType def = selectedDefinition;
         modelID.setText(def.modelId+"");
         maleEquip.setText(def.maleEquip+"");
         femaleEquip.setText(def.femaleEquip+"");
         itemName.setText(def.name);
+        if(def.tier != null)
+        tier.setText(def.tier.ordinal()+"");
+        else
+            tier.setText("");
         rotationX.setValue(def.iconRoll);
         rotationY.setValue(def.iconYaw);
         translationX.setValue(def.iconHorizontalOffset);
@@ -190,10 +235,21 @@ public class ItemDefController implements Initializable {
         opcaity.setValue(def.diffusion);
         modelZoom.setValue(def.iconZoom);
 
-        if(def.actions != null && def.groundActions != null && Arrays.equals(def.actions, wearActions) && Arrays.equals(def.groundActions, groundActions))
-            wearable.selectedProperty().setValue(true);
+        if(def.actions != null)
+            actions.setItems(FXCollections.observableArrayList(def.actions));
         else
-            wearable.selectedProperty().setValue(false);
+            actions.setItems(FXCollections.observableArrayList(new String[10]));
+
+
+        if(def.groundActions != null)
+            groundActions.setItems(FXCollections.observableArrayList(def.groundActions));
+        else
+            groundActions.setItems(FXCollections.observableArrayList(new String[10]));
+
+
+        groundActions.getSelectionModel().select(0);
+        actions.getSelectionModel().select(0);
+        dataType.getSelectionModel().select(def.dataType);
 
     }
 
@@ -265,6 +321,7 @@ public class ItemDefController implements Initializable {
 
     public void reset() {
         selectedDefinition = selectedClone.clone();
+        cache.set(selectedClone.id, selectedClone.clone());
         updateDefinitionGrid();
         updateSprite();
     }
@@ -483,5 +540,17 @@ public class ItemDefController implements Initializable {
     }
 
 
+    public void remove(ActionEvent actionEvent) {
+    }
 
+    public void add(ActionEvent actionEvent) {
+        ObjectType objectType = new ObjectType();
+        objectType.renew();
+        objectType.id = definitionsList.getItems().size() + 1;
+        cache.add(objectType);
+        definitionsList.setItems(FXCollections.observableArrayList(cache));
+        FilteredList<ObjectType> filteredData = new FilteredList<>(definitionsList.getItems(), s -> true);
+        definitionsList.setItems(filteredData);
+        definitionsList.refresh();
+    }
 }

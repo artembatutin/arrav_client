@@ -1,23 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckBox?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.Slider?>
-<?import javafx.scene.control.Tab?>
-<?import javafx.scene.control.TabPane?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.ColumnConstraints?>
-<?import javafx.scene.layout.GridPane?>
-<?import javafx.scene.layout.RowConstraints?>
-<?import javafx.scene.layout.VBox?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<BorderPane prefHeight="553.0" prefWidth="868.0" styleClass="cod-gray" xmlns="http://javafx.com/javafx/8.0.172-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.arrav.util.tool.itemdef.ItemDefController">
+<BorderPane prefHeight="690.0" prefWidth="1001.0" styleClass="cod-gray" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.arrav.util.tool.itemdef.ItemDefController">
     <center>
         <VBox BorderPane.alignment="CENTER">
             <children>
@@ -56,99 +44,85 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                     </rowConstraints>
                     <children>
-                        <VBox alignment="CENTER">
-                            <children>
-                        <CheckBox mnemonicParsing="false" fx:id="wearable" text="wearable" textFill="WHITE" />
-                                <Label prefHeight="17.0" prefWidth="75.0" text="Item Name" textAlignment="CENTER" textFill="WHITE" underline="true" />
-                            </children></VBox>
+                        <VBox alignment="CENTER" />
                         <VBox alignment="CENTER" GridPane.rowIndex="1">
-                            <children>
-                                <Label prefHeight="17.0" prefWidth="101.0" text="Inventory Model" textAlignment="CENTER" textFill="WHITE" underline="true" />
-                            </children></VBox>
+                     <children>
+                        <Label text="Tier:" textFill="WHITE" underline="true" />
+                        <TextField fx:id="tier" />
+                     </children></VBox>
                         <VBox alignment="CENTER" GridPane.rowIndex="2">
-                            <children>
-                                <Label prefHeight="17.0" prefWidth="79.0" text="Male Equip" textAlignment="CENTER" textFill="WHITE" underline="true" />
-                            </children></VBox>
+                     <children>
+                        <Label text="Data Type" textFill="WHITE" underline="true" />
+                        <ChoiceBox fx:id="dataType" prefWidth="150.0" style="--fx-text-fill: #1F1F1F;" />
+                     </children></VBox>
                         <VBox alignment="CENTER" GridPane.rowIndex="3">
-                            <children>
-                                <Label prefHeight="17.0" prefWidth="90.0" text="Female Equip" textAlignment="CENTER" textFill="WHITE" underline="true" />
-                            </children></VBox>
+                     <children>
+                        <Label text="Actions:" textFill="WHITE" underline="true" />
+                        <ComboBox fx:id="actions" editable="true" prefWidth="150.0" visibleRowCount="5" />
+                     </children></VBox>
                         <VBox alignment="CENTER" GridPane.columnIndex="1">
                             <children>
+                                <Label prefHeight="17.0" prefWidth="75.0" text="Item Name" textAlignment="CENTER" textFill="WHITE" underline="true" />
                                 <TextField fx:id="itemName" />
                             </children></VBox>
                         <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="1">
                             <children>
+                                <Label prefHeight="17.0" prefWidth="101.0" text="Inventory Model" textAlignment="CENTER" textFill="WHITE" underline="true" />
                                 <TextField fx:id="modelID" prefHeight="10.0" prefWidth="250.0" />
                             </children></VBox>
                         <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="2">
                             <children>
+                                <Label prefHeight="17.0" prefWidth="79.0" text="Male Equip" textAlignment="CENTER" textFill="WHITE" underline="true" />
                                 <TextField fx:id="maleEquip" />
                             </children></VBox>
                         <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="3">
                             <children>
+                                <Label prefHeight="17.0" prefWidth="90.0" text="Female Equip" textAlignment="CENTER" textFill="WHITE" underline="true" />
                                 <TextField fx:id="femaleEquip" />
                             </children></VBox>
                         <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="4">
                      <children>
+                        <Label prefHeight="17.0" prefWidth="90.0" text="Model Zoom" textAlignment="CENTER" textFill="WHITE" underline="true" />
                         <Slider fx:id="modelZoom" majorTickUnit="500.0" max="5000.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" />
                      </children></VBox>
                         <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="5">
                      <children>
+                        <Label prefHeight="17.0" prefWidth="66.0" text="RotationX" textAlignment="CENTER" textFill="WHITE" underline="true" />
                         <Slider fx:id="rotationX" majorTickUnit="300.0" max="2000.0" min="1.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" />
                      </children></VBox>
                         <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="6">
                      <children>
+                        <Label prefHeight="17.0" prefWidth="62.0" text="RotationY" textAlignment="CENTER" textFill="WHITE" underline="true" />
                         <Slider fx:id="rotationY" majorTickUnit="300.0" max="2000.0" min="1.0" minorTickCount="4" showTickLabels="true" showTickMarks="true" />
                      </children></VBox>
                         <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="7">
                      <children>
+                        <Label prefHeight="17.0" prefWidth="74.0" text="TranslationX" textAlignment="CENTER" textFill="WHITE" underline="true" />
                         <Slider fx:id="translationX" blockIncrement="1.0" majorTickUnit="150.0" max="200.0" min="-200.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" />
                      </children></VBox>
                         <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="8">
                      <children>
+                        <Label prefHeight="17.0" prefWidth="75.0" text="TranslationY" textAlignment="CENTER" textFill="WHITE" underline="true" />
                         <Slider fx:id="translationY" majorTickUnit="150.0" max="200.0" min="-200.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" />
                      </children></VBox>
                         <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="9">
                      <children>
-                        <Slider fx:id="translationZ" majorTickUnit="150.0" max="200.0" min="-200.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" />
-                     </children></VBox>
-                        <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="10">
-                     <children>
+                        <Label prefHeight="17.0" prefWidth="46.0" text="Opacity" textAlignment="CENTER" textFill="WHITE" underline="true" />
                         <Slider fx:id="opcaity" majorTickUnit="100.0" max="800.0" min="1.0" minorTickCount="1" showTickLabels="true" showTickMarks="true" />
                      </children></VBox>
+                        <VBox alignment="CENTER" GridPane.columnIndex="1" GridPane.rowIndex="10" />
                         <VBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="4">
                      <children>
-                        <Label prefHeight="17.0" prefWidth="90.0" text="Model Zoom" textAlignment="CENTER" textFill="WHITE" underline="true" />
+                        <Label text="Ground Actions:" textFill="WHITE" underline="true" />
+                        <ComboBox fx:id="groundActions" prefWidth="150.0" />
                      </children></VBox>
-                        <VBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="5">
-                     <children>
-                        <Label prefHeight="17.0" prefWidth="66.0" text="RotationX" textAlignment="CENTER" textFill="WHITE" underline="true" />
-                     </children></VBox>
-                        <VBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="6">
-                     <children>
-                        <Label prefHeight="17.0" prefWidth="62.0" text="RotationY" textAlignment="CENTER" textFill="WHITE" underline="true" />
-                     </children></VBox>
-                        <VBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="7">
-                     <children>
-                        <Label prefHeight="17.0" prefWidth="74.0" text="TranslationX" textAlignment="CENTER" textFill="WHITE" underline="true" />
-                     </children></VBox>
-                        <VBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="8">
-                     <children>
-                        <Label prefHeight="17.0" prefWidth="75.0" text="TranslationY" textAlignment="CENTER" textFill="WHITE" underline="true" />
-                     </children></VBox>
-                        <VBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="9">
-                     <children>
-                        <Label prefHeight="17.0" prefWidth="77.0" text="TranslationZ" textAlignment="CENTER" textFill="WHITE" underline="true" />
-                     </children></VBox>
-                        <VBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="10">
-                     <children>
-                        <Label prefHeight="17.0" prefWidth="46.0" text="Opacity" textAlignment="CENTER" textFill="WHITE" underline="true" />
-                     </children></VBox>
-                        <VBox alignment="CENTER" prefHeight="223.0" prefWidth="279.0" GridPane.columnIndex="0" GridPane.rowIndex="11">
-                     <children>
-                        <Label prefHeight="17.0" prefWidth="34.0" text="Sprite" textAlignment="CENTER" textFill="WHITE" underline="true" />
-                     </children></VBox>
+                        <VBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+                        <VBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+                        <VBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+                        <VBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="8" />
+                        <VBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="9" />
+                        <VBox alignment="CENTER" GridPane.columnIndex="0" GridPane.rowIndex="10" />
+                        <VBox alignment="CENTER" prefHeight="223.0" prefWidth="279.0" GridPane.columnIndex="0" GridPane.rowIndex="11" />
                         <VBox alignment="CENTER" prefHeight="170.0" prefWidth="279.0" GridPane.columnIndex="1" GridPane.rowIndex="11">
                      <children>
                         <ImageView fx:id="sprite" fitHeight="32.0" fitWidth="32.0" pickOnBounds="true" preserveRatio="true" />
@@ -172,7 +146,21 @@
     <left>
         <VBox BorderPane.alignment="CENTER">
             <children>
-            <ListView fx:id="definitionsList" onMouseClicked="#selectDefinition" prefHeight="528.0" prefWidth="248.0" />
+            <HBox prefHeight="25.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#add" text="+">
+                     <HBox.margin>
+                        <Insets left="90.0" right="5.0" />
+                     </HBox.margin>
+                  </Button>
+                  <Button mnemonicParsing="false" onAction="#remove" text="-" HBox.hgrow="NEVER">
+                     <HBox.margin>
+                        <Insets left="5.0" right="5.0" />
+                     </HBox.margin>
+                  </Button>
+               </children>
+            </HBox>
+            <ListView fx:id="definitionsList" onMouseClicked="#selectDefinition" onKeyPressed="#selectDefinition" prefHeight="643.0" prefWidth="248.0" />
                 <TextField fx:id="itemSearch" alignment="CENTER" promptText="Search...">
                     <VBox.margin>
                         <Insets bottom="5.0" left="5.0" top="5.0" />

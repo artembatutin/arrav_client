@@ -37,6 +37,10 @@
 	-fx-background-color: #1F1F1F;
 }
 
+.choice-box .label {
+     -fx-text-fill: grey;
+}
+
 .list-cell:even {
     -fx-text-fill: gray;
     -fx-background-color: #1F1F1F;

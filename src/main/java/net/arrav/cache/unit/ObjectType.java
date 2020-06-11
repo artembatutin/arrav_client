@@ -114,13 +114,27 @@ public final class ObjectType {
 			obj.toLend();
 		}
 
-	if(obj.id == 14293) {
-		obj.tier = TieredEntity.TIER1;
-	}
 		if(obj.tier != null)
 			obj.name = "<col="+obj.tier.getColor()+">"+obj.name+(Config.def.isShowTier() ? " "+ obj.tier.getName()+"</col>" : "</col>");
 
 		defCache.put(id, obj);
+		return obj;
+	}
+	public static ObjectType uncached(int id) {
+		final ObjectType obj = new ObjectType();
+		if(id > index.length)
+			return nulled;
+		data.pos = index[id];
+		obj.id = id;
+		obj.renew();
+		obj.decode(data, id);
+
+		if(obj.noteTemplateId != -1) {
+			obj.toNote();
+		}
+		if(obj.lentItemID != -1) {
+			obj.toLend();
+		}
 		return obj;
 	}
 	
@@ -525,7 +539,7 @@ public final class ObjectType {
 				written.add(26);
 			} else if(groundActions != null && !actionsd2) {
 				for(int i = 0; i < groundActions.length; i++) {
-					if(groundActions[i] != null && i < 5) {
+					if(groundActions[i] != null && !groundActions[i].equals("") && i < 5) {
 						out.writeByte(30 + i);
 						out.write(groundActions[i].getBytes());
 						out.writeByte(10);
@@ -534,7 +548,7 @@ public final class ObjectType {
 				actionsd2 = true;
 			} else if(actions != null && !actionsd) {
 				for(int i = 0; i < actions.length; i++) {
-					if(actions[i] != null && i < 5) {
+					if(actions[i] != null && !actions[i].equals("") && i < 5) {
 						out.writeByte(35 + i);
 						out.write(actions[i].getBytes());
 						out.writeByte(10);
@@ -1006,15 +1020,13 @@ public final class ObjectType {
 		return model;
 	}
 	
-	private void renew() {
+	public void renew() {
 		modelId = 0;
 		name = null;
 		description = null;
 		originalModelColors = null;
 		modifiedModelColors = null;
 		iconZoom = 2000;
-		iconYaw = 0;
-		iconRoll = 0;
 		iconYaw = 0;
 		iconRoll = 0;
 		spriteCameraYaw = 0;
@@ -1092,8 +1104,9 @@ public final class ObjectType {
 		actions[4] = "Discard";
 	}
 
+	@Override
 	public ObjectType clone() {
-		final ObjectType itemDef = new ObjectType();
+		ObjectType itemDef = new ObjectType();
 		itemDef.actions = new String[5];
 		itemDef.id = id;
 		itemDef.tier = tier;
@@ -1156,7 +1169,7 @@ public final class ObjectType {
 		if(groundActions != null) {
 			System.arraycopy(groundActions, 0, itemDef.groundActions, 0, 5);
 		}
-		return this;
+		return itemDef;
 	}
 	
 	private void toNote() {

@@ -1692,7 +1692,15 @@ public class GameActivity extends Activity {
 						}
 					}
 					if(client.chatAnimationEffects[i] == 0) {
+
+
+						boldFont.drawCenteredString(message, client.spriteDrawX - 1, client.spriteDrawY, 0);
+						boldFont.drawCenteredString(message, client.spriteDrawX + 1, client.spriteDrawY, 0);
 						boldFont.drawCenteredString(message, client.spriteDrawX + 1, client.spriteDrawY + 1, 0);
+						boldFont.drawCenteredString(message, client.spriteDrawX - 1, client.spriteDrawY - 1, 0);
+						boldFont.drawCenteredString(message, client.spriteDrawX + 1, client.spriteDrawY - 1, 0);
+						boldFont.drawCenteredString(message, client.spriteDrawX - 1, client.spriteDrawY + 1, 0);
+
 						boldFont.drawCenteredString(message, client.spriteDrawX, client.spriteDrawY, color);
 					}
 					if(client.chatAnimationEffects[i] == 1) {
@@ -1841,10 +1849,10 @@ public class GameActivity extends Activity {
 
 
 		if(Config.def.fps()) {
-			smallFont.drawRightAlignedString("Fps: " + client.fps, off, (line += 15), ColorConstants.TEST_FADE.getColor());
+			smallFont.drawRightAlignedEffectString("Fps: " + client.fps, off, (line += 15), ColorConstants.YELLOW, 0);
 			final Runtime runtime = Runtime.getRuntime();
 			final int mem = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
-			smallFont.drawRightAlignedString("Mem: " + mem+"k", off, (line += 15), ColorConstants.TEST_FADE.getColor());
+			smallFont.drawRightAlignedEffectString("Mem: " + mem+"k", off, (line += 15), ColorConstants.YELLOW, 0);
 		}
 		if(Config.def.data()) {
 			final Runtime runtime = Runtime.getRuntime();
