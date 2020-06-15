@@ -11,6 +11,7 @@ import net.arrav.net.SignLink;
 import net.arrav.util.io.Buffer;
 import net.arrav.Client;
 import net.arrav.util.DataToolkit;
+import net.arrav.world.model.TieredEntity;
 
 import java.io.*;
 import java.util.HashSet;
@@ -50,6 +51,7 @@ public final class NPCType {
 	private int brightness;
 	private int contrast;
 	private int scaleZ;
+	private TieredEntity tier;
 	private int scaleXY;
 
 	public DataType dataType;
@@ -115,6 +117,7 @@ public final class NPCType {
 			npc.pet(6203, "Tsutsy", 48);//zamorak
 		if(id == 3180)
 			npc.pet(6247, "Zilzy", 68);//saradomin
+
 		if(Config.def.idx())
 			System.out.println(npc.id + " - " + npc.standAnimationId + " - " + npc.walkAnimationId);
 		defCache.put(id, npc);
@@ -146,13 +149,13 @@ public final class NPCType {
 
 	public static void unpack(CacheArchive archive) {
 		final Buffer buffer;
-		if(Constants.USER_HOME_FILE_STORE) {
-			data = new Buffer(archive.getFile("npc.dat"));
-			buffer = new Buffer(archive.getFile("npc.idx"));
-		} else {
-			data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/npc.dat"));
-			buffer = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/npc.idx"));
-		}
+		//if(Constants.USER_HOME_FILE_STORE) {
+		//	data = new Buffer(archive.getFile("npc.dat"));
+		//	buffer = new Buffer(archive.getFile("npc.idx"));
+		//} else {
+			data = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/custom_npc.dat"));
+			buffer = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/custom_npc.idx"));
+		//}
 		final int length = buffer.getUShort();
 		System.out.println("[loading] npc size: " + length);
 		index = new int[length];
@@ -184,8 +187,9 @@ public final class NPCType {
 			if(i == 1) {
 				int j = stream.getUByte();
 				modelId = new int[j];
-				for(int j1 = 0; j1 < j; j1++)
+				for(int j1 = 0; j1 < j; j1++) {
 					modelId[j1] = stream.getUShort();
+				}
 			} else if(i == 2)
 				name = stream.getLine();
 			else if(i == 3)
@@ -266,11 +270,14 @@ public final class NPCType {
 					stream.getUShort();
 			} else if(i == 30)
 				clickable = false;
+			else if(i == 32)
+				tier = TieredEntity.ofOrdinal(stream.getUByte());
+			else if(i == 33)
+				dataType = DataType.ofOrdinal(stream.getUByte());
 			else
 				System.out.println("wrong opcode: " + i);
 		} while(true);
 	}
-	
 	
 	private static void repack() throws IOException {
 		final Buffer data634 = new Buffer(DataToolkit.readFile(SignLink.getCacheDir() + "/util/npc/npc634.dat"));

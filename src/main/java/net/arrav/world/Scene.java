@@ -9,6 +9,8 @@ import net.arrav.world.tile.*;
 import net.arrav.graphic.Rasterizer3D;
 import net.arrav.util.collect.LinkedDeque;
 
+import java.util.Arrays;
+
 public final class Scene {
 	
 	private static final byte DRAW_DISTANCE_TILES = 30;
@@ -736,6 +738,8 @@ public final class Scene {
 						final EntityUnit npcspw = entities2[l3];
 						npcspw.anInt528 = drawCycle;
 						if(!method323(z, npcspw.tileX, npcspw.sizeX, npcspw.tileY, npcspw.sizeY, npcspw.model.maxVerticalDistUp)) {
+							//int[] dat = new int[]{npcspw.yaw, rollSine, rollCosine, yawSine, yawCosine, npcspw.x - cameraPixelX, npcspw.y - cameraPixelY, npcspw.z - cameraPixelZ};
+							//System.out.println(Arrays.toString(dat));
 							npcspw.model.drawModel(npcspw.yaw, rollSine, rollCosine, yawSine, yawCosine, npcspw.x - cameraPixelX, npcspw.y - cameraPixelY, npcspw.z - cameraPixelZ, npcspw.hash, npcspw.model.getType());
 						}
 						for(int k7 = npcspw.tileX; k7 <= npcspw.sizeX; k7++) {

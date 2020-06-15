@@ -227,7 +227,7 @@ public class ItemDefController implements Initializable {
         if(def.tier != null)
         tier.setText(def.tier.ordinal()+"");
         else
-            tier.setText("");
+        tier.setText("");
         rotationX.setValue(def.iconRoll);
         rotationY.setValue(def.iconYaw);
         translationX.setValue(def.iconHorizontalOffset);

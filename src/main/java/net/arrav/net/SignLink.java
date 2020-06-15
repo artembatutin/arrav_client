@@ -26,8 +26,8 @@ public final class SignLink implements Runnable {
 	public static boolean reportError = true;
 	public static String errorName = "";
 	
-	private static RandomAccessFile cacheDatFile = null;
 	private static MappedByteBuffer cacheDat = null;
+	private static RandomAccessFile cacheDatFile = null;
 	private static final RandomAccessFile[] cacheIdxFile = new RandomAccessFile[Constants.CACHE_INDEX_COUNT];
 	private static final MappedByteBuffer[] cacheIdx = new MappedByteBuffer[Constants.CACHE_INDEX_COUNT];
 	private static boolean active;

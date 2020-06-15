@@ -207,7 +207,7 @@ public final class ObjectType {
 		dat.close();
 		idx.close();
 	}
-	
+
 	private void decode(Buffer buffer, int id) {
 		do {
 			int opcode = buffer.getUByte();
@@ -218,7 +218,7 @@ public final class ObjectType {
 			} else if(opcode == 2) {
 				name = buffer.getLine();
 			} else if(opcode == 3) {
-				dataType = DataType.ofOrdinal(buffer.getUByte());
+				buffer.getUShort();
 			} else if(opcode == 4) {
 				iconZoom = buffer.getUShort();
 			} else if(opcode == 5) {
@@ -338,7 +338,7 @@ public final class ObjectType {
 			}
 		} while(true);
 	}
-	
+
 	public void decodeOSRS(Buffer buffer) {
 		while(true) {
 			int opcode = buffer.getUByte();

@@ -9,6 +9,8 @@ import net.arrav.util.ReflectionUtil;
 import net.arrav.util.io.Buffer;
 import net.arrav.util.string.StringUtils;
 
+import java.util.Arrays;
+
 public final class Player extends Mobile {
 
 	public static Client client;
