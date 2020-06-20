@@ -2,7 +2,7 @@ package net.arrav.activity.panel.impl;
 
 import net.arrav.Config;
 import net.arrav.activity.panel.Panel;
-import net.arrav.cache.unit.Interface;
+import net.arrav.cache.unit.interfaces.Interface;
 import net.arrav.graphic.Rasterizer2D;
 
 public class ScoreBoardPanel extends Panel {

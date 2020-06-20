@@ -5,7 +5,7 @@ import net.arrav.Config;
 import net.arrav.Constants;
 import net.arrav.activity.ui.UIComponent;
 import net.arrav.cache.unit.DeformSequence;
-import net.arrav.cache.unit.Interface;
+import net.arrav.cache.unit.interfaces.Interface;
 import net.arrav.cache.unit.ObjectType;
 import net.arrav.graphic.Rasterizer2D;
 import net.arrav.graphic.Rasterizer3D;

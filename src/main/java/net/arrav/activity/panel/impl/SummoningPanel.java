@@ -1,7 +1,7 @@
 package net.arrav.activity.panel.impl;
 
 import net.arrav.activity.panel.Panel;
-import net.arrav.cache.unit.Interface;
+import net.arrav.cache.unit.interfaces.Interface;
 import net.arrav.cache.unit.ObjectType;
 import net.arrav.world.model.Item;
 import net.arrav.graphic.Rasterizer2D;

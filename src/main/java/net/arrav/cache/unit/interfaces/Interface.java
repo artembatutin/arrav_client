@@ -1,7 +1,10 @@
-package net.arrav.cache.unit;
+package net.arrav.cache.unit.interfaces;
 
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import net.arrav.Constants;
+import net.arrav.cache.unit.AnimationFrame;
+import net.arrav.cache.unit.NPCType;
+import net.arrav.cache.unit.ObjectType;
 import net.arrav.world.model.Model;
 import net.arrav.net.SignLink;
 import net.arrav.util.io.Buffer;

@@ -16,6 +16,7 @@ import net.arrav.cache.CacheUnpacker;
 import net.arrav.cache.custom.ModelVault;
 import net.arrav.cache.custom.SpritesCache;
 import net.arrav.cache.impl.InterfaceLoader;
+import net.arrav.cache.unit.interfaces.Interface;
 import net.arrav.net.*;
 import net.arrav.util.tool.itemdef.ItemDefinitionEditor;
 import net.arrav.world.CollisionMap;

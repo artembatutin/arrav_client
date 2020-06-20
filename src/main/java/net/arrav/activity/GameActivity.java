@@ -3,6 +3,7 @@ package net.arrav.activity;
 import net.arrav.Config;
 import net.arrav.Constants;
 import net.arrav.activity.ui.UIComponent;
+import net.arrav.cache.unit.interfaces.Interface;
 import net.arrav.util.string.ColorConstants;
 import net.arrav.util.string.StringUtils;
 import net.arrav.world.Scene;

@@ -991,7 +991,7 @@ public final class ObjectType {
 		return model;
 	}
 	
-	Model getItemModel(int i) {
+	public Model getItemModel(int i) {
 		if(stackableIds != null && i > 1) {
 			int j = -1;
 			for(int k = 0; k < 10; k++) {

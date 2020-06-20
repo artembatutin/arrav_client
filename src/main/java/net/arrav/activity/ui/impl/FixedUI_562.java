@@ -10,7 +10,7 @@ import net.arrav.world.model.Model;
 import net.arrav.world.model.Player;
 import net.arrav.graphic.Rasterizer2D;
 import net.arrav.Config;
-import net.arrav.cache.unit.Interface;
+import net.arrav.cache.unit.interfaces.Interface;
 import net.arrav.cache.unit.NPCType;
 import net.arrav.world.model.NPC;
 import net.arrav.graphic.Rasterizer3D;

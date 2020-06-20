@@ -7,7 +7,7 @@ import net.arrav.activity.panel.impl.SettingPanel;
 import net.arrav.activity.ui.UIComponent;
 import net.arrav.activity.ui.util.CounterHandler;
 import net.arrav.activity.ui.util.OrbHandler;
-import net.arrav.cache.unit.Interface;
+import net.arrav.cache.unit.interfaces.Interface;
 import net.arrav.cache.unit.NPCType;
 import net.arrav.world.model.Model;
 import net.arrav.world.model.NPC;

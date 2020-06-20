@@ -5,7 +5,7 @@ import net.arrav.Config;
 import net.arrav.Constants;
 import net.arrav.activity.panel.Panel;
 import net.arrav.activity.ui.impl.ResizableUI_CUS;
-import net.arrav.cache.unit.Interface;
+import net.arrav.cache.unit.interfaces.Interface;
 import net.arrav.graphic.Rasterizer2D;
 
 public class PlayerPanel extends Panel {
