@@ -57,11 +57,12 @@ public enum Tab {
 	//		tabID.tab.setSelectedTab(tab);
 	//	}
 	//},
-	STARTER() {
+	BANK() {
 		@Override
 		public void selectOption(int tab, Client client, Interface parent, Interface tabID) {
-
+			Client.instance.currentBankTab = tab;
 			tabID.tab.setSelectedTab(tab);
+			Interface.cache[5385].children[0] = 270 + tab;
 		}
 	};
 	Tab() {}

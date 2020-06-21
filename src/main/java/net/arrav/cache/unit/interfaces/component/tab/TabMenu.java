@@ -2,6 +2,7 @@ package net.arrav.cache.unit.interfaces.component.tab;
 
 
 import net.arrav.Client;
+import net.arrav.cache.unit.ObjectType;
 import net.arrav.cache.unit.interfaces.Interface;
 import net.arrav.graphic.font.BitmapFont;
 import net.arrav.graphic.img.BitmapImage;
@@ -47,24 +48,41 @@ public class TabMenu {
 
 		int offsetX = 0;
 		for (int tab = 0; tab < tabAmount; tab++) {
-			if(tab == selected) {
-				spriteBack.drawImage(x+offsetX, y);
+			if (tabType == Tab.BANK) {
+				BitmapImage infinity = Client.spriteCache.get(1357);
 
-				if(tabType == Tab.STARTER) {
-
-				} else
-				font.drawCenteredString(tabNames[tab], x+offsetX+(spriteBack.imageWidth / 2), y+17, child.color, 0x0);
-				offsetX +=spriteBack.imageWidth;
-				continue;
+				if (tab == selected) {
+					spriteBack.drawImage(x + offsetX, y);
+				} else {
+					spriteReg.drawImage(x + offsetX, y, child.tabHover == tab ? 170 : 255);
+				}
+				if (tab == 0)
+					infinity.drawImage((x + offsetX) + (spriteBack.imageWidth / 2) - (infinity.imageWidth / 2), y + (spriteBack.imageHeight / 2) - (infinity.imageHeight / 2) + 2);
+				else if(tab == tabAmount -1) {
+					infinity = Client.spriteCache.get(1358);
+					infinity.drawImage((x + offsetX) + (spriteBack.imageWidth / 2) - (infinity.imageWidth / 2), y + (spriteBack.imageHeight / 2) - (infinity.imageHeight / 2) + 2);
+				} else {
+					if(tab >= Client.instance.bankTabItemIcon.length)
+						continue;
+					int item = Client.instance.bankTabItemIcon[tab -1];
+					BitmapImage itemIcon = ObjectType.getIcon(item, 1, 0);
+					if(itemIcon != null) {
+						itemIcon.drawImage((x + offsetX) + (spriteBack.imageWidth / 2) - (itemIcon.imageWidth / 2), y + (spriteBack.imageHeight / 2) - (itemIcon.imageHeight / 2) + 2);
+					}
+				}
+				offsetX += spriteReg.imageWidth;
+			} else {
+				if (tab == selected) {
+					spriteBack.drawImage(x + offsetX, y);
+					font.drawCenteredString(tabNames[tab], x + offsetX + (spriteBack.imageWidth / 2), y + 17, child.color, 0x0);
+					offsetX += spriteBack.imageWidth;
+					continue;
+				}
+				spriteReg.drawImage(x + offsetX, y, child.tabHover == tab ? 100 : 255);
+				Client.instance.smallFont.drawCenteredString(tabNames[tab], x + offsetX + (spriteReg.imageWidth / 2), y + 17, child.color, 0x0);
+				offsetX += spriteReg.imageWidth;
 			}
-			spriteReg.drawImage(x+offsetX, y, child.tabHover == tab ? 100 : 255);
-			if(tabType == Tab.STARTER) {
-
-			} else
-				font.drawCenteredString(tabNames[tab], x+offsetX+(spriteReg.imageWidth / 2), y+17, child.color, 0x0);
-			offsetX += spriteReg.imageWidth;
 		}
-
 	}
 
 	public void hover(Interface parent, Interface child, int hoverX, int hoverY, int xBounds, int yBounds) {

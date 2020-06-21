@@ -17,6 +17,7 @@ import net.arrav.cache.custom.ModelVault;
 import net.arrav.cache.custom.SpritesCache;
 import net.arrav.cache.impl.InterfaceLoader;
 import net.arrav.cache.unit.interfaces.Interface;
+import net.arrav.cache.unit.interfaces.component.tab.Tab;
 import net.arrav.net.*;
 import net.arrav.util.tool.itemdef.ItemDefinitionEditor;
 import net.arrav.world.CollisionMap;
@@ -79,9 +80,8 @@ public class Client extends ClientEngine {
 	public ObjectList<Particle> displayedParticles;
 	public ObjectList<Particle> removeDeadParticles;
 
-	public int[] tabAmounts = new int[] { 350, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
-	public int[] bankInvTemp = new int[1000];
-	public int[] bankStackTemp = new int[1000];
+	public int currentBankTab;
+	public int[] bankTabItemIcon;
 
 	public final void addParticle(Particle particle) {
 		displayedParticles.add(particle);
@@ -393,7 +393,6 @@ public class Client extends ClientEngine {
 	public int[] anIntArray1190;
 	public int[] anIntArray1191;
 	public int[] currentShopInterfacePrices;
-	public int currentBankTab;
 	public int[][][] sceneGroundZ;
 	public long aLong1220;
 	public long[] friendsListAsLongs;
@@ -637,6 +636,8 @@ public class Client extends ClientEngine {
 		collisionMaps = new CollisionMap[4];
 		anIntArray1240 = new int[100];
 		draggingItem = false;
+		bankTabItemIcon = new int[8];
+		currentBankTab = 0;
 		currentShopInterfacePrices = new int[40];
 		updateAllGraphics = false;
 		messagePromptRaised = false;
@@ -3564,6 +3565,7 @@ public class Client extends ClientEngine {
 			outBuffer.putShortPlus128(arg2);
 		}
 		if(code == 632) {
+			System.out.println(arg3+" "+arg2+" "+arg1+" "+arg4);
 			outBuffer.putOpcode(145);
 			outBuffer.putShortPlus128(arg3);
 			outBuffer.putShortPlus128(arg2);
@@ -5599,9 +5601,16 @@ public class Client extends ClientEngine {
 						}
 					}
 
-					if(itemGroupID >= 270 && itemGroupID <= 279) {
-						int bankTab = itemGroupID - 270;
-						int id2 = bankTab;
+					if(itemGroupID >= 271 && itemGroupID <= 279) {
+						int bankTab = itemGroupID - 271;
+						bankTabItemIcon[bankTab] = group.invId[0] -1;
+
+						int amt = 0;
+						for(int tab : bankTabItemIcon)
+							if(tab != 0)
+								amt++;
+
+						Interface.addTabMenu(60081, 0, 2018, Tab.BANK, new String[amt + 2]);
 					}
 					pktType = -1;
 					return true;
