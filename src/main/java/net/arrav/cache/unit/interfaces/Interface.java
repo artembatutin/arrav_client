@@ -5,6 +5,9 @@ import net.arrav.Constants;
 import net.arrav.cache.unit.AnimationFrame;
 import net.arrav.cache.unit.NPCType;
 import net.arrav.cache.unit.ObjectType;
+import net.arrav.cache.unit.interfaces.component.tab.Tab;
+import net.arrav.cache.unit.interfaces.component.tab.TabMenu;
+import net.arrav.cache.unit.interfaces.custom.BankInterface;
 import net.arrav.world.model.Model;
 import net.arrav.net.SignLink;
 import net.arrav.util.io.Buffer;
@@ -15,7 +18,13 @@ import net.arrav.util.DataToolkit;
 
 import java.io.IOException;
 
-public final class Interface {
+public class Interface {
+
+
+	public int tabHover = -1;
+	public TabMenu tab;
+	public boolean hovered = false;
+
 
 
 	public static Client client;
@@ -65,7 +74,7 @@ public final class Interface {
 	public boolean rectFilled;
 	public int modelType;
 	public int modelId;
-	private int modelTypeAlt;
+    private int modelTypeAlt;
 	private int modelIdAlt;
 	public int modelZoom;
 	public int modelYaw;
@@ -144,6 +153,7 @@ public final class Interface {
 		Pestpanel2(fonts);
 		Pestpanel(fonts);
 		clanWars(fonts);
+		BankInterface.bank(fonts);
 		addPestControlRewardWidget(fonts);
 		/*try {
 			BufferedWriter w = new BufferedWriter(new FileWriter(new File("./int_values.txt")));
@@ -484,7 +494,7 @@ public final class Interface {
 		setBounds(21118, 87, 88, 17, RSinterface);
 	}
 	
-	private static void boltEnchantInterface(BitmapFont[] tda) {
+	public static void boltEnchantInterface(BitmapFont[] tda) {
 		addHoverButton(49002, 478, 17, 17, "Close Window", 250, 49003, 3);
 		addHoveredButton(49003, 461, 17, 17, 49004);
 		Interface tab = cache[49000];
@@ -676,7 +686,7 @@ public final class Interface {
 		tab.child(83, 49086, 262, 25); // Title (Enchant Crossbow Bolts)
 	}
 	
-	private static void decode(Buffer buffer) {
+	public static void decode(Buffer buffer) {
 		int parent = -1;
 		if(buffer.getBoolean()) {
 			parent = buffer.getInt();
@@ -1125,7 +1135,7 @@ public final class Interface {
 		return Widget;
 	}
 	
-	private static void addItemModel(int interfaceId, int itemId, int w, int h, int zoom) {
+	public static void addItemModel(int interfaceId, int itemId, int w, int h, int zoom) {
 		Interface rsinterface = cache[interfaceId] = new Interface();
 		ObjectType itemDef = ObjectType.get(itemId);
 		rsinterface.modelRoll = itemDef.iconRoll;
@@ -1232,6 +1242,30 @@ public final class Interface {
 		tab.spriteID = sprite1;
 		tab.secondarySpriteID = sprite2;
 	}
+
+	public static Interface addTabInterface(int id) {
+		Interface tab = createInterface(id);
+		tab.id = id;
+		tab.parent = id;
+		tab.type = Constants.TYPE_CONTAINER;
+		tab.actionType = 0;
+		tab.contentType = 0;
+		tab.width = 512;
+		tab.height = 700;
+		tab.alpha = (byte) 0;
+		tab.hoverInterToTrigger = -1;
+		return tab;
+	}
+
+	private static Interface createInterface(int id) {
+		if (cache[id] != null) {
+			System.out.println("overwritten interface: " + id);
+		}
+		Interface rsi = new Interface();
+		cache[id] = rsi;
+		return rsi;
+	}
+
 
 	public static Interface addInterface(int id) {
 		final Interface rsi = cache[id] = new Interface();
@@ -1388,7 +1422,7 @@ public final class Interface {
 		Tab.secondarySpriteID = i2;
 	}
 
-	private static void addSprite(int id, int spriteId) {
+	public static void addSprite(int id, int spriteId) {
 		final Interface tab = cache[id] = new Interface();
 		tab.id = id;
 		tab.parent = id;
@@ -1443,7 +1477,7 @@ public final class Interface {
 		Tab.colorAlt = hoverColor;
 	}
 
-	private static void addText(int i, String s, int k, boolean l, boolean m, int a, BitmapFont[] TDA, int j) {
+	public static void addText(int i, String s, int k, boolean l, boolean m, int a, BitmapFont[] TDA, int j) {
 		final Interface Widget = addInterface(i);
 		Widget.parent = i;
 		Widget.id = i;
@@ -1462,7 +1496,7 @@ public final class Interface {
 		Widget.color = k;
 	}
 
-	private static void addText(int id, String text, BitmapFont tda[], int idx, int color, boolean centered) {
+	public static void addText(int id, String text, BitmapFont tda[], int idx, int color, boolean centered) {
 		final Interface rsi = cache[id] = new Interface();
 		if(centered) {
 			rsi.textCenter = true;
@@ -1475,7 +1509,7 @@ public final class Interface {
 		rsi.type = 4;
 	}
 
-	private static void addText(int id, String text, BitmapFont tda[], int idx, int color, boolean center, boolean shadow) {
+	public static void addText(int id, String text, BitmapFont tda[], int idx, int color, boolean center, boolean shadow) {
 		final Interface tab = addInterface(id);
 		tab.parent = id;
 		tab.id = id;
@@ -1541,7 +1575,7 @@ public final class Interface {
 		rsi.tooltip = s;
 	}
 
-	private static void addTransparentSprite(int id, int spriteId, int transparency) {
+	public static void addTransparentSprite(int id, int spriteId, int transparency) {
 		final Interface tab = cache[id] = new Interface();
 		tab.id = id;
 		tab.parent = id;
@@ -1557,7 +1591,7 @@ public final class Interface {
 		tab.drawsAlpha = true;
 	}
 
-	private static void drawTooltip(int id, String text) {
+	public static void drawTooltip(int id, String text) {
 		final Interface rsi = addInterface(id);
 		rsi.id = id;
 		rsi.parent = id;
@@ -1577,28 +1611,28 @@ public final class Interface {
 		}
 	}
 
-	private static void removeSomething(int id) {
+	public static void removeSomething(int id) {
 		cache[id] = new Interface();
 	}
 
-	private static void setBounds(int ID, int X, int Y, int frame, Interface widget) {
+	public static void setBounds(int ID, int X, int Y, int frame, Interface widget) {
 		widget.children[frame] = ID;
 		widget.childX[frame] = X;
 		widget.childY[frame] = Y;
 	}
 
-	private static void setChildren(int total, Interface i) {
+	public static void setChildren(int total, Interface i) {
 		i.children = new int[total];
 		i.childX = new int[total];
 		i.childY = new int[total];
 	}
 
-	private static void color(int id, int color) {
+	public static void color(int id, int color) {
 		final Interface rsi = cache[id];
 		rsi.color = color;
 	}
 
-	private static void textSize(int id, BitmapFont tda[], int idx) {
+	public static void textSize(int id, BitmapFont tda[], int idx) {
 		final Interface rsi = cache[id];
 		rsi.fontId = idx;
 	}
@@ -1658,6 +1692,76 @@ public final class Interface {
 		rsi.spellUsableOn = 0;
 		rsi.type = 2;
 		return rsi;
+	}
+
+	/* Add Container */
+	static Interface addContainer(int id, int contentType, int width, int height, int xPad, int yPad, int opacity,
+									boolean move, boolean displayAmount, boolean displayExamine, String... actions) {
+		Interface container = addTabInterface(id);
+		container.parent = id;
+		container.type = Constants.WIDGET_INVENTORY;
+		container.contentType = contentType;
+		container.width = width;
+		container.height = height;
+		container.invIcon = new int[20];
+		container.invIconX = new int[20];
+		container.invIconY = new int[20];
+		container.invPadX = xPad;
+		container.invPadY = yPad;
+		container.invId = new int[5000];
+		container.invAmt = new int[5000];
+		container.menuItem = actions;
+		container.invDrag = move;
+		container.alpha = (byte) opacity;
+		//container.displayAmount = displayAmount;
+		//container.displayExamine = displayExamine;
+		return container;
+	}
+
+	/* Add Container */
+	static Interface addContainer(int id, int width, int height, int xPad, int yPad, boolean move,
+									boolean displayAmount, boolean displayExamine, String... actions) {
+		return addContainer(id, 0, width, height, xPad, yPad, 0, move, displayAmount, displayExamine, actions);
+	}
+
+	/* Add Container */
+	static Interface addContainer(int id, int width, int height, int xPad, int yPad, boolean move,
+									String... actions) {
+		return addContainer(id, 0, width, height, xPad, yPad, 0, move, true, true, actions);
+	}
+
+	/* Add Text */
+	static void addText(int id, String text, int idx, int color, boolean centered) {
+		Interface rsi = createInterface(id);
+		rsi.textCenter = centered;
+		rsi.textShadow = true;
+		rsi.fontId = idx;
+		rsi.text = text;
+		rsi.color = color;
+		rsi.id = id;
+		rsi.type = Constants.WIDGET_STRING;
+	}
+
+	/**
+	 * Adds an item container layer.
+	 */
+	public static Interface addContainer(int id, int contentType, int width, int height, String... actions) {
+		Interface container = addInterface(id);
+		container.parent = id;
+		container.type = Constants.WIDGET_INVENTORY;
+		container.contentType = contentType;
+		container.width = width;
+		container.height = height;
+		container.invIcon = new int[20];
+		container.invIconX = new int[20];
+		container.invIconY = new int[20];
+		container.invPadX = 14;
+		container.invPadY = 4;
+		container.invId = new int[5000];
+		container.invAmt = new int[5000];
+		container.invDrag = true;
+		container.menuItem = actions;
+		return container;
 	}
 
 	public static void addButton(int i, int j, int W, int H, String S, int AT) {
@@ -1755,7 +1859,7 @@ public final class Interface {
 		return model_1;
 	}
 
-	private Model method206(int i, int j) {
+	public Model method206(int i, int j) {
 		Model model = (Model) modelcache.get((i << 16) + j);
 		if(model != null) {
 			return model;
@@ -1811,6 +1915,136 @@ public final class Interface {
 		tab.colorAlt = 0;
 		tab.hoverColor = 0;
 		tab.hoverColorAlt = 0;
+	}
+
+	public static void addHoverText(int id, String text, String tooltip, int idx, int color,
+									boolean centerText, boolean textShadowed, int width) {
+		Interface rsinterface = addInterface(id);
+		rsinterface.id = id;
+		rsinterface.parent = id;
+		rsinterface.type = Constants.WIDGET_STRING;
+		rsinterface.actionType = 1;
+		rsinterface.width = width;
+		rsinterface.height = 11;
+		rsinterface.contentType = 0;
+		rsinterface.alpha = 0;
+		rsinterface.hoverInterToTrigger = -1;
+		rsinterface.textCenter = centerText;
+		rsinterface.textShadow = textShadowed;
+		rsinterface.fontId = idx;
+		rsinterface.text = text;
+		if (text.contains("\\n")) {
+			rsinterface.height += 11;
+		}
+		rsinterface.textAlt = "";
+		rsinterface.tooltip = tooltip;
+		rsinterface.color = color;
+		rsinterface.colorAlt = 0;
+		rsinterface.hoverColor = 0xFFFFFF;
+		rsinterface.hoverColorAlt = 0;
+	}
+
+	public static void addHoverText(int id, String text, String tooltip, int idx, int color,
+									int hoverColor, boolean centerText, boolean textShadowed, int width) {
+		Interface rsinterface = addInterface(id);
+		rsinterface.id = id;
+		rsinterface.parent = id;
+		rsinterface.type = Constants.WIDGET_STRING;
+		rsinterface.actionType = 1;
+		rsinterface.width = width;
+		rsinterface.height = 11;
+		rsinterface.contentType = 0;
+		rsinterface.alpha = 0;
+		rsinterface.hoverInterToTrigger = -1;
+		rsinterface.textCenter = centerText;
+		rsinterface.textShadow = textShadowed;
+		rsinterface.fontId = idx;
+		rsinterface.text = text;
+		rsinterface.textAlt = "";
+		rsinterface.tooltip = tooltip;
+		rsinterface.color = color;
+		rsinterface.colorAlt = 0;
+		rsinterface.hoverColor = hoverColor;
+		rsinterface.hoverColorAlt = 0;
+	}
+
+	/**
+	 * Adds a button.
+	 */
+	public static void addButton(int id, int enabled, int disabled, String tooltip, int w, int h) {
+		Interface tab = createInterface(id);
+		tab.id = id;
+		tab.parent = id;
+		tab.type = Constants.WIDGET_SPRITE;
+		tab.actionType = 1;
+		tab.contentType = 0;
+		tab.alpha = (byte) 0;
+		tab.hoverInterToTrigger = 52;
+		tab.spriteID = enabled;
+		tab.secondarySpriteID = disabled;
+		tab.width = w;
+		tab.height = h;
+		tab.tooltip = tooltip;
+	}
+
+	/**
+	 * Adds a config button hover layer.
+	 */
+	public static void addHoverConfigButton(int id, int hoverOver, int disabledID, int enabledID, int width, int height,
+											String tooltip, int[] anIntArray245, int[] anIntArray212, int[][] valueIndexArray) {
+		Interface rsint = addTabInterface(id);
+		rsint.parent = id;
+		rsint.id = id;
+		rsint.type = Constants.WIDGET_SPRITE;
+		rsint.actionType = 5;
+		rsint.contentType = 206;
+		rsint.width = width;
+		rsint.height = height;
+		rsint.alpha = 0;
+		rsint.hoverInterToTrigger = hoverOver;
+		rsint.valueCompareType = anIntArray245;
+		rsint.requiredValues = anIntArray212;
+		rsint.valueIndexArray = valueIndexArray;
+		rsint.spriteID = enabledID;
+		rsint.secondarySpriteID = disabledID;
+		rsint.tooltip = tooltip;
+	}
+
+	/**
+	 * Adds a config button hover layer.
+	 */
+	public static void addHoveredConfigButton(Interface original, int ID, int IMAGEID, int disabledID, int enabledID) {
+		Interface rsint = addTabInterface(ID);
+		rsint.parent = original.id;
+		rsint.id = ID;
+		rsint.type = 0;
+		rsint.actionType = 0;
+		rsint.contentType = 0;
+		rsint.width = original.width;
+		rsint.height = original.height;
+		rsint.alpha = 0;
+		rsint.hoverInterToTrigger = -1;
+		Interface hover = addInterface(IMAGEID);
+		hover.type = Constants.WIDGET_SPRITE;
+		hover.width = original.width;
+		hover.height = original.height;
+		hover.valueCompareType = original.valueCompareType;
+		hover.requiredValues = original.requiredValues;
+		hover.valueIndexArray = original.valueIndexArray;
+		hover.spriteID = enabledID;
+		hover.secondarySpriteID = disabledID;
+		rsint.totalChildren(1);
+		setBounds(IMAGEID, 0, 0, 0, rsint);
+		rsint.tooltip = original.tooltip;
+		rsint.hoverTriggered = true;
+	}
+
+	public static void addTabMenu(int id, int textColor, int spriteBack, Tab tab, String... options) {
+		Interface dropdownMenu = addInterface(id);
+		dropdownMenu.type = Constants.WIDGET_TAB;
+		dropdownMenu.actionType = Constants.WIDGET_TAB;
+		dropdownMenu.color = textColor;
+		dropdownMenu.tab = new TabMenu(tab, spriteBack, options);
 	}
 
 }

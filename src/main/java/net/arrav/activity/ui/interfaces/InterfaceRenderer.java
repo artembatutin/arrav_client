@@ -37,7 +37,9 @@ public class InterfaceRenderer {
                 client.drawFriendsListOrWelcomeScreen(childWidget);
             }
 
-            if(childWidget.type == Constants.TYPE_CONTAINER) {
+            if (childWidget.type == Constants.WIDGET_TAB) {
+                childWidget.tab.drawTabMenu(childWidget, xPos, yPos);
+            } else if(childWidget.type == Constants.TYPE_CONTAINER) {
                 if(childWidget.scrollPos > childWidget.scrollMax - childWidget.height) {
                     childWidget.scrollPos = childWidget.scrollMax - childWidget.height;
                 }
@@ -52,9 +54,12 @@ public class InterfaceRenderer {
                         client.gameActivity.drawScrollbar(xPos + childWidget.width, yPos, childWidget.height, childWidget.scrollMax, childWidget.scrollPos);
                     }
                 }
-            }
-            else if(childWidget.type != Constants.WIDGET_MODEL_LIST) {
+            } else if(childWidget.type != Constants.WIDGET_MODEL_LIST) {
                 if(childWidget.type == Constants.WIDGET_INVENTORY) {
+                    if(Config.def.idx()) {
+                        client.smallFont.drawLeftAlignedString("cont:"+childWidget.id, xPos, yPos + client.smallFont.lineHeight, 0x000000);
+                        Rasterizer2D.drawRectangle(xPos, yPos, (32 + childWidget.invPadX) * childWidget.width, (32 + childWidget.invPadY) * childWidget.height, 0);
+                    }
                     int item = 0;
                     for(int i = 0; i < childWidget.height; i++) {
                         for(int i2 = 0; i2 < childWidget.width; i2++) {
@@ -90,9 +95,9 @@ public class InterfaceRenderer {
                                             }
                                             itemImage.drawImage(x + mouseDragOffsetX, y + mouseDragOffsetY, 128);
                                             if(y + mouseDragOffsetY < Rasterizer2D.clipStartY && widget.scrollPos > 0) {
-                                                int i10 = client.anInt945 * (Rasterizer2D.clipStartY - y - mouseDragOffsetY) / 3;
-                                                if(i10 > client.anInt945 * 10) {
-                                                    i10 = client.anInt945 * 10;
+                                                int i10 = client.tickDelta * (Rasterizer2D.clipStartY - y - mouseDragOffsetY) / 3;
+                                                if(i10 > client.tickDelta * 10) {
+                                                    i10 = client.tickDelta * 10;
                                                 }
                                                 if(i10 > widget.scrollPos) {
                                                     i10 = widget.scrollPos;
@@ -101,9 +106,9 @@ public class InterfaceRenderer {
                                                 client.itemPressY += i10;
                                             }
                                             if(y + mouseDragOffsetY + 32 > Rasterizer2D.clipEndY && widget.scrollPos < widget.scrollMax - widget.height) {
-                                                int j10 = client.anInt945 * (y + mouseDragOffsetY + 32 - Rasterizer2D.clipEndY) / 3;
-                                                if(j10 > client.anInt945 * 10) {
-                                                    j10 = client.anInt945 * 10;
+                                                int j10 = client.tickDelta * (y + mouseDragOffsetY + 32 - Rasterizer2D.clipEndY) / 3;
+                                                if(j10 > client.tickDelta * 10) {
+                                                    j10 = client.tickDelta * 10;
                                                 }
                                                 if(j10 > widget.scrollMax - widget.height - widget.scrollPos) {
                                                     j10 = widget.scrollMax - widget.height - widget.scrollPos;

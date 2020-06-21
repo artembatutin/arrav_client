@@ -373,6 +373,45 @@ public final class BitmapImage extends Rasterizer2D {
 		}
 	}
 
+	public void drawSprite1(int i, int j, int k, boolean one) {
+		i += xOffset;
+		j += yOffset;
+		int i1 = i + j * Rasterizer2D.canvasWidth;
+		int j1 = 0;
+		int k1 = imageHeight;
+		int l1 = imageHeight;
+		int i2 = Rasterizer2D.canvasWidth - l1;
+		int j2 = 0;
+		if (!(one && j > 0) && j < clipStartY) {
+			int k2 = clipStartY - j;
+			k1 -= k2;
+			j = clipStartY;
+			j1 += k2 * l1;
+			i1 += k2 * Rasterizer2D.canvasWidth;
+		}
+		if (j + k1 > clipEndY)
+			k1 -= (j + k1) - clipEndY;
+		if (!(one && j > 0) && i < clipStartX) {
+			int l2 = clipStartX - i;
+			l1 -= l2;
+			i = clipStartX;
+			j1 += l2;
+			i1 += l2;
+			j2 += l2;
+			i2 += l2;
+		}
+		if (i + l1 > clipEndX) {
+			int i3 = (i + l1) - clipEndX;
+			l1 -= i3;
+			j2 += i3;
+			i2 += i3;
+		}
+		if (!(l1 <= 0 || k1 <= 0)) {
+			drawPixels(j1, l1, Rasterizer2D.canvasRaster, imageRaster, j2, k1, i2, k, i1);
+		}
+	}
+
+
 	public void drawImage(int x, int y, int alpha) {
 		if(this.alpha) {
 			drawAlphaImage(x, y, alpha);

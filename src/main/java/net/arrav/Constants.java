@@ -66,6 +66,7 @@ public final class Constants {
 	public static final byte WIDGET_MODEL = 6;
 	public static final byte WIDGET_ITEM_LIST = 7;
 	public static final byte WIDGET_TOOLTIP = 8;
+	public static final byte WIDGET_TAB = 70;
 
 	/*
 	 * Packet constants

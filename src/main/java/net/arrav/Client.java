@@ -78,7 +78,11 @@ public class Client extends ClientEngine {
 	 */
 	public ObjectList<Particle> displayedParticles;
 	public ObjectList<Particle> removeDeadParticles;
-	
+
+	public int[] tabAmounts = new int[] { 350, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+	public int[] bankInvTemp = new int[1000];
+	public int[] bankStackTemp = new int[1000];
+
 	public final void addParticle(Particle particle) {
 		displayedParticles.add(particle);
 	}
@@ -343,7 +347,7 @@ public class Client extends ClientEngine {
 	public int anInt933;
 	public int anInt934;
 	public int anInt935;
-	public int anInt945;
+	public int tickDelta;
 	public int anInt984;
 	public int anInt988;
 	public int anInt1010;
@@ -389,6 +393,7 @@ public class Client extends ClientEngine {
 	public int[] anIntArray1190;
 	public int[] anIntArray1191;
 	public int[] currentShopInterfacePrices;
+	public int currentBankTab;
 	public int[][][] sceneGroundZ;
 	public long aLong1220;
 	public long[] friendsListAsLongs;
@@ -1006,6 +1011,26 @@ public class Client extends ClientEngine {
 		} else {
 			return j / 0xf4240 + "M";
 		}
+	}
+
+	public final String formatAmount(long amount) {
+		String format = "Too high!";
+		if (amount >= 0 && amount < 0x186a0) {
+			format = String.valueOf(amount);
+		} else if (amount >= 0x186a0 && amount < 0xf4240) {
+			format = amount / 1000 + "K";
+		} else if (amount >= 0xf4240 && amount < 0x3b9aca00L) {
+			format = amount / 0xf4240 + "M";
+		} else if (amount >= 0x3b9aca00L && amount < 0xe8d4a51000L) {
+			format = amount / 0x3b9aca00 + "B";
+		} else if (amount >= 0x9184e72a000L && amount < 0x2386f26fc10000L) {
+			format = amount / 0xe8d4a51000L + "T";
+		} else if (amount >= 0x2386f26fc10000L && amount < 0xde0b6b3a7640000L) {
+			format = amount / 0x38d7ea4c68000L + "QD";
+		} else if (amount >= 0xde0b6b3a7640000L && amount < Long.MAX_VALUE) {
+			format = amount / 0xde0b6b3a7640000L + "QT";
+		}
+		return format;
 	}
 
 	public static String valueToKOrMLong(int i) {
@@ -1820,6 +1845,12 @@ public class Client extends ClientEngine {
 						}
 					}
 				}
+
+				if(childWidget.actionType == 70) {
+					childWidget.hovered = false;
+					childWidget.tab.hover(widget, childWidget, mouseX, mouseY, xPos, yPos);
+				}
+
 				if(childWidget.type == 2) {
 					int k2 = 0;
 					for(int l2 = 0; l2 < childWidget.height; l2++) {
@@ -2441,6 +2472,24 @@ public class Client extends ClientEngine {
 			k -= 2000;
 		}
 		return k == 337;
+	}
+
+	int itemMovement = 0;
+	int itemMovementCount = 0;
+	int marqueeSlot = 0;
+	int marqueeMovement = 0;
+
+	public void drawMovingItem(BitmapImage sprite, int x, int y) {
+
+		if (itemMovementCount++ % 35 == 0) {
+			itemMovement -= 42;
+		}
+		if (itemMovement < -45) {
+			itemMovement = windowWidth + 2;
+		}
+
+		x += itemMovement;
+		sprite.drawImage(x, y);
 	}
 
 	public void determineMenuSize() {
@@ -3438,6 +3487,12 @@ public class Client extends ClientEngine {
 				atInventoryInterfaceType = 3;
 			}
 		}
+		if(code == 772) {
+			Interface tab = Interface.cache[arg2];
+			Interface parent = Interface.cache[(int) arg4];
+			tab.tab.getTabType().selectOption(arg3, this, parent, tab);
+		}
+
 		if(code == 104) {
 			Interface class9_1 = Interface.cache[arg3];
 			spellId = class9_1.id;
@@ -5543,6 +5598,11 @@ public class Client extends ClientEngine {
 							currentShopInterfacePrices[j25] = 0;
 						}
 					}
+
+					if(itemGroupID >= 270 && itemGroupID <= 279) {
+						int bankTab = itemGroupID - 270;
+						int id2 = bankTab;
+					}
 					pktType = -1;
 					return true;
 				
@@ -5971,7 +6031,7 @@ public class Client extends ClientEngine {
 			if(graphic.anInt1560 != cameraPlane || graphic.noEffects) {
 				graphic.unlinkPrimary();
 			} else if(loopCycle >= graphic.anInt1564) {
-				graphic.moveAnimation(anInt945);
+				graphic.moveAnimation(tickDelta);
 				if(graphic.noEffects) {
 					graphic.unlinkPrimary();
 				} else {
@@ -6444,7 +6504,7 @@ public class Client extends ClientEngine {
 						projectile.method455(loopCycle, player.y, method42(projectile.anInt1597, player.x, player.y) - projectile.anInt1583, player.x);
 					}
 				}
-				projectile.method456(anInt945);
+				projectile.method456(tickDelta);
 				scene.addEntity(cameraPlane, projectile.anInt1595, (int) projectile.aDouble1587, -1, (int) projectile.aDouble1586, 60, (int) projectile.aDouble1585, projectile, false);
 			}
 		}
@@ -6795,7 +6855,7 @@ public class Client extends ClientEngine {
 								e.printStackTrace();
 								pushMessage("--> failed to repack image index", 0, "");
 							}
-						} else if(chatInput.equals("::idx")) {
+						}  else if(chatInput.equals("::idx")) {
 							Config.def.idx(!Config.def.idx());
 							pushMessage("--> index debug " + (Config.def.idx() ? "on" : "off"), 0, "");
 						} else if(chatInput.startsWith("::text")) {

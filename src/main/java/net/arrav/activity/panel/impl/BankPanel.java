@@ -403,9 +403,9 @@ public class BankPanel extends Panel {
 						xSelected = beginX + 53 + x + mouseDragOffsetX;
 						ySelected = beginY + offset + 5 + mouseDragOffsetY;
 						if(beginY + offset + 5 + mouseDragOffsetY < Rasterizer2D.clipStartY && scrollPos > 0) {
-							int i10 = client.anInt945 * (Rasterizer2D.clipStartY - (beginY + offset + 5) - mouseDragOffsetY) / 3;
-							if(i10 > client.anInt945 * 10) {
-								i10 = client.anInt945 * 10;
+							int i10 = client.tickDelta * (Rasterizer2D.clipStartY - (beginY + offset + 5) - mouseDragOffsetY) / 3;
+							if(i10 > client.tickDelta * 10) {
+								i10 = client.tickDelta * 10;
 							}
 							if(i10 > scrollPos) {
 								i10 = scrollPos;
@@ -414,9 +414,9 @@ public class BankPanel extends Panel {
 							itemPressY += i10;
 						}
 						if(beginY + offset + 5 + mouseDragOffsetY + 32 > Rasterizer2D.clipEndY && scrollPos < scrollMax - 268) {
-							int j10 = client.anInt945 * (beginY + offset + 5 + mouseDragOffsetY + 32 - Rasterizer2D.clipEndY) / 3;
-							if(j10 > client.anInt945 * 10) {
-								j10 = client.anInt945 * 10;
+							int j10 = client.tickDelta * (beginY + offset + 5 + mouseDragOffsetY + 32 - Rasterizer2D.clipEndY) / 3;
+							if(j10 > client.tickDelta * 10) {
+								j10 = client.tickDelta * 10;
 							}
 							if(j10 > scrollMax - 268 - scrollPos) {
 								j10 = scrollMax - 268 - scrollPos;

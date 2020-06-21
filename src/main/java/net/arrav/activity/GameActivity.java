@@ -144,7 +144,7 @@ public class GameActivity extends Activity {
 		client.method114();
 		client.method95();
 		client.method38();
-		client.anInt945++;
+		client.tickDelta++;
 		if(client.crossType != 0) {
 			client.crossIndex += 20;
 			if(client.crossIndex >= 400) {
@@ -349,11 +349,11 @@ public class GameActivity extends Activity {
 	public void update() {
 		if(client.fullscreenWidgetId != -1 && (client.loadingStage == 2)) {
 			if(client.loadingStage == 2) {
-				client.method119(client.anInt945, client.fullscreenWidgetId);
+				client.method119(client.tickDelta, client.fullscreenWidgetId);
 				if(client.openInterfaceID != -1) {
-					client.method119(client.anInt945, client.openInterfaceID);
+					client.method119(client.tickDelta, client.openInterfaceID);
 				}
-				client.anInt945 = 0;
+				client.tickDelta = 0;
 				Rasterizer3D.viewport = client.fixedFullScreenViewport;
 				Rasterizer2D.clearCanvas();
 				client.updateAllGraphics = true;
@@ -382,12 +382,12 @@ public class GameActivity extends Activity {
 			return;
 		}
 		if(client.forcedChatWidgetId != -1) {
-			boolean flag2 = client.method119(client.anInt945, client.forcedChatWidgetId);
+			boolean flag2 = client.method119(client.tickDelta, client.forcedChatWidgetId);
 			if(flag2)
 				client.updateInventory = true;
 		}
 		if(client.invOverlayInterfaceID != -1) {
-			boolean flag1 = client.method119(client.anInt945, client.invOverlayInterfaceID);
+			boolean flag1 = client.method119(client.tickDelta, client.invOverlayInterfaceID);
 			if(flag1)
 				client.updateInventory = true;
 		}
@@ -445,7 +445,7 @@ public class GameActivity extends Activity {
 				client.updateGraphics.drawGraphics(1, 1, client.graphics);
 			}
 		}
-		client.anInt945 = 0;
+		client.tickDelta = 0;
 	}
 
 	private void processRightClick() {
@@ -1776,7 +1776,7 @@ public class GameActivity extends Activity {
 			client.clickCross[4 + client.crossIndex / 100].drawImage(client.crossX - off - offset, client.crossY - off - offset);
 		}
 		if(client.anInt1018 != -1) {
-			client.method119(client.anInt945, client.anInt1018);
+			client.method119(client.tickDelta, client.anInt1018);
 			if(client.uiRenderer.isResizableOrFull()) {
 				if(client.anInt1018 == 197)
 					client.drawWidget(Interface.cache[client.anInt1018], client.windowWidth - 550, -90, 0, UIComponent.SCENE);
@@ -1787,7 +1787,7 @@ public class GameActivity extends Activity {
 			}
 		}
 		if(client.openInterfaceID != -1) {
-			client.method119(client.anInt945, client.openInterfaceID);
+			client.method119(client.tickDelta, client.openInterfaceID);
 			if(client.uiRenderer.isResizableOrFull()) {
 				client.drawWidget(Interface.cache[client.openInterfaceID], client.uiRenderer.resizable.getOnScreenWidgetOffsets().x, client.uiRenderer.resizable.getOnScreenWidgetOffsets().y, 0, UIComponent.SCENE);
 			} else {

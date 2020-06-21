@@ -776,7 +776,7 @@ public class ResizableUI_CUS extends ResizableUI {
 		Rasterizer3D.viewport.centerX = centerX;
 		Rasterizer3D.viewport.centerY = centerY;
 		final DeformSequence animation = DeformSequence.cache[childWidget.modelAnim];
-		for(childWidget.modelAnimDelay += client.anInt945; childWidget.modelAnimDelay > animation.getFrame(childWidget.modelAnimLength); ) {
+		for(childWidget.modelAnimDelay += client.tickDelta; childWidget.modelAnimDelay > animation.getFrame(childWidget.modelAnimLength); ) {
 			childWidget.modelAnimDelay -= animation.getFrame(childWidget.modelAnimLength) + 1;
 			childWidget.modelAnimLength++;
 			if(childWidget.modelAnimLength >= animation.length) {
