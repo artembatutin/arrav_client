@@ -11,6 +11,7 @@ import net.arrav.graphic.Rasterizer2D;
 import net.arrav.graphic.Rasterizer3D;
 import net.arrav.graphic.font.BitmapFont;
 import net.arrav.graphic.img.BitmapImage;
+import net.arrav.util.string.StringUtils;
 import net.arrav.world.model.Model;
 
 public class InterfaceRenderer {
@@ -39,6 +40,8 @@ public class InterfaceRenderer {
 
             if (childWidget.type == Constants.WIDGET_TAB) {
                 childWidget.tab.drawTabMenu(childWidget, xPos, yPos);
+            } else if (childWidget.type == Constants.WIDGET_INPUT_FIELD) {
+                drawInputField(childWidget, xPos, yPos, xPosition, yPosition, childWidget.width, childWidget.height);
             } else if(childWidget.type == Constants.TYPE_CONTAINER) {
                 if(childWidget.scrollPos > childWidget.scrollMax - childWidget.height) {
                     childWidget.scrollPos = childWidget.scrollMax - childWidget.height;
@@ -608,5 +611,69 @@ public class InterfaceRenderer {
     }
 
 
+    private static void drawInputField(Interface child, int interfaceX, int interfaceY, int x, int y, int width,
+                                       int height) {
+        int clickX = Client.instance.clickX, clickY = Client.instance.clickY;
 
+        if (Client.instance.uiRenderer.isFixed()) {
+            if (clickX >= 512 && clickY >= 169) {
+                clickX -= 512;
+                clickY -= 169;
+            }
+        }
+        for (int row = 0; row < width; row += 12) {
+            if (row + 12 > width) {
+                row -= 12 - (width - row);
+            }
+            Rasterizer2D.fillRectangle(x + row, y, 12, 12, 0x363227);
+            for (int collumn = 0; collumn < height; collumn += 12) {
+                if (collumn + 12 > height) {
+                    collumn -= 12 - (height - collumn);
+                }
+                Rasterizer2D.fillRectangle(x + row, y + collumn, 12, 12, 0x363227);
+            }
+        }
+        for (int top = 0; top < width; top += 8) {
+            if (top + 8 > width) {
+                top -= 8 - (width - top);
+            }
+            Rasterizer2D.drawHorizontalLine(x + top, y, 8, 0);
+            Rasterizer2D.drawHorizontalLine(x + top, y + height - 1, 8, 0);
+        }
+        for (int bottom = 0; bottom < height; bottom += 8) {
+            if (bottom + 8 > height) {
+                bottom -= 8 - (height - bottom);
+            }
+            Rasterizer2D.drawVerticalLine(x, y + bottom, 8, 0);
+            Rasterizer2D.drawVerticalLine(x + width - 1, y + bottom, 8, 0);
+        }
+        String message = child.text;
+        if (Client.instance.smallFont.getEffectStringWidth(message) > child.width - 10) {
+            message = message.substring(message.length() - (child.width / 10) - 1);
+        }
+        if (child.displayAsterisks) {
+            Client.instance.smallFont.drawLeftAlignedEffectString(StringUtils.toAsterisks(message) + (((!child.isInFocus ? 0 : 1) & (Client.instance.tickDelta % 40 < 20 ? 1 : 0)) != 0 ? "|" : ""), (x + 4), (y + (height / 2) + 6), child.color, 0);
+        } else {
+            //String string, int drawX, int drawY, int color, int shadow
+            Client.instance.smallFont.drawLeftAlignedEffectString(message + (((!child.isInFocus ? 0 : 1) & (Client.instance.tickDelta % 40 < 20 ? 1 : 0)) != 0 ? "|" : ""),  (x + 4), (y + (height / 2) + 6), child.color, 0);
+        }
+        if (clickX >= x && clickX <= x + child.width && clickY >= y && clickY <= y + child.height) {
+            if (!child.isInFocus && Client.instance.getInputFieldFocusOwner() != child) {
+              /*  if ((Client.instance.clickMode2 == 1 && !menuOpen)) {
+                    Interface.currentInputFieldId = child.id;
+                    Client.instance.setInputFieldFocusOwner(child);
+                    if (child.text != null && child.text.equals(child.defaultInputFieldText)) {
+                        child.text = "";
+                    }
+                    if (child.text == null) {
+                        child.text = "";
+                    }
+                }*/
+            }
+        }
     }
+
+
+
+
+}

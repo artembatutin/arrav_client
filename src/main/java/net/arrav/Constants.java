@@ -2,7 +2,9 @@ package net.arrav;
 
 public final class Constants {
 
-	private Constants() {
+
+
+    private Constants() {
 	}
 
 	public static final int MAX_POLYGON = 15_000;
@@ -67,6 +69,9 @@ public final class Constants {
 	public static final byte WIDGET_ITEM_LIST = 7;
 	public static final byte WIDGET_TOOLTIP = 8;
 	public static final byte WIDGET_TAB = 70;
+	public static int WIDGET_DROP_DOWN = 69;
+	public static int WIDGET_INPUT_FIELD = 16;
+
 
 	/*
 	 * Packet constants

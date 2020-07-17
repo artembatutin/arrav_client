@@ -5,6 +5,8 @@ import net.arrav.Constants;
 import net.arrav.cache.unit.AnimationFrame;
 import net.arrav.cache.unit.NPCType;
 import net.arrav.cache.unit.ObjectType;
+import net.arrav.cache.unit.interfaces.component.dropdown.Dropdown;
+import net.arrav.cache.unit.interfaces.component.dropdown.DropdownMenu;
 import net.arrav.cache.unit.interfaces.component.tab.Tab;
 import net.arrav.cache.unit.interfaces.component.tab.TabMenu;
 import net.arrav.cache.unit.interfaces.custom.BankInterface;
@@ -21,17 +23,22 @@ import java.io.IOException;
 public class Interface {
 
 
+
+	public static int currentInputFieldId;
+	public static Client client;
+	public static BitmapFont[] fonts;
+	public static CacheArchive archive;
+	public static Interface[] cache;
+	private static final Int2ObjectOpenHashMap<Model> modelcache = new Int2ObjectOpenHashMap<>();
+
+
 	public int tabHover = -1;
 	public TabMenu tab;
 	public boolean hovered = false;
 
 
 
-	public static Client client;
-	public static BitmapFont[] fonts;
-	public static CacheArchive archive;
-	public static Interface[] cache;
-	private static final Int2ObjectOpenHashMap<Model> modelcache = new Int2ObjectOpenHashMap<>();
+
 	public int type;
 	public int id;
 	public int parent;
@@ -94,6 +101,15 @@ public class Interface {
 	public boolean hoverTriggered;
 	public int spriteID;
 	public int secondarySpriteID;
+
+	public boolean displayAsterisks;
+	public boolean updatesEveryInput;
+	public int characterLimit;
+	public String inputRegex = "";
+	public String defaultInputFieldText = "";
+	public boolean isInFocus;
+	private boolean updateConfig;
+
 
 	public static void unpack(CacheArchive widgetArchive, BitmapFont[] fonts) {
 		Interface.fonts = fonts;
@@ -1764,6 +1780,53 @@ public class Interface {
 		return container;
 	}
 
+	/* Add Container */
+	public static Interface addContainer2(int id, int contentType, int width, int height, int xPad, int yPad, int opacity,
+										  boolean move, boolean displayAmount, boolean displayExamine, String... actions) {
+		Interface container = addTabInterface(id);
+		container.parent = id;
+		container.type = Constants.WIDGET_INVENTORY;
+		container.contentType = contentType;
+		container.width = width;
+		container.height = height;
+		container.invIcon = new int[20];
+		container.invIconX = new int[20];
+		container.invIconY = new int[20];
+		container.invPadX = xPad;
+		container.invPadY = yPad;
+		container.invId = new int[5000];
+		container.invAmt = new int[5000];
+		container.menuItem = actions;
+		container.invDrag = move;
+		container.alpha = (byte) opacity;
+		//container.displayAmount = displayAmount;
+		//container.displayExamine = displayExamine;
+		return container;
+	}
+
+	public static Interface addContainer3(int id, int contentType, int width, int height, int xPad, int yPad, int opacity,
+										  boolean move, boolean displayAmount, boolean displayExamine, String... actions) {
+		Interface container = addTabInterface(id);
+		container.parent = id;
+		container.type = Constants.WIDGET_INVENTORY;
+		container.contentType = contentType;
+		container.width = width;
+		container.height = height;
+		container.invIcon = new int[20];
+		container.invIconX = new int[20];
+		container.invIconY = new int[20];
+		container.invPadX = xPad;
+		container.invPadY = yPad;
+		container.invId = new int[5000];
+		container.invAmt = new int[5000];
+		container.menuItem = actions;
+		container.invDrag = move;
+		container.alpha = (byte) opacity;
+		//container.displayAmount = displayAmount;
+		//container.displayExamine = displayExamine;
+		return container;
+	}
+
 	public static void addButton(int i, int j, int W, int H, String S, int AT) {
 		Interface Interface = addInterface(i);
 		Interface.id = i;
@@ -1802,6 +1865,80 @@ public class Interface {
 		Tab.spriteID = bID;
 		Tab.secondarySpriteID = bID2;
 		Tab.tooltip = tT;
+	}
+	public static void addConfigButton(int ID, int pID, int bID, int bID2, int width, int height, String tT, int configID, int aT, int configFrame, boolean updateConfig) {
+		Interface Tab = addInterface(ID);
+		Tab.parent = pID;
+		Tab.id = ID;
+		Tab.type = 5;
+		Tab.actionType = aT;
+		Tab.contentType = 0;
+		Tab.width = width;
+		Tab.height = height;
+		Tab.alpha = 0;
+		Tab.hoverInterToTrigger = -1;
+		Tab.valueCompareType = new int[1];
+		Tab.requiredValues = new int[1];
+		Tab.valueCompareType[0] = 1;
+		Tab.requiredValues[0] = configID;
+		Tab.valueIndexArray = new int[1][3];
+		Tab.valueIndexArray[0][0] = 5;
+		Tab.valueIndexArray[0][1] = configFrame;
+		Tab.valueIndexArray[0][2] = 0;
+		Tab.spriteID = bID;
+		Tab.secondarySpriteID = bID2;
+		Tab.tooltip = tT;
+		Tab.updateConfig = updateConfig;
+	}
+
+	/* Adds Input Field */
+	protected static void addInputField(int identity, int characterLimit, int color, String text, int width, int height,
+										boolean asterisks, boolean updatesEveryInput, String regex) {
+		Interface field = addInterface(identity);
+		field.id = identity;
+		field.type = Constants.WIDGET_INPUT_FIELD;
+		field.actionType = 8;
+		field.text = text;
+		field.width = width;
+		field.height = height;
+		field.characterLimit = characterLimit;
+		field.color = color;
+		field.displayAsterisks = asterisks;
+		field.tooltip = text;
+		field.defaultInputFieldText = text;
+		field.updatesEveryInput = updatesEveryInput;
+		field.inputRegex = regex;
+	}
+
+	public static void addInputField(int identity, int characterLimit, int color, String text, int width, int height,
+									 boolean asterisks, boolean updatesEveryInput) {
+		Interface field = addInterface(identity);
+		field.id = identity;
+		field.type = Constants.WIDGET_INPUT_FIELD;
+		field.actionType = 8;
+		field.text = text;
+		field.width = width;
+		field.height = height;
+		field.characterLimit = characterLimit;
+		field.color = color;
+		field.displayAsterisks = asterisks;
+		field.defaultInputFieldText = text;
+		field.updatesEveryInput = updatesEveryInput;
+	}
+
+	public static void addInputField(int identity, int characterLimit, int color, String text, int width, int height,
+									 boolean asterisks) {
+		Interface field = addInterface(identity);
+		field.id = identity;
+		field.type = Constants.WIDGET_INPUT_FIELD;
+		field.actionType = 8;
+		field.text = text;
+		field.width = width;
+		field.height = height;
+		field.characterLimit = characterLimit;
+		field.color = color;
+		field.displayAsterisks = asterisks;
+		field.defaultInputFieldText = text;
 	}
 
 	public static void addClickableText(int id, String text, String tooltip, BitmapFont tda[], int idx, int color, boolean center, boolean shadow, int width) {
@@ -2045,6 +2182,26 @@ public class Interface {
 		dropdownMenu.actionType = Constants.WIDGET_TAB;
 		dropdownMenu.color = textColor;
 		dropdownMenu.tab = new TabMenu(tab, spriteBack, options);
+	}
+
+	public DropdownMenu dropDown;
+	public Interface dropDownOpen;
+	public int dropDownHover = -1;
+
+	public static void addDropdownMenu(int identification, int width, int defaultOption, boolean split, boolean center,
+									   Dropdown dropdown, String... options) {
+		addDropdownMenu(identification, width, defaultOption, 0xFD961E, split, center, dropdown, options);
+	}
+
+	public static void addDropdownMenu(int identification, int width, int defaultOption, int textColor, boolean split,
+									   boolean center, Dropdown dropdown, String... options) {
+		Interface dropdownMenu = addInterface(identification);
+		dropdownMenu.type = Constants.WIDGET_DROP_DOWN;
+		dropdownMenu.actionType = 69;
+		dropdownMenu.textCenter = center;
+		dropdownMenu.color = textColor;
+		dropdownMenu.text = "";
+		dropdownMenu.dropDown = new DropdownMenu(width, defaultOption, dropdown, options);
 	}
 
 }

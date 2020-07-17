@@ -1,5 +1,6 @@
 package net.arrav;
 
+import com.sun.scenario.Settings;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import javafx.application.Application;
@@ -506,6 +507,13 @@ public class Client extends ClientEngine {
 	private int hiddenEndCycle;
 	private int fadeOutEndCycle;
 
+	public void sendString(String text, int id) {
+		if (Interface.cache[id] != null) {
+			Interface.cache[id].text = text;
+			Interface.cache[id].scrollPos = 0;
+		}
+	}
+
 	public Client() {
 		displayedParticles = new ObjectArrayList<>(10000);
 		removeDeadParticles = new ObjectArrayList<>();
@@ -899,6 +907,38 @@ public class Client extends ClientEngine {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+	}
+
+	public void setInputFieldFocusOwner(Interface owner) {
+		for (Interface rsi : Interface.cache)
+			if (rsi != null)
+				if (rsi == owner)
+					rsi.isInFocus = true;
+				else
+					rsi.isInFocus = false;
+	}
+
+	public Interface getInputFieldFocusOwner() {
+		for (Interface rsi : Interface.cache)
+			if (rsi != null)
+				if (rsi.isInFocus)
+					return rsi;
+		return null;
+	}
+
+	public boolean isFieldInFocus() {
+		for (Interface rsi : Interface.cache)
+			if (rsi != null)
+				if (rsi.type == Constants.WIDGET_INPUT_FIELD && rsi.isInFocus)
+					return true;
+		return false;
+	}
+
+	public void resetInputFieldFocus() {
+		for (Interface rsi : Interface.cache)
+			if (rsi != null)
+				rsi.isInFocus = false;
+		Interface.currentInputFieldId = -1;
 	}
 
 	private Activity getActivity() {
@@ -3789,10 +3829,13 @@ public class Client extends ClientEngine {
 			if(class9_2.valueIndexArray != null && class9_2.valueIndexArray[0][0] == 5) {
 				final int i2 = class9_2.valueIndexArray[0][1];
 				if(variousSettings[i2] != class9_2.requiredValues[0]) {
-					variousSettings[i2] = class9_2.requiredValues[0];
-					handleSettings(i2);
-					if(i2 == 166) {
-						Config.def.brightness = class9_2.requiredValues[0];
+					if (class9_2.updateConfig) {
+						//Settings.config(this, second);
+						variousSettings[i2] = class9_2.requiredValues[0];
+						handleSettings(i2);
+						if(i2 == 166) {
+							Config.def.brightness = class9_2.requiredValues[0];
+						}
 					}
 				}
 			}
