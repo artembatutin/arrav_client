@@ -11,6 +11,7 @@ import net.arrav.net.SignLink;
 import net.arrav.util.io.Buffer;
 import net.arrav.Client;
 import net.arrav.util.DataToolkit;
+import net.arrav.world.model.Player;
 import net.arrav.world.model.TieredEntity;
 
 import java.io.*;

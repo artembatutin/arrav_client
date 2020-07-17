@@ -1560,7 +1560,7 @@ public class GameActivity extends Activity {
 					if(Config.def.names()) {
 						calcMobileRenderLoc(mobile, mobile.height + 15);
 						int col = 0x00ff00;
-						//if (player.clanName == localPlayer.clanName)
+						//if (player.clanName == localPlayer.clanName)todo implement
 						//	col = 0x00ff00;
 						smallFont.drawCenteredEffectString(player.name, client.spriteDrawX, client.spriteDrawY - 10, col, 0);
 						//if (player.clanName != "")
