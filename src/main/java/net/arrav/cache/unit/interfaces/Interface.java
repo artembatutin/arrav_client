@@ -10,6 +10,7 @@ import net.arrav.cache.unit.interfaces.component.dropdown.DropdownMenu;
 import net.arrav.cache.unit.interfaces.component.tab.Tab;
 import net.arrav.cache.unit.interfaces.component.tab.TabMenu;
 import net.arrav.cache.unit.interfaces.custom.BankInterface;
+import net.arrav.cache.unit.interfaces.custom.ClanInterface;
 import net.arrav.world.model.Model;
 import net.arrav.net.SignLink;
 import net.arrav.util.io.Buffer;
@@ -169,8 +170,15 @@ public class Interface {
 		Pestpanel2(fonts);
 		Pestpanel(fonts);
 		clanWars(fonts);
-		BankInterface.bank(fonts);
 		addPestControlRewardWidget(fonts);
+
+
+
+
+		//tamatea added
+		ClanInterface.init(fonts);
+		BankInterface.bank(fonts);
+
 		/*try {
 			BufferedWriter w = new BufferedWriter(new FileWriter(new File("./int_values.txt")));
 			for(int i = 0; i < cache.length; i++) {

@@ -75,7 +75,7 @@ public class Config {
 	 */
 	private boolean data = false;
 	private boolean fps = false;
-	private boolean idx = true;
+	private boolean idx = false;
 	private boolean sprite = false;
 
 	/*

@@ -3829,14 +3829,14 @@ public class Client extends ClientEngine {
 			if(class9_2.valueIndexArray != null && class9_2.valueIndexArray[0][0] == 5) {
 				final int i2 = class9_2.valueIndexArray[0][1];
 				if(variousSettings[i2] != class9_2.requiredValues[0]) {
-					if (class9_2.updateConfig) {
-						//Settings.config(this, second);
-						variousSettings[i2] = class9_2.requiredValues[0];
-						handleSettings(i2);
-						if(i2 == 166) {
-							Config.def.brightness = class9_2.requiredValues[0];
-						}
-					}
+//					if (class9_2.updateConfig) {todo rip rest
+//						//Settings.config(this, second);
+//						variousSettings[i2] = class9_2.requiredValues[0];
+//						handleSettings(i2);
+//						if(i2 == 166) {
+//							Config.def.brightness = class9_2.requiredValues[0];
+//						}
+//					}
 				}
 			}
 			switch(arg3) {
@@ -6212,6 +6212,10 @@ public class Client extends ClientEngine {
 				continue;
 			}
 			final Interface class9_1 = Interface.cache[element];
+			if(class9_1 == null) {
+				System.out.println("Null child:"+element);
+				continue;
+			}
 			if(class9_1.type == 1) {
 				flag1 |= method119(i, class9_1.id);
 			}

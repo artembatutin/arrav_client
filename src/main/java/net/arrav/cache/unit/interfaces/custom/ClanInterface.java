@@ -1,6 +1,7 @@
 package net.arrav.cache.unit.interfaces.custom;
 
 import net.arrav.cache.unit.interfaces.Interface;
+import net.arrav.cache.unit.interfaces.component.dropdown.Dropdown;
 import net.arrav.graphic.font.BitmapFont;
 
 public class ClanInterface  extends Interface {
@@ -83,7 +84,9 @@ public class ClanInterface  extends Interface {
         addHoveredButton(42121, 287, 36, 36, 42122);
         addHoverButton(42123, 699, 36, 36, "Change item showcase", -1, 42124, 1);
         addHoveredButton(42124, 287, 36, 36, 42125);
-        addContainer(42126, 3, 7, 9, 8, false, false, false, null, null, null, null, null);
+        addHoverText(42126, "Lock clan (no one can join)", "Toggle clan lock", 0, 0xEB981F, 0xFFFFFF, false, true, 60);
+
+        //addContainer(42126, 3, 7, 9, 8, false, false, false, null, null, null, null, null);
         addHoverText(42127, "Lock clan (no one can join)", "Toggle clan lock", 0, 0xEB981F, 0xFFFFFF, false, true, 60);
         addConfigButton(42128, 42100, 235, 234, 15, 15, "Toggle clan lock", 1, 1, 326, false);
         addText(42129, "Banned Members", tda, 0, 0xDE8B0D, false, true);
@@ -324,7 +327,8 @@ public class ClanInterface  extends Interface {
         addText(43008, "Clan Members", tda, 3, 0xEB981F, true, true);
         addText(43009, "Teh Beasts", tda, 1, 0xF7DC6F, true, true);
         addText(43010, "Unleash your inner beast", tda, 0, 0xC47423, true, true);
-        addContainer(43011, 3, 7, 9, 8, false, false, false, null, null, null, null, null);
+        addText(43011, "Unleash your inner beast", tda, 0, 0xC47423, true, true);
+       // addContainer(43011, 3, 7, 9, 8, false, false, false, null, null, null, null, null);
         addInputField(43012, 15, 0xFF981F, "Search for clan...", 156, 24, false, false, "[A-Za-z0-9 ]");
         addConfigButton(43013, 43000, 433, 434, 159, 19, "View clan overview", 0, 5, 531, false);
         addConfigButton(43014, 43000, 433, 434, 159, 19, "View clan members", 1, 5, 531, false);

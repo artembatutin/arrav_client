@@ -155,12 +155,13 @@ public class DropdownMenu {
 		child.dropDownHover = (len - shit) + scroll;
 
 		Client client = Client.instance;
-		client.menuActionName[client.menuActionRow] = "Select " + options[child.dropDownHover];
-		client.menuActionTypes[client.menuActionRow] = 770;
-		client.secondMenuAction[client.menuActionRow] = child.interfaceId;
-		client.firstMenuAction[client.menuActionRow] = child.dropDownHover;
-		client.selectedMenuActions[client.menuActionRow] = parent.interfaceId;
-		client.menuActionRow++;
+
+		Client.instance.menuItemName[Client.instance.menuPos] = "Select " + options[child.dropDownHover];
+		Client.instance.menuItemCode[Client.instance.menuPos] = 770;
+		Client.instance.menuItemArg2[Client.instance.menuPos] = child.id;
+		Client.instance.menuItemArg3[Client.instance.menuPos] = child.dropDownHover;
+		Client.instance.menuItemArg4[Client.instance.menuPos] = parent.id;
+		Client.instance.menuPos++;
 	}
 
 }
