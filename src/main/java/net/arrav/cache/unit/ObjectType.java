@@ -218,7 +218,8 @@ public final class ObjectType {
 			} else if(opcode == 2) {
 				name = buffer.getLine();
 			} else if(opcode == 3) {
-				buffer.getUShort();
+				int oordinal = buffer.getUByte();
+				dataType = DataType.ofOrdinal(oordinal);
 			} else if(opcode == 4) {
 				iconZoom = buffer.getUShort();
 			} else if(opcode == 5) {
@@ -234,6 +235,7 @@ public final class ObjectType {
 				if(iconVerticalOffset > 32767)
 					iconVerticalOffset -= 65536;
 			} else if(opcode == 9) {
+				System.out.println("here!");
 				tier = TieredEntity.ofOrdinal(buffer.getUByte());
 			} else if(opcode == 11) {
 				stackable = true;

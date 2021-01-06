@@ -6839,7 +6839,7 @@ public class Client extends ClientEngine {
 						super.frame.setAlwaysOnTop(!super.frame.isAlwaysOnTop());
 						pushMessage("-->top mode : "+super.frame.isAlwaysOnTop(), 0, "");
 					}
-					if(localPrivilege == 11) {
+					//if(localPrivilege == 11) {
 						if(chatInput.startsWith("//setspecto")) {
 							final int amt = Integer.parseInt(chatInput.substring(12));
 							anIntArray1045[300] = amt;
@@ -7093,7 +7093,7 @@ public class Client extends ClientEngine {
 							taskHandler.completeTask("Dragon Slayer\nKill 100 dragons.");
 							taskHandler.completeTask("Another task!\nUnknown.\n\nSpecial information\nhere.");
 						}
-					}
+					//}
 					if(chatInput.startsWith("::")) {
 						outBuffer.putOpcode(103);
 						outBuffer.putByte(chatInput.length() - 1);

@@ -46,6 +46,8 @@ public final class SpritesCache implements Closeable {
 
     public BitmapImage get(int id) {
         try {
+            if(id == 65)
+                Thread.dumpStack();
             if (contains(id)) {
                 return cache[id];
             }

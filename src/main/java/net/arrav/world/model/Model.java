@@ -15,6 +15,8 @@ import net.arrav.graphic.Rasterizer2D;
 import net.arrav.graphic.Rasterizer3D;
 import net.arrav.util.io.Buffer;
 
+import java.util.ArrayList;
+
 public final class Model extends Entity {
 	
 	private boolean force_texture;
@@ -533,11 +535,12 @@ public final class Model extends Entity {
 			}
 		}
 	}
-	
+
+	ArrayList<Integer> weights = new ArrayList<>();
+
 	private void decodeOld(byte[] is) {
 		boolean has_face_type = false;
 		boolean has_texture_type = false;
-		
 		Buffer[] buffers = new Buffer[5];
 		for(int i = 0; i < buffers.length; i++)
 			buffers[i] = new Buffer(is);
@@ -649,8 +652,31 @@ public final class Model extends Entity {
 			i_180_ = vertexX[i_183_];
 			i_181_ = vertexY[i_183_];
 			i_182_ = vertexZ[i_183_];
-			if(modelVertexSkins == 1)
-				vertexSkin[i_183_] = buffers[4].getUByte();
+			if(modelVertexSkins == 1) {
+				int weight = buffers[4].getUByte();
+				if(weight == 100)
+					weight = 8;
+				if(weight == 58)
+					weight = 25;
+				if(weight == 93)
+					weight = 21;
+
+				if(weight == 205)
+					weight = 41;
+				if(weight == 7)
+					weight = 40;
+				if(weight == 41)
+					weight = 29;
+
+				if(weight == 160 || weight == 191 || weight == 179 || weight == 186 || weight == 252 || weight == 199 || weight == 231 || weight == 154 || weight == 144 || weight == 177 || weight == 176 || weight == 152 || weight == 201 || weight == 170 || weight == 250 || weight == 174 || weight == 189 || weight == 181 || weight == 171)
+					weight = 1;
+
+				if(weight > 100) {
+					if(!weights.contains(weight))
+						weights.add(weight);
+				}
+				vertexSkin[i_183_] = weight;
+			}
 		}
 		buffers[0].pos = i_175_;
 		buffers[1].pos = i_171_;

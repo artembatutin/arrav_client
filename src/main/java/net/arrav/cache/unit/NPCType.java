@@ -101,7 +101,7 @@ public final class NPCType {
 		if(id == 3167) {
 			npc.pet(1615, "Abyssal orphan", 48);
 			npc.dataType = DataType.CUSTOM;
-			npc.modelId = new int[]{1};
+			npc.modelId = new int[]{4};
 
 		}
 		if(id == 3168)

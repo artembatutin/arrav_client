@@ -3,6 +3,7 @@ package net.arrav.cache.unit.interfaces.custom;
 import net.arrav.cache.unit.interfaces.Interface;
 import net.arrav.cache.unit.interfaces.component.dropdown.Dropdown;
 import net.arrav.graphic.font.BitmapFont;
+import net.arrav.util.string.ColorConstants;
 
 public class ClanInterface  extends Interface {
 
@@ -20,8 +21,8 @@ public class ClanInterface  extends Interface {
         Interface tab = addInterface(57700);
         addSprite(57701, 702);
         addText(57702, "Clan Showcase", TDA, 2, 0xff981f, true, true);
-        addHoverButton(57703, 24, 21, 21, "Close", 250, 57704, 3);
-        addHoveredButton(57704, 25, 21, 21, 57705);
+        addHoverButton(57703, 478, 21, 21, "Close", 250, 57704, 3);
+        addHoveredButton(57704, 461, 21, 21, 57705);
         addHoverButton(57706, 298, 63, 25, "Confirm", -1, 57707, 1);
         addHoveredButton(57707, 700, 63, 25, 57708);
         addHoverButton(57709, 298, 63, 25, "Delete", -1, 57710, 1);
@@ -145,42 +146,33 @@ public class ClanInterface  extends Interface {
     private static void clanManage(BitmapFont[] tda) {
         Interface Interface = addTabInterface(42000);
         addText(42001, "Clan Management", tda, 2, 0xDE8B0D, true, true);
-        addSprite(42004, 265);
-        addSprite(42005, 64);
-
-        addHoverButton(42006, 391, 118, 32, "Return to main tab", 0, 42007, 1);
-        addHoveredButton(42007, 392, 118, 32, 42008);
+        addHoverButton(42006, 1617, 118, 32, "Return to main tab", 0, 42007, 1);
+        addHoveredButton(42007, 1618, 118, 32, 42008);
         addText(42009, "Close Tab", tda, 3, 0xF7DC6F, true, true);
-        Interface.totalChildren(9);
+        Interface.totalChildren(5);
         Interface.child(0, 42001, 97, 5);
-        Interface.child(1, 42004, -5, 25);
-        Interface.child(2, 42004, -5, 75);
-        Interface.child(3, 42005, 0, 25);
-        Interface.child(4, 42005, 0, 217);
-        Interface.child(5, 42100, -3, 27);
-        Interface.child(6, 42006, 40, 224);
-        Interface.child(7, 42007, 40, 224);
-        Interface.child(8, 42009, 98, 230);
+        Interface.child(1, 42100, -3, 27);
+        Interface.child(2, 42006, 40, 224);
+        Interface.child(3, 42007, 40, 224);
+        Interface.child(4, 42009, 98, 230);
     }
 
     private static void clanChat(BitmapFont[] tda) {
         Interface Interface = addInterface(33500);
-        addSprite(33501, 67);
-        addText(33502, "Overload", tda, 3, 0xDE8B0D, true, true);
-        addSprite(33503, 68);
-        addHoverButton(33507, 834, 20, 20, "Join clan", -1, 33508, 1);
-        addHoveredButton(33508, 835, 20, 20, 33509);
-        addHoverButton(33510, 836, 20, 20, "Leave clan", -1, 33511, 1);
-        addHoveredButton(33511, 837, 20, 20, 33512);
-        addHoverButton(33513, 838, 20, 20, "View clan information", -1, 33514, 1);
-        addHoveredButton(33514, 839, 20, 20, 33515);
-        addHoverButton(33520, 840, 20, 20, "Manage clan", -1, 33521, 1);
-        addHoveredButton(33521, 841, 20, 20, 33522);
-        addConfigButton(33518, 33500, 706, 705, 24, 22, "Manage Lootshare", 0, 5, 393, false);
-        addConfigButton(33525, 33500, 444, 443, 24, 12, "Sort by privilege", 0, 5, 394, false);
-        addConfigButton(33526, 33500, 446, 445, 117, 12, "Sort by name", 1, 5, 394, false);
-        addConfigButton(33527, 33500, 448, 447, 56, 12, "Sort by rank", 2, 5, 394, false);
-        Interface.totalChildren(16);
+        addText(33502, "RagePS", tda, 1, 0xDE8B0D, true, true);
+        addHoverButton(33507, 1380, 20, 20, "Join clan", -1, 33508, 1);
+        addHoveredButton(33508, 1381, 20, 20, 33509);
+        addHoverButton(33510, 1382, 20, 20, "Leave clan", -1, 33511, 1);
+        addHoveredButton(33511, 1383, 20, 20, 33512);
+        addHoverButton(33513, 1389, 20, 20, "View clan information", -1, 33514, 1);
+        addHoveredButton(33514, 1390, 20, 20, 33515);
+        addHoverButton(33520, 1391, 20, 20, "Manage clan", -1, 33521, 1);
+        addHoveredButton(33521, 1392, 20, 20, 33522);
+        addConfigButton(33518, 33500, 1394, 1393, 24, 22, "Manage Lootshare", 0, 5, 393, false);
+        addConfigButton(33525, 33500, 1396, 1395, 24, 12, "Sort by privilege", 0, 5, 394, false);
+        addConfigButton(33526, 33500, 1398, 1397, 117, 12, "Sort by name", 1, 5, 394, false);
+        addConfigButton(33527, 33500, 1400, 1399, 56, 12, "Sort by rank", 2, 5, 394, false);
+        Interface.totalChildren(14);
         Interface.child(0, 33502, 97, 2);
         Interface.child(1, 33507, 5, 237);
         Interface.child(2, 33508, 5, 237);
@@ -192,26 +184,23 @@ public class ClanInterface  extends Interface {
         Interface.child(8, 33521, 65, 235);
         Interface.child(9, 33518, 155, 235);
         Interface.child(10, 33530, -3, 38);
-        Interface.child(11, 33503, 0, 25);
-        Interface.child(12, 33503, 0, 223);
-        Interface.child(13, 33525, 0, 26);
-        Interface.child(14, 33526, 20, 26);
-        Interface.child(15, 33527, 135, 26);
+        Interface.child(11, 33525, 0, 26);
+        Interface.child(12, 33526, 20, 26);
+        Interface.child(13, 33527, 135, 26);
         Interface scrollInterface = addTabInterface(33530);
         scrollInterface.scrollPos = 0;
         scrollInterface.contentType = 0;
         scrollInterface.width = 178;
         scrollInterface.height = 188;
-        scrollInterface.scrollMax = 189;
-        int x = 3, y = 0, child = 0, sprite = 0, size = 600;
+        scrollInterface.scrollMax = 190;
+        int x = 3, y = 0, child = 0, sprite = 0, size = 500;
         scrollInterface.totalChildren(size);
         for (int i = 0; i < size; i += 4) {
             sprite++;
-            int id = sprite % 2 == 0 ? 65 : 66;
-            addSprite(33531 + i, id);
-            addText((33531 + (i + 1)), "", tda, 3, 0xA4997D, false, true);
-            addHoverText((33531 + (i + 2)), "", "", 3, 0xA4997D, false, true, 60);
-            addText((33531 + (i + 3)), "", tda, 3, 0xF7DC6F, false, true);
+            addPixels(33531 + i, sprite % 2 == 0 ? 0x211c16 : 0x302821, 0, 175, 25, 0, true);
+            addText((33531 + (i + 1)), i+"", tda, 1, 0xA4997D, false, true);
+            addHoverText((33531 + (i + 2)), "Tamatea", "", 1, 0xA4997D, true, true, 60);
+            addText((33531 + (i + 3)), "", tda, 1, 0xF7DC6F, false, true);
             scrollInterface.child(child++, 33531 + i, x, y);
             scrollInterface.child(child++, (33531 + (i + 1)), x + 5, y + 4);
             scrollInterface.child(child++, (33531 + (i + 2)), x + 20, y + 1);
@@ -222,19 +211,19 @@ public class ClanInterface  extends Interface {
 
     private static void clanMemberManage(BitmapFont[] tda) {
         Interface menu = addTabInterface(43600);
-        addSprite(43601, 709);
+        addSprite(43601, 1401);
         addText(43602, "Member Management", tda, 2, 0xDE8B0D, true, true);
-        addHoverButton(43603, 24, 16, 16, "Close", 250, 43604, 3);
-        addHoveredButton(43604, 25, 16, 16, 43605);
+        addHoverButton(43603, 478, 16, 16, "Close", 250, 43604, 3);
+        addHoveredButton(43604, 461, 16, 16, 43605);
         addText(43606, "Daniel", tda, 0, 0xDE8B0D, true, true);
-        addHoverButton(43607, 288, 150, 35, "Promote member", -1, 43608, 1);
-        addHoveredButton(43608, 289, 150, 35, 43609);
-        addHoverButton(43610, 288, 150, 35, "Demote member", -1, 43611, 1);
-        addHoveredButton(43611, 289, 150, 35, 43612);
-        addHoverButton(43613, 288, 150, 35, "Kick member", -1, 43614, 1);
-        addHoveredButton(43614, 289, 150, 35, 43615);
-        addHoverButton(43616, 288, 150, 35, "Ban member", -1, 43617, 1);
-        addHoveredButton(43617, 289, 150, 35, 43618);
+        addHoverButton(43607, 1618, 150, 35, "Promote member", -1, 43608, 1);
+        addHoveredButton(43608, 1617, 150, 35, 43609);
+        addHoverButton(43610, 1618, 150, 35, "Demote member", -1, 43611, 1);
+        addHoveredButton(43611, 1617, 150, 35, 43612);
+        addHoverButton(43613, 1618, 150, 35, "Kick member", -1, 43614, 1);
+        addHoveredButton(43614, 1617, 150, 35, 43615);
+        addHoverButton(43616, 1618, 150, 35, "Ban member", -1, 43617, 1);
+        addHoveredButton(43617, 1617, 150, 35, 43618);
         addText(43619, "Promote Member", tda, 3, 0xDE8B0D, true, true);
         addText(43620, "Demote Member", tda, 3, 0xDE8B0D, true, true);
         addText(43621, "Kick Member", tda, 3, 0xDE8B0D, true, true);
@@ -261,7 +250,7 @@ public class ClanInterface  extends Interface {
 
     private static void clanInformation2(BitmapFont[] tda) {
         Interface Interface = addTabInterface(43500);
-        addSprite(45001, 435);
+        addSprite(45001, 1402);
         Interface.totalChildren(14);
 
         Interface.child(0, 45001, 13, 13);
@@ -288,7 +277,7 @@ public class ClanInterface  extends Interface {
         clanMembersList.totalChildren(200);
         int y = 1, count = 0;
         for (int i = 0, child = 0; i < 200; i += 2) {
-            addSprite(45051 + i, count % 2 == 0 ? 453 : 454);
+            addPixels(45051 + i, count % 2 == 0  ? 0x211c16 : 0x302821, 0, 301, 40, 0, true);
             addHoverText((45051 + (i + 1)), "", "", 0, 0xFF9900, 0xFFFFFF, false, true, 168);
             clanMembersList.child(child++, 45051 + i, 2, y + 1);
             clanMembersList.child(child++, 45051 + (1 + i), 7, y + 4);
@@ -306,7 +295,7 @@ public class ClanInterface  extends Interface {
         y = 1;
         count = 0;
         for (int i = 0, child = 0; i < 20; i += 2) {
-            addSprite(45011 + i, count % 2 == 0 ? 453 : 454);
+            addPixels(45011 + i, count % 2 == 0  ? 0x211c16 : 0x302821, 0, 301, 40, 0, true);
             addText(45011 + (1 + i), "2", tda, 0, 0xDE8B0D, false, true);
             clanMemberInfo.child(child++, 45011 + i, 2, y + 1);
             clanMemberInfo.child(child++, 45011 + (1 + i), 7, y + 4);
@@ -319,8 +308,8 @@ public class ClanInterface  extends Interface {
     private static void clanInformation(BitmapFont[] tda) {
         Interface Interface = addTabInterface(43000);
         addSprite(43001, 833);
-        addHoverButton(43002, 24, 16, 16, "Close", -1, 43003, 1);
-        addHoveredButton(43003, 25, 16, 16, 43004);
+        addHoverButton(43002, 478, 16, 16, "Close", -1, 43003, 1);
+        addHoveredButton(43003, 461, 16, 16, 43004);
         addText(43005, "Clan Viewer", tda, 2, 0xFF981F, true, true);
         addText(43006, "Top Clans:", tda, 3, 0xEB981F, true, true);
         addText(43007, "Clan Overview", tda, 3, 0xEB981F, true, true);
@@ -330,10 +319,10 @@ public class ClanInterface  extends Interface {
         addText(43011, "Unleash your inner beast", tda, 0, 0xC47423, true, true);
        // addContainer(43011, 3, 7, 9, 8, false, false, false, null, null, null, null, null);
         addInputField(43012, 15, 0xFF981F, "Search for clan...", 156, 24, false, false, "[A-Za-z0-9 ]");
-        addConfigButton(43013, 43000, 433, 434, 159, 19, "View clan overview", 0, 5, 531, false);
-        addConfigButton(43014, 43000, 433, 434, 159, 19, "View clan members", 1, 5, 531, false);
-        addHoverButton(43015, 391, 118, 32, "Join clan channel", -1, 43016, 1);
-        addHoveredButton(43016, 392, 118, 32, 43017);
+        addConfigButton(43013, 43000, 1403, 1404, 159, 19, "View clan overview", 0, 5, 531, false);
+        addConfigButton(43014, 43000, 1403, 1404, 159, 19, "View clan members", 1, 5, 531, false);
+        addHoverButton(43015, 1617, 118, 32, "Join clan channel", -1, 43016, 1);
+        addHoveredButton(43016, 1618, 118, 32, 43017);
         addText(43018, "Join a Clan", tda, 3, 0xFF981F, true, true);
         addDropdownMenu(43019, 159, 0, false, true, Dropdown.DEFAULT, "All Time", "Top PvP", "Top PvM", "Top Skilling",
                 "Top Ironman");
@@ -371,7 +360,7 @@ public class ClanInterface  extends Interface {
         clanDetailScroll.totalChildren(40);
         int y = 1, count = 0;
         for (int i = 0, child = 0; i < 40; i += 2) {
-            addSprite(43101 + i, count % 2 == 0 ? 453 : 454);
+            addPixels(43101 + i, count % 2 == 0  ? 0x211c16 : 0x302821, 0, 301, 40, 0, true);
             addText(43101 + (1 + i), "", tda, 0, 0xDE8B0D, false, true);
             clanDetailScroll.child(child++, 43101 + i, 2, y + 1);
             clanDetailScroll.child(child++, 43101 + (1 + i), 7, y + 4);

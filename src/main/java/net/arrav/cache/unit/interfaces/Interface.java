@@ -1851,6 +1851,35 @@ public class Interface {
 		Interface.tooltip = S;
 	}
 
+	public static void addPixels(int id, int color, int width, int height, int alpha, boolean filled) {
+		Interface rsi = addInterface(id);
+		rsi.type = Constants.WIDGET_RECTANGLE;
+		rsi.alpha = (byte) alpha;
+		rsi.color = color;
+		rsi.hoverColor = color;
+		rsi.hoverColorAlt = color;
+		rsi.colorAlt = color;
+		rsi.rectFilled = filled;
+		rsi.width = width;
+		rsi.height = height;
+	}
+
+	public static void addPixels(int id, int color, int hoverColor, int width, int height, int alpha, boolean filled) {
+		Interface rsi = addInterface(id);
+		rsi.type = Constants.WIDGET_RECTANGLE;
+		rsi.alpha = (byte) alpha;
+		rsi.color = color;
+		rsi.colorAlt = color;
+		rsi.hoverColor = hoverColor;
+		rsi.hoverColorAlt = hoverColor;
+		rsi.rectFilled = filled;
+		rsi.width = width;
+		rsi.height = height;
+		rsi.contentType = 0;
+		rsi.actionType = 1;
+		rsi.hoverInterToTrigger = id;
+	}
+
 	public static void addConfigButton(int ID, int pID, int bID, int bID2, int width, int height, String tT, int configID, int aT, int configFrame) {
 		Interface Tab = addInterface(ID);
 		Tab.parent = pID;
