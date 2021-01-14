@@ -2746,10 +2746,15 @@ public class Client extends ClientEngine {
 			}
 			socketStream = new Session(this, openSocket(TitleActivity.CONNECTIONS[TitleActivity.connection].getPort()));
 			outBuffer.pos = 0;
+			outBuffer.putByte(14);//login request
 			outBuffer.putByte(Constants.BUILD);
-			socketStream.write(outBuffer.data, 1);
+			socketStream.write(outBuffer.data, 2);
+			for (int i = 0; i < 8; i++) {
+				//socketStream.read();
+			}
 			int returnCode = socketStream.read();
 			final int i1 = returnCode;
+			System.out.println("return code:"+returnCode);
 			if(returnCode == 0) {
 				socketStream.read(inBuffer.data, 8);
 				inBuffer.pos = 0;
@@ -2769,6 +2774,9 @@ public class Client extends ClientEngine {
 				outBuffer.putLine(password);
 				outBuffer.doKeys();
 				outStream.pos = 0;
+				outBuffer.putByte(16);//standard connection
+
+
 				outStream.putByte(outBuffer.pos);
 				outStream.putBytes(outBuffer.data, 0, outBuffer.pos);
 				outBuffer.cipher = new ISAACCipher(ai);
