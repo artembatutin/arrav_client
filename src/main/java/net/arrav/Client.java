@@ -2759,7 +2759,6 @@ public class Client extends ClientEngine {
 			}
 			int response = socketStream.read();
 			int copy = response;
-			System.out.println("return code:"+response);
 			if(response == 0) {
 				socketStream.read(inBuffer.data, 8);
 				inBuffer.pos = 0;
@@ -2778,7 +2777,6 @@ public class Client extends ClientEngine {
 				outBuffer.putInt(mac);//uid
 				outBuffer.putLine(username);
 				outBuffer.putLine(password);
-				System.out.println("login block length:"+outBuffer.pos);
 				outBuffer.encodeRSA(RSA_EXPONENT, RSA_MODULUS);
 
 
@@ -2810,7 +2808,7 @@ public class Client extends ClientEngine {
 			}
 			if(response == 2) {
 				localPrivilege = socketStream.read();
-				//flagged = socketStream.read() == 1;
+				flagged = socketStream.read() == 1;
 				titleMessage = "";
 				taskHandler = new TaskHandler(this);
 				exporbHandler = new ExpOrbHandler();
@@ -4559,7 +4557,7 @@ public class Client extends ClientEngine {
 			anInt843 = anInt842;
 			anInt842 = anInt841;
 			anInt841 = pktType;
-			//System.out.println("reading packet " + pktType);
+			System.out.println("reading packet " + pktType);
 			switch(pktType) {
 
 				case 82:
