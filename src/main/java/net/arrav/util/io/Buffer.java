@@ -538,4 +538,18 @@ public final class Buffer extends DoublyLinkableEntry {
 		putByte(bytes.length);
 		putBytes(bytes, 0, bytes.length);
 	}
+
+	public void encodeRSA(BigInteger exponent, BigInteger modulus) {
+		int length = pos;
+		pos = 0;
+		byte[] buffer = new byte[length];
+		getBytes(buffer, 0, length);
+		byte[] rsa;
+
+		rsa = new BigInteger(buffer).modPow(exponent, modulus).toByteArray();
+
+		pos = 0;
+		putByte(rsa.length);
+		putBytes(rsa, 0, rsa.length);
+	}
 }

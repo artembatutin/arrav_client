@@ -1,6 +1,5 @@
 package net.arrav;
 
-import com.sun.scenario.Settings;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import javafx.application.Application;
@@ -56,6 +55,7 @@ import img.ImagePacker;
 import java.applet.AppletContext;
 import java.awt.*;
 import java.io.*;
+import java.math.BigInteger;
 import java.net.InetAddress;
 import java.net.Socket;
 import java.net.URL;
@@ -74,7 +74,7 @@ public class Client extends ClientEngine {
 	public static SpritesCache spriteCache = new SpritesCache();
 
 	public static ModelVault modelVault = new ModelVault();
-	
+
 	/*
 	 * Particles
 	 */
@@ -87,7 +87,7 @@ public class Client extends ClientEngine {
 	public final void addParticle(Particle particle) {
 		displayedParticles.add(particle);
 	}
-	
+
 	/*
 	 * Npc information values.
 	 */
@@ -99,14 +99,14 @@ public class Client extends ClientEngine {
 	public boolean npcSug;
 	public int npcSugMin;
 	public int npcSugMax;
-	
+
 	/*
 	 * Panel
 	 */
 	public boolean marketSearch;
 	public boolean panelSearch;
 	public String panelSearchInput;
-	
+
 	public String[] scoreNames = new String[20];
 	public int[] scoreKills = new int[20];
 	public int[] scoreDeaths = new int[20];
@@ -399,7 +399,7 @@ public class Client extends ClientEngine {
 	public long[] friendsListAsLongs;
 	private Buffer aStream_834;
 	private Buffer inBuffer;
-	private Buffer outStream;
+	private Buffer login;
 	private Buffer[] playerBuffer;
 	private CacheUnpacker cacheHandler;
 	private ISAACCipher encryption;
@@ -501,7 +501,7 @@ public class Client extends ClientEngine {
 	private int[][] anIntArrayArray929;
 	private long aLong824;
 	private long aLong953;
-	private long aLong1215;
+	private long serverSeed;
 	private int fadeInStartCycle;
 	private int fadeInEndCycle;
 	private int hiddenEndCycle;
@@ -533,7 +533,7 @@ public class Client extends ClientEngine {
 		npcList = new NPC[16384];
 		npcEntryList = new int[16384];
 		anIntArray840 = new int[1000];
-		outStream = Buffer.newPooledBuffer();
+		login = Buffer.newPooledBuffer();
 		openInterfaceID = -1;
 		currentExp = new int[Constants.SKILL_AMOUNT];
 		currentStatGoals = new int[Constants.SKILL_AMOUNT];
@@ -684,7 +684,7 @@ public class Client extends ClientEngine {
 			System.out.println("Failed to launch the applet.");
 		}
 	}
-	
+
 	public static Client instance;
 
 	/**
@@ -776,7 +776,7 @@ public class Client extends ClientEngine {
 			mouseDetection = null;
 			aStream_834 = null;
 			outBuffer = null;
-			outStream = null;
+			login = null;
 			inBuffer = null;
 			mapCoordinates = null;
 			terrainData = null;
@@ -1078,7 +1078,7 @@ public class Client extends ClientEngine {
 		//for(int k = s.length() - 3; k > 0; k -= 3) {
 		//	s = s.substring(0, k) + "," + s.substring(k);
 		//}
-		
+
 		if(i > 1000000) {
 			return "million @whi@(" + (i/1000000) + ")";
 		} else if(i > 1000) {
@@ -1783,7 +1783,7 @@ public class Client extends ClientEngine {
 			final Interface childWidget = Interface.cache[widget.children[child]];
 			xPos += childWidget.offsetX;
 			yPos += childWidget.offsetY;
-			
+
 			if((widget.id == 3917 || childWidget.hoverInterToTrigger >= 0 || childWidget.hoverColor != 0) &&
 					k >= xPos && i1 >= yPos && k < xPos + childWidget.width && i1 < yPos + childWidget.height) {
 				if(childWidget.hoverInterToTrigger >= 0) {
@@ -2716,7 +2716,7 @@ public class Client extends ClientEngine {
 		if(loadingStage == 1) {
 			final int j = initialiseRegionLoading();
 			if(j != 0 && System.currentTimeMillis() - aLong824 > 0x57e40L) {
-				SignLink.reportError(localUsername + " glcfb " + aLong1215 + "," + j + "," + Config.def.lowMem() + "," + cacheIdx[0] + "," + onDemandRequester.getRequestCount() + "," + cameraPlane + "," + regionX + "," + regionY);
+				SignLink.reportError(localUsername + " glcfb " + serverSeed + "," + j + "," + Config.def.lowMem() + "," + cacheIdx[0] + "," + onDemandRequester.getRequestCount() + "," + cameraPlane + "," + regionX + "," + regionY);
 				aLong824 = System.currentTimeMillis();
 			}
 		}
@@ -2725,6 +2725,9 @@ public class Client extends ClientEngine {
 			renderMinimap(cameraPlane);
 		}
 	}
+	private static final BigInteger RSA_MODULUS = new BigInteger("116594337766357727767531649630523053499900404611184165273631199626521717296430080122311817245989116683706635837790426872327658286160904966101726944165040914108060391743201907910055865970560142406108033643270714107271152004612451768206307171314997817695901718733338762518764633839451201192092904527075512820107");
+
+	private static final BigInteger RSA_EXPONENT = new BigInteger("65537");
 
 	public void connect(String username, String password) {
 		if(username.length() == 0 || password.length() == 0) {
@@ -2745,52 +2748,59 @@ public class Client extends ClientEngine {
 				titleActivity.update();
 			}
 			socketStream = new Session(this, openSocket(TitleActivity.CONNECTIONS[TitleActivity.connection].getPort()));
+			long encoded = StringUtils.encryptName(username);
+			int nameHash = (int) (encoded >> 16 & 31L);
 			outBuffer.pos = 0;
 			outBuffer.putByte(14);//login request
-			outBuffer.putByte(Constants.BUILD);
+			outBuffer.putByte(nameHash);//login request
 			socketStream.write(outBuffer.data, 2);
 			for (int i = 0; i < 8; i++) {
-				//socketStream.read();
+				socketStream.read();
 			}
-			int returnCode = socketStream.read();
-			final int i1 = returnCode;
-			System.out.println("return code:"+returnCode);
-			if(returnCode == 0) {
+			int response = socketStream.read();
+			int copy = response;
+			System.out.println("return code:"+response);
+			if(response == 0) {
 				socketStream.read(inBuffer.data, 8);
 				inBuffer.pos = 0;
-				aLong1215 = inBuffer.getLong();
-				final int ai[] = new int[4];
-				ai[0] = (int) (Math.random() * 99999999D);
-				ai[1] = (int) (Math.random() * 99999999D);
-				ai[2] = (int) (aLong1215 >> 32);
-				ai[3] = (int) aLong1215;
+				serverSeed = inBuffer.getLong();
+				final int[] seed = new int[4];
+				seed[0] = (int) (Math.random() * 99999999D);
+				seed[1] = (int) (Math.random() * 99999999D);
+				seed[2] = (int) (serverSeed >> 32);
+				seed[3] = (int) serverSeed;
 				outBuffer.pos = 0;
-				outBuffer.putInt(ai[0]);
-				outBuffer.putInt(ai[1]);
-				outBuffer.putInt(ai[2]);
-				outBuffer.putInt(ai[3]);
-				outBuffer.putInt(mac);
+				outBuffer.putByte(10);//secure id
+				outBuffer.putInt(seed[0]);
+				outBuffer.putInt(seed[1]);
+				outBuffer.putInt(seed[2]);
+				outBuffer.putInt(seed[3]);
+				outBuffer.putInt(mac);//uid
 				outBuffer.putLine(username);
 				outBuffer.putLine(password);
-				outBuffer.doKeys();
-				outStream.pos = 0;
-				outBuffer.putByte(16);//standard connection
+				System.out.println("login block length:"+outBuffer.pos);
+				outBuffer.encodeRSA(RSA_EXPONENT, RSA_MODULUS);
 
 
-				outStream.putByte(outBuffer.pos);
-				outStream.putBytes(outBuffer.data, 0, outBuffer.pos);
-				outBuffer.cipher = new ISAACCipher(ai);
+
+				login.pos = 0;
+				login.putByte(16);//standard connection
+				int loginBlockSize = outBuffer.pos;
+				login.putByte(loginBlockSize);//login size
+				login.putBytes(outBuffer.data, 0,loginBlockSize);
+
+				outBuffer.cipher = new ISAACCipher(seed);
 				for(int j2 = 0; j2 < 4; j2++) {
-					ai[j2] += 50;
+					seed[j2] += 50;
 				}
-				encryption = new ISAACCipher(ai);
-				socketStream.write(outStream.data, outStream.pos);
-				returnCode = socketStream.read();
+				encryption = new ISAACCipher(seed);
+				socketStream.write(login.data, login.pos);
+				response = socketStream.read();
 				titleMessage = "";
 			} else {
 				TitleActivity.scrollOpened = true;
 			}
-			if(returnCode == 1) {
+			if(response == 1) {
 				try {
 					Thread.sleep(2000L);
 				} catch(final Exception _ex) {
@@ -2798,7 +2808,7 @@ public class Client extends ClientEngine {
 				connect(username, password);
 				return;
 			}
-			if(returnCode == 2) {
+			if(response == 2) {
 				localPrivilege = socketStream.read();
 				//flagged = socketStream.read() == 1;
 				titleMessage = "";
@@ -2937,63 +2947,63 @@ public class Client extends ClientEngine {
 				return;
 			}*/
 			TitleActivity.scrollOpened = true;
-			if(returnCode == 3) {
+			if(response == 3) {
 				titleMessage = "Invalid username or password.";
 				return;
 			}
-			if(returnCode == 4) {
+			if(response == 4) {
 				titleMessage = "Your account has been disabled.\nPlease appeal on the forums.";
 				return;
 			}
-			if(returnCode == 5) {
+			if(response == 5) {
 				titleMessage = "Your account is already logged in.\nTry again in 60 secs...";
 				return;
 			}
-			if(returnCode == 6) {
+			if(response == 6) {
 				titleMessage = "Arrav has been updated!\nRestart this client.";
 				return;
 			}
-			if(returnCode == 7) {
+			if(response == 7) {
 				titleMessage = "This world is full.\nPlease use a different world.";
 				return;
 			}
-			if(returnCode == 8) {
+			if(response == 8) {
 				titleMessage = "Unable to connect.\nLogin server offline.";
 				return;
 			}
-			if(returnCode == 9) {
+			if(response == 9) {
 				titleMessage = "Login limit exceeded.\nToo many connections from your address.";
 				return;
 			}
-			if(returnCode == 10) {
+			if(response == 10) {
 				titleMessage = "Unable to connect.\nBad session nodeId.";
 				return;
 			}
-			if(returnCode == 11) {
+			if(response == 11) {
 				titleMessage = "Login server rejected session.\nPlease try again.";
 				return;
 			}
-			if(returnCode == 12) {
+			if(response == 12) {
 				titleMessage = "You need a members account to login to this world.\nPlease subscribe, or use a different world.";
 				return;
 			}
-			if(returnCode == 13) {
+			if(response == 13) {
 				titleMessage = "Could not complete login.\nPlease try using a different world.";
 				return;
 			}
-			if(returnCode == 14) {
+			if(response == 14) {
 				titleMessage = "The server is currently updating.\nPlease wait a moment.";
 				return;
 			}
-			if(returnCode == 16) {
+			if(response == 16) {
 				titleMessage = "Login attempts exceeded.\nPlease wait 1 minute and try again.";
 				return;
 			}
-			if(returnCode == 17) {
+			if(response == 17) {
 				titleMessage = "You are standing in a members-only area.\nTo play on this world move to a free area first.";
 				return;
 			}
-			if(returnCode == 18) {
+			if(response == 18) {
 				titleMessage = "You are currently running an outdated client version.\nPlease visit www.edgeville.net to get the newest version.";
 				try {
 					new Updater(this).run();
@@ -3002,15 +3012,15 @@ public class Client extends ClientEngine {
 				}
 				return;
 			}
-			if(returnCode == 19) {
+			if(response == 19) {
 				titleMessage = "The server is currently starting up.\nPlease allow it a moment.";
 				return;
 			}
-			if(returnCode == 20) {
+			if(response == 20) {
 				titleMessage = "Invalid loginserver requested.\nPlease try using a different world.";
 				return;
 			}
-			if(returnCode == 21) {
+			if(response == 21) {
 				for(int k1 = socketStream.read(); k1 >= 0; k1--) {
 					titleMessage = "You have only just left another world.\nYour profile will be transferred in: " + k1 + " seconds.";
 					titleActivity.update();
@@ -3022,8 +3032,8 @@ public class Client extends ClientEngine {
 				connect(username, password);
 				return;
 			}
-			if(returnCode == -1) {
-				if(i1 == 0) {
+			if(response == -1) {
+				if(copy == 0) {
 					if(loginFailures < 2) {
 						try {
 							Thread.sleep(2000L);
