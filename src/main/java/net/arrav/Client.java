@@ -472,7 +472,7 @@ public class Client extends ClientEngine {
 	private int forcedCameraPixelZ;
 	private int anInt1101;
 	private int anInt1102;
-	private int anInt1137;
+	private int selectedSpell;
 	public int anInt1186;
 	public int anInt1187;
 	private int anInt1193;
@@ -3442,7 +3442,7 @@ public class Client extends ClientEngine {
 			if(l1 != -1) {
 				s1 = s1.substring(l1 + 5).trim();
 				final String s7 = StringUtils.formatName(StringUtils.decryptName(StringUtils.encryptName(s1)));
-				boolean flag9 = false;
+				boolean reachable = false;
 				for(int j3 = 0; j3 < playerCount; j3++) {
 					final Player class30_sub2_sub4_sub1_sub2_7 = playerList[playerEntryList[j3]];
 					if(class30_sub2_sub4_sub1_sub2_7 == null || class30_sub2_sub4_sub1_sub2_7.name == null || !class30_sub2_sub4_sub1_sub2_7.name.equalsIgnoreCase(s7)) {
@@ -3461,11 +3461,11 @@ public class Client extends ClientEngine {
 						outBuffer.putOpcode(128);
 						outBuffer.putShort(playerEntryList[j3]);
 					}
-					flag9 = true;
+					reachable = true;
 					break;
 				}
 
-				if(!flag9) {
+				if(!reachable) {
 					pushMessage("Unable to find " + s7, 0, "");
 				}
 			}
@@ -3509,7 +3509,7 @@ public class Client extends ClientEngine {
 			final Interface class9_1 = Interface.cache[arg3];
 			spellSelected = 1;
 			spellId = class9_1.id;
-			anInt1137 = arg3;
+			selectedSpell = arg3;
 			spellUsableOn = class9_1.spellUsableOn;
 			itemSelected = 0;
 			String s4 = class9_1.selectedActionName;
@@ -3830,7 +3830,7 @@ public class Client extends ClientEngine {
 			outBuffer.putLitEndShort(arg3 + baseY);
 			outBuffer.putShort(arg1);
 			outBuffer.putLitEndShort(arg2 + baseX);
-			outBuffer.putShortPlus128(anInt1137);
+			outBuffer.putShortPlus128(selectedSpell);
 		}
 		if(code == 647) {
 			outBuffer.putOpcode(213);
@@ -3899,7 +3899,7 @@ public class Client extends ClientEngine {
 				crossIndex = 0;
 				outBuffer.putOpcode(131);
 				outBuffer.putLitEndShortPlus128(arg1);
-				outBuffer.putShortPlus128(anInt1137);
+				outBuffer.putShortPlus128(selectedSpell);
 			}
 		}
 		if(code == 200) {
@@ -3956,7 +3956,7 @@ public class Client extends ClientEngine {
 				crossIndex = 0;
 				outBuffer.putOpcode(249);
 				outBuffer.putShortPlus128(arg1);
-				outBuffer.putLitEndShort(anInt1137);
+				outBuffer.putLitEndShort(selectedSpell);
 			}
 		}
 		if(code == 729 && panelHandler.action()) {
@@ -3989,7 +3989,7 @@ public class Client extends ClientEngine {
 				outBuffer.putMedium((int) (arg4 >> 14 & 0xFFFFFF));
 				outBuffer.putShort(arg2 + baseX);
 				outBuffer.putShort(arg3 + baseY);
-				outBuffer.putShort(anInt1137);
+				outBuffer.putShort(selectedSpell);
 			}
 		}
 		if(code == 567 && panelHandler.action()) {
@@ -4039,7 +4039,7 @@ public class Client extends ClientEngine {
 			outBuffer.putShort(arg2);
 			outBuffer.putShortPlus128(arg1);
 			outBuffer.putShort(arg3);
-			outBuffer.putShortPlus128(anInt1137);
+			outBuffer.putShortPlus128(selectedSpell);
 			atInventoryLoopCycle = 0;
 			atInventoryInterface = arg3;
 			atInventoryIndex = arg2;
@@ -5066,8 +5066,8 @@ public class Client extends ClientEngine {
 				case 253:
 					final String s = inBuffer.getLine();
 					if(s.endsWith(":tradereq:")) {
-						final String s3 = s.substring(0, s.indexOf(":"));
-						final long l17 = StringUtils.encryptName(s3);
+						final String name = s.substring(0, s.indexOf(":"));
+						final long l17 = StringUtils.encryptName(name);
 						boolean flag2 = false;
 						for(int j27 = 0; j27 < ignoreCount; j27++) {
 							if(ignoreListAsLongs[j27] != l17) {
@@ -5077,7 +5077,7 @@ public class Client extends ClientEngine {
 
 						}
 						if(!flag2 && anInt1251 == 0) {
-							pushMessage("wishes to trade with you.", 4, s3);
+							pushMessage("wishes to trade with you.", 4, name);
 						}
 					} else if(s.endsWith("#url#")) {
 						final String link = s.substring(0, s.indexOf("#"));
