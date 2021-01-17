@@ -1191,9 +1191,11 @@ public class Client extends ClientEngine {
 	private void updateNPCs(Buffer buffer, int psize) {
 		anInt839 = 0;
 		anInt893 = 0;
+
 		updateNPCMovement(buffer);
 		addNewNPC(psize, buffer);
 		updateNpcs(buffer);
+
 		for(int k = 0; k < anInt839; k++) {
 			final int l = anIntArray840[k];
 			if(npcList[l].anInt1537 != loopCycle) {
@@ -4557,7 +4559,6 @@ public class Client extends ClientEngine {
 			anInt843 = anInt842;
 			anInt842 = anInt841;
 			anInt841 = pktType;
-			System.out.println("reading packet " + pktType);
 			switch(pktType) {
 
 				case 82:
@@ -8228,17 +8229,17 @@ public class Client extends ClientEngine {
 		}
 	}
 
-	private void addNewNPC(int i, Buffer buffer) {
-		while(buffer.bit + 21 < i * 8) {
-			final int k = buffer.getBits(14);
-			if(k == 16383) {
+	private void addNewNPC(int packetSize, Buffer buffer) {
+		while(buffer.bit + 21 < packetSize * 8) {
+			final int index = buffer.getBits(14);
+			if(index == 16383) {
 				break;
 			}
-			if(npcList[k] == null) {
-				npcList[k] = new NPC();
+			if(npcList[index] == null) {
+				npcList[index] = new NPC();
 			}
-			final NPC npc = npcList[k];
-			npcEntryList[npcListSize++] = k;
+			final NPC npc = npcList[index];
+			npcEntryList[npcListSize++] = index;
 			npc.anInt1537 = loopCycle;
 			int l = buffer.getBits(5);
 			if(l > 15) {
@@ -8252,7 +8253,7 @@ public class Client extends ClientEngine {
 			npc.type = NPCType.get(buffer.getBits(16));
 			final int k1 = buffer.getBits(1);
 			if(k1 == 1) {
-				anIntArray894[anInt893++] = k;
+				anIntArray894[anInt893++] = index;
 			}
 			npc.anInt1540 = npc.type.boundaryDimension;
 			npc.anInt1504 = npc.type.degreesToTurn;
@@ -8263,6 +8264,7 @@ public class Client extends ClientEngine {
 			npc.anInt1511 = npc.type.standAnimationId;
 			npc.setPos(localPlayer.smallX[0] + i1, localPlayer.smallY[0] + l, j1 == 1);
 		}
+
 		buffer.endBitAccess();
 	}
 
