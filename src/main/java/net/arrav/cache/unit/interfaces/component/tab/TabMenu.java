@@ -65,7 +65,7 @@ public class TabMenu {
 					if(tab >= Client.instance.bankTabItemIcon.length)
 						continue;
 					int item = Client.instance.bankTabItemIcon[tab -1];
-					BitmapImage itemIcon = ObjectType.getIcon(item, 1, 0);
+					BitmapImage itemIcon = item == -1 ? null : ObjectType.getIcon(item, 1, 0);
 					if(itemIcon != null) {
 						itemIcon.drawImage((x + offsetX) + (spriteBack.imageWidth / 2) - (itemIcon.imageWidth / 2), y + (spriteBack.imageHeight / 2) - (itemIcon.imageHeight / 2) + 2);
 					}

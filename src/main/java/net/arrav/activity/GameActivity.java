@@ -446,6 +446,9 @@ public class GameActivity extends Activity {
 			}
 		}
 		client.tickDelta = 0;
+		if (client.console.openConsole) {
+			client.console.drawConsole(client.windowWidth);
+		}
 	}
 
 	private void processRightClick() {
@@ -1347,6 +1350,10 @@ public class GameActivity extends Activity {
 		}
 		updateEntities();
 		drawHeadIcon();
+
+		if (client.console.openConsole) {
+			client.console.drawConsole(client.windowWidth);
+		}
 		client.combatOverlayHandler.displayEntityFeed();
 		client.messageFeedHandler.displayKillFeed();
 		client.exporbHandler.process();

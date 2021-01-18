@@ -274,7 +274,7 @@ public class Client extends ClientEngine {
 	public boolean messagePromptRaised;
 	public boolean showTab = true;
 	public boolean showChat = true;
-	private boolean noclip = false;
+	public boolean noclip = false;
 	public boolean aBoolean972;
 	public int hoveredChannelButton;
 	public int selectedChannelButton;
@@ -401,7 +401,7 @@ public class Client extends ClientEngine {
 	private Buffer inBuffer;
 	private Buffer login;
 	private Buffer[] playerBuffer;
-	private CacheUnpacker cacheHandler;
+	public CacheUnpacker cacheHandler;
 	private ISAACCipher encryption;
 	private LinkedDeque aClass19_1013;
 	private LinkedDeque aClass19_1056;
@@ -683,6 +683,11 @@ public class Client extends ClientEngine {
 		} catch(final Exception exception) {
 			System.out.println("Failed to launch the applet.");
 		}
+	}
+
+	public boolean alwaysOntop() {
+		super.frame.setAlwaysOnTop(!super.frame.isAlwaysOnTop());
+		return super.frame.isAlwaysOnTop();
 	}
 
 	public static Client instance;
@@ -1193,12 +1198,8 @@ public class Client extends ClientEngine {
 		mobsAwaitingUpdateCount = 0;
 
 		updateNPCMovement(buffer);
-		System.out.println("movement:"+buffer.pos+" "+psize);
 		addNewNPC(psize, buffer);
-		System.out.println("new npc:"+buffer.pos+" "+psize);
 		updateNpcs(buffer);
-		System.out.println("update:"+buffer.pos+" "+psize);
-		System.out.println("=-===================================");
 
 		for(int k = 0; k < anInt839; k++) {
 			final int l = anIntArray840[k];
@@ -3087,6 +3088,7 @@ public class Client extends ClientEngine {
 		for(int i = 0; i < 4; i++) {
 			collisionMaps[i].clear();
 		}
+		console.openConsole = false;
 		System.gc();
 		taskHandler = null;
 		exporbHandler = null;
@@ -3122,6 +3124,7 @@ public class Client extends ClientEngine {
 		final Session rsSocket = socketStream;
 		loggedIn = false;
 		loginFailures = 0;
+		console.openConsole = false;
 		connect(localUsername, localPassword);
 		if(!loggedIn) {
 			logOut();
@@ -6605,37 +6608,57 @@ public class Client extends ClientEngine {
 
 	public void method73() {
 		do {
-			final int j = getKey();
-			if(j == -1) {
+			final int key = getKey();
+			if(key == -1) {
 				break;
 			}
-			if(j == 9) {
+			if(key == 9) {
 				tabToReplyPm();
 				return;
 			}
-			if(j == 32 && (forcedChatWidgetId == 356 || forcedChatWidgetId == 359 || forcedChatWidgetId == 363 || forcedChatWidgetId == 368 || forcedChatWidgetId == 306) && !aBoolean1149) {
+			/*if(key == 32 && (forcedChatWidgetId == 356 || forcedChatWidgetId == 359 || forcedChatWidgetId == 363 || forcedChatWidgetId == 368 || forcedChatWidgetId == 306) && !aBoolean1149) {
 				outBuffer.putOpcode(40);
 				aBoolean1149 = true;
 			}
 			if(openInterfaceID != -1 && openInterfaceID == reportAbuseInterfaceID) {
-				if(j == 8 && reportAbuseInput.length() > 0) {
+				if(key == 8 && reportAbuseInput.length() > 0) {
 					reportAbuseInput = reportAbuseInput.substring(0, reportAbuseInput.length() - 1);
 				}
-				if((j >= 97 && j <= 122 || j >= 65 && j <= 90 || j >= 48 && j <= 57 || j == 32) && reportAbuseInput.length() < 12) {
-					reportAbuseInput += (char) j;
+				if((key >= 97 && key <= 122 || key >= 65 && key <= 90 || key >= 48 && key <= 57 || key == 32) && reportAbuseInput.length() < 12) {
+					reportAbuseInput += (char) key;
+				}
+			}*/
+			if (console.openConsole) {
+				if (key == 8 && console.consoleInput.length() > 0) {
+					console.consoleInput = console.consoleInput.substring(0, console.consoleInput.length() - 1);
+				}
+				if (key >= 32 && key <= 122 && console.consoleInput.length() < 80) {
+					console.consoleInput += (char) key;
+				}
+				if ((key == 13 || key == 10) && console.consoleInput.length() > 0) {
+					console.sendConsoleMessage(console.consoleInput);
+					console.sendConsoleCommands(console.consoleInput);
+					console.consoleInput = "";
+					//redrawDialogueBox = true;
+				} else if (openInterfaceID != -1 && openInterfaceID == reportAbuseInterfaceID) {
+					if (key == 8 && reportAbuseInput.length() > 0)
+						reportAbuseInput = reportAbuseInput.substring(0, reportAbuseInput.length() - 1);
+					if ((key >= 97 && key <= 122 || key >= 65 && key <= 90 || key >= 48 && key <= 57 || key == 32)
+							&& reportAbuseInput.length() < 12)
+						reportAbuseInput += (char) key;
 				}
 			} else if(messagePromptRaised) {
-				if(j >= 32 && j <= 122 && promptInput.length() < 80) {
-					promptInput += (char) j;
+				if(key >= 32 && key <= 122 && promptInput.length() < 80) {
+					promptInput += (char) key;
 					if(panelSearch)
-						panelSearchInput += (char) j;
+						panelSearchInput += (char) key;
 				}
-				if(j == 8 && promptInput.length() > 0) {
+				if(key == 8 && promptInput.length() > 0) {
 					promptInput = promptInput.substring(0, promptInput.length() - 1);
 					if(panelSearch)
 						panelSearchInput = panelSearchInput.substring(0, panelSearchInput.length() - 1);
 				}
-				if(j == 13 || j == 10) {
+				if(key == 13 || key == 10) {
 					messagePromptRaised = false;
 					if(marketSearch && panelSearch) {
 						outBuffer.putOpcode(105);
@@ -6741,47 +6764,47 @@ public class Client extends ClientEngine {
 					}
 				}
 			} else if(inputDialogState == 1) {
-				if(j == 107 || j == 75 || j == 109 || j == 77) {//k(107/75), m(109/77) inputs.
+				if(key == 107 || key == 75 || key == 109 || key == 77) {//k(107/75), m(109/77) inputs.
 					if(outBoundInput.length() == 0)
-						outBoundInput += (char) j;
+						outBoundInput += (char) key;
 					return;
 				}
-				if(j >= 48 && j <= 57 && amountOrNameInput.length() < 10 || (j == 45 && npcSug)) {
-					amountOrNameInput += (char) j;
+				if(key >= 48 && key <= 57 && amountOrNameInput.length() < 10 || (key == 45 && npcSug)) {
+					amountOrNameInput += (char) key;
 				}
-				if(j == 8 && (amountOrNameInput.length() > 0 || outBoundInput.length() > 0)) {
+				if(key == 8 && (amountOrNameInput.length() > 0 || outBoundInput.length() > 0)) {
 					if(outBoundInput.length() > 0) {
 						outBoundInput = outBoundInput.substring(0, outBoundInput.length() - 1);
 						return;
 					}
 					amountOrNameInput = amountOrNameInput.substring(0, amountOrNameInput.length() - 1);
 				}
-				if(j == 13 || j == 10) {
+				if(key == 13 || key == 10) {
 					if(amountOrNameInput.length() > 0) {
-						int i1 = 0;
+						int amount = 0;
 						try {
-							i1 = Integer.parseInt(amountOrNameInput);
+							amount = Integer.parseInt(amountOrNameInput);
 						} catch(final Exception ignored) {}
 						if(outBoundInput.length() > 0) {
 							if(outBoundInput.contains("k") || outBoundInput.contentEquals("K")) {
-								i1 *= 1000;
+								amount *= 1000;
 							}
 							if(outBoundInput.contains("m") || outBoundInput.contentEquals("M")) {
-								i1 *= 1000000;
+								amount *= 1000000;
 							}
 							outBoundInput = "";
 						}
 						if(npcSug) {
 							//npc suggestion output.
 							if(npcSugMin != -10) {
-								npcSugMax = i1;
+								npcSugMax = amount;
 								inputDialogState = 0;
 								amountOrNameInput = "";
 								promptInput = "";
 								promptInputTitle = "rarity? always,common,uncommon,rare,very_rare,extremely_rare";
 								messagePromptRaised = true;
 							} else {
-								npcSugMin = i1;
+								npcSugMin = amount;
 								promptInputTitle = "Maximum count?";
 								inputDialogState = 1;
 								amountOrNameInput = "";
@@ -6789,18 +6812,18 @@ public class Client extends ClientEngine {
 							return;
 						}
 						outBuffer.putOpcode(208);
-						outBuffer.putInt(i1);
+						outBuffer.putInt(amount);
 					}
 					inputDialogState = 0;
 				}
 			} else if(inputDialogState == 2) {
-				if(j >= 32 && j <= 122 && amountOrNameInput.length() < 12) {
-					amountOrNameInput += (char) j;
+				if(key >= 32 && key <= 122 && amountOrNameInput.length() < 12) {
+					amountOrNameInput += (char) key;
 				}
-				if(j == 8 && amountOrNameInput.length() > 0) {
+				if(key == 8 && amountOrNameInput.length() > 0) {
 					amountOrNameInput = amountOrNameInput.substring(0, amountOrNameInput.length() - 1);
 				}
-				if(j == 13 || j == 10) {
+				if(key == 13 || key == 10) {
 					if(amountOrNameInput.length() > 0) {
 						outBuffer.putOpcode(60);
 						outBuffer.putLong(StringUtils.encryptName(amountOrNameInput));
@@ -6808,58 +6831,22 @@ public class Client extends ClientEngine {
 					inputDialogState = 0;
 				}
 			} else if(panelHandler.isBankpen() && bankSearching) {
-				if(j >= 32 && j <= 122 && bankSearch.length() < 80) {
-					bankSearch += (char) j;
+				if(key >= 32 && key <= 122 && bankSearch.length() < 80) {
+					bankSearch += (char) key;
 				}
-				if(j == 8 && bankSearch.length() > 0) {
+				if(key == 8 && bankSearch.length() > 0) {
 					bankSearch = bankSearch.substring(0, bankSearch.length() - 1);
 				}
 			} else if(forcedChatWidgetId == -1) {
-				if(j >= 32 && j <= 122 && chatInput.length() < (uiRenderer.id == 1 ? 90 : 70)) {
-					chatInput += (char) j;
+				if(key >= 32 && key <= 122 && chatInput.length() < (uiRenderer.id == 1 ? 90 : 70)) {
+					chatInput += (char) key;
 				}
-				if(j == 8 && chatInput.length() > 0) {
+				if(key == 8 && chatInput.length() > 0) {
 					chatInput = chatInput.substring(0, chatInput.length() - 1);
 				}
-				if((j == 13 || j == 10) && chatInput.length() > 0) {
-					if(chatInput.equals("::gc")) {
-						System.gc();
-						final Runtime runtime = Runtime.getRuntime();
-						final int mem = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
-						pushMessage("--> mem: " + mem + "k", 0, "");
-					}
-					if(chatInput.startsWith("::editor")) {
-						try {
-							logOut();
-							(new Thread(() -> {
-								Application.launch(ItemDefinitionEditor.class, new String[0]);
-							})).start();
-						}catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-					if(chatInput.equals("::fps")) {
-						Config.def.fps(!Config.def.fps());
-						pushMessage("--> fps " + (Config.def.fps() ? "on" : "off"), 0, "");
-					}
-					if(chatInput.startsWith("::mapid")) {
-						try {
-							int id = Integer.parseInt(chatInput.substring(6));
-							for (int region = 0; region < OnDemandFetcher.regionFiles.length; region++) {
-								if (OnDemandFetcher.regionFiles[region] == id) {
-									pushMessage("-->landscape file:" + OnDemandFetcher.regionLandFiles[region] + ", object file:" + OnDemandFetcher.regionObjectFiles[region], 0, "");
-									System.out.println(OnDemandFetcher.regionLandFiles[region]);
-									System.out.println(OnDemandFetcher.regionObjectFiles[region]);
-								}
-							}
-						}catch (Exception e) {
-							e.printStackTrace();
-						}
-					}
-					if(chatInput.equals("::top")) {
-						super.frame.setAlwaysOnTop(!super.frame.isAlwaysOnTop());
-						pushMessage("-->top mode : "+super.frame.isAlwaysOnTop(), 0, "");
-					}
+				if((key == 13 || key == 10) && chatInput.length() > 0) {
+
+
 					//if(localPrivilege == 11) {
 						if(chatInput.startsWith("//setspecto")) {
 							final int amt = Integer.parseInt(chatInput.substring(12));
@@ -6921,198 +6908,6 @@ public class Client extends ClientEngine {
 							pushMessage("::ortho - Toggle between orthographic and perspective views", 0, "");
 							pushMessage("::cls - Clears the chatbox", 0, "");
 							pushMessage("::commands - This command", 0, "");
-						} else if(chatInput.equals("::dat")) {
-							Config.def.data(!Config.def.data());
-							pushMessage("--> data debug " + (Config.def.data() ? "on" : "off"), 0, "");
-						} else if(chatInput.equals("::repackimg")) {
-							try {
-								ImagePacker.pack(this, true);
-								pushMessage("--> repacked image index ", 0, "");
-							} catch(IOException e) {
-								e.printStackTrace();
-								pushMessage("--> failed to repack image index", 0, "");
-							}
-						}  else if(chatInput.equals("::idx")) {
-							Config.def.idx(!Config.def.idx());
-							pushMessage("--> index debug " + (Config.def.idx() ? "on" : "off"), 0, "");
-						} else if(chatInput.startsWith("::text")) {
-							try {
-								final String[] args = chatInput.split(" ");
-								Arrays.fill(UnderlayFloorType.FLOOR_TEXTURE, (Integer.parseInt(args[1])));
-								for(int i23 = 0; i23 < UnderlayFloorType.cache.length; i23++) {
-									if (UnderlayFloorType.FLOOR_TEXTURE[i23] != -1) {
-										UnderlayFloorType.cache[i23].texture = UnderlayFloorType.FLOOR_TEXTURE[i23];
-									}
-								}
-							} catch(final Exception e) {
-								pushMessage("Error changin texture", 0, "");
-							}
-						} else if(chatInput.equals("::sprite")) {
-							Config.def.setSprite(!Config.def.sprite());
-							pushMessage("--> sprite debug " + (Config.def.sprite() ? "on" : "off"), 0, "");
-						} else if(chatInput.equals("::data")) {
-							final Runtime runtime = Runtime.getRuntime();
-							final int mem = (int) ((runtime.totalMemory() - runtime.freeMemory()) / 1024L);
-							pushMessage("--> fps: " + super.fps + ", mem: " + mem + "k", 0, "");
-						} else if(chatInput.equals("::cls")) {
-							for(int j1 = 0; j1 < 500; j1++) {
-								chatMessage[j1] = null;
-							}
-						} else if(chatInput.equals("::noclip")) {
-							noclip = !noclip;
-							pushMessage("--> noclip " + (noclip ? "on" : "off"), 0, "");
-						} else if(chatInput.equals("::logout")) {
-							logOut();
-						} else if(chatInput.startsWith("::login_")) {
-							String[] args = chatInput.substring(8).split("_");
-							if(args.length == 2) {
-								logOut();
-								for(int i = 0; i < 5; i++) {
-									connect(args[0], args[1]);
-									if(loggedIn) {
-										break;
-									}
-									try {
-										Thread.sleep(1000L);
-									} catch(InterruptedException e) {
-									}
-								}
-							}
-						} else if(chatInput.equals("::relog")) {
-							logOut();
-							for(int i = 0; i < 5; i++) {
-								connect(localUsername, localPassword);
-								if(loggedIn) {
-									break;
-								}
-								try {
-									Thread.sleep(1000L);
-								} catch(InterruptedException e) {
-								}
-							}
-						} else if(chatInput.equals("::packobj")) {
-							try {
-								LocationType.pack();
-							} catch(IOException e) {
-								e.printStackTrace();
-							}
-						} else if(chatInput.equals("::new")) {
-							for(int f : terrainDataIds) {
-								onDemandRequester.setNew(f);
-							}
-							for(int o : objectDataIds) {
-								onDemandRequester.setNew(o);
-							}
-							onDemandRequester.packMapIndex();
-							loadRegion();
-							pushMessage("set new", 0, "client");
-						} else if(chatInput.equals("::old")) {
-							for(int f : terrainDataIds) {
-								onDemandRequester.setOld(f);
-							}
-							for(int o : objectDataIds) {
-								onDemandRequester.setOld(o);
-							}
-							onDemandRequester.packMapIndex();
-							loadRegion();
-							pushMessage("set old", 0, "client");
-						} else if(chatInput.equals("::maps")) {
-							System.out.println("Started repacking region maps.");
-							
-							for(int f : terrainDataIds) {
-								File file = new File(SignLink.getCacheDir() + "maps/" + f + ".gz");
-								if(file.exists()) {
-									byte[] data = new byte[(int) file.length()];
-									FileInputStream fis = null;
-									try {
-										fis = new FileInputStream(file);
-										fis.read(data);
-										fis.close();
-									} catch(Exception e) {
-										e.printStackTrace();
-									}
-									if(data != null && data.length > 0) {
-										cacheIdx[4].writeFile(data.length, data, f);
-										System.out.println("Repacked " + f + ".");
-									} else {
-										System.out.println("Unable to locate index " + f + ".");
-									}
-								}
-							}
-							for(int o : objectDataIds) {
-								File file = new File(SignLink.getCacheDir() + "maps/" + o + ".gz");
-								if(file.exists()) {
-									byte[] data = new byte[(int) file.length()];
-									FileInputStream fis = null;
-									try {
-										fis = new FileInputStream(file);
-										fis.read(data);
-										fis.close();
-									} catch(Exception e) {
-										e.printStackTrace();
-									}
-									if(data != null && data.length > 0) {
-										cacheIdx[4].writeFile(data.length, data, o);
-										System.out.println("Repacked " + o + ".");
-									} else {
-										System.out.println("Unable to locate index " + o + ".");
-									}
-								}
-							}
-							//onDemandRequester.packMapIndex();
-							loadRegion();
-						} else if(chatInput.equals("::mapsi")) {
-							System.out.println("repacking map index.");
-							onDemandRequester.packMapIndex();
-							loadRegion();
-						}
-						if(chatInput.equals("::roll")) {
-							rollCharacterInInterface = !rollCharacterInInterface;
-						}
-						if(chatInput.equals("::fog")) {
-							Config.def.fog(!Config.def.fog());
-							pushMessage("--> fog " + (Config.def.fog() ? "on" : "off"), 0, "");
-						}
-						if(chatInput.equals("::tween")) {
-							Config.def.tween(!Config.def.tween());
-							pushMessage("--> tween " + (Config.def.tween() ? "on" : "off"), 0, "");
-						}
-						if(chatInput.equals("::mat")) {
-							Config.def.groundMat(!Config.def.groundMat());
-							pushMessage("--> mat " + (Config.def.groundMat() ? "on" : "off"), 0, "");
-						}
-						if(chatInput.startsWith("hitmark")) {
-							try {
-								final String[] args = chatInput.split(" ");
-								Config.def.hitsplat(Integer.parseInt(args[1]));
-							} catch(final Exception e) {
-								pushMessage("Interface Failed to load", 0, "");
-							}
-						}
-						if(chatInput.startsWith("::msg_")) {
-							String[] args = chatInput.substring(6).split("_");
-							if(args.length == 3) {
-								try {
-									pushMessage(args[1], Integer.parseInt(args[2]), args[0]);
-								} catch(Exception e) {
-								}
-							}
-						}
-						if(chatInput.equals("::m0") || chatInput.equals("::m1") || chatInput.equals("::m2")) {
-							setMode(Integer.parseInt(chatInput.substring(3)));
-						}
-						if(chatInput.equals("::packinterface")) {
-							Interface.pack();
-						}
-						if(chatInput.equals("::reint")) {
-							new InterfaceLoader(cacheHandler.getCacheArchive(3, "interface", CacheUnpacker.EXPECTED_CRC[3])).run(this);
-						}
-						if(chatInput.equals("::task")) {
-							taskHandler.completeTask("Dragon Slayer\nKill 100 dragons.");
-						}
-						if(chatInput.equals("::task2")) {
-							taskHandler.completeTask("Dragon Slayer\nKill 100 dragons.");
-							taskHandler.completeTask("Another task!\nUnknown.\n\nSpecial information\nhere.");
 						}
 					//}
 					if(chatInput.startsWith("::")) {

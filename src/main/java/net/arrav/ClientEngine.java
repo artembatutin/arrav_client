@@ -2,6 +2,7 @@ package net.arrav;
 
 import net.arrav.activity.panel.impl.SettingPanel;
 import net.arrav.activity.ui.UIRenderer;
+import net.arrav.activity.ui.util.Console;
 import net.arrav.net.SignLink;
 
 import javax.imageio.ImageIO;
@@ -18,6 +19,7 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 	 * Declared variables.
 	 */
 	public int invTab;
+	public Console console = new Console();
 	private static final long serialVersionUID = -6866891087399185924L;
 	private final long[] optims;
 	private final int[] keyQueue = new int[128];
@@ -327,6 +329,7 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 		for(int i = 0; i < 128; i++) {
 			keyPressed[i] = 0;
 		}
+			controlIsDown = false;
 	}
 
 	@Override
@@ -348,11 +351,26 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 	
 	}
 
+	public boolean controlIsDown = false;
+
+
 	@Override
 	public final void keyPressed(KeyEvent keyevent) {
 		idleTime = 0;
 		final int keyCode = keyevent.getKeyCode();
 		int keyCharacter = keyevent.getKeyChar();
+
+		if (keyCharacter == 96) {
+			console.openConsole = !console.openConsole;
+			return;
+
+		}
+
+		if (console.openConsole && controlIsDown && (keyCode == KeyEvent.VK_UP || keyCode == KeyEvent.VK_DOWN)) {
+			console.chooseCommand(keyCode == KeyEvent.VK_UP);
+			return;
+		}
+
 		if(keyCode == KeyEvent.VK_F1) {
 			setTab(SettingPanel.hotkeys[0]);
 		} else if(keyCode == KeyEvent.VK_F2) {
@@ -433,6 +451,9 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 		if(keyCode == 16) {
 			shiftDown = true;
 		}
+		if (keyevent.isControlDown()) {
+			controlIsDown = true;
+		}
 	}
 
 	@Override
@@ -440,6 +461,12 @@ public class ClientEngine extends Applet implements Runnable, MouseListener, Mou
 		idleTime = 0;
 		final int keyCode = keyevent.getKeyCode();
 		char keyCharacter = keyevent.getKeyChar();
+
+		if (keyCode == KeyEvent.VK_CONTROL) {
+			controlIsDown = false;
+		}
+
+
 		if(keyCharacter < 30) {
 			keyCharacter = 0;
 		}
