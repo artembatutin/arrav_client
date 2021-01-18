@@ -137,16 +137,16 @@ public final class Player extends Mobile {
 		int currCycle = -1;
 		int nextCycle = -1;
 		if(desc != null) {
-			if(super.anim >= 0 && super.animDelay == 0 && super.anim <= DeformSequence.cache.length) {
-				final DeformSequence seq = DeformSequence.cache[super.anim];
-				currAnim = seq.frameList[super.animFrame];
+			if(super.anim >= 0 && super.animationDelay == 0 && super.anim <= DeformSequence.animations.length) {
+				final DeformSequence seq = DeformSequence.animations[super.anim];
+				currAnim = seq.frameList[super.displayedEmoteFrames];
 				if(Config.def.tween() && super.nextAnimFrame != -1) {
 					nextAnim = seq.frameList[super.nextAnimFrame];
-					currCycle = seq.cycleList[super.animFrame];
-					nextCycle = super.animCycle;
+					currCycle = seq.cycleList[super.displayedEmoteFrames];
+					nextCycle = super.emoteTimeRemaining;
 				}
 			} else if(super.idleAnim >= 0) {
-				final DeformSequence seq = DeformSequence.cache[super.idleAnim];
+				final DeformSequence seq = DeformSequence.animations[super.idleAnim];
 				currAnim = seq.frameList[super.idleAnimFrame];
 				if(Config.def.tween() && super.nextIdleAnimFrame != -1) {
 					nextAnim = seq.frameList[super.nextIdleAnimFrame];
@@ -160,16 +160,16 @@ public final class Player extends Mobile {
 		int i1 = -1;
 		int j1 = -1;
 		int k1 = -1;
-		if(super.anim >= 0 && super.animDelay == 0) {
-			final DeformSequence animation = DeformSequence.cache[super.anim];
-			currAnim = animation.frameList[super.animFrame];
+		if(super.anim >= 0 && super.animationDelay == 0) {
+			final DeformSequence animation = DeformSequence.animations[super.anim];
+			currAnim = animation.frameList[super.displayedEmoteFrames];
 			if(Config.def.tween() && super.nextAnimFrame != -1) {
 				nextAnim = animation.frameList[super.nextAnimFrame];
-				currCycle = animation.cycleList[super.animFrame];
-				nextCycle = super.animCycle;
+				currCycle = animation.cycleList[super.displayedEmoteFrames];
+				nextCycle = super.emoteTimeRemaining;
 			}
 			if(super.idleAnim >= 0 && super.idleAnim != super.anInt1511) {
-				i1 = DeformSequence.cache[super.idleAnim].frameList[super.idleAnimFrame];
+				i1 = DeformSequence.animations[super.idleAnim].frameList[super.idleAnimFrame];
 			}
 			if(animation.leftHandItem >= 0) {
 				j1 = animation.leftHandItem;
@@ -181,7 +181,7 @@ public final class Player extends Mobile {
 
 			}
 		} else if(super.idleAnim >= 0) {
-			DeformSequence seq = DeformSequence.cache[super.idleAnim];
+			DeformSequence seq = DeformSequence.animations[super.idleAnim];
 			currAnim = seq.frameList[super.idleAnimFrame];
 			if(Config.def.tween() && super.nextIdleAnimFrame != -1) {
 				nextAnim = seq.frameList[super.nextIdleAnimFrame];
@@ -260,7 +260,7 @@ public final class Player extends Mobile {
 		final Model model_2 = Model.model;
 		model_2.method464(model_1, AnimationFrame.isNull(currAnim) & AnimationFrame.isNull(i1));
 		if(currAnim != -1 && i1 != -1) {
-			model_2.method471(DeformSequence.cache[super.anim].flowControl, i1, currAnim);
+			model_2.method471(DeformSequence.animations[super.anim].flowControl, i1, currAnim);
 		} else if(currAnim != -1) {
 			if(Config.def.tween()) {
 				model_2.applyAnimation(currAnim, nextAnim, nextCycle, currCycle);

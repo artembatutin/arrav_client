@@ -33,7 +33,7 @@ public final class Location extends Entity {
 		anInt1605 = i1;
 		anInt1606 = k1;
 		if(l1 != -1) {
-			seq = DeformSequence.cache[l1];
+			seq = DeformSequence.animations[l1];
 			animFrame = 0;
 			anInt1608 = client.loopCycle;
 			if(flag && seq.animCycle != -1) {

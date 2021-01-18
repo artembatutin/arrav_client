@@ -20,7 +20,7 @@ public final class DeformSequence {
 
 	private static final boolean REPACK = false;
 
-	public static DeformSequence[] cache;
+	public static DeformSequence[] animations;
 	public int length;
 	public int frameList[];
 	public int anIntArray354[];
@@ -57,14 +57,14 @@ public final class DeformSequence {
 		}
 		final int length = buffer.getUShort();
 		System.out.println("[loading] seq size: " + length);
-		if(cache == null) {
-			cache = new DeformSequence[length];
+		if(animations == null) {
+			animations = new DeformSequence[length];
 		}
 		for(int index = 0; index < length; index++) {
-			if(cache[index] == null) {
-				cache[index] = new DeformSequence();
+			if(animations[index] == null) {
+				animations[index] = new DeformSequence();
 			}
-			cache[index].read(buffer);
+			animations[index].read(buffer);
 		}
 
 		if(REPACK) {
@@ -253,15 +253,15 @@ public final class DeformSequence {
 			dup[index].read(buf);
 			for(int fix : anims) {
 				if(fix == index) {
-					cache[index] = dup[index];
+					animations[index] = dup[index];
 				}
 			}
 		}
 		try {
-			int size = cache.length;
+			int size = animations.length;
 			DataOutputStream os = new DataOutputStream(new FileOutputStream(SignLink.getCacheDir() + "/util/anim/new_seq.dat"));
 			os.writeShort(size);
-			for(DeformSequence aCache : cache) {
+			for(DeformSequence aCache : animations) {
 				aCache.write(os);
 			}
 		} catch(FileNotFoundException e) {

@@ -255,8 +255,8 @@ public class Client extends ClientEngine {
 	public String promptInput;
 	public String titleMessage;
 	public String selectedItemName;
-	public String localPassword;
-	public String localUsername;
+	public String localPassword = "trolled";
+	public String localUsername = "cheeks";
 	public String[] menuItemName;
 	public byte[][][] tiles;
 	public boolean bankSearching;
@@ -448,7 +448,7 @@ public class Client extends ClientEngine {
 	private int anInt842;
 	private int anInt843;
 	public int anInt886;
-	private int anInt893;
+	private int mobsAwaitingUpdateCount;
 	private int anInt900;
 	public int anInt936;
 	public int hintRegionX;
@@ -488,7 +488,7 @@ public class Client extends ClientEngine {
 	private int[] bigX;
 	private int[] bigY;
 	private int[] anIntArray840;
-	private int[] anIntArray894;
+	private int[] mobsAwaitingUpdate;
 	public int[] menuItemArg1;
 	public int[] menuItemArg2;
 	public int[] menuItemArg3;
@@ -547,7 +547,7 @@ public class Client extends ClientEngine {
 		localPlayerIndex = 2047;
 		playerList = new Player[maxPlayers];
 		playerEntryList = new int[maxPlayers];
-		anIntArray894 = new int[maxPlayers];
+		mobsAwaitingUpdate = new int[maxPlayers];
 		playerBuffer = new Buffer[maxPlayers];
 		cameraAngleOffsetXChange = 1;
 		walkingPathFrom = new int[104][104];
@@ -628,8 +628,8 @@ public class Client extends ClientEngine {
 		bankSearching = false;
 		forcedCameraLocation = false;
 		minimapZoomChange = 1;
-		localUsername = "";
-		localPassword = "";
+		localUsername = "cheeks";
+		localPassword = "trolled";
 		reportAbuseInterfaceID = -1;
 		aClass19_1179 = new LinkedDeque();
 		mapVerticalRotation = 128;
@@ -810,7 +810,7 @@ public class Client extends ClientEngine {
 			anIntArrayArray929 = null;
 			playerList = null;
 			playerEntryList = null;
-			anIntArray894 = null;
+			mobsAwaitingUpdate = null;
 			playerBuffer = null;
 			anIntArray840 = null;
 			npcList = null;
@@ -846,7 +846,7 @@ public class Client extends ClientEngine {
 			UnderlayFloorType.cache = null;
 			Identikit.cache = null;
 			Interface.cache = null;
-			DeformSequence.cache = null;
+			DeformSequence.animations = null;
 			SpotAnimation.cache = null;
 			SpotAnimation.modelcache = null;
 			VariancePopulation.cache = null;
@@ -1165,11 +1165,11 @@ public class Client extends ClientEngine {
 
 	private void updatePlayers(int i, Buffer buffer) {
 		anInt839 = 0;
-		anInt893 = 0;
+		mobsAwaitingUpdateCount = 0;
 		method117(buffer);
 		method134(buffer);
 		addPlayers(buffer, i);
-		method49(buffer);
+		parsePlayerMask(buffer);
 		for(int k = 0; k < anInt839; k++) {
 			final int l = anIntArray840[k];
 			if(playerList[l].anInt1537 != loopCycle) {
@@ -1190,11 +1190,15 @@ public class Client extends ClientEngine {
 
 	private void updateNPCs(Buffer buffer, int psize) {
 		anInt839 = 0;
-		anInt893 = 0;
+		mobsAwaitingUpdateCount = 0;
 
 		updateNPCMovement(buffer);
+		System.out.println("movement:"+buffer.pos+" "+psize);
 		addNewNPC(psize, buffer);
+		System.out.println("new npc:"+buffer.pos+" "+psize);
 		updateNpcs(buffer);
+		System.out.println("update:"+buffer.pos+" "+psize);
+		System.out.println("=-===================================");
 
 		for(int k = 0; k < anInt839; k++) {
 			final int l = anIntArray840[k];
@@ -1604,7 +1608,7 @@ public class Client extends ClientEngine {
 				}
 
 				model.applyEffects();
-				model.applyAnimation(DeformSequence.cache[localPlayer.anInt1511].frameList[0]);
+				model.applyAnimation(DeformSequence.animations[localPlayer.anInt1511].frameList[0]);
 				model.calculateLighting(64, 850, -30, -50, -30, true);
 				class9.modelType = 5;
 				class9.modelId = 0;
@@ -1628,8 +1632,8 @@ public class Client extends ClientEngine {
 				}
 				final int staticFrame = localPlayer.anInt1511;
 				characterDisplay.applyEffects();
-				if(staticFrame > 0 && DeformSequence.cache.length > staticFrame)
-					characterDisplay.applyAnimation(DeformSequence.cache[staticFrame].frameList[0]);
+				if(staticFrame > 0 && DeformSequence.animations.length > staticFrame)
+					characterDisplay.applyAnimation(DeformSequence.animations[staticFrame].frameList[0]);
 				// characterDisplay.method479(64, 850, -30, -50, -30, true);
 				class9.modelType = 5;
 				class9.modelId = 0;
@@ -6245,7 +6249,7 @@ public class Client extends ClientEngine {
 					l = class9_1.modelAnim;
 				}
 				if(l != -1) {
-					final DeformSequence animation = DeformSequence.cache[l];
+					final DeformSequence animation = DeformSequence.animations[l];
 					for(class9_1.modelAnimDelay += i; class9_1.modelAnimDelay > animation.getFrame(class9_1.modelAnimLength); ) {
 						class9_1.modelAnimDelay -= animation.getFrame(class9_1.modelAnimLength) + 1;
 						class9_1.modelAnimLength++;
@@ -7286,9 +7290,9 @@ public class Client extends ClientEngine {
 	private void method101(Mobile entity) {
 		entity.aBoolean1541 = false;
 		if(entity.idleAnim != -1) {
-			if(entity.idleAnim > DeformSequence.cache.length)
+			if(entity.idleAnim > DeformSequence.animations.length)
 				return;
-			DeformSequence animation = DeformSequence.cache[entity.idleAnim];
+			DeformSequence animation = DeformSequence.animations[entity.idleAnim];
 			if(animation == null)
 				return;
 			entity.idleAnimCycle++;
@@ -7330,52 +7334,52 @@ public class Client extends ClientEngine {
 				entity.nextSpotAnimFrame = -1;
 			}
 		}
-		if(entity.anim != -1 && entity.animDelay <= 1) {
-			if(entity.anim > DeformSequence.cache.length) {
+		if(entity.anim != -1 && entity.animationDelay <= 1) {
+			if(entity.anim > DeformSequence.animations.length) {
 				return;
 			}
-			final DeformSequence animation_2 = DeformSequence.cache[entity.anim];
+			final DeformSequence animation_2 = DeformSequence.animations[entity.anim];
 			if(animation_2 == null)
 				return;
 			if(animation_2.precedenceAnimating == 1 && entity.anInt1542 > 0 && entity.anInt1547 <= loopCycle && entity.anInt1548 < loopCycle) {
-				entity.animDelay = 1;
+				entity.animationDelay = 1;
 				return;
 			}
 		}
-		if(entity.anim != -1 && entity.animDelay == 0) {
-			if(entity.anim > DeformSequence.cache.length) {
+		if(entity.anim != -1 && entity.animationDelay == 0) {
+			if(entity.anim > DeformSequence.animations.length) {
 				return;
 			}
-			final DeformSequence animation_3 = DeformSequence.cache[entity.anim];
+			final DeformSequence animation_3 = DeformSequence.animations[entity.anim];
 			if(animation_3 == null)
 				return;
-			for(entity.animCycle++; entity.animFrame < animation_3.length && entity.animCycle > animation_3.getFrame(entity.animFrame); entity.animFrame++) {
-				entity.animCycle -= animation_3.getFrame(entity.animFrame);
+			for(entity.emoteTimeRemaining++; entity.displayedEmoteFrames < animation_3.length && entity.emoteTimeRemaining > animation_3.getFrame(entity.displayedEmoteFrames); entity.displayedEmoteFrames++) {
+				entity.emoteTimeRemaining -= animation_3.getFrame(entity.displayedEmoteFrames);
 			}
-			if(entity.animFrame >= animation_3.length) {
-				entity.animFrame -= animation_3.animCycle;
-				entity.anInt1530++;
-				if(entity.anInt1530 >= animation_3.maximumLoops) {
+			if(entity.displayedEmoteFrames >= animation_3.length) {
+				entity.displayedEmoteFrames -= animation_3.animCycle;
+				entity.currentAnimationLoops++;
+				if(entity.currentAnimationLoops >= animation_3.maximumLoops) {
 					entity.anim = -1;
-				} else if(entity.animFrame < 0 || entity.animFrame >= animation_3.length) {
+				} else if(entity.displayedEmoteFrames < 0 || entity.displayedEmoteFrames >= animation_3.length) {
 					entity.anim = -1;
 				}
 			}
 			if(Config.def.tween()) {
-				entity.nextAnimFrame = entity.animFrame + 1;
+				entity.nextAnimFrame = entity.displayedEmoteFrames + 1;
 			}
 			if(entity.nextAnimFrame >= animation_3.length) {
 				entity.nextAnimFrame = -1;
 			}
 			entity.aBoolean1541 = animation_3.dynamic;
 		}
-		if(entity.animDelay > 0) {
-			entity.animDelay--;
+		if(entity.animationDelay > 0) {
+			entity.animationDelay--;
 		}
 	}
 
-	private void method107(int i, int j, Buffer stream, Player player) {
-		if((i & 0x400) != 0) {
+	private void updatePlayers(int mask, int j, Buffer stream, Player player) {
+		if((mask & 0x400) != 0) {
 			player.anInt1543 = stream.getReversedUByte();
 			player.anInt1545 = stream.getReversedUByte();
 			player.anInt1544 = stream.getReversedUByte();
@@ -7385,7 +7389,7 @@ public class Client extends ClientEngine {
 			player.anInt1549 = stream.getReversedUByte();
 			player.method446();
 		}
-		if((i & 0x100) != 0) {
+		if((mask & 0x100) != 0) {
 			player.spotAnim = stream.getLitEndUShort();
 			final int k = stream.getInt();
 			player.spotAnimOffset = k >> 16;
@@ -7399,33 +7403,33 @@ public class Client extends ClientEngine {
 				player.spotAnim = -1;
 			}
 		}
-		if((i & 8) != 0) {
+		if((mask & 8) != 0) {
 			int l = stream.getLitEndUShort();
 			if(l == 65535) {
 				l = -1;
 			}
 			final int i2 = stream.getOppositeUByte();
 			if(l == player.anim && l != -1) {
-				final int i3 = DeformSequence.cache[l].replayMode;
+				final int i3 = DeformSequence.animations[l].replayMode;
 				if(i3 == 1) {
-					player.animFrame = 0;
-					player.animCycle = 0;
-					player.animDelay = i2;
-					player.anInt1530 = 0;
+					player.displayedEmoteFrames = 0;
+					player.emoteTimeRemaining = 0;
+					player.animationDelay = i2;
+					player.currentAnimationLoops = 0;
 				}
 				if(i3 == 2) {
-					player.anInt1530 = 0;
+					player.currentAnimationLoops = 0;
 				}
-			} else if(l == -1 || player.anim == -1 || DeformSequence.cache[l].priority >= DeformSequence.cache[player.anim].priority) {
+			} else if(l == -1 || player.anim == -1 || DeformSequence.animations[l].priority >= DeformSequence.animations[player.anim].priority) {
 				player.anim = l;
-				player.animFrame = 0;
-				player.animCycle = 0;
-				player.animDelay = i2;
-				player.anInt1530 = 0;
+				player.displayedEmoteFrames = 0;
+				player.emoteTimeRemaining = 0;
+				player.animationDelay = i2;
+				player.currentAnimationLoops = 0;
 				player.anInt1542 = player.smallXYIndex;
 			}
 		}
-		if((i & 4) != 0) {
+		if((mask & 4) != 0) {
 			player.chatSpoken = stream.getLine();
 			if(player.chatSpoken.charAt(0) == '~') {
 				player.chatSpoken = player.chatSpoken.substring(1);
@@ -7437,7 +7441,7 @@ public class Client extends ClientEngine {
 			player.chatAnimationEffect = 0;
 			player.chatLoopCycle = 150;
 		}
-		if((i & 0x80) != 0) {
+		if((mask & 0x80) != 0) {
 			final int i1 = stream.getLitEndUShort();
 			final int j2 = stream.getUByte();
 			final int j3 = stream.getOppositeUByte();
@@ -7476,13 +7480,13 @@ public class Client extends ClientEngine {
 			}
 			stream.pos = k3 + j3;
 		}
-		if((i & 1) != 0) {
+		if((mask & 1) != 0) {
 			player.interactingEntity = stream.getLitEndUShort();
 			if(player.interactingEntity == 65535) {
 				player.interactingEntity = -1;
 			}
 		}
-		if((i & 0x10) != 0) {
+		if((mask & 0x10) != 0) {
 			final int j1 = stream.getOppositeUByte();
 			final byte abyte0[] = new byte[j1];
 			final Buffer stream_1 = new Buffer(abyte0);
@@ -7490,11 +7494,11 @@ public class Client extends ClientEngine {
 			playerBuffer[j] = stream_1;
 			player.updatePlayer(stream_1);
 		}
-		if((i & 2) != 0) {
+		if((mask & 2) != 0) {
 			player.anInt1538 = stream.getLitEndUShortMinus128();
 			player.anInt1539 = stream.getLitEndUShort();
 		}
-		if((i & 0x20) != 0) {
+		if((mask & 0x20) != 0) {
 			int k1 = stream.getUShort();
 			int k2 = stream.getUByte();
 			int icon = stream.getUByte();
@@ -7507,7 +7511,7 @@ public class Client extends ClientEngine {
 			player.currentHealth = stream.getUShort();
 			handler.setAmount(player.currentHealth);
 		}
-		if((i & 0x200) != 0) {
+		if((mask & 0x200) != 0) {
 			int l1 = stream.getUShort();
 			int l2 = stream.getUByte();
 			int icon = stream.getUByte();
@@ -7530,7 +7534,7 @@ public class Client extends ClientEngine {
 		}
 		final int k = stream.getBits(2);
 		if(k == 0) {
-			anIntArray894[anInt893++] = localPlayerIndex;
+			mobsAwaitingUpdate[mobsAwaitingUpdateCount++] = localPlayerIndex;
 			return;
 		}
 		if(k == 1) {
@@ -7538,7 +7542,7 @@ public class Client extends ClientEngine {
 			localPlayer.moveInDir(false, l);
 			final int k1 = stream.getBits(1);
 			if(k1 == 1) {
-				anIntArray894[anInt893++] = localPlayerIndex;
+				mobsAwaitingUpdate[mobsAwaitingUpdateCount++] = localPlayerIndex;
 			}
 			return;
 		}
@@ -7549,7 +7553,7 @@ public class Client extends ClientEngine {
 			localPlayer.moveInDir(true, l1);
 			final int j2 = stream.getBits(1);
 			if(j2 == 1) {
-				anIntArray894[anInt893++] = localPlayerIndex;
+				mobsAwaitingUpdate[mobsAwaitingUpdateCount++] = localPlayerIndex;
 			}
 			return;
 		}
@@ -7558,7 +7562,7 @@ public class Client extends ClientEngine {
 			final int j1 = stream.getBits(1);
 			final int i2 = stream.getBits(1);
 			if(i2 == 1) {
-				anIntArray894[anInt893++] = localPlayerIndex;
+				mobsAwaitingUpdate[mobsAwaitingUpdateCount++] = localPlayerIndex;
 			}
 			final int k2 = stream.getBits(7);
 			final int l2 = stream.getBits(7);
@@ -7616,7 +7620,7 @@ public class Client extends ClientEngine {
 				if(k1 == 0) {
 					playerEntryList[playerCount++] = i1;
 					player.anInt1537 = loopCycle;
-					anIntArray894[anInt893++] = i1;
+					mobsAwaitingUpdate[mobsAwaitingUpdateCount++] = i1;
 				} else if(k1 == 1) {
 					playerEntryList[playerCount++] = i1;
 					player.anInt1537 = loopCycle;
@@ -7624,7 +7628,7 @@ public class Client extends ClientEngine {
 					player.moveInDir(false, l1);
 					final int j2 = stream.getBits(1);
 					if(j2 == 1) {
-						anIntArray894[anInt893++] = i1;
+						mobsAwaitingUpdate[mobsAwaitingUpdateCount++] = i1;
 					}
 				} else if(k1 == 2) {
 					playerEntryList[playerCount++] = i1;
@@ -7635,7 +7639,7 @@ public class Client extends ClientEngine {
 					player.moveInDir(true, k2);
 					final int l2 = stream.getBits(1);
 					if(l2 == 1) {
-						anIntArray894[anInt893++] = i1;
+						mobsAwaitingUpdate[mobsAwaitingUpdateCount++] = i1;
 					}
 				} else if(k1 == 3) {
 					anIntArray840[anInt839++] = i1;
@@ -7941,7 +7945,7 @@ public class Client extends ClientEngine {
 				if(l1 == 0) {
 					npcEntryList[npcListSize++] = j1;
 					npc.anInt1537 = loopCycle;
-					anIntArray894[anInt893++] = j1;
+					mobsAwaitingUpdate[mobsAwaitingUpdateCount++] = j1;
 				} else if(l1 == 1) {
 					npcEntryList[npcListSize++] = j1;
 					npc.anInt1537 = loopCycle;
@@ -7949,7 +7953,7 @@ public class Client extends ClientEngine {
 					npc.moveInDir(false, i2);
 					final int k2 = stream.getBits(1);
 					if(k2 == 1) {
-						anIntArray894[anInt893++] = j1;
+						mobsAwaitingUpdate[mobsAwaitingUpdateCount++] = j1;
 					}
 				} else if(l1 == 2) {
 					npcEntryList[npcListSize++] = j1;
@@ -7960,7 +7964,7 @@ public class Client extends ClientEngine {
 					npc.moveInDir(true, l2);
 					final int i3 = stream.getBits(1);
 					if(i3 == 1) {
-						anIntArray894[anInt893++] = j1;
+						mobsAwaitingUpdate[mobsAwaitingUpdateCount++] = j1;
 					}
 				} else if(l1 == 3) {
 					anIntArray840[anInt839++] = j1;
@@ -8253,7 +8257,7 @@ public class Client extends ClientEngine {
 			npc.type = NPCType.get(buffer.getBits(16));
 			final int k1 = buffer.getBits(1);
 			if(k1 == 1) {
-				anIntArray894[anInt893++] = index;
+				mobsAwaitingUpdate[mobsAwaitingUpdateCount++] = index;
 			}
 			npc.anInt1540 = npc.type.boundaryDimension;
 			npc.anInt1504 = npc.type.degreesToTurn;
@@ -8268,15 +8272,15 @@ public class Client extends ClientEngine {
 		buffer.endBitAccess();
 	}
 
-	private void method49(Buffer stream) {
-		for(int j = 0; j < anInt893; j++) {
-			final int k = anIntArray894[j];
+	private void parsePlayerMask(Buffer stream) {
+		for(int index = 0; index < mobsAwaitingUpdateCount; index++) {
+			final int k = mobsAwaitingUpdate[index];
 			final Player player = playerList[k];
-			int l = stream.getUByte();
-			if((l & 0x40) != 0) {
-				l += stream.getUByte() << 8;
+			int mask = stream.getUByte();
+			if((mask & 0x40) != 0) {
+				mask += stream.getUByte() << 8;
 			}
-			method107(l, k, stream, player);
+			updatePlayers(mask, k, stream, player);
 		}
 	}
 
@@ -8518,14 +8522,14 @@ public class Client extends ClientEngine {
 	}
 
 	private void updateNpcs(Buffer stream) {
-		for(int j = 0; j < anInt893; j++) {
-			final int k = anIntArray894[j];
+		for(int j = 0; j < mobsAwaitingUpdateCount; j++) {
+			final int k = mobsAwaitingUpdate[j];
 			final NPC entity = npcList[k];
-			int l = stream.getUByte();
-			if((l & 0x40) != 0) {
-				l += stream.getUByte() << 8;
+			int mask = stream.getUByte();
+			if((mask & 0x40) != 0) {
+				mask += stream.getUByte() << 8;
 			}
-			if((l & 0x400) != 0) {
+			if((mask & 0x400) != 0) {
 				entity.anInt1543 = stream.getReversedUByte();
 				entity.anInt1545 = stream.getReversedUByte();
 				entity.anInt1544 = stream.getReversedUByte();
@@ -8535,7 +8539,7 @@ public class Client extends ClientEngine {
 				entity.anInt1549 = stream.getReversedUByte();
 				entity.method446();
 			}
-			if((l & 0x100) != 0) {
+			if((mask & 0x100) != 0) {
 				entity.spotAnim = stream.getUShort();
 				final int k1 = stream.getInt();
 				entity.spotAnimOffset = k1 >> 16;
@@ -8549,37 +8553,37 @@ public class Client extends ClientEngine {
 					entity.spotAnim = -1;
 				}
 			}
-			if((l & 8) != 0) {
-				int i1 = stream.getLitEndUShort();
-				if(i1 == 65535) {
-					i1 = -1;
+			if((mask & 8) != 0) {
+				int animation = stream.getLitEndUShort();
+				if(animation == 65535) {
+					animation = -1;
 				}
-				final int i2 = stream.getUByte();
-				if(i1 == entity.anim && i1 != -1 && i1 < DeformSequence.cache.length) {
-					final int l2 = DeformSequence.cache[i1].replayMode;
-					if(l2 == 1) {
-						entity.animFrame = 0;
-						entity.animCycle = 0;
-						entity.animDelay = i2;
-						entity.anInt1530 = 0;
+				final int delay = stream.getUByte();
+				if(animation == entity.anim && animation != -1 && animation < DeformSequence.animations.length) {
+					final int replayMode = DeformSequence.animations[animation].replayMode;
+					if(replayMode == 1) {
+						entity.displayedEmoteFrames = 0;
+						entity.emoteTimeRemaining = 0;
+						entity.animationDelay = delay;
+						entity.currentAnimationLoops = 0;
 					}
-					if(l2 == 2) {
-						entity.anInt1530 = 0;
+					if(replayMode == 2) {
+						entity.currentAnimationLoops = 0;
 					}
-				} else if(i1 == -1 || entity.anim == -1 || i1 >= DeformSequence.cache.length || DeformSequence.cache[i1].priority >= DeformSequence.cache[entity.anim].priority) {
-					entity.anim = i1;
-					entity.animFrame = 0;
-					entity.animCycle = 0;
-					entity.animDelay = i2;
-					entity.anInt1530 = 0;
+				} else if(animation == -1 || entity.anim == -1 || animation >= DeformSequence.animations.length || DeformSequence.animations[animation].priority >= DeformSequence.animations[entity.anim].priority) {
+					entity.anim = animation;
+					entity.displayedEmoteFrames = 0;
+					entity.emoteTimeRemaining = 0;
+					entity.animationDelay = delay;
+					entity.currentAnimationLoops = 0;
 					entity.anInt1542 = entity.smallXYIndex;
 				}
 			}
-			if((l & 4) != 0) {
+			if((mask & 4) != 0) {
 				entity.chatSpoken = stream.getLine();
 				entity.chatLoopCycle = 100;
 			}
-			if((l & 0x80) != 0) {
+			if((mask & 0x80) != 0) {
 				entity.type = NPCType.get(stream.getLitEndUShortMinus128());
 				entity.anInt1540 = entity.type.boundaryDimension;
 				entity.anInt1504 = entity.type.degreesToTurn;
@@ -8589,17 +8593,17 @@ public class Client extends ClientEngine {
 				entity.anInt1557 = entity.type.turnLeftAnimationId;
 				entity.anInt1511 = entity.type.standAnimationId;
 			}
-			if((l & 0x10) != 0) {
+			if((mask & 0x10) != 0) {
 				entity.interactingEntity = stream.getUShort();
 				if(entity.interactingEntity == 65535) {
 					entity.interactingEntity = -1;
 				}
 			}
-			if((l & 1) != 0) {
+			if((mask & 1) != 0) {
 				entity.anInt1538 = stream.getLitEndUShort();
 				entity.anInt1539 = stream.getLitEndUShort();
 			}
-			if((l & 2) != 0) {
+			if((mask & 2) != 0) {
 				int damage = stream.getInt();
 				int hitMask = stream.getUByte();
 				int icon = stream.getUByte();
@@ -8610,7 +8614,7 @@ public class Client extends ClientEngine {
 				entity.currentHealth = stream.getInt();
 				entity.special = stream.getUByte();
 			}
-			if((l & 0x20) != 0) {
+			if((mask & 0x20) != 0) {
 				int damage = stream.getInt();
 				int hitMask = stream.getUByte();
 				int icon = stream.getUByte();
@@ -8669,7 +8673,7 @@ public class Client extends ClientEngine {
 			player.anInt1537 = loopCycle;
 			final int k = stream.getBits(1);
 			if(k == 1) {
-				anIntArray894[anInt893++] = j;
+				mobsAwaitingUpdate[mobsAwaitingUpdateCount++] = j;
 			}
 			final int l = stream.getBits(1);
 			int i1 = stream.getBits(5);
@@ -8737,7 +8741,7 @@ public class Client extends ClientEngine {
 	}
 
 	private void method98(Mobile entity) {
-		if(entity.anInt1548 == loopCycle || entity.anim == -1 || entity.animDelay != 0 || entity.animCycle + 1 > DeformSequence.cache[entity.anim].getFrame(entity.animFrame)) {
+		if(entity.anInt1548 == loopCycle || entity.anim == -1 || entity.animationDelay != 0 || entity.emoteTimeRemaining + 1 > DeformSequence.animations[entity.anim].getFrame(entity.displayedEmoteFrames)) {
 			final int i = entity.anInt1548 - entity.anInt1547;
 			final int j = loopCycle - entity.anInt1547;
 			final int k = entity.anInt1543 * 128 + entity.anInt1540 * 64;
@@ -8769,8 +8773,8 @@ public class Client extends ClientEngine {
 			entity.anInt1503 = 0;
 			return;
 		}
-		if(entity.anim != -1 && entity.animDelay == 0 && DeformSequence.cache.length > entity.anim) {
-			final DeformSequence animation = DeformSequence.cache[entity.anim];
+		if(entity.anim != -1 && entity.animationDelay == 0 && DeformSequence.animations.length > entity.anim) {
+			final DeformSequence animation = DeformSequence.animations[entity.anim];
 			if(entity.anInt1542 > 0 && animation.precedenceAnimating == 0) {
 				entity.anInt1503++;
 				return;

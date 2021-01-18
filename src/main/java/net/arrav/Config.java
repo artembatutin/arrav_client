@@ -73,9 +73,9 @@ public class Config {
 	/*
 	 * Debug configurations
 	 */
-	private boolean data = false;
+	private boolean data = true;
 	private boolean fps = false;
-	private boolean idx = false;
+	private boolean idx = true;
 	private boolean sprite = false;
 
 	/*

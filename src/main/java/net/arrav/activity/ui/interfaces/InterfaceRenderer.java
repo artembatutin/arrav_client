@@ -374,11 +374,11 @@ public class InterfaceRenderer {
                     if(animationID == -1) {
                         model = childWidget.getModel(-1, -1, isSelected);
                     } else {
-                        if(animationID > DeformSequence.cache.length) {
+                        if(animationID > DeformSequence.animations.length) {
                             Rasterizer3D.textured = true;
                             return;
                         }
-                        final DeformSequence animation = DeformSequence.cache[animationID];
+                        final DeformSequence animation = DeformSequence.animations[animationID];
                         if(animation == null) {
                             Rasterizer3D.textured = true;
                             return;

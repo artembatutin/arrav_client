@@ -34,10 +34,10 @@ public class Mobile extends Entity {
 	public int spotAnimOffset;
 	public int smallXYIndex;
 	public int anim;
-	public int animFrame;
-	public int animCycle;
-	public int animDelay;
-	public int anInt1530;
+	public int displayedEmoteFrames;
+	public int emoteTimeRemaining;
+	public int animationDelay;
+	public int currentAnimationLoops;
 	public int chatAnimationEffect;
 	public int loopCycleStatus;
 	public int currentHealth;
@@ -136,10 +136,10 @@ public class Mobile extends Entity {
 			j++;
 			k--;
 		}
-		if(anim >= DeformSequence.cache.length) {
+		if(anim >= DeformSequence.animations.length) {
 			anim = -1;
 		}
-		if(anim != -1 && DeformSequence.cache[anim].precedenceWalking == 1) {
+		if(anim != -1 && DeformSequence.animations[anim].precedenceWalking == 1) {
 			anim = -1;
 		}
 		if(smallXYIndex < 9) {
@@ -156,7 +156,7 @@ public class Mobile extends Entity {
 	}
 
 	public final void setPos(int i, int j, boolean flag) {
-		if(anim != -1 && DeformSequence.cache[anim].precedenceWalking == 1) {
+		if(anim != -1 && DeformSequence.animations[anim].precedenceWalking == 1) {
 			anim = -1;
 		}
 		if(!flag) {

@@ -61,22 +61,22 @@ public final class NPC extends Mobile {
 		int nextAnim = -1;
 		int currCycle = -1;
 		int nextCycle = -1;
-		if(super.anim >= 0 && super.animDelay == 0 && DeformSequence.cache.length > super.anim) {
-			DeformSequence seq = DeformSequence.cache[super.anim];
+		if(super.anim >= 0 && super.animationDelay == 0 && DeformSequence.animations.length > super.anim) {
+			DeformSequence seq = DeformSequence.animations[super.anim];
 			if(Config.def.tween() && super.nextAnimFrame != -1) {
 				nextAnim = seq.frameList[super.nextAnimFrame];
-				currCycle = seq.cycleList[super.animFrame];
-				nextCycle = super.animCycle;
+				currCycle = seq.cycleList[super.displayedEmoteFrames];
+				nextCycle = super.emoteTimeRemaining;
 			}
-			currAnim = seq.frameList[super.animFrame];
+			currAnim = seq.frameList[super.displayedEmoteFrames];
 			int idleAnim = -1;
 			if(super.idleAnim >= 0 && super.idleAnim != super.anInt1511) {
-				idleAnim = DeformSequence.cache[super.idleAnim].frameList[super.idleAnimFrame];
+				idleAnim = DeformSequence.animations[super.idleAnim].frameList[super.idleAnimFrame];
 			}
-			return type.getModel(idleAnim, currAnim, nextAnim, currCycle, nextCycle, DeformSequence.cache[super.anim].flowControl);
+			return type.getModel(idleAnim, currAnim, nextAnim, currCycle, nextCycle, DeformSequence.animations[super.anim].flowControl);
 		}
 		if(super.idleAnim >= 0 && super.idleAnim != 65535) {
-			final DeformSequence seq = DeformSequence.cache[super.idleAnim];
+			final DeformSequence seq = DeformSequence.animations[super.idleAnim];
 			currAnim = seq.frameList[super.idleAnimFrame];
 			if(Config.def.tween() && super.nextIdleAnimFrame != -1) {
 				nextAnim = seq.frameList[super.nextIdleAnimFrame];

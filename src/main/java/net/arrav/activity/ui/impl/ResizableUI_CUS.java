@@ -763,7 +763,7 @@ public class ResizableUI_CUS extends ResizableUI {
 		if(animationID == -1) {
 			model = childWidget.getModel(-1, -1, isSelected);
 		} else {
-			final DeformSequence animation = DeformSequence.cache[animationID];
+			final DeformSequence animation = DeformSequence.animations[animationID];
 			if(childWidget.modelAnimLength > animation.anIntArray354.length || childWidget.modelAnimLength > animation.frameList.length) {
 				return;
 			}
@@ -775,7 +775,7 @@ public class ResizableUI_CUS extends ResizableUI {
 		Rasterizer2D.removeClip();
 		Rasterizer3D.viewport.centerX = centerX;
 		Rasterizer3D.viewport.centerY = centerY;
-		final DeformSequence animation = DeformSequence.cache[childWidget.modelAnim];
+		final DeformSequence animation = DeformSequence.animations[childWidget.modelAnim];
 		for(childWidget.modelAnimDelay += client.tickDelta; childWidget.modelAnimDelay > animation.getFrame(childWidget.modelAnimLength); ) {
 			childWidget.modelAnimDelay -= animation.getFrame(childWidget.modelAnimLength) + 1;
 			childWidget.modelAnimLength++;

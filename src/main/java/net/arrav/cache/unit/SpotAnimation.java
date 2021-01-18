@@ -55,8 +55,8 @@ public final class SpotAnimation {
 				modelid = buffer.getUShort();
 			} else if(code == 2) {
 				seqid = buffer.getUShort();
-				if(DeformSequence.cache != null) {
-					animFrameSequence = DeformSequence.cache[seqid];
+				if(DeformSequence.animations != null) {
+					animFrameSequence = DeformSequence.animations[seqid];
 				}
 			} else if(code == 4) {
 				scaleHorizontal = buffer.getUShort();

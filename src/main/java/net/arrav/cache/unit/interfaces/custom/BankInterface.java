@@ -107,14 +107,14 @@ public class BankInterface extends Interface {
         int y = 28 + 37;
         c = 63;
         int c2 = 90;
-        System.out.println("v");
+        //System.out.println("v");
         for (int i = 0; i < 6; i++) {
             bank.child(c++, interfaceId + (c2++), 462, y);
             bank.child(c++, interfaceId + (c2++), 462, y);//+35
             c2++;
             bank.child(c++, interfaceId + (c2++), 462 + 23, y+4);//+35
             y += 37;
-            System.out.println(c);
+           // System.out.println(c);
             }
     }
 

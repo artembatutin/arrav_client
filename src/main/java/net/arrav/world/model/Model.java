@@ -16,6 +16,7 @@ import net.arrav.graphic.Rasterizer3D;
 import net.arrav.util.io.Buffer;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 public final class Model extends Entity {
 	
@@ -2149,15 +2150,17 @@ public final class Model extends Entity {
 				}
 			}
 			if(display_model_specific_texture) {
+
 				if(face_type == 0) {
 					int texture_type = triTexCoord[face] & 0xffff;
 					if(texture_type == 0xffff)
 						texture_type = -1;
 					if((texType != null && texType[texture_type] >= 0) || texture_type == -1) {
-						int x = (texture_type == -1 || texType[texture_type] > 0) ? a : texVertex1[texture_type] & 0xffff;
-						int y = (texture_type == -1 || texType[texture_type] > 0) ? b : texVertex2[texture_type] & 0xffff;
-						int z = (texture_type == -1 || texType[texture_type] > 0) ? c : texVertex3[texture_type] & 0xffff;
-						Rasterizer3D.drawTexturedTriangle(projVertexY[a], projVertexY[b], projVertexY[c], projVertexX[a], projVertexX[b], projVertexX[c], vertex2dZ[a], vertex2dZ[b], vertex2dZ[c], triCol1[face], triCol2[face], triCol3[face], projTexVertexX[x], projTexVertexX[y], projTexVertexX[z], projTexVertexY[x], projTexVertexY[y], projTexVertexY[z], projTexVertexZ[x], projTexVertexZ[y], projTexVertexZ[z], triTex[face], force_texture, false);
+							int x = (texture_type == -1 || texType[texture_type] > 0) ? a : texVertex1[texture_type] & 0xffff;
+							int y = (texture_type == -1 || texType[texture_type] > 0) ? b : texVertex2[texture_type] & 0xffff;
+							int z = (texture_type == -1 || texType[texture_type] > 0) ? c : texVertex3[texture_type] & 0xffff;
+							Rasterizer3D.drawTexturedTriangle(projVertexY[a], projVertexY[b], projVertexY[c], projVertexX[a], projVertexX[b], projVertexX[c], vertex2dZ[a], vertex2dZ[b], vertex2dZ[c], triCol1[face], triCol2[face], triCol3[face], projTexVertexX[x], projTexVertexX[y], projTexVertexX[z], projTexVertexY[x], projTexVertexY[y], projTexVertexY[z], projTexVertexZ[x], projTexVertexZ[y], projTexVertexZ[z], triTex[face], force_texture, false);
+
 						return;
 					}
 				}
@@ -3334,8 +3337,12 @@ public final class Model extends Entity {
 				if(flag && (i3 == -5000 || l3 == -5000 || k4 == -5000)) {
 					outOfReach[k] = true;
 					final int j5 = (projVertexLocalZ[l] + projVertexLocalZ[k1] + projVertexLocalZ[j2]) / 3 + maxDiagonalDistUp;
-					faceLists[j5][depthListIndices[j5]++] = k;
-				} else {
+					try {//todo actually fix this
+						faceLists[j5][depthListIndices[j5]++] = k;
+					}catch (Exception e) {
+						//e.printStackTrace();
+					}
+					} else {
 					if(needAddToSelectedObjects && cursorOn(hoverX, hoverY, projVertexY[l], projVertexY[k1], projVertexY[j2], i3, l3, k4)) {
 						modelHover[objectsRendered++] = hash;
 						needAddToSelectedObjects = false;
@@ -3347,7 +3354,11 @@ public final class Model extends Entity {
 						if(k5 > faceLists.length || k5 > depthListIndices.length) {
 							return;
 						}
-						faceLists[k5][depthListIndices[k5]++] = k;
+						try {//todo actually fix this
+							faceLists[k5][depthListIndices[k5]++] = k;
+						} catch (Exception e) {
+							//e.printStackTrace();
+						}
 					}
 				}
 			}
@@ -3534,16 +3545,24 @@ public final class Model extends Entity {
 			final int k3 = projTexVertexY[v1];
 			final int k4 = triCol1[idx];
 			if(j2 >= Constants.CAM_NEAR) {
-				final int k5 = (Constants.CAM_NEAR - l1) * shadeAmt[j2 - l1];
-				triReqX[pos] = centerX + ((k2 + ((projTexVertexX[v3] - k2) * k5 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-				triReqY[pos] = centerY + ((k3 + ((projTexVertexY[v3] - k3) * k5 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-				triReqCol[pos++] = k4 + ((triCol3[idx] - k4) * k5 >> 16);
+				try {//todo actually fix this
+					final int k5 = (Constants.CAM_NEAR - l1) * shadeAmt[j2 - l1];
+					triReqX[pos] = centerX + ((k2 + ((projTexVertexX[v3] - k2) * k5 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
+					triReqY[pos] = centerY + ((k3 + ((projTexVertexY[v3] - k3) * k5 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
+					triReqCol[pos++] = k4 + ((triCol3[idx] - k4) * k5 >> 16);
+				}catch (Exception e) {
+
+				}
 			}
 			if(i2 >= Constants.CAM_NEAR) {
-				final int l5 = (Constants.CAM_NEAR - l1) * shadeAmt[i2 - l1];
-				triReqX[pos] = centerX + ((k2 + ((projTexVertexX[v2] - k2) * l5 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-				triReqY[pos] = centerY + ((k3 + ((projTexVertexY[v2] - k3) * l5 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-				triReqCol[pos++] = k4 + ((triCol2[idx] - k4) * l5 >> 16);
+				try {//todo actually fix this
+					final int l5 = (Constants.CAM_NEAR - l1) * shadeAmt[i2 - l1];
+					triReqX[pos] = centerX + ((k2 + ((projTexVertexX[v2] - k2) * l5 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
+					triReqY[pos] = centerY + ((k3 + ((projTexVertexY[v2] - k3) * l5 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
+					triReqCol[pos++] = k4 + ((triCol2[idx] - k4) * l5 >> 16);
+				}catch (Exception e) {
+
+				}
 			}
 		}
 		if(i2 >= Constants.CAM_NEAR) {
@@ -3555,16 +3574,24 @@ public final class Model extends Entity {
 			final int l3 = projTexVertexY[v2];
 			final int l4 = triCol2[idx];
 			if(l1 >= Constants.CAM_NEAR) {
-				final int i6 = (Constants.CAM_NEAR - i2) * shadeAmt[l1 - i2];
-				triReqX[pos] = centerX + ((l2 + ((projTexVertexX[v1] - l2) * i6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-				triReqY[pos] = centerY + ((l3 + ((projTexVertexY[v1] - l3) * i6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-				triReqCol[pos++] = l4 + ((triCol1[idx] - l4) * i6 >> 16);
+				try {//todo actually fix this
+					final int i6 = (Constants.CAM_NEAR - i2) * shadeAmt[l1 - i2];
+					triReqX[pos] = centerX + ((l2 + ((projTexVertexX[v1] - l2) * i6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
+					triReqY[pos] = centerY + ((l3 + ((projTexVertexY[v1] - l3) * i6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
+					triReqCol[pos++] = l4 + ((triCol1[idx] - l4) * i6 >> 16);
+				}catch (Exception e) {
+
+				}
 			}
 			if(j2 >= Constants.CAM_NEAR) {
-				final int j6 = (Constants.CAM_NEAR - i2) * shadeAmt[j2 - i2];
-				triReqX[pos] = centerX + ((l2 + ((projTexVertexX[v3] - l2) * j6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-				triReqY[pos] = centerY + ((l3 + ((projTexVertexY[v3] - l3) * j6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
-				triReqCol[pos++] = l4 + ((triCol3[idx] - l4) * j6 >> 16);
+				try {//todo actually fix this
+					final int j6 = (Constants.CAM_NEAR - i2) * shadeAmt[j2 - i2];
+					triReqX[pos] = centerX + ((l2 + ((projTexVertexX[v3] - l2) * j6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
+					triReqY[pos] = centerY + ((l3 + ((projTexVertexY[v3] - l3) * j6 >> 16)) * Scene.focalLength) / Constants.CAM_NEAR;
+					triReqCol[pos++] = l4 + ((triCol3[idx] - l4) * j6 >> 16);
+				}catch (Exception e) {
+
+				}
 			}
 		}
 		if(j2 >= Constants.CAM_NEAR) {
