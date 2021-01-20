@@ -3682,6 +3682,11 @@ public class Client extends ClientEngine {
 				showChat = !showChat;
 			}
 		}
+		if (code == 1005) {
+			for(int j1 = 0; j1 < 500; j1++) {
+				chatMessage[j1] = null;
+			}
+		}
 		if(code == 998) {
 			selectedChannelButton = 1;
 			if(chatTypeView != Constants.MSG_GAME) {

@@ -40,7 +40,9 @@ public class ResizableUI_CUS extends ResizableUI {
 		if(client.mouseX >= 57 && client.mouseX <= 113 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
 			client.menuItemName[1] = "View All";
 			client.menuItemCode[1] = 999;
-			client.menuPos = 2;
+			client.menuItemName[2] = "Clear";
+			client.menuItemCode[2] = 1005;
+			client.menuPos = 3;
 			client.hoveredChannelButton = 0;
 		} else if(client.mouseX >= 114 && client.mouseX <= 170 && client.mouseY >= client.windowHeight - 21 && client.mouseY <= client.windowHeight) {
 			client.menuItemName[1] = "View Game";

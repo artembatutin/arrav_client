@@ -63,7 +63,6 @@ public final class ModelVault implements Closeable {
 
 
     public byte[] getData(int id) {
-        System.err.println("Getting model "+id);
         try {
             if (!dataChannel.isOpen() || !metaChannel.isOpen()) {
                 System.out.println("Model channels are closed!");
