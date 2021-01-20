@@ -331,15 +331,21 @@ public class InterfaceRenderer {
                                 image = Client.spriteCache.get(childWidget.secondarySpriteID);
                         } else {
                             if(childWidget.spriteID != -1)
+                                if (childWidget.spriteID == 1033)
+                                    image = BitmapImage.BLANK;
+                                            else
                                 image = Client.spriteCache.get(childWidget.spriteID);
                         }
                     }
 
 
-                    if(image == null) {
+                    if(image == null && childWidget.secondarySpriteID == -1) {
                         System.out.println("null image id:"+childWidget.id+" parent:"+childWidget.parent+" sprite:"+childWidget.spriteID+" sprite:"+childWidget.secondarySpriteID);
                         continue;
                     }
+
+                    if(image == null)
+                        continue;
 
                     if(Config.def.sprite()) {
                         Rasterizer2D.drawRectangle(xPos, yPos, image.imageWidth, image.imageHeight, 0x000000);

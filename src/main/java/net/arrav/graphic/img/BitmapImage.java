@@ -20,6 +20,8 @@ public final class BitmapImage extends Rasterizer2D {
 
 	private static final ColorModel COLOR_MODEL = new DirectColorModel(32, 0xff0000, 0xff00, 0xff);
 
+	public static final BitmapImage BLANK = new BitmapImage(1,1);
+
 	public static Graphics2D createGraphics(int[] pixels, int width, int height) {
 		return new java.awt.image.BufferedImage(COLOR_MODEL,
 				java.awt.image.Raster.createWritableRaster(COLOR_MODEL.createCompatibleSampleModel(width, height),

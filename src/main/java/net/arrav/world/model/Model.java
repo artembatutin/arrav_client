@@ -1524,6 +1524,8 @@ public final class Model extends Entity {
 		}
 
 		if(data == null) {
+			if(type == null)
+				type = DataType.NEW;
 			odFetcher.addRequest(type.getIndex(), index);
 			return null;
 		} else {
