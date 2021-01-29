@@ -119,6 +119,10 @@ public final class NPCType {
 		if(id == 3180)
 			npc.pet(6247, "Zilzy", 68);//saradomin
 
+		if(npc.tier != null)
+			npc.name = "<col="+npc.tier.getColor()+">"+npc.name+(Config.def.isShowTier() ? " "+ npc.tier.getName()+"</col>" : "</col>");
+
+
 		if(Config.def.idx())
 			System.out.println(npc.id + " - " + npc.standAnimationId + " - " + npc.walkAnimationId);
 		defCache.put(id, npc);
