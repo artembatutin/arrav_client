@@ -5,6 +5,10 @@ import net.arrav.world.model.Model;
 import net.arrav.util.io.Buffer;
 import net.arrav.cache.CacheArchive;
 
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.util.HashSet;
+
 public final class SpotAnimation {
 
 	public static SpotAnimation[] cache;
@@ -43,6 +47,54 @@ public final class SpotAnimation {
 			cache[id].id = id;
 			cache[id].read(buffer);
 		}
+	}
+
+
+	private void pack(DataOutputStream dao) throws IOException {
+		HashSet<Integer> written = new HashSet<>();
+
+		do {
+		if(modelid != -1 && !written.contains(1)) {
+			dao.writeByte(1);
+			dao.writeShort(modelid);
+			written.add(1);
+		} else if(seqid != -1 && !written.contains(2)) {
+			dao.writeByte(2);
+			dao.writeShort(seqid);
+			written.add(2);
+		} else if(scaleHorizontal != -1 && !written.contains(4)) {
+			dao.writeByte(4);
+			dao.writeShort(scaleHorizontal);
+			written.add(4);
+		} else if(scaleVertical != -1 && !written.contains(5)) {
+			dao.writeByte(5);
+			dao.writeShort(scaleVertical);
+			written.add(5);
+		}else if(rotation != -1 && !written.contains(6)) {
+			dao.writeByte(6);
+			dao.writeShort(rotation);
+			written.add(6);
+		}else if(lightness != -1 && !written.contains(7)) {
+			dao.writeByte(7);
+			dao.writeByte(lightness);
+			written.add(7);
+		}else if(contrast != -1 && !written.contains(8)) {
+			dao.writeByte(8);
+			dao.writeByte(contrast);
+			written.add(8);
+		}else if(anIntArray408 != null && !written.contains(40)) {
+			dao.writeByte(40);
+			dao.writeByte(anIntArray408.length);
+			for (int i = 0; i < anIntArray408.length; i++) {
+				dao.writeShort(anIntArray408[i]);
+				dao.writeShort(anIntArray409[i]);
+			}
+			written.add(40);
+		} else {
+			dao.writeByte(0);
+			break;
+		}
+		} while (true);
 	}
 
 	private void read(Buffer buffer) {
