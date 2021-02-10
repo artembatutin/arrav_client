@@ -235,7 +235,6 @@ public final class ObjectType {
 				if(iconVerticalOffset > 32767)
 					iconVerticalOffset -= 65536;
 			} else if(opcode == 9) {
-				System.out.println("here!");
 				tier = TieredEntity.ofOrdinal(buffer.getUByte());
 			} else if(opcode == 11) {
 				stackable = true;
